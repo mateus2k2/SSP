@@ -1,0 +1,29 @@
+vector<vector<int>> ToolSets;
+
+void makeToolSets(){
+	int sizes[5] = {5,7,8,3,6};
+	int numberSets = 5;
+
+	ToolSets.resize(numberJobs);
+	for(int i=0; i < numberJobs; ++i){
+		ToolSets[i].resize(numberTools);
+	}
+
+	ToolSets[0] = {1,2,3,4,5}; 			  
+	ToolSets[1] = {12,13,14,15,16,17,18}; 
+	ToolSets[3] = {4,5,8,9,10,11,12,13}; 
+	ToolSets[4] = {5,6,7};			  	  
+	ToolSets[5] = {15,16,17,18,19,20};  
+		
+}
+
+JobTools[0] = {0};  // (1,1) corresponds to ToolSets[0]
+JobTools[1] = {0};  // (1,2) corresponds to ToolSets[0]
+JobTools[2] = {1};  // (2,1) corresponds to ToolSets[1]
+JobTools[3] = {2};  // (3,1) corresponds to ToolSets[2]
+JobTools[4] = {2};  // (3,2) corresponds to ToolSets[2]
+JobTools[5] = {3};  // (4,1) corresponds to ToolSets[3]
+JobTools[6] = {3};  // (4,2) corresponds to ToolSets[3]
+JobTools[7] = {4};  // (5,1) corresponds to ToolSets[4]
+JobTools[8] = {5};  // (6,1) corresponds to ToolSets[5]
+JobTools[9] = {0};  // (7,1) corresponds to ToolSets[0]
