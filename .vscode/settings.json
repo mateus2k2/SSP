@@ -2,5 +2,6 @@
     "files.associations": {
         "atomic": "cpp",
         "algorithm": "cpp"
-    }
+    },
+    "git.enabled": false
 }

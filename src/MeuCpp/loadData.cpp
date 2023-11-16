@@ -6,11 +6,11 @@
 using namespace std;
 
 /* 
-g++ src/MeuC++/loadData.cpp -o src/MeuC++/loadData -Wall
-./src/MeuC++/loadData
+g++ src/MeuCpp/loadData.cpp -o src/MeuCpp/loadData -Wall
+./src/MeuCpp/loadData
 */
 
-
+//processingTimes, operations, toolSets
 int numberJobs, numberTools, capacityMagazine;	
 std::vector<std::vector<bool>>  toolJob;
 std::vector<std::vector<int>>  JobTools; 
@@ -65,9 +65,13 @@ void loadInstance(string filename){
 	}
 }
 
+void laodRealInstance(string filename){
+
+}
+
 int main(){
         
-    loadInstance("/home/mateus/WSL/IC/dataOG/KTNS/Instances/Catanzaro/Tabela1/datA1");
+    loadInstance("/home/mateus/WSL/IC/data/example.txt");
     
     cout << "numberJobs: " << numberJobs << "\n";
     cout << "numberTools: " << numberTools << "\n";
@@ -90,3 +94,47 @@ int main(){
         cout << "\n";
     }
 }
+
+/* 
+
+/home/mateus/WSL/IC/dataRaw/KTNS/Instances/Catanzaro/Tabela1/datA1
+10
+10
+4
+0 0 1 1 0 1 0 0 1 1 
+0 1 0 0 0 0 0 0 0 1 
+0 1 0 0 0 1 0 0 0 0 
+0 0 0 0 0 0 0 0 1 1 
+0 0 0 1 1 0 1 1 1 0 
+1 0 1 0 0 1 1 0 0 0 
+1 0 0 0 0 0 0 1 0 0 
+0 0 0 0 1 1 1 1 1 0 
+0 0 1 1 0 0 1 0 0 0 
+0 0 0 0 1 0 0 0 0 1 
+
+
+/home/mateus/WSL/IC/dataRaw/KTNS/Instances/Catanzaro/Tabela1/datB9
+15
+20
+6
+0 0 0 1 0 0 0 1 0 1 0 0 1 0 0 
+0 0 1 1 0 0 0 0 0 0 1 0 1 0 0 
+0 0 0 0 0 1 0 1 0 0 0 0 0 0 0 
+0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 
+0 0 0 0 0 1 0 0 1 0 1 0 0 0 0 
+1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 
+0 0 0 1 0 0 0 0 1 1 0 0 0 0 1 
+0 0 0 0 1 1 0 1 0 0 1 0 0 0 1 
+0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 
+1 0 0 0 0 0 0 0 0 0 0 0 1 0 1 
+0 0 0 0 1 0 0 0 0 0 0 0 1 1 0 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+0 0 0 1 0 0 0 0 0 0 0 1 0 0 0 
+0 0 0 1 0 0 1 0 0 0 0 0 0 0 0 
+0 0 0 0 1 0 0 1 0 1 1 0 1 1 0 
+0 1 0 0 1 0 1 0 0 0 0 1 0 1 0 
+0 0 0 0 0 0 0 1 0 0 0 0 0 1 0 
+0 0 0 0 0 0 0 1 0 0 0 0 0 1 0 
+1 1 0 0 0 1 0 0 0 0 1 0 0 0 0 
+0 0 0 0 1 0 0 0 0 0 0 0 0 0 1
+*/
