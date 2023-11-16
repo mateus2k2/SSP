@@ -8,4 +8,4 @@ mainPy:
 	clear src/MeuPy/main.py
 
 git:
-	clear && git add . && git commit -m "update" && git push
+	clear && git add . && git commit -m "update" && git push origin master
