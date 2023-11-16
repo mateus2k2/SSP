@@ -101,7 +101,6 @@ void makeToolJob(){
 // KTNS
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
 unsigned int KTNS(vector<int> s){
 	
     // Variaveis
@@ -222,6 +221,62 @@ unsigned int GPCAPar(vector<int> s){
  
 }
 
+void threadRunGPCA(){
+
+	while(true){
+		if(!fase){			
+
+			int pipes_count = 0;
+			int last_full = (numberJobs-1);
+			vector<int> last_seen(numberTools);
+			vector<vector<int>> M;
+	
+
+			//Completa o last_seen
+			for(unsigned int i = 0; i < numberTools; ++i){
+				if(toolJob[i][neigh[(numberJobs-1)]]) last_seen[i] = (numberJobs-1);
+				else last_seen[i] = numberJobs;
+			}
+			
+			M.push_back(JobTools[neigh[(numberJobs-1)]]);
+	
+	
+			for(unsigned int e = (numberJobs-2); e >= meio; --e){
+		
+				M.push_back(JobTools[neigh[e]]);
+				
+				for (auto t = JobTools[neigh[e]].begin(); t != JobTools[neigh[e]].end(); ++t){
+			
+					if(last_full >= last_seen[*t]){
+				
+						++pipes_count;
+								
+						for(unsigned int i = (last_seen[*t]-1); i > e; --i){
+					
+							M[((numberJobs-1) - i)].push_back(*t);					
+							if(M[((numberJobs-1) - i)].size() == capacityMagazine) last_full = i;
+						}
+					}
+					last_seen[*t] = e; 	
+				}
+		
+				if(M[((numberJobs-1) - e)].size() == capacityMagazine) last_full = e;
+			}
+
+			
+			last_fullD = last_full;
+			last_seenD = last_seen;
+			MD = M;
+			pipes_countD = pipes_count;
+
+			fase = true;			
+			endD = true;
+		}
+		
+		if(stop) break;
+	}
+}
+
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // TESTE SOLUTION
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -231,8 +286,16 @@ int main(){
 	s = {0,1,2,3,4,5,6,7,8,9};
     makeJobTools();
 	makeToolJob();
-    cout << "Solucao KTNS: "    << KTNS(s) 	  << endl;
-    cout << "Solucao GPSAPar: " << GPCAPar(s) << endl;
+
+	tKT = thread(threadRunGPCA);
+	unsigned int GPCAParSum = GPCAPar(s);
+	stop = true;
+	tKT.join();
+
+	unsigned int KTNSSum = KTNS(s);
+
+	cout << "Solucao GPSAPar: " << GPCAParSum << endl;
+    cout << "Solucao KTNS: "    << KTNSSum 	  << endl;
 
     return 0;
 }
