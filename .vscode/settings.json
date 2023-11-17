@@ -1,7 +1,9 @@
 {
     "files.associations": {
         "atomic": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "thread": "cpp",
+        "ostream": "cpp"
     },
     "git.enabled": false
 }

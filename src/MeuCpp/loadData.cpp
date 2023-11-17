@@ -5,11 +5,6 @@
 
 using namespace std;
 
-/* 
-g++ src/MeuCpp/loadData.cpp -o src/MeuCpp/loadData -Wall
-./src/MeuCpp/loadData
-*/
-
 //processingTimes, operations, toolSets
 int numberJobs, numberTools, capacityMagazine;	
 std::vector<std::vector<bool>>  toolJob;
@@ -66,12 +61,12 @@ void loadInstance(string filename){
 }
 
 void laodRealInstance(string filename){
-
+	
 }
 
 int main(){
         
-    loadInstance("/home/mateus/WSL/IC/data/example.txt");
+    loadInstance("/home/mateus/WSL/IC/data/Example.txt");
     
     cout << "numberJobs: " << numberJobs << "\n";
     cout << "numberTools: " << numberTools << "\n";

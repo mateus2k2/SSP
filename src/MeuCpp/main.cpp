@@ -2,12 +2,8 @@
 #include <iostream>
 #include <atomic>
 #include <thread>
-using namespace std;
 
-/* 
-g++ src/MeuCpp/code.cpp -o src/MeuCpp/code -Wall
-./src/MeuCpp/code
-*/
+using namespace std;
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // VARIVEIS GLOBAIS
@@ -34,27 +30,25 @@ vector<int> last_seenD;		   // auxiliary of GPCA PAR
 vector<vector<int>> MD;		   // auxiliary of GPCA PAR
 int pipes_countD = 0;		   // auxiliary of GPCA PAR
 
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
+// DEFINIÇÕES DO PLOBLEMA
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#define COSTSWITCH 1
+#define COSTSWITCHINSTANCE 10
+#define COSTPRIORITY 30
+#define PROFITYPRIORITY 30
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // LOAD DATA
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
+
 void makeJobTools(){
 	JobTools.resize(numberTools);
 	for(int i=0; i < numberTools; ++i){
 		JobTools[i].resize(numberJobs);
 	}
 
-	// JobTools[0] = {1,2,3,4,5}; 			 // (1,1) 
-	// JobTools[1] = {1,2,3,4,5};		     // (1,2)
-	// JobTools[2] = {12,13,14,15,16,17,18}; // (2,1)
-	// JobTools[3] = {4,5,8,9,10,11,12,13};  // (3,1)
-	// JobTools[4] = {4,5,8,9,10,11,12,13};  // (3,2)
-	// JobTools[5] = {12,13,14,15,16,17,18}; // (4,1)
-	// JobTools[6] = {12,13,14,15,16,17,18}; // (4,2)
-	// JobTools[7] = {5,6,7};			  	 // (5,1)	
-	// JobTools[8] = {15,16,17,18,19,20};    // (6,1)
-	// JobTools[9] = {1,2,3,4,5}; 			 // (7,1)
-	
 	JobTools[0] = {0,1,2,3,4}; 			  // (1,1) 
 	JobTools[1] = {0,1,2,3,4};		      // (1,2)
 	JobTools[2] = {11,12,13,14,15,16,17}; // (2,1)
@@ -69,31 +63,31 @@ void makeJobTools(){
 }
 
 void makeToolJob(){
-	toolJob.resize(numberJobs);
+	toolJob.resize(numberTools);
 	for(int i=0; i < numberJobs; ++i){
-		toolJob[i].resize(numberTools);
+		toolJob[i].resize(numberJobs);
 	}
 
-	JobTools[0]  = {1,1,0,0,0,0,0,0,0,1};
-	JobTools[1]  = {1,1,0,0,0,0,0,0,0,1};
-	JobTools[2]  = {1,1,0,0,0,0,0,0,0,1};
-	JobTools[3]  = {1,1,0,1,1,0,0,0,0,1};
-	JobTools[4]  = {1,1,0,1,1,0,0,1,0,1};
-	JobTools[5]  = {0,0,0,0,0,0,0,1,0,0};
-	JobTools[6]  = {0,0,0,0,0,0,0,1,0,0};
-	JobTools[7]  = {0,0,0,1,1,0,0,0,0,0};
-	JobTools[8]  = {0,0,0,1,1,0,0,0,0,0};
-	JobTools[9]  = {0,0,0,1,1,0,0,0,0,0};
-	JobTools[10] = {0,0,0,1,1,0,0,0,0,0};
-	JobTools[11] = {0,0,1,1,1,1,1,0,0,0};
-	JobTools[12] = {0,0,1,1,1,1,1,0,0,0};
-	JobTools[13] = {0,0,1,0,0,1,1,0,0,0};
-	JobTools[14] = {0,0,1,0,0,1,1,0,1,0};
-	JobTools[15] = {0,0,1,0,0,1,1,0,1,0};
-	JobTools[16] = {0,0,1,0,0,1,1,0,1,0};
-	JobTools[17] = {0,0,1,0,0,1,1,0,1,0};
-	JobTools[18] = {0,0,0,0,0,0,0,0,1,0};
-	JobTools[19] = {0,0,0,0,0,0,0,0,1,0};
+	toolJob[0]  = {1,1,0,0,0,0,0,0,0,1};
+	toolJob[1]  = {1,1,0,0,0,0,0,0,0,1};
+	toolJob[2]  = {1,1,0,0,0,0,0,0,0,1};
+	toolJob[3]  = {1,1,0,1,1,0,0,0,0,1};
+	toolJob[4]  = {1,1,0,1,1,0,0,1,0,1};
+	toolJob[5]  = {0,0,0,0,0,0,0,1,0,0};
+	toolJob[6]  = {0,0,0,0,0,0,0,1,0,0};
+	toolJob[7]  = {0,0,0,1,1,0,0,0,0,0};
+	toolJob[8]  = {0,0,0,1,1,0,0,0,0,0};
+	toolJob[9]  = {0,0,0,1,1,0,0,0,0,0};
+	toolJob[10] = {0,0,0,1,1,0,0,0,0,0};
+	toolJob[11] = {0,0,1,1,1,1,1,0,0,0};
+	toolJob[12] = {0,0,1,1,1,1,1,0,0,0};
+	toolJob[13] = {0,0,1,0,0,1,1,0,0,0};
+	toolJob[14] = {0,0,1,0,0,1,1,0,1,0};
+	toolJob[15] = {0,0,1,0,0,1,1,0,1,0};
+	toolJob[16] = {0,0,1,0,0,1,1,0,1,0};
+	toolJob[17] = {0,0,1,0,0,1,1,0,1,0};
+	toolJob[18] = {0,0,0,0,0,0,0,0,1,0};
+	toolJob[19] = {0,0,0,0,0,0,0,0,1,0};
 
 }
 
@@ -108,12 +102,16 @@ unsigned int KTNS(vector<int> s){
 	unsigned int evalSol = 0; 
 	int jL;
 
+	int sumChanges = 0;
+	bool change = false;
+
 	// Percorre todas as ferramentas
 	for(jL= 0; jL < numberJobs; ++jL){
 		
 		vector<bool> magazineCL(numberTools);		
 		int left = jL;
 		int cmL = 0;
+		change = false;
 
 		while((cmL < capacityMagazine) && (left < numberJobs)){
 			for (auto it=JobTools[s[left]].begin(); ((it!=JobTools[s[left]].end()) && (cmL < capacityMagazine)); ++it){
@@ -123,6 +121,7 @@ unsigned int KTNS(vector<int> s){
 				}else if((jL == left) && (!magazineCL[*it])){
 					magazineCL[*it] = true;
 					++evalSol;
+					change = true;
 					++cmL;
 				}
 			}
@@ -136,11 +135,76 @@ unsigned int KTNS(vector<int> s){
 			}
 		}
 		
+		if(change) ++sumChanges;
+
 		magazineL = magazineCL;
+		
+		//print magazineCL
+		// for(unsigned int n = 0; n < magazineCL.size(); ++n){
+		// 	cout<<magazineCL[n]<<" ";
+		// }
 		
 	}
 
-	return evalSol;
+	return (PROFITYPRIORITY * s.size()) - (COSTSWITCH * evalSol) - (COSTSWITCHINSTANCE * sumChanges);
+}
+
+unsigned int GPCA(vector<int> s){	
+	int pipes_count = 0;
+	int last_full = 0;
+	vector<int> last_seen(numberTools);
+	vector<vector<int>> M;
+
+	int sumChanges = 0;
+	bool change = false;
+
+	//Completa o last_seen
+	for(unsigned int i = 0; i < numberTools; ++i){
+		if(toolJob[i][s[0]]) last_seen[i] = 0;
+		else last_seen[i] = -1;
+	}
+	M.push_back(JobTools[s[0]]);
+	
+	
+	for(unsigned int e = 1; e < numberJobs; ++e){
+		
+		M.push_back(JobTools[s[e]]);
+		change = false;
+		
+		//print M
+		// for(unsigned int t = 0; t < M.size(); ++t){
+		// 	cout<<"M["<<t<<"]:";
+		// 	for(unsigned int n = 0; n < M[t].size(); ++n){
+		// 		cout<<M[t][n]<<" ";
+		// 	}
+		// 	cout<<"\n";
+		// }
+		// cout<<"\n";
+
+		for (auto t = JobTools[s[e]].begin(); t != JobTools[s[e]].end(); ++t){
+			
+			if(last_full <= last_seen[*t]){
+				
+				++pipes_count;
+				change = true;
+				
+				// cout<<"PIPE last_see:"<< last_seen[*t] <<" Atual:"<< e <<" last_full:"<<last_full<<"\n";
+				
+				for(unsigned int i = (last_seen[*t]+1); i < e; ++i){
+					
+					M[i].push_back(*t);					
+					if(M[i].size() == capacityMagazine) last_full = i;
+				}
+			}
+			last_seen[*t] = e; 	
+		}
+		if (change) ++sumChanges;
+		
+		if(M[e].size() == capacityMagazine) last_full = e;
+
+	}
+
+	return (PROFITYPRIORITY * s.size()) - (COSTSWITCHINSTANCE * sumChanges) - (COSTSWITCH * pipes_count);
 }
 
 unsigned int GPCAPar(vector<int> s){
@@ -154,6 +218,9 @@ unsigned int GPCAPar(vector<int> s){
 	int last_full = 0;
 	vector<int> last_seen(numberTools);
 	vector<vector<int>> M;
+
+	int sumChanges = 0;
+	bool change = false;
 	
 
 	//Completa o last_seen
@@ -165,14 +232,26 @@ unsigned int GPCAPar(vector<int> s){
 	
 	
 	for(unsigned int e = 1; e <= meio; ++e){
+		change = false;
 		
 		M.push_back(JobTools[s[e]]);
+
+		// print M
+		// for(unsigned int t = 0; t < M.size(); ++t){
+		// 	cout<<"M["<<t<<"]:";
+		// 	for(unsigned int n = 0; n < M[t].size(); ++n){
+		// 		cout<<M[t][n]<<" ";
+		// 	}
+		// 	cout<<"\n";
+		// }
+		// cout<<"\n";
 				
 		for (auto t = JobTools[s[e]].begin(); t != JobTools[s[e]].end(); ++t){
 			
 			if(last_full <= last_seen[*t]){
 				
 				++pipes_count;
+				change = true;
 				
 			//	cout<<"PIPE last_see:"<< last_seen[*t] <<" Atual:"<< e <<" last_full:"<<last_full<<"\n";
 				
@@ -184,6 +263,8 @@ unsigned int GPCAPar(vector<int> s){
 			}
 			last_seen[*t] = e; 	
 		}
+
+		if (change) ++sumChanges;
 		
 		if(M[e].size() == capacityMagazine) last_full = e;
 	}
@@ -194,6 +275,7 @@ unsigned int GPCAPar(vector<int> s){
 
 
 	for(unsigned int e = (meio+1); e <= last_fullD; ++e){
+		change = false;
 		
 		M.push_back(MD[((numberJobs-1) - e)]);
 				
@@ -202,6 +284,7 @@ unsigned int GPCAPar(vector<int> s){
 			if((last_full <= last_seen[*t]) && (last_seen[*t] != meio)){
 				
 				++pipes_count;
+				change = true;
 								
 				for(unsigned int i = (last_seen[*t]+1); i < e; ++i){
 					
@@ -211,12 +294,13 @@ unsigned int GPCAPar(vector<int> s){
 			last_seen[*t] = -1; 	
 			}
 		}
+		if (change) ++sumChanges;
 		
 		if(M[e].size() == capacityMagazine) last_full = e;
 	}
 
 
- return (sum - capacityMagazine - (pipes_count+pipes_countD));
+	return (PROFITYPRIORITY * s.size()) - (COSTSWITCHINSTANCE * sumChanges) - (COSTSWITCH * pipes_count);
  
  
 }
@@ -287,15 +371,17 @@ int main(){
     makeJobTools();
 	makeToolJob();
 
-	tKT = thread(threadRunGPCA);
-	unsigned int GPCAParSum = GPCAPar(s);
-	stop = true;
-	tKT.join();
+	// int KTNSSum = KTNS(s);
+    // cout << "Solucao KTNS: "    << KTNSSum 	  << endl;
 
-	unsigned int KTNSSum = KTNS(s);
-
-	cout << "Solucao GPSAPar: " << GPCAParSum << endl;
-    cout << "Solucao KTNS: "    << KTNSSum 	  << endl;
+	// int GPCASum = GPCA(s);
+	// cout << "Solucao GPCA: "    << GPCASum 	  << endl;
+	
+	// tKT = thread(threadRunGPCA);
+	// int GPCAParSum = GPCAPar(s);
+	// stop = true;
+	// tKT.join();
+	// cout << "Solucao GPSAPar: " << GPCAParSum << endl;
 
     return 0;
 }
