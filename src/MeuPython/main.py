@@ -11,8 +11,6 @@ def myPrint(listOfThings):
             print(thing[1])
         print()
 
-# ld.optimizeToolSetCSV()
-
 # ---------------------------------------------------------------
 # LOADING BEEZAO INSTANCE 
 # ---------------------------------------------------------------

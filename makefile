@@ -4,10 +4,13 @@ loadDataCpp:
 	clear && g++ src/MeuCpp/loadData.cpp -o src/out/loadData && clear && echo "\n" && src/out/loadData
 
 mainCpp:
-	clear && g++ src/MeuCpp/main.cpp -std=c++2a -Wshadow -o src/out/mainCpp -Wno-unused-result -lpthread -O3 && echo "\n" && clear && src/out/mainCpp
+	clear && g++ src/MeuCpp/*.cpp -std=c++2a -Wshadow -o src/out/mainCpp -Wno-unused-result -lpthread -O3 && echo "\n" && clear && src/out/mainCpp
 
 mainPy:
-	clear src/MeuPy/main.py
+	clear && echo "\n" && python src/MeuPy/main.py 
+
+optmizeTollSetsPy:
+	clear && echo "\n" && python src/MeuPython/optmizeTollSets.py 
 
 # Codigos KTNS
 

@@ -2,28 +2,7 @@ import random
 import pandas as pd
 import json
 
-
-def optimizeToolSetCSV():
-    df = pd.read_csv('/home/mateus/WSL/IC/data/Data Tool Set Compositions.csv', sep=';', header=None)
-
-    df = df.fillna('NaNPlaceholder')
-    df = df.drop(0, axis=1)
-    df.index = range(1, len(df) + 1)
-    
-    uniqueStrings = df.stack().unique()
-    stringToIntMapping = {string: i+1 for i, string in enumerate(uniqueStrings)}
-    stringToIntMapping['NaNPlaceholder'] = ''
-
-    df = df.map(lambda x: stringToIntMapping[x])
-
-    df.to_csv('/home/mateus/WSL/IC/data/Data Tool Set Compositions Int.csv', index=True, header=False, sep=';')
-    
-    with open('data.json', 'w') as fp:
-        json.dump(stringToIntMapping, fp)
-
-
-    print(stringToIntMapping)
-    
+   
 # ---------------------------------------------------------------
 # LOADING JOBS DATA
 # ---------------------------------------------------------------

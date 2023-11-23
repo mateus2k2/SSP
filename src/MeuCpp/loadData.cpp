@@ -3,19 +3,16 @@
 #include <sstream>
 #include <vector>
 #include <string>
+#include <algorithm> 
+
+#include "headers/loadData.h"
+#include "headers/GlobalVars.h"
 
 using namespace std;
 
-vector<int> operation;
-vector<int> job;
-vector<int> toolSet;
-vector<int> processingTime;
-vector<vector<int>> toolSets;
-
-int numberJobs, numberTools, capacityMagazine;	
-vector<vector<bool>>  toolJob;
-vector<vector<int>>  JobTools; 
-unsigned int sum = 0;
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
+// LOAD DUMMY
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 void loadInstance(string filename){
@@ -67,7 +64,6 @@ void loadInstance(string filename){
 }
 
 int laodRealInstance(string filename){
-	// Open the CSV file
     ifstream file(filename);
 
     if (!file.is_open()) {
@@ -75,14 +71,12 @@ int laodRealInstance(string filename){
         return 1;
     }
 
-    // Read each line from the file
     string line;
 	getline(file, line);
     while (getline(file, line)) {
         stringstream ss(line);
         string value;
 
-        // Read each value separated by semicolon
         getline(ss, value, ';');
         operation.push_back(stoi(value));
 
@@ -92,18 +86,16 @@ int laodRealInstance(string filename){
         getline(ss, value, ';');
         toolSet.push_back(stoi(value));
 
-        getline(ss, value, '\n'); // Read until the end of the line
+        getline(ss, value, '\n');
         processingTime.push_back(stoi(value));
     }
 
-    // Close the file
     file.close();
 
     return 0;
 }
 
 int laodToolSet(string filename) {
-    // Open the CSV file
     ifstream file(filename);
 
     if (!file.is_open()) {
@@ -111,17 +103,14 @@ int laodToolSet(string filename) {
         return 1;
     }
 
-    // Read each line from the file
     string line;
     while (getline(file, line)) {
         stringstream ss(line);
         string value;
         vector<int> lineData;
 
-        // Read each value separated by semicolon
 		getline(ss, value, ';');
         while (getline(ss, value, ';')) {
-            // Convert each value to an integer and add it to the vector
 			if (!value.empty()){
                 lineData.push_back(stoi(value));
 			}
@@ -130,88 +119,68 @@ int laodToolSet(string filename) {
 			}
         }
 
-        // Add the vector for the current line to the main vector
         toolSets.push_back(lineData);
     }
 
-    // Close the file
     file.close();
 
     return 0;
 }
 
-int main(){
-    
-	// ------------------------------------------------------------------------------------------------------------------------
 
-    // loadInstance("/home/mateus/WSL/IC/data/Example.txt");
-    
-    // cout << "numberJobs: " << numberJobs << "\n";
-    // cout << "numberTools: " << numberTools << "\n";
-    // cout << "capacityMagazine: " << capacityMagazine << "\n";
-    // cout << "sum: " << sum << "\n";
-    
-    // for(unsigned int i = 0; i < numberJobs; ++i){
-    //     cout << "JobTools[" << i << "]: ";
-    //     for (auto t = JobTools[i].begin(); t != JobTools[i].end(); ++t){
-    //         cout << *t << " ";
-    //     }
-    //     cout << "\n";
-    // }
-    
-    // for(unsigned int i = 0; i < numberTools; ++i){
-    //     cout << "toolJob[" << i << "]: ";
-    //     for (auto t = toolJob[i].begin(); t != toolJob[i].end(); ++t){
-    //         cout << *t << " ";
-    //     }
-    //     cout << "\n";
-    // }
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
+// LOAD DUMMY
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	// ------------------------------------------------------------------------------------------------------------------------
 
-	// laodRealInstance("/home/mateus/WSL/IC/data/Data Jobs 250.csv");
+void makeJobTools(){
+	JobTools.resize(numberTools);
+	for(int i=0; i < numberTools; ++i){
+		JobTools[i].resize(numberJobs);
+	}
 
-	// // Print the vectors
-    // cout << "Operation: ";
-    // for (const auto &op : operation) {
-    //     cout << op << " ";
-    // }
-    // cout << endl;
+	JobTools[0] = {0,1,2,3,4}; 			  // (1,1) 
+	JobTools[1] = {0,1,2,3,4};		      // (1,2)
+	JobTools[2] = {11,12,13,14,15,16,17}; // (2,1)
+	JobTools[3] = {3,4,7,8,9,10,11,12};   // (3,1)
+	JobTools[4] = {3,4,7,8,9,10,11,12};   // (3,2)
+	JobTools[5] = {11,12,13,14,15,16,17}; // (4,1)
+	JobTools[6] = {11,12,13,14,15,16,17}; // (4,2)
+	JobTools[7] = {4,5,6};			  	  // (5,1)	
+	JobTools[8] = {14,15,16,17,18,19};    // (6,1)
+	JobTools[9] = {0,1,2,3,4}; 			  // (7,1) 
 
-    // cout << "Job: ";
-    // for (const auto &j : job) {
-    //     cout << j << " ";
-    // }
-    // cout << endl;
-
-    // cout << "ToolSet: ";
-    // for (const auto &ts : toolSet) {
-    //     cout << ts << " ";
-    // }
-    // cout << endl;
-
-    // cout << "Processing Time: ";
-    // for (const auto &pt : processingTime) {
-    //     cout << pt << " ";
-    // }
-    // cout << endl;
-
-	// ------------------------------------------------------------------------------------------------------------------------
-
-	// laodToolSet("/home/mateus/WSL/IC/data/Data Tool Set Compositions.csv");
-	
-	// print toolSets
-	// for (const auto &line : toolSets) {
-	//     for (const auto &value : line) {
-	//         cout << value << " ";
-	//     }
-	//     cout << endl;
-	// }
-
-	// return 0;
-
-	// ------------------------------------------------------------------------------------------------------------------------
 }
+
+void makeToolJob(){
+	toolJob.resize(numberTools);
+	for(int i=0; i < numberJobs; ++i){
+		toolJob[i].resize(numberJobs);
+	}
+
+	toolJob[0]  = {1,1,0,0,0,0,0,0,0,1};
+	toolJob[1]  = {1,1,0,0,0,0,0,0,0,1};
+	toolJob[2]  = {1,1,0,0,0,0,0,0,0,1};
+	toolJob[3]  = {1,1,0,1,1,0,0,0,0,1};
+	toolJob[4]  = {1,1,0,1,1,0,0,1,0,1};
+	toolJob[5]  = {0,0,0,0,0,0,0,1,0,0};
+	toolJob[6]  = {0,0,0,0,0,0,0,1,0,0};
+	toolJob[7]  = {0,0,0,1,1,0,0,0,0,0};
+	toolJob[8]  = {0,0,0,1,1,0,0,0,0,0};
+	toolJob[9]  = {0,0,0,1,1,0,0,0,0,0};
+	toolJob[10] = {0,0,0,1,1,0,0,0,0,0};
+	toolJob[11] = {0,0,1,1,1,1,1,0,0,0};
+	toolJob[12] = {0,0,1,1,1,1,1,0,0,0};
+	toolJob[13] = {0,0,1,0,0,1,1,0,0,0};
+	toolJob[14] = {0,0,1,0,0,1,1,0,1,0};
+	toolJob[15] = {0,0,1,0,0,1,1,0,1,0};
+	toolJob[16] = {0,0,1,0,0,1,1,0,1,0};
+	toolJob[17] = {0,0,1,0,0,1,1,0,1,0};
+	toolJob[18] = {0,0,0,0,0,0,0,0,1,0};
+	toolJob[19] = {0,0,0,0,0,0,0,0,1,0};
+
+}
+
 
 /* 
 
