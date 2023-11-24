@@ -2,6 +2,7 @@
 #include <atomic>
 #include <vector>
 #include <thread>
+#include <map>
 
 using namespace std;
 
@@ -10,15 +11,17 @@ using namespace std;
 // VARIVEIS DADOS
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-extern vector<int> operation;		 // 		
-extern vector<int> job;			     // 	
-extern vector<int> toolSet;		     // 	
-extern vector<int> processingTime;	 // 	
-extern vector<vector<int>> toolSets; // 
-extern vector<int> machine;		     // *		
-extern vector<int> priority;		 // *	
-extern int planingHorizon;  		 // * Horizonte de planejamento (Dias)
-extern int unsupervised; 			 // * Horas nao supervisionadas (Horas em cada dia)
+extern map<int, vector<int>>  mapToolSets; // Vetor com cada ToolSet
+
+extern vector<int> operation;		 // Aperation Vector		
+extern vector<int> job;			     // Job Vector	
+extern vector<int> processingTime;	 // Processing Time de cada Vector	
+extern vector<int> machine;		     // Maquina que cada job vai ser feito (Index comeca no 0)	
+extern vector<int> priority;		 // Prioridade de cada job (0 ou 1)
+extern int planingHorizon;  		 // Horizonte de planejamento (Dias)
+extern int unsupervised; 			 // Horas nao supervisionadas (Horas em cada dia)
+extern int currantHour;  		     // Hora Atual 
+extern int currantDay; 			     // Dia Atual
 
 extern int numberMachines;		     // * Nuemro de maquinas
 extern int numberTools;      	     //   Numero de Ferramentas diferentes 

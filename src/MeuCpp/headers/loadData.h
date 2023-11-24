@@ -8,8 +8,4 @@ void loadInstance(string filename);
 int laodRealInstance(string filename);
 int laodToolSet(string filename) ;
 
-void makeJobTools();
-void makeToolJob();
-
-
 #endif

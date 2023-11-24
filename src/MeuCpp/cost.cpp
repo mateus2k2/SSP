@@ -296,6 +296,60 @@ void threadRunGPCA(){
 // GPCA With Output
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-void GPCAOut(vector<int> s){
+unsigned int GPCAOut(vector<int> s){
+	int pipes_count = 0;
+	int last_full = 0;
+	vector<int> last_seen(numberTools);
+	vector<vector<int>> M;
 
+	int sumChanges = 0;
+	bool change = false;
+
+	//Completa o last_seen
+	for(unsigned int i = 0; i < numberTools; ++i){
+		if(toolJob[i][s[0]]) last_seen[i] = 0;
+		else last_seen[i] = -1;
+	}
+	M.push_back(JobTools[s[0]]);
+	
+	
+	for(unsigned int e = 1; e < numberJobs; ++e){
+		
+		M.push_back(JobTools[s[e]]);
+		change = false;
+		
+		//print M
+		// for(unsigned int t = 0; t < M.size(); ++t){
+		// 	cout<<"M["<<t<<"]:";
+		// 	for(unsigned int n = 0; n < M[t].size(); ++n){
+		// 		cout<<M[t][n]<<" ";
+		// 	}
+		// 	cout<<"\n";
+		// }
+		// cout<<"\n";
+
+		for (auto t = JobTools[s[e]].begin(); t != JobTools[s[e]].end(); ++t){
+			
+			if(last_full <= last_seen[*t]){
+				
+				++pipes_count;
+				change = true;
+				
+				// cout<<"PIPE last_see:"<< last_seen[*t] <<" Atual:"<< e <<" last_full:"<<last_full<<"\n";
+				
+				for(unsigned int i = (last_seen[*t]+1); i < e; ++i){
+					
+					M[i].push_back(*t);					
+					if(M[i].size() == capacityMagazine) last_full = i;
+				}
+			}
+			last_seen[*t] = e; 	
+		}
+		if (change) ++sumChanges;
+		
+		if(M[e].size() == capacityMagazine) last_full = e;
+
+	}
+
+	return (PROFITYPRIORITY * s.size()) - (COSTSWITCHINSTANCE * sumChanges) - (COSTSWITCH * pipes_count);
 }

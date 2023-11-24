@@ -3,7 +3,10 @@
         "atomic": "cpp",
         "algorithm": "cpp",
         "thread": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "iostream": "cpp",
+        "vector": "cpp",
+        "type_traits": "cpp"
     },
     "git.enabled": false
 }

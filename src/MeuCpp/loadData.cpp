@@ -65,6 +65,16 @@ void loadInstance(string filename){
 
 int laodRealInstance(string filename){
     ifstream file(filename);
+    int tmpToolSetIndex;
+
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    numberMachines = 1;		   
+    numberTools = 20;      	    
+    numberJobs = 10; 	   	   
+    capacityMagazine = 8; 
+
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     if (!file.is_open()) {
         cerr << "Error opening file!" << endl;
@@ -84,7 +94,9 @@ int laodRealInstance(string filename){
         job.push_back(stoi(value));
 
         getline(ss, value, ';');
-        toolSet.push_back(stoi(value));
+        tmpToolSetIndex = stoi(value);
+        JobTools.push_back(mapToolSets[tmpToolSetIndex]);
+
 
         getline(ss, value, '\n');
         processingTime.push_back(stoi(value));
@@ -92,11 +104,27 @@ int laodRealInstance(string filename){
 
     file.close();
 
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    toolJob.resize(numberTools);
+    for(int i=0; i < numberTools; ++i){
+        toolJob[i].resize(numberJobs);
+    }
+
+    for(int i=0; i < numberJobs; ++i){
+        for(int j=0; j < JobTools[i].size(); ++j){
+            toolJob[JobTools[i][j]][i] = true;
+        }
+    }
+
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+    
     return 0;
 }
 
 int laodToolSet(string filename) {
     ifstream file(filename);
+    int tmpIndex;
 
     if (!file.is_open()) {
         cerr << "Error opening file!" << endl;
@@ -110,16 +138,17 @@ int laodToolSet(string filename) {
         vector<int> lineData;
 
 		getline(ss, value, ';');
+        tmpIndex = stoi(value);
         while (getline(ss, value, ';')) {
 			if (!value.empty()){
-                lineData.push_back(stoi(value));
+                lineData.push_back(stoi(value)-1);
 			}
 			else{
 				break;
 			}
         }
 
-        toolSets.push_back(lineData);
+        mapToolSets.insert(pair<int, vector<int>>(tmpIndex, lineData));
     }
 
     file.close();
@@ -127,60 +156,7 @@ int laodToolSet(string filename) {
     return 0;
 }
 
-
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
-// LOAD DUMMY
-// ------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-void makeJobTools(){
-	JobTools.resize(numberTools);
-	for(int i=0; i < numberTools; ++i){
-		JobTools[i].resize(numberJobs);
-	}
-
-	JobTools[0] = {0,1,2,3,4}; 			  // (1,1) 
-	JobTools[1] = {0,1,2,3,4};		      // (1,2)
-	JobTools[2] = {11,12,13,14,15,16,17}; // (2,1)
-	JobTools[3] = {3,4,7,8,9,10,11,12};   // (3,1)
-	JobTools[4] = {3,4,7,8,9,10,11,12};   // (3,2)
-	JobTools[5] = {11,12,13,14,15,16,17}; // (4,1)
-	JobTools[6] = {11,12,13,14,15,16,17}; // (4,2)
-	JobTools[7] = {4,5,6};			  	  // (5,1)	
-	JobTools[8] = {14,15,16,17,18,19};    // (6,1)
-	JobTools[9] = {0,1,2,3,4}; 			  // (7,1) 
-
-}
-
-void makeToolJob(){
-	toolJob.resize(numberTools);
-	for(int i=0; i < numberJobs; ++i){
-		toolJob[i].resize(numberJobs);
-	}
-
-	toolJob[0]  = {1,1,0,0,0,0,0,0,0,1};
-	toolJob[1]  = {1,1,0,0,0,0,0,0,0,1};
-	toolJob[2]  = {1,1,0,0,0,0,0,0,0,1};
-	toolJob[3]  = {1,1,0,1,1,0,0,0,0,1};
-	toolJob[4]  = {1,1,0,1,1,0,0,1,0,1};
-	toolJob[5]  = {0,0,0,0,0,0,0,1,0,0};
-	toolJob[6]  = {0,0,0,0,0,0,0,1,0,0};
-	toolJob[7]  = {0,0,0,1,1,0,0,0,0,0};
-	toolJob[8]  = {0,0,0,1,1,0,0,0,0,0};
-	toolJob[9]  = {0,0,0,1,1,0,0,0,0,0};
-	toolJob[10] = {0,0,0,1,1,0,0,0,0,0};
-	toolJob[11] = {0,0,1,1,1,1,1,0,0,0};
-	toolJob[12] = {0,0,1,1,1,1,1,0,0,0};
-	toolJob[13] = {0,0,1,0,0,1,1,0,0,0};
-	toolJob[14] = {0,0,1,0,0,1,1,0,1,0};
-	toolJob[15] = {0,0,1,0,0,1,1,0,1,0};
-	toolJob[16] = {0,0,1,0,0,1,1,0,1,0};
-	toolJob[17] = {0,0,1,0,0,1,1,0,1,0};
-	toolJob[18] = {0,0,0,0,0,0,0,0,1,0};
-	toolJob[19] = {0,0,0,0,0,0,0,0,1,0};
-
-}
-
 
 /* 
 

@@ -17,24 +17,26 @@ using namespace std;
 // VARIVEIS DADOS
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-vector<int> operation;		    		
-vector<int> job;			    	
-vector<int> toolSet;		    	
-vector<int> processingTime;	    	
-vector<vector<int>> toolSets;   
-vector<int> machine;		   		
-vector<int> priority;		   	
-int planingHorizon;
-int unsupervised;		   
+map<int, vector<int>>  mapToolSets;
 
-int numberMachines = 1;		   
-int numberTools = 20;      	    
-int numberJobs = 10; 	   	   
-int capacityMagazine = 8;     
+vector<int> operation;		 	
+vector<int> job;			  
+vector<int> processingTime;	 
+vector<int> machine;		 
+vector<int> priority;		 
+int planingHorizon;  		 
+int unsupervised; 			 
+int currantHour;  		      
+int currantDay; 			 
+
+int numberMachines;		   
+int numberTools;      	    
+int numberJobs; 	   	   
+int capacityMagazine;     
 vector<vector<int>> JobTools;  
 vector<vector<bool>> toolJob;  
 
-unsigned int sum = 0;   	   
+unsigned int sum = 0;   	
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // VARIVEIS GLOBAIS
@@ -59,25 +61,7 @@ int pipes_countD = 0;
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-int main(){
-
-	// vector<int> s(numberJobs);
-	// s = {0,1,2,3,4,5,6,7,8,9};
-    // makeJobTools();
-	// makeToolJob();
-
-	// int KTNSSum = KTNS(s);
-    // cout << "Solucao KTNS: "    << KTNSSum 	  << endl;
-
-	// int GPCASum = GPCA(s);
-	// cout << "Solucao GPCA: "    << GPCASum 	  << endl;
-	
-	// tKT = thread(threadRunGPCA);
-	// int GPCAParSum = GPCAPar(s);
-	// stop = true;
-	// tKT.join();
-	// cout << "Solucao GPSAPar: " << GPCAParSum << endl;
-  
+int main(){ 
 
 	// ------------------------------------------------------------------------------------------------------------------------
 
@@ -106,59 +90,75 @@ int main(){
 
 	// ------------------------------------------------------------------------------------------------------------------------
 
-	// laodRealInstance("/home/mateus/WSL/IC/data/Data Jobs 250.csv");
-
-	// // Print the vectors
-    // cout << "Operation: ";
-    // for (const auto &op : operation) {
-    //     cout << op << " ";
-    // }
-    // cout << endl;
-
-    // cout << "Job: ";
-    // for (const auto &j : job) {
-    //     cout << j << " ";
-    // }
-    // cout << endl;
-
-    // cout << "ToolSet: ";
-    // for (const auto &ts : toolSet) {
-    //     cout << ts << " ";
-    // }
-    // cout << endl;
-
-    // cout << "Processing Time: ";
-    // for (const auto &pt : processingTime) {
-    //     cout << pt << " ";
-    // }
-    // cout << endl;
+	laodToolSet("/home/mateus/WSL/IC/data/Exemple Tool Sets.csv");
+	cout << "Map Too Sets: " << endl;
+	for (const auto& pair : mapToolSets) {
+        cout << "Key: " << pair.first << ", Value: ";
+		for (const auto &t : pair.second) {
+			cout << t << " ";
+		}
+		cout << endl;
+    }
+    cout << endl << endl;
 
 	// ------------------------------------------------------------------------------------------------------------------------
 
-	// laodToolSet("/home/mateus/WSL/IC/data/Data Tool Set Compositions.csv");
+	laodRealInstance("/home/mateus/WSL/IC/data/Exemple Jobs.csv");
+
+    cout << "Operation: " << endl;
+    for (const auto &op : operation) {
+        cout << op << " ";
+    }
+    cout << endl << endl;
+
+    cout << "Job: " << endl;
+    for (const auto &j : job) {
+        cout << j << " ";
+    }
+    cout << endl << endl;
+
+    cout << "JobTools: " << endl;
+    for (const auto &ts : JobTools) {
+        for (const auto &t : ts) {
+			cout << t << " ";
+		}
+		cout << endl;
+    }
+    cout << endl << endl;
+
+	cout << "toolJob: " << endl;
+    for (const auto &ts : toolJob) {
+        for (const auto &t : ts) {
+			cout << t << " ";
+		}
+		cout << endl;
+    }
+    cout << endl << endl;
+
+    cout << "Processing Time: " << endl;
+    for (const auto &pt : processingTime) {
+        cout << pt << " ";
+    }
+    cout << endl << endl;
+
+	// ------------------------------------------------------------------------------------------------------------------------
+
+	vector<int> s(numberJobs);
+	s = {0,1,2,3,4,5,6,7,8,9};
+	// makeJobTools();
+	// makeToolJob();
+
+	int KTNSSum = KTNS(s);
+    cout << "Solucao KTNS: "    << KTNSSum 	  << endl;
+
+	int GPCASum = GPCA(s);
+	cout << "Solucao GPCA: "    << GPCASum 	  << endl;
 	
-	// print toolSets
-	// for (const auto &line : toolSets) {
-	//     for (const auto &value : line) {
-	//         cout << value << " ";
-	//     }
-	//     cout << endl;
-	// }
-
-    // auto max_itr = max_element(toolSets.begin(), toolSets.end(),
-    //     [](const vector<int>& a, const vector<int>& b) {
-    //         return a.size() < b.size();
-    //     });
-
-    // cout << (*max_itr).size() << endl;
-
-    // for (int element : *max_itr) {
-    //     cout << element << " ";
-    // }
-
-	// return 0;
-
-	// ------------------------------------------------------------------------------------------------------------------------
+	tKT = thread(threadRunGPCA);
+	int GPCAParSum = GPCAPar(s);
+	stop = true;
+	tKT.join();
+	cout << "Solucao GPSAPar: " << GPCAParSum << endl;
 
 	return 0;
 }
