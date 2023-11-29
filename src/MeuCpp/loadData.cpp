@@ -114,11 +114,11 @@ int laodRealInstance(string filename){
     }
     numberTools = largestElement;
 
-    planingHorizon = 7;   //ToDo 		 
-    unsupervised   = 720; //ToDo 			 
-    numberMachines = 0;   //ToDo
-    priority = {};        //ToDo
-    machine  = {};        //ToDo
+    planingHorizon = 7;   //ToDo Nunca Muda? 		  
+    unsupervised   = 720; //ToDo Nunca Muda? 			 
+    numberMachines = 0;   //ToDo Da onde Carregar?
+    priority = {};        //ToDo Da onde Carregar?
+    machine  = {};        //ToDo Parte da Solução
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 

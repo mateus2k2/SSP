@@ -53,6 +53,8 @@ void loadDataTypes(){
         jobTmp.priority = priority[i];
         jobTmp.indexMachine = -1;
 
+        jobTmp.JobTools = JobTools[i];
+
         jobTmp.superJob = false;
         jobTmp.originalJobs = {};
 
@@ -75,12 +77,17 @@ void loadDataTypes(){
     // Print the result
 
     for (int i = 0; i < jobsType.size(); i++){
-        cout << "Job: " << jobsType[i].indexJob << "\nOperation: " << jobsType[i].indexOperation << "\nToolSet: " << jobsType[i].indexToolSet << "\nProcessingTime: " << jobsType[i].processingTime << "\nPriority: " << jobsType[i].priority << "\nMachine: " << jobsType[i].indexMachine << endl;
+        cout << "Job: " << jobsType[i].indexJob << "\nOperation: " << jobsType[i].indexOperation << "\nToolSet: " << jobsType[i].indexToolSet << "\nProcessingTime: " << jobsType[i].processingTime << "\nPriority: " << jobsType[i].priority << "\nMachine: " << jobsType[i].indexMachine << "\nJobTools: " <<  endl;
+        
+        for(int j = 0; j < jobsType[i].JobTools.size(); j++){
+            cout << jobsType[i].JobTools[j] << " ";
+        }
+
         cout << "\n\n";
     }
 
     for(int i = 0; i < ToolSetsType.size(); i++){
-        cout << "ToolSet " << ToolSetsType[i].indexToolSet << "\nTools ";
+        cout << "ToolSet: " << ToolSetsType[i].indexToolSet << "\nTools: ";
 
         for(int j = 0; j < ToolSetsType[i].tools.size(); j++){
             cout << ToolSetsType[i].tools[j] << " ";

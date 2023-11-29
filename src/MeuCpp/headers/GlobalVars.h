@@ -29,24 +29,7 @@ extern vector<int> JobToolsIndex;    // Vetor de jobs com cada ferramenta que el
 extern vector<vector<int>> JobTools; // Vetor de jobs com cada ferramenta que ele usa
 extern vector<vector<bool>> toolJob; // Vetor de ferramentas com cada job que ela pode fazer
 
-
-// ------------------------------------------------------------------------------------------------------------------------------------------------------
-// VARIVEIS GLOBAIS
-// ------------------------------------------------------------------------------------------------------------------------------------------------------
-
-extern unsigned int sum;   	   // auxiliary of GPCA
-extern int meio; 			   // auxiliary of KTNS PAR
-extern vector<int> neigh; 	   // auxiliary of KTNS PAR
-extern atomic_bool fase; 	   // auxiliary of KTNS PAR
-extern atomic_bool endD;	   // auxiliary of KTNS PAR
-extern atomic_bool stop;	   // auxiliary of KTNS PAR
-extern vector<bool> magazineD; // auxiliary of KTNS PAR
-extern int evalSolD;		   // auxiliary of KTNS PAR
-extern thread tKT;			   // auxiliary of GPCA PAR
-extern int last_fullD;		   // auxiliary of GPCA PAR
-extern vector<int> last_seenD; // auxiliary of GPCA PAR
-extern vector<vector<int>> MD; // auxiliary of GPCA PAR
-extern int pipes_countD;	   // auxiliary of GPCA PAR
+extern unsigned int sum;   	         // auxiliary
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // DEFINIÇÕES DO PLOBLEMA
@@ -70,6 +53,8 @@ typedef struct{
     int processingTime;
     bool priority;
     int indexMachine;
+    
+    vector<int> JobTools;  
 
     bool superJob;
     vector<int> originalJobs;

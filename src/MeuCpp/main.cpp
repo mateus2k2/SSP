@@ -36,25 +36,7 @@ vector<int> JobToolsIndex;
 vector<vector<int>> JobTools;  
 vector<vector<bool>> toolJob;  
 
-
-// ------------------------------------------------------------------------------------------------------------------------------------------------------
-// VARIVEIS GLOBAIS
-// ------------------------------------------------------------------------------------------------------------------------------------------------------
-
-unsigned int sum = 0;   	
-int meio = 0 ; 				   
-vector<int> neigh; 			   
-atomic_bool fase{true}; 	   
-atomic_bool endD{false};	   
-atomic_bool stop{false};	   
-vector<bool> magazineD;		   
-int evalSolD;				   
-thread tKT;					   
-int last_fullD;				   
-vector<int> last_seenD;		   
-vector<vector<int>> MD;		   
-int pipes_countD = 0;		   
-
+unsigned int sum;
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // MAIN
