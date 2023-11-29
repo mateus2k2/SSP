@@ -1,15 +1,18 @@
 # Meus Codigos
 
 mainCpp:
-	clear && g++ src/MeuCpp/*.cpp -std=c++2a -Wshadow -o src/out/mainCpp -Wno-unused-result -lpthread -O3 && echo "\n" && clear && src/out/mainCpp
+	clear && g++ src/MeuCpp/*.cpp -std=c++2a -Wshadow -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native && echo "\n" && clear && src/out/mainCpp
 
 mainPy:
 	clear && echo "\n" && python src/MeuPy/main.py 
 
 optmizeTollSetsPy:
-	clear && echo "\n" && python src/MeuPython/optmizeTollSets.py 
+	clear && echo "\n" && python src/MeuPython/optmizeToolSets.py 
 
-# Codigos KTNS
+toolSetsAnalysis:
+	clear && echo "\n" && python src/MeuPython/toolSetsAnalysis.py 
+
+# Codigos Andre
 
 KTNS:
 	clear && g++ ./src/KTNS/main.cpp ./src/KTNS/src/*.cpp -std=c++2a -Wshadow -o ./src/out/KTNS -Wno-unused-result -lpthread -O3 && echo "\n"

@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <algorithm> 
+#include <unordered_set>
 
 #include "headers/loadData.h"
 #include "headers/GlobalVars.h"
@@ -67,15 +68,6 @@ int laodRealInstance(string filename){
     ifstream file(filename);
     int tmpToolSetIndex;
 
-    // ------------------------------------------------------------------------------------------------------------------------------------------------------
-
-    numberMachines = 1;		   
-    numberTools = 20;      	    
-    numberJobs = 10; 	   	   
-    capacityMagazine = 8; 
-
-    // ------------------------------------------------------------------------------------------------------------------------------------------------------
-
     if (!file.is_open()) {
         cerr << "Error opening file!" << endl;
         return 1;
@@ -87,7 +79,7 @@ int laodRealInstance(string filename){
         stringstream ss(line);
         string value;
 
-        getline(ss, value, ';');
+        getline(ss, value, ';');    
         operation.push_back(stoi(value));
 
         getline(ss, value, ';');
@@ -96,13 +88,37 @@ int laodRealInstance(string filename){
         getline(ss, value, ';');
         tmpToolSetIndex = stoi(value);
         JobTools.push_back(mapToolSets[tmpToolSetIndex]);
-
+        JobToolsIndex.push_back(tmpToolSetIndex);
 
         getline(ss, value, '\n');
         processingTime.push_back(stoi(value));
     }
 
     file.close();
+
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    numberJobs = job.size();    
+
+    auto maxIt = max_element(JobTools.begin(), JobTools.end(),
+        [](const vector<int>& a, const vector<int>& b) {
+            return a.size() < b.size();
+        });
+    capacityMagazine = maxIt->size();
+
+    int largestElement = numeric_limits<int>::min();
+    for (const auto& innerVector : JobTools) {
+        for (int element : innerVector) {
+            largestElement = max(largestElement, element);
+        }
+    }
+    numberTools = largestElement;
+
+    planingHorizon = 7;   //ToDo 		 
+    unsupervised   = 720; //ToDo 			 
+    numberMachines = 0;   //ToDo
+    priority = {};        //ToDo
+    machine  = {};        //ToDo
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -113,7 +129,7 @@ int laodRealInstance(string filename){
 
     for(int i=0; i < numberJobs; ++i){
         for(int j=0; j < JobTools[i].size(); ++j){
-            toolJob[JobTools[i][j]][i] = true;
+            toolJob[JobTools[i][j]-1][i] = true;
         }
     }
 
@@ -141,7 +157,7 @@ int laodToolSet(string filename) {
         tmpIndex = stoi(value);
         while (getline(ss, value, ';')) {
 			if (!value.empty()){
-                lineData.push_back(stoi(value)-1);
+                lineData.push_back(stoi(value));
 			}
 			else{
 				break;
@@ -156,48 +172,72 @@ int laodToolSet(string filename) {
     return 0;
 }
 
-// ------------------------------------------------------------------------------------------------------------------------------------------------------
+void printDataReport(){
+    cout << "\n------------------------------------------------------------------------------------------" << endl;
+    cout << "DATA REPORT" << endl;
+    cout << "------------------------------------------------------------------------------------------\n" << endl;
 
-/* 
+    cout << "Number of Machines: " << numberMachines << endl;
+    cout << "Number of Tools: " << numberTools << endl;
+    cout << "Number of Jobs: " << numberJobs << endl;
+    cout << "Capacity of Magazine: " << capacityMagazine << endl;
+    cout << "Planing Horizon: " << planingHorizon << endl;
+    cout << "Unsupervised: " << unsupervised << endl;
+    
+    cout << endl << endl;
+    
+    for (const auto& pair : mapToolSets) {
+        cout << "Key: " << pair.first << ", Values: ";
+        for (const auto& value : pair.second) {
+            cout << value << " ";
+        }
+        cout << endl;
+    }
 
-/home/mateus/WSL/IC/dataRaw/KTNS/Instances/Catanzaro/Tabela1/datA1
-10
-10
-4
-0 0 1 1 0 1 0 0 1 1 
-0 1 0 0 0 0 0 0 0 1 
-0 1 0 0 0 1 0 0 0 0 
-0 0 0 0 0 0 0 0 1 1 
-0 0 0 1 1 0 1 1 1 0 
-1 0 1 0 0 1 1 0 0 0 
-1 0 0 0 0 0 0 1 0 0 
-0 0 0 0 1 1 1 1 1 0 
-0 0 1 1 0 0 1 0 0 0 
-0 0 0 0 1 0 0 0 0 1 
+    cout << endl << endl;
 
+    cout << "Priority: " << endl;
+    for (const auto &p : priority) {
+        cout << p << " ";
+    }
+    
+    cout << endl;
+    
+    cout << "Operation: " << endl;
+    for (const auto &op : operation) {
+        cout << op << " ";
+    }
+    cout << endl;
 
-/home/mateus/WSL/IC/dataRaw/KTNS/Instances/Catanzaro/Tabela1/datB9
-15
-20
-6
-0 0 0 1 0 0 0 1 0 1 0 0 1 0 0 
-0 0 1 1 0 0 0 0 0 0 1 0 1 0 0 
-0 0 0 0 0 1 0 1 0 0 0 0 0 0 0 
-0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 
-0 0 0 0 0 1 0 0 1 0 1 0 0 0 0 
-1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 
-0 0 0 1 0 0 0 0 1 1 0 0 0 0 1 
-0 0 0 0 1 1 0 1 0 0 1 0 0 0 1 
-0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 
-1 0 0 0 0 0 0 0 0 0 0 0 1 0 1 
-0 0 0 0 1 0 0 0 0 0 0 0 1 1 0 
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-0 0 0 1 0 0 0 0 0 0 0 1 0 0 0 
-0 0 0 1 0 0 1 0 0 0 0 0 0 0 0 
-0 0 0 0 1 0 0 1 0 1 1 0 1 1 0 
-0 1 0 0 1 0 1 0 0 0 0 1 0 1 0 
-0 0 0 0 0 0 0 1 0 0 0 0 0 1 0 
-0 0 0 0 0 0 0 1 0 0 0 0 0 1 0 
-1 1 0 0 0 1 0 0 0 0 1 0 0 0 0 
-0 0 0 0 1 0 0 0 0 0 0 0 0 0 1
-*/
+    cout << "Job: " << endl;
+    for (const auto &j : job) {
+        cout << j << " ";
+    }
+    cout << endl;
+
+    cout << "Processing Time: " << endl;
+    for (const auto &pt : processingTime) {
+        cout << pt << " ";
+    }
+
+    cout << endl << endl << endl;
+
+    cout << "JobTools: " << endl;
+    for (const auto &ts : JobTools) {
+        for (const auto &t : ts) {
+            cout << t << " ";
+        }
+        cout << endl;
+    }
+    
+    cout << endl << endl;
+
+    cout << "toolJob: " << endl;
+    for (const auto &ts : toolJob) {
+        for (const auto &t : ts) {
+            cout << t << " ";
+        }
+        cout << endl;
+    }
+}
+

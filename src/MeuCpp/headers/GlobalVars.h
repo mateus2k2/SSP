@@ -20,22 +20,21 @@ extern vector<int> machine;		     // Maquina que cada job vai ser feito (Index c
 extern vector<int> priority;		 // Prioridade de cada job (0 ou 1)
 extern int planingHorizon;  		 // Horizonte de planejamento (Dias)
 extern int unsupervised; 			 // Horas nao supervisionadas (Horas em cada dia)
-extern int currantHour;  		     // Hora Atual 
-extern int currantDay; 			     // Dia Atual
 
-extern int numberMachines;		     // * Nuemro de maquinas
-extern int numberTools;      	     //   Numero de Ferramentas diferentes 
-extern int numberJobs; 	   	         //   Numero de Jobs
-extern int capacityMagazine;         //   Capacidade do magazine das maquina
-extern vector<vector<int>> JobTools; //   Vetor de jobs com cada ferramenta que ele usa
-extern vector<vector<bool>> toolJob; //   Vetor de ferramentas com cada job que ela pode fazer
+extern int numberMachines;		     // Nuemro de maquinas
+extern int numberTools;      	     // Numero de Ferramentas diferentes 
+extern int numberJobs; 	   	         // Numero de Jobs
+extern int capacityMagazine;         // Capacidade do magazine das maquina
+extern vector<int> JobToolsIndex;    // Vetor de jobs com cada ferramenta que ele usa
+extern vector<vector<int>> JobTools; // Vetor de jobs com cada ferramenta que ele usa
+extern vector<vector<bool>> toolJob; // Vetor de ferramentas com cada job que ela pode fazer
 
-extern unsigned int sum;   	         //   auxiliary of GPCA
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // VARIVEIS GLOBAIS
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
+extern unsigned int sum;   	   // auxiliary of GPCA
 extern int meio; 			   // auxiliary of KTNS PAR
 extern vector<int> neigh; 	   // auxiliary of KTNS PAR
 extern atomic_bool fase; 	   // auxiliary of KTNS PAR
@@ -57,5 +56,33 @@ extern int pipes_countD;	   // auxiliary of GPCA PAR
 #define COSTSWITCHINSTANCE 10
 #define COSTPRIORITY 30
 #define PROFITYPRIORITY 30
+
+// #define DEBUG
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
+// TIPOS DA DADOS
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+typedef struct{
+    int indexJob;
+    int indexOperation;
+    int indexToolSet;
+    int processingTime;
+    bool priority;
+    int indexMachine;
+
+    bool superJob;
+    vector<int> originalJobs;
+} Job;
+
+
+typedef struct{
+    int indexToolSet;
+    vector<int> tools;
+
+    bool superToolSet;
+    vector<int> originalToolSets;
+} ToolSet;
+
 
 #endif

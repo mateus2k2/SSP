@@ -1,24 +1,110 @@
-clear && g++ src/MeuCpp/*.cpp -std=c++2a -Wshadow -o src/out/mainCpp -Wno-unused-result -lpthread -O3 && echo "\n" && clear && src/out/mainCpp
-[H[2J[3J
+Job: 1
+Operation: 1
+ToolSet: 1
+ProcessingTime: 180
+Priority: 1
+Machine: -1
 
-[H[2J[3J1 2 3 4 5 
-12 13 14 15 16 17 18 
-4 5 8 9 10 11 12 13 
-5 6 7 
-15 16 17 18 19 20 
-8
-4 5 8 9 10 11 12 13 Operation: 1 2 1 1 2 1 2 1 1 1 
-Job: 1 1 2 3 3 4 4 5 6 7 
-JobTools: 12 13 14 15 16 17 18 
-12 13 14 15 16 17 18 
-4 5 8 9 10 11 12 13 
-5 6 7 
-5 6 7 
-4 5 8 9 10 11 12 13 
-4 5 8 9 10 11 12 13 
-15 16 17 18 19 20 
 
-12 13 14 15 16 17 18 
+Job: 1
+Operation: 2
+ToolSet: 1
+ProcessingTime: 300
+Priority: 1
+Machine: -1
 
-toolJob: 
-Processing Time: 3 5 7 6 8 4 9 6 10 5 
+
+Job: 2
+Operation: 1
+ToolSet: 2
+ProcessingTime: 350
+Priority: 0
+Machine: -1
+
+
+Job: 3
+Operation: 1
+ToolSet: 3
+ProcessingTime: 300
+Priority: 0
+Machine: -1
+
+
+Job: 3
+Operation: 2
+ToolSet: 3
+ProcessingTime: 400
+Priority: 0
+Machine: -1
+
+
+Job: 4
+Operation: 1
+ToolSet: 2
+ProcessingTime: 240
+Priority: 1
+Machine: -1
+
+
+Job: 4
+Operation: 2
+ToolSet: 2
+ProcessingTime: 540
+Priority: 1
+Machine: -1
+
+
+Job: 5
+Operation: 1
+ToolSet: 4
+ProcessingTime: 360
+Priority: 0
+Machine: -1
+
+
+Job: 6
+Operation: 1
+ToolSet: 5
+ProcessingTime: 600
+Priority: 0
+Machine: -1
+
+
+Job: 7
+Operation: 1
+ToolSet: 1
+ProcessingTime: 300
+Priority: 1
+Machine: -1
+
+
+ToolSet 1
+Tools 1 2 3 4 5 
+
+ToolSet 1
+Tools 1 2 3 4 5 
+
+ToolSet 2
+Tools 12 13 14 15 16 17 18 
+
+ToolSet 3
+Tools 4 5 8 9 10 11 12 13 
+
+ToolSet 3
+Tools 4 5 8 9 10 11 12 13 
+
+ToolSet 2
+Tools 12 13 14 15 16 17 18 
+
+ToolSet 2
+Tools 12 13 14 15 16 17 18 
+
+ToolSet 4
+Tools 5 6 7 
+
+ToolSet 5
+Tools 15 16 17 18 19 20 
+
+ToolSet 1
+Tools 1 2 3 4 5 
+
