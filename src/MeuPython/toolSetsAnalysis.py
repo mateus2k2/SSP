@@ -57,7 +57,7 @@ def countMaiores80():
             print(f'Operation {toolSetNeaded3[0][i]} Job {toolSetNeaded3[1][i]} ToolSet {toolSetNeaded3[2][i]} Processing Time {toolSetNeaded3[3][i]} ')
 
 def subSets():
-    ToolSetAll = pd.read_csv("/home/mateus/WSL/IC/data/ToolSetAll.csv", delimiter=';', header=None, dtype=str)
+    ToolSetAll = pd.read_csv("/home/mateus/WSL/IC/data/1000ToolSet.csv", delimiter=';', header=None, dtype=str)
 
     toolSets = ToolSetAll.values.tolist()
     toolSets = [[int(x) for x in row if x == x] for row in toolSets]
@@ -74,21 +74,21 @@ def subSets():
         for j in range(i, len(sets)):
             if (sets[j].issubset(sets[i])) and (i != j ) and (sets[i] != sets[j]):
                 countAtual += 1
-                print(f'{index[j]} é subset de {index[i]}')
+                print(f'{index[j]} é subset do {index[i]}')
         subsets_count[index[i]] = countAtual
         print(f'\n----------------------------------------------------------------------------\n')
     
-    index.sort()
-    listaBoa = [subsets_count[x] for x in index]
+    # index.sort()
+    # listaBoa = [subsets_count[x] for x in index]
     
-    plt.figure(figsize=(10, 5))
-    plt.subplot(2, 1, 1)
-    plt.plot(index, listaBoa, marker='o')
-    plt.title('Number of Subsets for Each ToolSet')
-    plt.xlabel('ToolSet Index (Sequence Number)')
-    plt.ylabel('Number of Subsets')
+    # plt.figure(figsize=(10, 5))
+    # plt.subplot(2, 1, 1)
+    # plt.plot(index, listaBoa, marker='o')
+    # plt.title('Number of Subsets for Each ToolSet')
+    # plt.xlabel('ToolSet Index (Sequence Number)')
+    # plt.ylabel('Number of Subsets')
     
-    plt.tight_layout()
-    plt.show()
+    # plt.tight_layout()
+    # plt.show()
 
-# subSets()
+subSets()

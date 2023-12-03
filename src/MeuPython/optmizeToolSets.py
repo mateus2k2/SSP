@@ -103,8 +103,8 @@ pruneNotNeadedAll('/home/mateus/WSL/IC/data/ToolSetOG.csv', '/home/mateus/WSL/IC
 stringToInt('/home/mateus/WSL/IC/data/ToolSetString.csv', '/home/mateus/WSL/IC/data/ToolSetPruned.csv', '/home/mateus/WSL/IC/data/Map/ToolSetMappingPruned.json')
 os.remove("/home/mateus/WSL/IC/data/ToolSetString.csv")
 
-stringToIntAll('/home/mateus/WSL/IC/data/ToolSetOG.csv', '/home/mateus/WSL/IC/data/ToolSetInt.csv', '/home/mateus/WSL/IC/data/Map/ToolSetMappingAll.json')
-pruneNotNeadedAll('/home/mateus/WSL/IC/data/ToolSetInt.csv', '/home/mateus/WSL/IC/data/ToolSetAll.csv', int)
-os.remove("/home/mateus/WSL/IC/data/ToolSetInt.csv")
+# stringToIntAll('/home/mateus/WSL/IC/data/ToolSetOG.csv', '/home/mateus/WSL/IC/data/ToolSetInt.csv', '/home/mateus/WSL/IC/data/Map/ToolSetMappingAll.json')
+# pruneNotNeadedAll('/home/mateus/WSL/IC/data/ToolSetInt.csv', '/home/mateus/WSL/IC/data/ToolSetAll.csv', int)
+# os.remove("/home/mateus/WSL/IC/data/ToolSetInt.csv")
 
 # countMaiores80()

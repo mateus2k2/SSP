@@ -25,12 +25,8 @@ unsigned int KTNSReport(vector<int> s){
 
 	int sumChanges = 0; // Conta quantas trocas de instancia foram feitas, quando pelo menos uma troca de ferramenta foi trocada do magazine
 	int currantSwitch = 0; // Conta quantas trocas de ferramenta foram feitas, no job atual
-	int currantProcessingTime = 0; 
-
-	// int currantMinute = 0; // Conta quantas horas ja foram usadas no dia atual  		       
-	// int currantDay = 0; // Conta quantos dias ja foram usados no horizonte de planejamento
-	int inicioJob = 0; // Conta quantas horas ja foram usadas no dia atual  		       
-	int fimJob = 0; // Conta quantos dias ja foram usados no horizonte de planejamento 
+	int currantMinute = 0; // Conta quantas horas ja foram usadas no dia atual  		       
+	int currantDay = 0; // Conta quantos dias ja foram usados no horizonte de planejamento 
 
 	vector<int> fineshedPriority; // Jobs prioritarios que foram feitos
 	vector<int> unfinesedPriority; // Jobs prioritarios que foram feitos
@@ -47,7 +43,7 @@ unsigned int KTNSReport(vector<int> s){
 		int cmL = 0;
 
 		while((cmL < capacityMagazine) && (left < numberJobs)){
-			for (auto it=jobsType[s[left]].JobTools.begin(); ((it!=jobsType[s[left]].JobTools.end()) && (cmL < capacityMagazine)); ++it){
+			for (auto it=JobTools[s[left]].begin(); ((it!=JobTools[s[left]].end()) && (cmL < capacityMagazine)); ++it){
 				if((magazineL[*it]) && (!magazineCL[*it])){
 					magazineCL[*it] = true;
 					++cmL;
@@ -73,56 +69,50 @@ unsigned int KTNSReport(vector<int> s){
 
 		// ---------------------------------------------------------------------------
 
-		currantProcessingTime = jobsType[s[jL]].processingTime;
-		fimJob = inicioJob + currantProcessingTime;
-
 		// verifica se a hora é sem supervisao e se houve troca de ferramenta
-		if ((inicioJob % 1440 >= unsupervised) && (currantSwitch > 0)){
-			
+		if ((currantMinute >= unsupervised) && (currantSwitch > 0)){
 			//Verificar de consigo acabar essa tarefa antes de exceder o horizonte de planejamento
-			if(fimJob + 1440 > planingHorizon * 1440){
+			if(currantDay + 1 > planingHorizon){
 				// Contar quantar tarefas prioritarias faltaram
 				for(unsigned int v = jL; v < numberJobs; ++v){
-					if(jobsType[s[v]].priority) unfinesedPriority.push_back(s[v]);
+					if(priority[s[v]]) unfinesedPriority.push_back(s[v]);
 				}
 				// Pode sair do loop 
 				break;
 			}
 			else{
-				inicioJob += 1440 - (inicioJob % 1440);
-				fimJob = inicioJob + currantProcessingTime;
-
+				currantDay++;
+				currantMinute = 0;
 			}
-
 		}
 
 		//Tarefa vai vazar para o proximo dia
-		if ((inicioJob % 1440) + currantProcessingTime >= 1440 ){
-			
+		if (currantMinute + processingTime[s[jL]] > 1440){
 			//Verificar de consigo acabar essa tarefa antes de exceder o horizonte de planejamento
-			if(fimJob + 1440 > planingHorizon * 1440){
+			if(currantDay + 1 > planingHorizon){
 				// Contar quantar tarefas prioritarias faltaram
 				for(unsigned int v = jL; v < numberJobs; ++v){
-					if(jobsType[s[v]].priority) unfinesedPriority.push_back(s[v]);
+					if(priority[s[v]]) unfinesedPriority.push_back(s[v]);
 				}
 				// Pode sair do loop 
 				break;
 			}
 			else{
-				inicioJob = fimJob;
-				fimJob = 0;
+				currantDay++;
+				// Acumular as horas que vazaram para o dia seguinte
+				currantMinute += (currantMinute + processingTime[s[jL]])-1440;
 			}
 		}
 		//Tarefa pode continuar no mesmo dia
 		else{
-			inicioJob = fimJob;
+			currantMinute += processingTime[s[jL]];
 		}
 
 		// ---------------------------------------------------------------------------
 
-		cout << "Job Processado: " << s[jL] << " | " << "Processing Time: "  << currantProcessingTime  << " | " << "Priority: " << jobsType[s[jL]].priority << " | " << "Count Mudanças Magazine: " << currantSwitch << endl;
-		printf("Minuto do Dia: %i/1440 | Hora: %d/24\n", inicioJob%1440, (inicioJob%1440)/60);
-		printf("Dia Atual: %i/%i\n", inicioJob/1440, planingHorizon);
+		cout << "Job Processado: " << s[jL] << " | " << "Processing Time: "  << processingTime[s[jL]]  << " | " << "Priority: " << priority[s[jL]] << " | " << "Count Mudanças Magazine: " << currantSwitch << endl;
+		printf("Minuto do Dia: %i/1440 | Hora: %d/24\n", currantMinute, currantMinute/60);
+		printf("Dia Atual: %i/%i\n", currantDay, planingHorizon);
 		
 		cout << "\n";
 		
@@ -139,7 +129,7 @@ unsigned int KTNSReport(vector<int> s){
 
 		evalSol += currantSwitch;
 		if(currantSwitch > 0) ++sumChanges;
-		if (jobsType[s[jL]].priority) fineshedPriority.push_back(s[jL]);
+		if (priority[s[jL]]) fineshedPriority.push_back(s[jL]);
 
 		// ---------------------------------------------------------------------------
 
@@ -202,7 +192,7 @@ unsigned int KTNSReportIfDef(vector<int> s){
 		int cmL = 0;
 
 		while((cmL < capacityMagazine) && (left < numberJobs)){
-			for (auto it=jobsType[s[left]].JobTools.begin(); ((it!=jobsType[s[left]].JobTools.end()) && (cmL < capacityMagazine)); ++it){
+			for (auto it=JobTools[s[left]].begin(); ((it!=JobTools[s[left]].end()) && (cmL < capacityMagazine)); ++it){
 				if((magazineL[*it]) && (!magazineCL[*it])){
 					magazineCL[*it] = true;
 					++cmL;
@@ -235,9 +225,9 @@ unsigned int KTNSReportIfDef(vector<int> s){
 				// Contar quantar tarefas prioritarias faltaram
 				for(unsigned int v = jL; v < numberJobs; ++v){
 					#ifdef DEBUG
-					if(jobsType[s[v]].priority) unfinesedPriority.push_back(s[v]);
+					if(priority[s[v]]) unfinesedPriority.push_back(s[v]);
 					#else
-					if(jobsType[s[v]].priority) ++unfinesedPriority;
+					if(priority[s[v]]) ++unfinesedPriority;
 					#endif
 				}
 				// Pode sair do loop 
@@ -250,15 +240,15 @@ unsigned int KTNSReportIfDef(vector<int> s){
 		}
 
 		//Tarefa vai vazar para o proximo dia
-		if (currantMinute + jobsType[s[jL]].processingTime > 1440){
+		if (currantMinute + processingTime[s[jL]] > 1440){
 			//Verificar de consigo acabar essa tarefa antes de exceder o horizonte de planejamento
 			if(currantDay + 1 > planingHorizon){
 				// Contar quantar tarefas prioritarias faltaram
 				for(unsigned int v = jL; v < numberJobs; ++v){
 					#ifdef DEBUG
-					if(jobsType[s[v]].priority) unfinesedPriority.push_back(s[v]);
+					if(priority[s[v]]) unfinesedPriority.push_back(s[v]);
 					#else
-					if(jobsType[s[v]].priority) ++unfinesedPriority;
+					if(priority[s[v]]) ++unfinesedPriority;
 					#endif
 				}
 				// Pode sair do loop 
@@ -267,18 +257,18 @@ unsigned int KTNSReportIfDef(vector<int> s){
 			else{
 				currantDay++;
 				// Acumular as horas que vazaram para o dia seguinte
-				currantMinute += (currantMinute + jobsType[s[jL]].processingTime)-1440;
+				currantMinute += (currantMinute + processingTime[s[jL]])-1440;
 			}
 		}
 		//Tarefa pode continuar no mesmo dia
 		else{
-			currantMinute += jobsType[s[jL]].processingTime;
+			currantMinute += processingTime[s[jL]];
 		}
 
 		// ---------------------------------------------------------------------------
 
 		#ifdef DEBUG
-		cout << "Job Processado: " << s[jL] << " | " << "Processing Time: "  << jobsType[s[jL]].processingTime  << " | " << "Priority: " << jobsType[s[jL]].priority << " | " << "Count Mudanças Magazine: " << currantSwitch << endl;
+		cout << "Job Processado: " << s[jL] << " | " << "Processing Time: "  << processingTime[s[jL]]  << " | " << "Priority: " << priority[s[jL]] << " | " << "Count Mudanças Magazine: " << currantSwitch << endl;
 		printf("Minuto do Dia: %i/1440 | Hora: %d/24\n", currantMinute, currantMinute/60);
 		printf("Dia Atual: %i/%i\n", currantDay, planingHorizon);
 		
@@ -299,9 +289,9 @@ unsigned int KTNSReportIfDef(vector<int> s){
 		evalSol += currantSwitch;
 		if(currantSwitch > 0) ++sumChanges;
 		#ifdef DEBUG
-		if (jobsType[s[jL]].priority) fineshedPriority.push_back(s[jL]);
+		if (priority[s[jL]]) fineshedPriority.push_back(s[jL]);
 		#else
-		if (jobsType[s[jL]].priority) ++fineshedPriority;
+		if (priority[s[jL]]) ++fineshedPriority;
 		#endif
 
 		// ---------------------------------------------------------------------------
@@ -365,7 +355,7 @@ unsigned int KTNS(vector<int> s){
 		int cmL = 0;
 
 		while((cmL < capacityMagazine) && (left < numberJobs)){
-			for (auto it=jobsType[s[left]].JobTools.begin(); ((it!=jobsType[s[left]].JobTools.end()) && (cmL < capacityMagazine)); ++it){
+			for (auto it=JobTools[s[left]].begin(); ((it!=JobTools[s[left]].end()) && (cmL < capacityMagazine)); ++it){
 				if((magazineL[*it]) && (!magazineCL[*it])){
 					magazineCL[*it] = true;
 					++cmL;
@@ -397,7 +387,7 @@ unsigned int KTNS(vector<int> s){
 			if(currantDay + 1 > planingHorizon){
 				// Contar quantar tarefas prioritarias faltaram
 				for(unsigned int v = jL; v < numberJobs; ++v){
-					unfinesedPriority += jobsType[s[v]].priority;
+					unfinesedPriority += priority[s[v]];
 				}
 				// Pode sair do loop 
 				break;
@@ -409,12 +399,12 @@ unsigned int KTNS(vector<int> s){
 		}
 
 		//Tarefa vai vazar para o proximo dia
-		if (currantMinute + jobsType[s[jL]].processingTime > 1440){
+		if (currantMinute + processingTime[s[jL]] > 1440){
 			//Verificar de consigo acabar essa tarefa antes de exceder o horizonte de planejamento
 			if(currantDay + 1 > planingHorizon){
 				// Contar quantar tarefas prioritarias faltaram
 				for(unsigned int v = jL; v < numberJobs; ++v){
-					unfinesedPriority += jobsType[s[v]].priority;
+					unfinesedPriority += priority[s[v]];
 				}
 				// Pode sair do loop 
 				break;
@@ -422,19 +412,19 @@ unsigned int KTNS(vector<int> s){
 			else{
 				currantDay++;
 				// Acumular as horas que vazaram para o dia seguinte
-				currantMinute += (currantMinute + jobsType[s[jL]].processingTime)-1440;
+				currantMinute += (currantMinute + processingTime[s[jL]])-1440;
 			}
 		}
 		//Tarefa pode continuar no mesmo dia
 		else{
-			currantMinute += jobsType[s[jL]].processingTime;
+			currantMinute += processingTime[s[jL]];
 		}
 
 		// ---------------------------------------------------------------------------
 
 		evalSol += currantSwitch;
 		if(currantSwitch > 0) ++sumChanges;
-		fineshedPriority += jobsType[s[jL]].priority;
+		fineshedPriority += priority[s[jL]];
 
 		// ---------------------------------------------------------------------------
 
@@ -465,14 +455,13 @@ unsigned int printSolutionReport(vector<int> sol){
 	cout << endl;
 
 	cout << "Machine: " << endl;
-    for (const auto &p : jobsType)
-        cout << p.indexMachine << " ";
+    for (const auto &p : machine)
+        cout << p << " ";
 
 	cout << endl;
 
     for (int i = 0; i < sol.size(); ++i){
-        // sols[machine[sol[i]]].push_back(sol[i]);
-        sols[jobsType[sol[i]].indexMachine].push_back(sol[i]);
+        sols[machine[sol[i]]].push_back(sol[i]);
     }
 
     for (int i = 0; i < sols.size(); ++i) {
@@ -510,16 +499,14 @@ unsigned int printSolutionReportIfDef(vector<int> sol){
 	cout << endl;
 
 	cout << "Machine: " << endl;
-    for (const auto &p : jobsType)
-        cout << p.indexMachine << " ";
-
+    for (const auto &p : machine)
+        cout << p << " ";
 
 	cout << endl;
 	#endif
 
     for (int i = 0; i < sol.size(); ++i){
-        sols[jobsType[sol[i]].indexMachine].push_back(sol[i]);
-        // sols[machine[sol[i]]].push_back(sol[i]);
+        sols[machine[sol[i]]].push_back(sol[i]);
     }
 
     for (int i = 0; i < sols.size(); ++i) {
@@ -531,7 +518,7 @@ unsigned int printSolutionReportIfDef(vector<int> sol){
         cout << "\n------------------------------------------------------------------------------------------\n\n";
 		#endif
 
-        totalCost += KTNSReportIfDef(sols[i]);
+        totalCost += KTNSReport(sols[i]);
     }
 
 	#ifdef DEBUG
@@ -550,8 +537,7 @@ unsigned int cost(vector<int> sol){
 	int totalCost = 0;
 
     for (int i = 0; i < sol.size(); ++i){
-        sols[jobsType[sol[i]].indexMachine].push_back(sol[i]);
-        // sols[machine[sol[i]]].push_back(sol[i]);
+        sols[machine[sol[i]]].push_back(sol[i]);
     }
 
     for (int i = 0; i < sols.size(); ++i) {

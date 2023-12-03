@@ -8,6 +8,41 @@
 
 using namespace std;
 
+void loadDataTypes(){
+
+    for (int i = 0; i < numberJobs; i++){
+        Job jobTmp;
+
+        jobTmp.indexJob = job[i];
+        jobTmp.indexOperation = operation[i];
+        jobTmp.indexToolSet = JobToolsIndex[i];
+        jobTmp.processingTime = processingTime[i];
+        jobTmp.priority = priority[i];
+        jobTmp.indexMachine = -1;
+
+        jobTmp.JobTools = JobTools[i];
+
+        jobTmp.superJob = false;
+        jobTmp.originalJobs = {};
+
+        jobsType.push_back(jobTmp);
+    }
+
+    for (auto it = mapToolSets.begin(); it != mapToolSets.end(); ++it) {
+        ToolSet toolSetTmp;
+
+        toolSetTmp.indexToolSet = it->first;
+        toolSetTmp.tools = it->second;
+
+        toolSetTmp.superToolSet = false;
+        toolSetTmp.originalToolSets = {};
+
+        ToolSetsType.push_back(toolSetTmp);
+    }
+
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+}
 bool compareFunction(ToolSet a, ToolSet b) {
     return a.tools.size() > b.tools.size();
 }
@@ -45,7 +80,7 @@ void removeSubSets(){
 
             Job superJob;
 
-            superJob.indexJob = numberJobs + 1;
+            superJob.indexJob = numberJobs + countjobsTypeDeletados + 1;
             superJob.indexOperation = 0;
             superJob.indexToolSet = ToolSetsType[i].indexToolSet;
             superJob.processingTime = 0;
@@ -62,13 +97,14 @@ void removeSubSets(){
                     superJob.originalJobs.push_back(countjobsTypeDeletados++);
 
                     superJob.processingTime += jobsType[j].processingTime;
-                    superJob.priority += jobsType[j].priority;
-                    superJob.indexMachine = jobsType[j].indexMachine;
 
                     jobsTypeDeletados.push_back(jobsType[j]);
                     jobsType.erase(jobsType.begin() + j);
+                    
                 }
             }
+            // UPDATE NUMBER OF JOBS 
+            numberJobs = jobsType.size(); 
             jobsType.push_back(superJob);
 
         }
@@ -85,6 +121,4 @@ void removeSubSets(){
     }
     numberTools = allTools.size();
 
-    // UPDATE NUMBER OF JOBS 
-    numberJobs = jobsType.size(); 
 }

@@ -9,8 +9,6 @@ void loadInstance(string filename);
 int laodRealInstance(string filename);
 int laodToolSet(string filename);
 
-void loadDataTypes();
-
 void printDataReport();
 
 #endif

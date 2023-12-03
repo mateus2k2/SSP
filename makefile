@@ -3,14 +3,15 @@
 mainCpp:
 	clear && g++ src/MeuCpp/*.cpp -std=c++2a -Wshadow -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native && echo "\n" && clear && src/out/mainCpp
 
-mainPy:
-	clear && echo "\n" && python src/MeuPy/main.py 
-
 optmizeTollSetsPy:
 	clear && echo "\n" && python src/MeuPython/optmizeToolSets.py 
 
 toolSetsAnalysis:
 	clear && echo "\n" && python src/MeuPython/toolSetsAnalysis.py 
+
+testePy:
+	clear && echo "\n" && python src/MeuPython/teste.py 
+
 
 # Codigos Andre
 

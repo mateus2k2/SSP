@@ -127,9 +127,9 @@ int laodRealInstance(string filename){
 
     // Numero de ferramentas;
     set <int> allTools;
-    for(int i = 0; i < JobTools.size(); i++){
-        for(int j = 0; j < JobTools[i].size(); j++){
-            allTools.insert(JobTools[i][j]);
+    for(int i = 0; i < jobsType.size(); i++){
+        for(int j = 0; j < jobsType[i].JobTools.size(); j++){
+            allTools.insert(jobsType[i].JobTools[j]);
         }
     }
     numberTools = allTools.size();
@@ -177,40 +177,6 @@ int laodToolSet(string filename) {
     file.close();
 
     return 0;
-}
-
-void loadDataTypes(){
-
-    for (int i = 0; i < numberJobs; i++){
-        Job jobTmp;
-
-        jobTmp.indexJob = job[i];
-        jobTmp.indexOperation = operation[i];
-        jobTmp.indexToolSet = JobToolsIndex[i];
-        jobTmp.processingTime = processingTime[i];
-        jobTmp.priority = priority[i];
-        jobTmp.indexMachine = -1;
-
-        jobTmp.JobTools = JobTools[i];
-
-        jobTmp.superJob = false;
-        jobTmp.originalJobs = {};
-
-        jobsType.push_back(jobTmp);
-    }
-
-    for (auto it = mapToolSets.begin(); it != mapToolSets.end(); ++it) {
-        ToolSet toolSetTmp;
-
-        toolSetTmp.indexToolSet = it->first;
-        toolSetTmp.tools = it->second;
-
-        toolSetTmp.superToolSet = false;
-        toolSetTmp.originalToolSets = {};
-
-        ToolSetsType.push_back(toolSetTmp);
-    }
-
 }
 
 void printDataReport() {

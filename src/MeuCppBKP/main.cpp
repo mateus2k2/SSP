@@ -15,7 +15,7 @@
 using namespace std;
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
-// VARIVEIS PARA CARREGAR DADOS
+// VARIVEIS DADOS
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 map<int, vector<int>>  mapToolSets;
@@ -28,10 +28,6 @@ vector<int> processingTime;
 vector<int> machine;		 
 vector<int> priority;		 
 
-// ------------------------------------------------------------------------------------------------------------------------------------------------------
-// VARIVEIS RESOLVER O PROBLEMA
-// ------------------------------------------------------------------------------------------------------------------------------------------------------
-
 int planingHorizon;  		 
 int unsupervised; 			 
 int numberMachines;		   
@@ -41,12 +37,14 @@ int capacityMagazine;
 
 vector<Job> jobsType;
 vector<Job> jobsTypeDeletados;
+
 vector<ToolSet> ToolSetsType;
 vector<ToolSet> ToolSetsTypeDeletados;
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // MAIN
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 int main(){ 
 
@@ -61,26 +59,44 @@ int main(){
     // numberMachines  = 2;
 
     // loadDataTypes();
-
-    // for (int i = 0; i < numberJobs; ++i) {
-    //     jobsType[i].indexMachine = machine[i];
-    // }
+    // removeSubSets();
 
     // ---------------------------------------------------------------------
 
-	laodToolSet("/home/mateus/WSL/IC/data/Exemplo/ToolSets2.csv");
-	laodRealInstance("/home/mateus/WSL/IC/data/Exemplo/Jobs2.csv");
+	// laodToolSet("/home/mateus/WSL/IC/data/Exemplo/ToolSets2.csv");
+	// laodRealInstance("/home/mateus/WSL/IC/data/Exemplo/Jobs2.csv");
 
-    vector<int> sol = {2,5,6,3,4,7,8,0,1,8};
-    machine         = {1,1,0,0,0,0,0,1,1,1,1};
-    priority        = {1,1,0,0,0,1,1,0,0,1,1};
-    numberMachines  = 2;
+    // vector<int> sol = {2,5,6,3,4,7,8,0,1,9,11};
+    // machine         = {1,1,0,0,0,0,0,1,1,1,1};
+    // priority        = {1,1,0,0,0,1,1,0,0,1,1};
+    // numberMachines  = 2;
+
+    // loadDataTypes();
+
+    // printDataReport();
+    // removeSubSets();
+    // printDataReport();
+
+    // ---------------------------------------------------------------------
+
+    laodToolSet("/home/mateus/WSL/IC/data/1000ToolSet.csv");
+	laodRealInstance("/home/mateus/WSL/IC/data/1000.csv");
+
+    vector<int> sol(numberJobs);
+    for (int i = 0; i < numberJobs; ++i) {
+        sol[i] = i;
+    }
+    priority.resize(numberJobs);
+    for (int i = 0; i < numberJobs; ++i) {
+        priority[i] = 1;
+    }
+    machine.resize(numberJobs);
+    for (int i = 0; i < numberJobs; ++i) {
+        machine[i] = 0;
+    }
+    numberMachines = 1;
 
     loadDataTypes();
-
-    for (int i = 0; i < numberJobs; ++i) {
-        jobsType[i].indexMachine = machine[i];
-    }
 
     printDataReport();
     removeSubSets();
@@ -88,42 +104,8 @@ int main(){
 
     // ---------------------------------------------------------------------
 
-    // laodToolSet("/home/mateus/WSL/IC/data/1000ToolSet.csv");
-	// laodRealInstance("/home/mateus/WSL/IC/data/1000.csv");
-
-    // priority.resize(numberJobs);
-    // for (int i = 0; i < numberJobs; ++i) {
-    //     priority[i] = 1;
-    // }
-    // machine.resize(numberJobs);
-    // for (int i = 0; i < numberJobs; ++i) {
-    //     machine[i] = 0;
-    // }
-    // numberMachines = 1;
-    
-    // loadDataTypes();
-
-    // priority.resize(numberJobs);
-    // for (int i = 0; i < numberJobs; ++i) {
-    //     jobsType[i].priority = 1;
-    // }
-    // machine.resize(numberJobs);
-    // for (int i = 0; i < numberJobs; ++i) {
-    //     jobsType[i].indexMachine = 0;
-    // }
-    // numberMachines = 1;
-
-    // removeSubSets();
-
-    // vector<int> sol(numberJobs);
-    // for (int i = 0; i < numberJobs; ++i) {
-    //     sol[i] = i;
-    // }
-
-    // ---------------------------------------------------------------------
-
-    printDataReport();
-    printSolutionReport(sol);
+    // printDataReport();
+    // printSolutionReport(sol);
 
 	return 0;
 }
