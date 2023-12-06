@@ -8,83 +8,75 @@
 
 using namespace std;
 
-bool compareFunction(ToolSet a, ToolSet b) {
-    return a.tools.size() > b.tools.size();
+bool compareJobs(Job a, Job b) {
+    return a.JobTools.size() > b.JobTools.size();
 }
 
-bool isSubset(const std::vector<int>& subset, const std::vector<int>& superset) {
-    return std::includes(superset.begin(), superset.end(), subset.begin(), subset.end());
+bool compareJobsPriority(int a, int b) {
+    return originalJobs[a].priority > originalJobs[b].priority;
 }
 
-void removeSubSets(){
-    
-    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+bool isSubset(const vector<int>& subset, const vector<int>& superset) {
+    return includes(superset.begin(), superset.end(), subset.begin(), subset.end());
+}
 
-    sort(ToolSetsType.begin(), ToolSetsType.end(), compareFunction);
+void makeSuper(){
+    vector<bool> subSets(originalJobs.size(), false);
 
-    int countToolSetsTypeDeletados = 0;
-    int countjobsTypeDeletados = 0;
+    sort(originalJobs.begin(), originalJobs.end(), compareJobs);
 
-    for(int i = 0; i < ToolSetsType.size(); i++){
-        vector<int> indexTmp;
+    for(int i = 0; i < originalJobs.size(); i++){
+        SuperToolSet SuperToolSetTmp;
+        SuperJob SuperJobTmp;
 
-        for(int j = 0; j < ToolSetsType.size(); j++){
-            if (isSubset(ToolSetsType[j].tools, ToolSetsType[i].tools) && i != j /* && ToolSetsType[j].indexToolSet != ToolSetsType[i].indexToolSet */){
-                ToolSetsType[i].superToolSet = true;
-                ToolSetsType[i].originalToolSets.push_back(countToolSetsTypeDeletados++);
-                ToolSetsTypeDeletados.push_back(ToolSetsType[j]);
+        if(subSets[i] == false){
+            
+            SuperToolSetTmp.indexOriginalToolSet = originalJobs[i].indexToolSet;
+            SuperToolSetTmp.originalToolSets.push_back(originalJobs[i].indexToolSet);
 
-                indexTmp.push_back(ToolSetsType[j].indexToolSet);
+            SuperJobTmp.indexSuperToolSet = superToolSet.size();
+            SuperJobTmp.originalJobs.push_back(i);
+            SuperJobTmp.prioritySum += originalJobs[i].priority;
+            SuperJobTmp.processingTimeSum += originalJobs[i].processingTime;
 
-                ToolSetsType.erase(ToolSetsType.begin() + j);
+            for(int j = i; j < originalJobs.size(); j++){
 
-            };
-        }
-        if (ToolSetsType[i].superToolSet){
-            indexTmp.push_back(ToolSetsType[i].indexToolSet);
+                if ((isSubset(originalJobs[j].JobTools, originalJobs[i].JobTools) || originalJobs[j].indexToolSet == originalJobs[i].indexToolSet ) && i != j){
+                    SuperJobTmp.originalJobs.push_back(j);
+                    SuperJobTmp.prioritySum += originalJobs[j].priority;
+                    SuperJobTmp.processingTimeSum += originalJobs[j].processingTime;
 
-            Job superJob;
+                    if(find(SuperToolSetTmp.originalToolSets.begin(), SuperToolSetTmp.originalToolSets.end(), originalJobs[j].indexToolSet) != SuperToolSetTmp.originalToolSets.end()){
+                        SuperToolSetTmp.originalToolSets.push_back(j);
+                    }
 
-            superJob.indexJob = numberJobs + 1;
-            superJob.indexOperation = 0;
-            superJob.indexToolSet = ToolSetsType[i].indexToolSet;
-            superJob.processingTime = 0;
-            superJob.priority = -1;
-            superJob.indexMachine = -1;
-
-            superJob.JobTools = ToolSetsType[i].tools;
-
-            superJob.superJob = true;
-            superJob.originalJobs = {};
-
-            for(int j = 0; j < jobsType.size(); j++){
-                if (find(indexTmp.begin(), indexTmp.end(), jobsType[j].indexToolSet) != indexTmp.end()){
-                    superJob.originalJobs.push_back(countjobsTypeDeletados++);
-
-                    superJob.processingTime += jobsType[j].processingTime;
-                    superJob.priority += jobsType[j].priority;
-                    superJob.indexMachine = jobsType[j].indexMachine;
-
-                    jobsTypeDeletados.push_back(jobsType[j]);
-                    jobsType.erase(jobsType.begin() + j);
-                }
+                    subSets[j] = true;
+                };
             }
-            jobsType.push_back(superJob);
 
+            if(subSets[i] == false)
+
+                superJobs.push_back(SuperJobTmp);
+                superToolSet.push_back(SuperToolSetTmp);
+
+                int indexSuperJob = superJobs.size();
+                superJobs[indexSuperJob].originalJobs.sort(compareJobsPriority);
         }
-        indexTmp.clear();
 
     }
 
-    // UPDATE NUMBER OF TOOLS
-    set <int> allTools;
-    for(int i = 0; i < jobsType.size(); i++){
-        for(int j = 0; j < jobsType[i].JobTools.size(); j++){
-            allTools.insert(jobsType[i].JobTools[j]);
-        }
-    }
-    numberTools = allTools.size();
+}
 
-    // UPDATE NUMBER OF JOBS 
-    numberJobs = jobsType.size(); 
+void makePriorityIndex(){
+    for(int i = 0; i < superJobs.size(); i++){
+        for (auto it = superJobs[i].originalJobs.begin(); it != superJobs[i].originalJobs.end(); ++it){
+            if(originalJobs[*it].priority == 1){
+                int originalIndex = distance(superJobs[i].originalJobs.begin(), it);
+                pair<int,int> tmp(i,originalIndex);
+                priorityIndex.insert(tmp);
+            }
+        }
+        
+    }
+
 }

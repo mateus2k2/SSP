@@ -4,7 +4,7 @@
 
 using namespace std;
 
-void loadDataTypes();
-void removeSubSets();
+void makeSuper();
+void makePriorityIndex();
 
 #endif

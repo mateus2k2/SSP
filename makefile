@@ -12,6 +12,9 @@ toolSetsAnalysis:
 testePy:
 	clear && echo "\n" && python src/MeuPython/teste.py 
 
+ganattPy:
+	clear && echo "\n" && python src/MeuPython/ganatt.py 
+
 
 # Codigos Andre
 

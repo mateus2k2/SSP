@@ -193,10 +193,7 @@ void loadDataTypes(){
 
         jobTmp.JobTools = JobTools[i];
 
-        jobTmp.superJob = false;
-        jobTmp.originalJobs = {};
-
-        jobsType.push_back(jobTmp);
+        originalJobs.push_back(jobTmp);
     }
 
     for (auto it = mapToolSets.begin(); it != mapToolSets.end(); ++it) {
@@ -205,10 +202,7 @@ void loadDataTypes(){
         toolSetTmp.indexToolSet = it->first;
         toolSetTmp.tools = it->second;
 
-        toolSetTmp.superToolSet = false;
-        toolSetTmp.originalToolSets = {};
-
-        ToolSetsType.push_back(toolSetTmp);
+        originalToolSets.push_back(toolSetTmp);
     }
 
 }
@@ -275,18 +269,11 @@ void printDataReport() {
     cout << "JOBS DATA TYPE" << endl;
     cout << "------------------------------------------------------------------------------------------\n" << endl;
 
-    for (int i = 0; i < jobsType.size(); i++){
-        cout << "Job: " << jobsType[i].indexJob << "\nOperation: " << jobsType[i].indexOperation << "\nToolSet: " << jobsType[i].indexToolSet << "\nProcessingTime: " << jobsType[i].processingTime << "\nPriority: " << jobsType[i].priority << "\nMachine: " << jobsType[i].indexMachine << "\nJobTools: ";
+    for (int i = 0; i < originalJobs.size(); i++){
+        cout << "Job: " << originalJobs[i].indexJob << "\nOperation: " << originalJobs[i].indexOperation << "\nToolSet: " << originalJobs[i].indexToolSet << "\nProcessingTime: " << originalJobs[i].processingTime << "\nPriority: " << originalJobs[i].priority << "\nMachine: " << originalJobs[i].indexMachine << "\nJobTools: ";
         
-        for(int j = 0; j < jobsType[i].JobTools.size(); j++){
-            cout << jobsType[i].JobTools[j] << " ";
-        }
-
-        cout << "\n";
-
-        cout << "superJob: " << jobsType[i].superJob << "\noriginalJobs: ";
-        for(int j = 0; j < jobsType[i].originalJobs.size(); j++){
-            cout << jobsType[i].originalJobs[j] << " ";
+        for(int j = 0; j < originalJobs[i].JobTools.size(); j++){
+            cout << originalJobs[i].JobTools[j] << " ";
         }
 
         cout << "\n\n";
@@ -296,50 +283,16 @@ void printDataReport() {
     cout << "TOOL SET TYPE" << endl;
     cout << "------------------------------------------------------------------------------------------\n" << endl;
 
-    for(int i = 0; i < ToolSetsType.size(); i++){
-        cout << "ToolSet: " << ToolSetsType[i].indexToolSet << "\nTools: ";
+    for(int i = 0; i < originalToolSets.size(); i++){
+        cout << "ToolSet: " << originalToolSets[i].indexToolSet << "\nTools: ";
 
-        for(int j = 0; j < ToolSetsType[i].tools.size(); j++){
-            cout << ToolSetsType[i].tools[j] << " ";
-        }
-        
-        cout << "\n";
-
-        cout << "superToolSet: " << ToolSetsType[i].superToolSet << "\noriginalToolSets: ";
-        for(int j = 0; j < ToolSetsType[i].originalToolSets.size(); j++){
-            cout << ToolSetsType[i].originalToolSets[j] << " ";
+        for(int j = 0; j < originalToolSets[i].tools.size(); j++){
+            cout << originalToolSets[i].tools[j] << " ";
         }
         
         cout << "\n\n";
     }
 
 
-    cout << "\n------------------------------------------------------------------------------------------" << endl;
-    cout << "JOBS DATA TYPE EXCLUIDOS" << endl;
-    cout << "------------------------------------------------------------------------------------------\n" << endl;
-
-    for (int i = 0; i < jobsTypeDeletados.size(); i++){
-        cout << "Job: " << jobsTypeDeletados[i].indexJob << "\nOperation: " << jobsTypeDeletados[i].indexOperation << "\nToolSet: " << jobsTypeDeletados[i].indexToolSet << "\nProcessingTime: " << jobsTypeDeletados[i].processingTime << "\nPriority: " << jobsTypeDeletados[i].priority << "\nMachine: " << jobsTypeDeletados[i].indexMachine << "\nJobTools: ";
-        
-        for(int j = 0; j < jobsTypeDeletados[i].JobTools.size(); j++){
-            cout << jobsTypeDeletados[i].JobTools[j] << " ";
-        }
-
-        cout << "\n\n";
-    }
-
-    cout << "------------------------------------------------------------------------------------------" << endl;
-    cout << "TOOL SET TYPE EXCLUIDOS" << endl;
-    cout << "------------------------------------------------------------------------------------------\n" << endl;
-
-    for(int i = 0; i < ToolSetsTypeDeletados.size(); i++){
-        cout << "ToolSet: " << ToolSetsTypeDeletados[i].indexToolSet << "\nTools: ";
-
-        for(int j = 0; j < ToolSetsTypeDeletados[i].tools.size(); j++){
-            cout << ToolSetsTypeDeletados[i].tools[j] << " ";
-        }
-        
-        cout << "\n\n";
-    }
 }
 

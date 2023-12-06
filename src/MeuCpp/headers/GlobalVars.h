@@ -1,6 +1,8 @@
 #ifndef GlobalVarsH
 #include <atomic>
 #include <vector>
+#include <list>
+#include <set>
 #include <thread>
 #include <map>
 
@@ -19,9 +21,6 @@ typedef struct{
     int indexMachine;
     vector<int> JobTools;  
 
-    bool superJob;
-    vector<int> originalJobs; // Index no vetor jobsTypeDeletados, jobs que compoem esse superJob 
-
 }Job;
 
 
@@ -29,10 +28,23 @@ typedef struct{
     int indexToolSet;
     vector<int> tools;
 
-    bool superToolSet;
-    vector<int> originalToolSets;  // Index no vetor ToolSetsTypeDeletados, toolSets que sao subconjuntos desse superToolSet 
-
 }ToolSet;
+
+
+typedef struct{
+    int indexSuperToolSet;
+    int processingTimeSum;
+    int prioritySum;
+    list<int> originalJobs;
+
+}SuperJob;
+
+
+typedef struct{
+    int indexOriginalToolSet;
+    list<int> originalToolSets;
+
+}SuperToolSet;
 
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -40,14 +52,14 @@ typedef struct{
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 extern map<int, vector<int>>  mapToolSets; // Vetor com cada ToolSet
-extern vector<int> JobToolsIndex;    // Vetor de jobs com cada ferramenta que ele usa
-extern vector<vector<int>> JobTools; // Vetor de jobs com cada ferramenta que ele usa
+extern vector<int> JobToolsIndex;          // Vetor de jobs com cada ferramenta que ele usa
+extern vector<vector<int>> JobTools;       // Vetor de jobs com cada ferramenta que ele usa
 
-extern vector<int> operation;		 // Aperation Vector		
-extern vector<int> job;			     // Job Vector	
-extern vector<int> processingTime;	 // Processing Time de cada Vector	
-extern vector<int> machine;		     // Maquina que cada job vai ser feito (Index comeca no 0)	
-extern vector<int> priority;		 // Prioridade de cada job (0 ou 1)
+extern vector<int> operation;		       // Aperation Vector		
+extern vector<int> job;			           // Job Vector	
+extern vector<int> processingTime;	       // Processing Time de cada Vector	
+extern vector<int> machine;		           // Maquina que cada job vai ser feito (Index comeca no 0)	
+extern vector<int> priority;		       // Prioridade de cada job (0 ou 1)
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // VARIVEIS RESOLVER O PROBLEMA
@@ -60,10 +72,13 @@ extern int numberTools;      	     // Numero de Ferramentas diferentes
 extern int numberJobs; 	   	         // Numero de Jobs
 extern int capacityMagazine;         // Capacidade do magazine das maquina
 
-extern vector<Job> jobsType;
-extern vector<Job> jobsTypeDeletados;
-extern vector<ToolSet> ToolSetsType;
-extern vector<ToolSet> ToolSetsTypeDeletados;
+extern vector<Job> originalJobs;
+extern vector<ToolSet> originalToolSets;
+
+extern vector<SuperJob> superJobs;
+extern vector<SuperToolSet> superToolSet;
+
+extern set<pair<int,int>> priorityIndex;
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // DEFINIÇÕES DO PLOBLEMA

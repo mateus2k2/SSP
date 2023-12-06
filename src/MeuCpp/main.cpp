@@ -39,10 +39,13 @@ int numberTools;
 int numberJobs; 	   	   
 int capacityMagazine;     
 
-vector<Job> jobsType;
-vector<Job> jobsTypeDeletados;
-vector<ToolSet> ToolSetsType;
-vector<ToolSet> ToolSetsTypeDeletados;
+vector<Job> originalJobs;
+vector<ToolSet> originalToolSets;
+
+vector<SuperJob> superJobs;
+vector<SuperToolSet> superToolSet;
+
+set<pair<int,int>> priorityIndex;
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // MAIN
@@ -63,33 +66,37 @@ int main(){
     // loadDataTypes();
 
     // for (int i = 0; i < numberJobs; ++i) {
-    //     jobsType[i].indexMachine = machine[i];
+    //     originalJobs[i].indexMachine = machine[i];
     // }
 
     // ---------------------------------------------------------------------
 
-	laodToolSet("/home/mateus/WSL/IC/data/Exemplo/ToolSets2.csv");
-	laodRealInstance("/home/mateus/WSL/IC/data/Exemplo/Jobs2.csv");
+	// laodToolSet("/home/mateus/WSL/IC/data/Exemplo/ToolSets2.csv");
+	// laodRealInstance("/home/mateus/WSL/IC/data/Exemplo/Jobs2.csv");
 
-    vector<int> sol = {2,5,6,3,4,7,8,0,1,8};
-    machine         = {1,1,0,0,0,0,0,1,1,1,1};
-    priority        = {1,1,0,0,0,1,1,0,0,1,1};
-    numberMachines  = 2;
+    // vector<int> sol = {2,5,6,3,4,7,8,0,1,8};
+    // machine         = {1,1,0,0,0,0,0,1,1,1,1};
+    // priority        = {1,1,0,0,0,1,1,0,0,1,1};
+    // numberMachines  = 2;
 
-    loadDataTypes();
+    // loadDataTypes();
 
-    for (int i = 0; i < numberJobs; ++i) {
-        jobsType[i].indexMachine = machine[i];
-    }
+    // for (int i = 0; i < numberJobs; ++i) {
+    //     originalJobs[i].indexMachine = machine[i];
+    // }
 
-    printDataReport();
-    removeSubSets();
-    printDataReport();
+    // makeSuper();
 
     // ---------------------------------------------------------------------
 
     // laodToolSet("/home/mateus/WSL/IC/data/1000ToolSet.csv");
 	// laodRealInstance("/home/mateus/WSL/IC/data/1000.csv");
+
+    // laodToolSet("/home/mateus/WSL/IC/data/750ToolSet.csv");
+	// laodRealInstance("/home/mateus/WSL/IC/data/750.csv");
+
+    // laodToolSet("/home/mateus/WSL/IC/data/250ToolSet.csv");
+	// laodRealInstance("/home/mateus/WSL/IC/data/250.csv");
 
     // priority.resize(numberJobs);
     // for (int i = 0; i < numberJobs; ++i) {
@@ -105,11 +112,11 @@ int main(){
 
     // priority.resize(numberJobs);
     // for (int i = 0; i < numberJobs; ++i) {
-    //     jobsType[i].priority = 1;
+    //     originalJobs[i].priority = 1;
     // }
     // machine.resize(numberJobs);
     // for (int i = 0; i < numberJobs; ++i) {
-    //     jobsType[i].indexMachine = 0;
+    //     originalJobs[i].indexMachine = 0;
     // }
     // numberMachines = 1;
 
@@ -122,8 +129,8 @@ int main(){
 
     // ---------------------------------------------------------------------
 
-    printDataReport();
-    printSolutionReport(sol);
+    // printDataReport();
+    // costReport(sol);
 
 	return 0;
 }
