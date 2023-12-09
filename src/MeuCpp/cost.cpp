@@ -6,6 +6,7 @@
 #include <sstream>
 #include <string>
 #include <algorithm> 
+#include <fstream>
 
 #include "headers/GlobalVars.h"
 #include "headers/loadData.h"
@@ -17,48 +18,51 @@ using namespace std;
 // KTNS
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-unsigned int KTNSReport(vector<int> s){
+unsigned int KTNSReport(vector<int> s, fstream& solutionReportFile){
     // Variaveis
 	vector<bool> magazineL(numberTools, true);	
-	unsigned int evalSol = 0; 
+	unsigned int switchs = 0; 
 	int jL;
 
-	int sumChanges = 0; // Conta quantas trocas de instancia foram feitas, quando pelo menos uma troca de ferramenta foi trocada do magazine
-	int currantSwitch = 0; // Conta quantas trocas de ferramenta foram feitas, no job atual
+	int switchsInstances = 0; 		// Conta quantas trocas de instancia foram feitas, quando pelo menos uma troca de ferramenta foi trocada do magazine
+	int currantSwitchs = 0; 		// Conta quantas trocas de ferramenta foram feitas, no job atual
 	int currantProcessingTime = 0; 
 
-	// int currantMinute = 0; // Conta quantas horas ja foram usadas no dia atual  		       
-	// int currantDay = 0; // Conta quantos dias ja foram usados no horizonte de planejamento
-	int inicioJob = 0; // Conta quantas horas ja foram usadas no dia atual  		       
-	int fimJob = 0; // Conta quantos dias ja foram usados no horizonte de planejamento 
+	int inicioJob = 0; 				// Conta quantas horas ja foram usadas no dia atual  		       
+	int fimJob = 0; 				// Conta quantos dias ja foram usados no horizonte de planejamento 
 
-	vector<int> fineshedPriority; // Jobs prioritarios que foram feitos
-	vector<int> unfinesedPriority; // Jobs prioritarios que foram feitos
+	int fineshedPriorityCount = 0;
+	int unfineshedPriorityCount = 0;
 
-	numberJobs = s.size();
+	int countCreated = 0;
+	int expanded = true;
+
+	int numberJobsSol = s.size();
 
 	// Percorre todas as ferramentas
-	for(jL= 0; jL < numberJobs; ++jL){
+	for(jL= 0; jL < numberJobsSol; ++jL){
 		
-		currantSwitch = 0;
+		currantSwitchs = 0;
 
 		vector<bool> magazineCL(numberTools);		
 		int left = jL;
 		int cmL = 0;
 
-		while((cmL < capacityMagazine) && (left < numberJobs)){
-			for (auto it=originalJobs[s[left]].JobTools.begin(); ((it!=originalJobs[s[left]].JobTools.end()) && (cmL < capacityMagazine)); ++it){
+		while((cmL < capacityMagazine) && (left < numberJobsSol)){
+			for (auto it=originalToolSets[superToolSet[superJobs[s[left]].indexSuperToolSet].indexOriginalToolSet].tools.begin(); ((it!=originalToolSets[superToolSet[superJobs[s[left]].indexSuperToolSet].indexOriginalToolSet].tools.end()) && (cmL < capacityMagazine)); ++it){
+				
 				if((magazineL[*it]) && (!magazineCL[*it])){
 					magazineCL[*it] = true;
 					++cmL;
 				}else if((jL == left) && (!magazineCL[*it])){
 					magazineCL[*it] = true;
 					++cmL;
-					++currantSwitch;
+					++currantSwitchs;
 				}
 			}
 			++left;
 		}
+
 		
 		for(int t=0; ((t < numberTools) && (cmL < capacityMagazine)); t++){
 			if((magazineL[t]) && (!magazineCL[t])){
@@ -69,277 +73,234 @@ unsigned int KTNSReport(vector<int> s){
 
 		magazineL = magazineCL;
 
-		if (jL == 0) currantSwitch = capacityMagazine;
+		if (jL == 0) currantSwitchs = capacityMagazine;
 
 		// ---------------------------------------------------------------------------
 
-		currantProcessingTime = originalJobs[s[jL]].processingTime;
+		currantProcessingTime = superJobs[s[jL]].processingTimeSum;
 		fimJob = inicioJob + currantProcessingTime;
 
 		// verifica se a hora é sem supervisao e se houve troca de ferramenta
-		if ((inicioJob % 1440 >= unsupervised) && (currantSwitch > 0)){
+		if ((inicioJob % TIMESCALE >= unsupervised) && (currantSwitchs > 0)){
 			
 			//Verificar de consigo acabar essa tarefa antes de exceder o horizonte de planejamento
-			if(fimJob + 1440 > planingHorizon * 1440){
-				// Contar quantar tarefas prioritarias faltaram
-				for(unsigned int v = jL; v < numberJobs; ++v){
-					if(originalJobs[s[v]].priority) unfinesedPriority.push_back(s[v]);
+			if(fimJob + (TIMESCALE - (fimJob % TIMESCALE)) >= planingHorizon * TIMESCALE){
+				
+				if(expanded == false){
+					for(unsigned int v = jL+1; v < numberJobsSol; ++v){
+						unfineshedPriorityCount += superJobs[s[v]].prioritySum;
+					}
+
+					int lastJob = s[s.size()-1];
+					s.clear();
+
+					for (auto it = superJobs[lastJob].originalJobs.begin(); it != superJobs[lastJob].originalJobs.end(); ++it){
+						SuperJob SuperJobTmp;
+
+						SuperJobTmp.indexSuperToolSet = superJobs[lastJob].indexSuperToolSet;
+						SuperJobTmp.processingTimeSum = originalJobs[*it].processingTime;
+						SuperJobTmp.prioritySum = originalJobs[*it].priority;
+						SuperJobTmp.originalJobs.push_back(*it);
+
+						superJobs.push_back(SuperJobTmp);
+						countCreated++;
+
+						s.push_back(superJobs.size()-1);
+					}
+					expanded = true;
+					numberJobsSol = s.size();
+					jL = 0;
+
+					continue;
 				}
-				// Pode sair do loop 
-				break;
+
+				else{
+					// Contar quantar tarefas prioritarias faltaram
+					for(unsigned int v = jL; v < numberJobsSol; ++v){
+						unfineshedPriorityCount += superJobs[s[v]].prioritySum;
+					}
+					// Pode sair do loop 
+					cout << "break1" << endl;
+					cout << "fimJob: " << fimJob << endl;
+					cout << "inicioJob: " << inicioJob << endl;
+					cout << "currantProcessingTime: " << currantProcessingTime << endl;
+					cout << "jL: " << jL << endl;
+					break;
+				}
+				
 			}
 			else{
-				inicioJob += 1440 - (inicioJob % 1440);
+				inicioJob += TIMESCALE - (inicioJob % TIMESCALE);
 				fimJob = inicioJob + currantProcessingTime;
-
 			}
 
 		}
 
 		//Tarefa vai vazar para o proximo dia
-		if ((inicioJob % 1440) + currantProcessingTime >= 1440 ){
+		if ((inicioJob % TIMESCALE) + currantProcessingTime >= TIMESCALE){
 			
 			//Verificar de consigo acabar essa tarefa antes de exceder o horizonte de planejamento
-			if(fimJob + 1440 > planingHorizon * 1440){
-				// Contar quantar tarefas prioritarias faltaram
-				for(unsigned int v = jL; v < numberJobs; ++v){
-					if(originalJobs[s[v]].priority) unfinesedPriority.push_back(s[v]);
+			if(fimJob >= planingHorizon * TIMESCALE){
+				
+				if(expanded == false){
+					for(unsigned int v = jL+1; v < numberJobsSol; ++v){
+						unfineshedPriorityCount += superJobs[s[v]].prioritySum;
+					}
+
+					int lastJob = s[s.size()-1];
+					s.clear();
+
+					for (auto it = superJobs[lastJob].originalJobs.begin(); it != superJobs[lastJob].originalJobs.end(); ++it){
+						SuperJob SuperJobTmp;
+
+						SuperJobTmp.indexSuperToolSet = superJobs[lastJob].indexSuperToolSet;
+						SuperJobTmp.processingTimeSum = originalJobs[*it].processingTime;
+						SuperJobTmp.prioritySum = originalJobs[*it].priority;
+						SuperJobTmp.originalJobs.push_back(*it);
+
+						superJobs.push_back(SuperJobTmp);
+						countCreated++;
+
+						s.push_back(superJobs.size()-1);
+					}
+					expanded = true;
+					numberJobsSol = s.size();
+					jL = 0;
+
+					continue;
 				}
-				// Pode sair do loop 
-				break;
+				else{
+					// Contar quantar tarefas prioritarias faltaram
+					for(unsigned int v = jL; v < numberJobsSol; ++v){
+						unfineshedPriorityCount += superJobs[s[v]].prioritySum;
+					}
+					// Pode sair do loop 
+					cout << "break2" << endl;
+					cout << "fimJob: " << fimJob << endl;
+					cout << "inicioJob: " << inicioJob << endl;
+					cout << "currantProcessingTime: " << currantProcessingTime << endl;
+					cout << "jL: " << jL << endl;
+					break;
+					
+				}
+				
 			}
-			else{
-				inicioJob = fimJob;
-				fimJob = 0;
+			
+		}
+		
+		inicioJob = fimJob;
+
+		// ---------------------------------------------------------------------------
+		
+		int inicioTmp = fimJob - currantProcessingTime;
+		int fimTmp = fimJob;
+
+		for (auto it = superJobs[s[jL]].originalJobs.begin(); it != superJobs[s[jL]].originalJobs.end(); ++it){
+
+			fimTmp = inicioTmp + originalJobs[*it].processingTime;
+
+			solutionReportFile << originalJobs[*it].indexJob << ";";
+			solutionReportFile << originalJobs[*it].indexOperation << ";";
+			solutionReportFile << inicioTmp << ";";
+			solutionReportFile << fimTmp << ";";
+			solutionReportFile << originalJobs[*it].priority << ";";
+
+			for(unsigned int t = 0; t < magazineCL.size(); ++t){
+				if(magazineCL[t]){ 
+					solutionReportFile << t << ",";
+				}
 			}
+			solutionReportFile << "\n";
+
+			inicioTmp = fimTmp;
+
 		}
-		//Tarefa pode continuar no mesmo dia
-		else{
-			inicioJob = fimJob;
-		}
-
-		// ---------------------------------------------------------------------------
-
-		cout << "Job Processado: " << s[jL] << " | " << "Processing Time: "  << currantProcessingTime  << " | " << "Priority: " << originalJobs[s[jL]].priority << " | " << "Count Mudanças Magazine: " << currantSwitch << endl;
-		printf("Minuto do Dia: %i/1440 | Hora: %d/24\n", inicioJob%1440, (inicioJob%1440)/60);
-		printf("Dia Atual: %i/%i\n", inicioJob/1440, planingHorizon);
-		
-		cout << "\n";
-		
-		cout << "Magazine: ";
-		for(unsigned int t = 0; t < magazineCL.size(); ++t){
-			if(magazineCL[t]) 
-				cout << t << " ";
-		}
-
-		cout << "\n\n";
-
 		
 		// ---------------------------------------------------------------------------
 
-		evalSol += currantSwitch;
-		if(currantSwitch > 0) ++sumChanges;
-		if (originalJobs[s[jL]].priority) fineshedPriority.push_back(s[jL]);
+		switchs += currantSwitchs;
+		if(currantSwitchs > 0) ++switchsInstances;
+		fineshedPriorityCount += superJobs[s[jL]].prioritySum;
 
 		// ---------------------------------------------------------------------------
 
 	}
+	superJobs.erase(superJobs.end() - countCreated, superJobs.end());
 
-	int fineshedPriorityCount = fineshedPriority.size();
-	int unfinesedPriorityCount = unfinesedPriority.size();
 
-	cout << "DONE\n";
-
-	printf("Fineshed Priority (%i) : ", fineshedPriorityCount);
-	for(unsigned int t = 0; t < fineshedPriorityCount; ++t){
-		cout << fineshedPriority[t] << " ";
-	}
-	cout << "\n";
-
-	printf("Unfineshed Priority (%i) : ", unfinesedPriorityCount);
-	for(unsigned int t = 0; t < unfinesedPriorityCount; ++t){
-		cout << unfinesedPriority[t] << " ";
-	}
-	cout << "\n";
-
-	cout << "Number of Switchs: " << evalSol << "\n";
-	cout << "Number of Switchs Instances: " << sumChanges << "\n";
-
-	int cost = (PROFITYPRIORITY * fineshedPriorityCount) - (COSTSWITCH * evalSol) - (COSTSWITCHINSTANCE * sumChanges) - (COSTPRIORITY * unfinesedPriorityCount);
-	printf("(%i * %i) - (%i * %i) - (%i * %i) - (%i * %i) = %i\n", PROFITYPRIORITY, fineshedPriorityCount, COSTSWITCH, evalSol, COSTSWITCHINSTANCE, sumChanges, COSTPRIORITY, unfinesedPriorityCount, cost);
+	int cost = (PROFITYPRIORITY * fineshedPriorityCount) - (COSTSWITCH * switchs) - (COSTSWITCHINSTANCE * switchsInstances) - (COSTPRIORITY * unfineshedPriorityCount);
+	solutionReportFile << "END;";
+	solutionReportFile << fineshedPriorityCount << ";";
+	solutionReportFile << switchs << ";";
+	solutionReportFile << switchsInstances << ";";
+	solutionReportFile << unfineshedPriorityCount << ";";
+	solutionReportFile << cost << "\n";
 
 	return cost;
 }
 
 unsigned int KTNS(vector<int> s){
-	
-	// Variaveis
-	vector<bool> magazineL(numberTools, true);	
-	unsigned int evalSol = 0; 
-	int jL;
-
-	int sumChanges = 0; // Conta quantas trocas de instancia foram feitas, quando pelo menos uma troca de ferramenta foi trocada do magazine
-	int currantSwitch = 0; // Conta quantas trocas de ferramenta foram feitas, no job atual
-	int currantMinute = 0; // Conta quantas horas ja foram usadas no dia atual  		       
-	int currantDay = 0; // Conta quantos dias ja foram usados no horizonte de planejamento 
-
-	int fineshedPriority = 0; // Jobs prioritarios que foram feitos
-	int unfinesedPriority = 0; // Jobs prioritarios que foram feitos
-
-	numberJobs = s.size();
-
-	// Percorre todas as ferramentas
-	for(jL= 0; jL < numberJobs; ++jL){
-		
-		currantSwitch = 0;
-
-		vector<bool> magazineCL(numberTools);		
-		int left = jL;
-		int cmL = 0;
-
-		while((cmL < capacityMagazine) && (left < numberJobs)){
-			for (auto it=originalJobs[s[left]].JobTools.begin(); ((it!=originalJobs[s[left]].JobTools.end()) && (cmL < capacityMagazine)); ++it){
-				if((magazineL[*it]) && (!magazineCL[*it])){
-					magazineCL[*it] = true;
-					++cmL;
-				}else if((jL == left) && (!magazineCL[*it])){
-					magazineCL[*it] = true;
-					++cmL;
-					++currantSwitch;
-				}
-			}
-			++left;
-		}
-		
-		for(int t=0; ((t < numberTools) && (cmL < capacityMagazine)); t++){
-			if((magazineL[t]) && (!magazineCL[t])){
-				magazineCL[t] = true;
-				++cmL;			
-			}
-		}
-
-		magazineL = magazineCL;
-
-		if (jL == 0) currantSwitch = capacityMagazine;
-
-		// ---------------------------------------------------------------------------
-
-		// verifica se a hora é sem supervisao e se houve troca de ferramenta
-		if ((currantMinute >= unsupervised) && (currantSwitch > 0)){
-			//Verificar de consigo acabar essa tarefa antes de exceder o horizonte de planejamento
-			if(currantDay + 1 > planingHorizon){
-				// Contar quantar tarefas prioritarias faltaram
-				for(unsigned int v = jL; v < numberJobs; ++v){
-					unfinesedPriority += originalJobs[s[v]].priority;
-				}
-				// Pode sair do loop 
-				break;
-			}
-			else{
-				currantDay++;
-				currantMinute = 0;
-			}
-		}
-
-		//Tarefa vai vazar para o proximo dia
-		if (currantMinute + originalJobs[s[jL]].processingTime > 1440){
-			//Verificar de consigo acabar essa tarefa antes de exceder o horizonte de planejamento
-			if(currantDay + 1 > planingHorizon){
-				// Contar quantar tarefas prioritarias faltaram
-				for(unsigned int v = jL; v < numberJobs; ++v){
-					unfinesedPriority += originalJobs[s[v]].priority;
-				}
-				// Pode sair do loop 
-				break;
-			}
-			else{
-				currantDay++;
-				// Acumular as horas que vazaram para o dia seguinte
-				currantMinute += (currantMinute + originalJobs[s[jL]].processingTime)-1440;
-			}
-		}
-		//Tarefa pode continuar no mesmo dia
-		else{
-			currantMinute += originalJobs[s[jL]].processingTime;
-		}
-
-		// ---------------------------------------------------------------------------
-
-		evalSol += currantSwitch;
-		if(currantSwitch > 0) ++sumChanges;
-		fineshedPriority += originalJobs[s[jL]].priority;
-
-		// ---------------------------------------------------------------------------
-
-	}
-
-	int cost = (PROFITYPRIORITY * fineshedPriority) - (COSTSWITCH * evalSol) - (COSTSWITCHINSTANCE * sumChanges) - (COSTPRIORITY * unfinesedPriority);
-
-	return cost;
+	return 0;
 }
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // COST
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-unsigned int costReport(vector<int> sol){
+unsigned int costReport(vector<int> sol, vector<int> machine, fstream& solutionReportFile){
 	
 	vector<vector<int>> sols(numberMachines);
 	int totalCost = 0;
-
-	cout << "\n------------------------------------------------------------------------------------------\n";
-	cout << "SOLUTION";
-	cout << "\n------------------------------------------------------------------------------------------\n\n";
-
-	cout << "Solution: " << endl;
-    for (const auto &p : sol)
-        cout << p << " ";
-
-	cout << endl;
-
-	cout << "Machine: " << endl;
-    for (const auto &p : originalJobs)
-        cout << p.indexMachine << " ";
-
-	cout << endl;
+	
+	solutionReportFile << planingHorizon << ";" << unsupervised << ";" << TIMESCALE << endl;
 
     for (int i = 0; i < sol.size(); ++i){
-        // sols[machine[sol[i]]].push_back(sol[i]);
-        sols[originalJobs[sol[i]].indexMachine].push_back(sol[i]);
+        sols[machine[sol[i]]].push_back(sol[i]);
     }
 
     for (int i = 0; i < sols.size(); ++i) {
-        cout << "\n------------------------------------------------------------------------------------------\n";
-        cout << "Machine: " << i << " = ";
+
+		// ------------------------------------------------------------------------------------------------
+		// int countCreated = 0;
+
+		// int lastJob = sols[i][sols[i].size()-1];
+		// sols[i].erase(sols[i].end()-1, sols[i].end());
+
+		// for (auto it = superJobs[lastJob].originalJobs.begin(); it != superJobs[lastJob].originalJobs.end(); ++it){
+		// 	SuperJob SuperJobTmp;
+
+		// 	SuperJobTmp.indexSuperToolSet = superJobs[lastJob].indexSuperToolSet;
+		// 	SuperJobTmp.processingTimeSum = originalJobs[*it].processingTime;
+		// 	SuperJobTmp.prioritySum = originalJobs[*it].priority;
+		// 	SuperJobTmp.originalJobs.push_back(*it);
+
+		// 	superJobs.push_back(SuperJobTmp);
+		// 	countCreated++;
+
+		// 	sols[i].push_back(superJobs.size()-1);
+		// }
+
+		// ------------------------------------------------------------------------------------------------
+
+        solutionReportFile << "Machine: " << i << " = ";
         for (int j = 0; j < sols[i].size(); ++j)
-            cout << sols[i][j] << " ";
-        cout << "\n------------------------------------------------------------------------------------------\n\n";
+			for (auto it = superJobs[sols[i][j]].originalJobs.begin(); it != superJobs[sols[i][j]].originalJobs.end(); ++it){
+				solutionReportFile << "(" << originalJobs[*it].indexJob << "," << originalJobs[*it].indexOperation << ");";
+			}
+		solutionReportFile << "\n";
 
-        totalCost += KTNSReport(sols[i]);
+        totalCost += KTNSReport(sols[i], solutionReportFile);
+
+		// ------------------------------------------------------------------------------------------------
+
+		// superJobs.erase(superJobs.end() - countCreated, superJobs.end());
+
     }
-
-	cout << "\n------------------------------------------------------------------------------------------\n";
-	cout << "ALL DONE, TOTAL COST: " << totalCost;
-	cout << "\n------------------------------------------------------------------------------------------\n";
 
 	return totalCost;
 
 }
 
 unsigned int cost(vector<int> sol){
-	
-	vector<vector<int>> sols(numberMachines);
-	int totalCost = 0;
-
-    for (int i = 0; i < sol.size(); ++i){
-        sols[originalJobs[sol[i]].indexMachine].push_back(sol[i]);
-        // sols[machine[sol[i]]].push_back(sol[i]);
-    }
-
-    for (int i = 0; i < sols.size(); ++i) {
-        totalCost += KTNS(sols[i]);
-    }
-
-	return totalCost;
-
+	return 0;
 }

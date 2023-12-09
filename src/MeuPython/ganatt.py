@@ -1,48 +1,154 @@
 import matplotlib.pyplot as plt
-plt.rcParams['svg.fonttype'] = 'path'
 
-# Sample data
-tasks = {
-    "Task 1": [(0, 5)],     # Task 1 runs from hour 0 to hour 5
-    "Task 2": [(5, 7)],     # Task 2 runs from hour 2 to hour 7
-    "Task 3": [(7, 10)],    # Task 3 runs from hour 6 to hour 10
-    # Add more tasks as needed
-}
+def plot_machine(machines, planejamento):
+    planingHorizon = planejamento['planingHorizon']
+    unsupervised = planejamento['unsupervised']
+    timescale = planejamento['timescale']
+    numberMachines = len(machines)
+    
+    fig, ax = plt.subplots()
 
-# Set up the plot
-fig, ax = plt.subplots()
-
-# Define colors for each task
-colors = ['red', 'green', 'blue']
-
-# Plot each task as a horizontal bar with specified color
-for i, (task, time_intervals) in enumerate(tasks.items()):
-    for start, end in time_intervals:
-        bar_width = end - start
-        ax.barh(2, bar_width, left=start, align='center', edgecolor='black', height=0.6, color='red', label=task)
+    colors = {
+        'priority': 'tab:blue',
+        'normal': 'tab:orange',
+    }
+    
+    for i, machine in enumerate(machines):
+        operations = machine['operations']
+        machine_info = machine['machine_info']
+        end_info = machine['end_info']
         
-        # Add text inside the bar
-        text_x = start + bar_width / 2
-        text_y = 2
-        ax.text(text_x, text_y, f"{task}\n{start}-{end}", color='white', ha='center', va='center')
+        for j, operation in enumerate(operations):
+            
+            barY = (numberMachines-i-(i%2))
+            barWidth = operation['end'] - operation['start']           
+            ax.barh(barY, barWidth, left=operation['start'], align='center', edgecolor='black', height=0.3, color=colors['normal'], label=operation['job'])
+            
+            fontsize = 8
+            
+            jobOperationTextX = operation['start'] + barWidth / 2
+            ax.text(jobOperationTextX, barY, f"({operation['job']}, {operation['operation']})", color='white', ha='center', va='center', fontsize=fontsize)
+            
+            
+            magazineTextX = operation['start'] + barWidth / 2
+            magazineTextY = (barY - 0.5)
+            ax.text(magazineTextX, magazineTextY, f"{operation['maganize']}", color='black', ha='center', va='center', fontsize=fontsize)
+
+    verticalLines = []
+    xticks = []
+    count = 0
+    for i in range(0, planingHorizon+1):
+        verticalLines.append(count)
+        verticalLines.append(count+unsupervised)
+        xticks.append(count)
+        xticks.append(count+unsupervised)
+        count += timescale
+    
+    verticalLines.pop()
+    
+    for i, linePosition in enumerate(verticalLines):
+        ax.axvline(linePosition, color='gray', linestyle='dotted', linewidth=1)
+        if i < len(verticalLines)-1 and i%2 == 1: 
+            ax.axvspan(verticalLines[i], verticalLines[i+1], facecolor='lightgray', alpha=0.5, label='Highlighted Area')
+
+    ax.set_yticks(range(-1, len(machines)))
+    ax.set_yticklabels(range(-1, len(machines)))
+    
+    ax.set_xticks(xticks)
+    ax.set_xticklabels(xticks)
+    
+    ax.set_xlabel('Time (hours)')
+    ax.set_ylabel('Machines')
+
+    plt.show()
+
+def parse_machine_section(machine_section):
+    lines = machine_section.strip().split('\n')
+    machine_info = lines[0].split('=')[1].strip()
+    operations = [line.split(';') for line in lines[1:-1]]
+    end_info = lines[-1].split(';')
+    
+    operationsObj = []
+    endInfoObj = {}
+    machineInfoObj = []
+    
+    pairs = machine_info[:-1].split(";")
+    job_operation_list = [tuple(map(int, pair.strip('()').split(','))) for pair in pairs]
+    for job_operation in job_operation_list:
+        machineInfoObj.append({
+            'job': int(job_operation[0]),
+            'operation': int(job_operation[1])
+        })
+
+    for operation in operations:
+        operationsObj.append({
+            'job': int(operation[0]),
+            'operation': int(operation[1]),
+            'start': int(operation[2]),
+            'end': int(operation[3]),
+            'priority': int(operation[4]),
+            'maganize': list(map(int, operation[5][:-1].split(',')))
+        })
+    
+    endInfoObj['fineshedPriorityCount'] = int(end_info[1])
+    endInfoObj['switchs'] = int(end_info[2])
+    endInfoObj['switchsInstances'] = int(end_info[3])
+    endInfoObj['unfinesedPriorityCount'] = int(end_info[4])
+    endInfoObj['cost'] = int(end_info[5])
         
-        # Add text inside the bar
-        text_x = start + bar_width / 2
-        text_y = 1
-        ax.text(text_x, text_y, f"texto embaixo", color='black', ha='center', va='center')
+    return machineInfoObj, operationsObj, endInfoObj
 
-# Add dotted vertical lines at specific positions
-vertical_lines = [3, 8]
-for line_position in vertical_lines:
-    ax.axvline(line_position, color='gray', linestyle='dotted', linewidth=1)
+def parse_file(file_path):
+    file = open(file_path, 'r')
+    file_content = file.read()
+    
+    lines = file_content.splitlines()
+    header = lines.pop(0)
+    planejamento = [int(num) for num in header.split(';')]
+    planejamentoObj = {
+        'planingHorizon': planejamento[0],
+        'unsupervised': planejamento[1],
+        'timescale': planejamento[2]
+        
+    }
+    
+    modified_string = '\n'.join(lines)
+    
+    machines = []
+    machine_sections = modified_string.strip().split('Machine:')
+    for machine_section in machine_sections[1:]:
+        machine_info, operations, end_info = parse_machine_section(machine_section)
+        machines.append({
+            'machine_info': machine_info,
+            'operations': operations,
+            'end_info': end_info
+        })
+    return machines, planejamentoObj
 
+def printReport(machines, planejamento):
+    print(f"planingHorizon = {planejamento['planingHorizon']}")
+    print(f"unsupervised = {planejamento['unsupervised']}")
+    print("\n----------------------------------------------------------------\n")
+    
+    for machine in machines:
+        operations = machine['operations']
+        machine_info = machine['machine_info']
+        end_info = machine['end_info']
+        
+        print(f"machine_info = {machine_info}")
+        print()
+        
+        for operation in operations:
+            print(f"job = {operation['job']} operation {operation['operation']}")
+            print(f"start = {operation['start']}")
+            print(f"end = {operation['end']}")
+            print(f"priority = {operation['priority']}")
+            print(f"maganize = {operation['maganize']}") 
+            print()      
+        
+        print(f"end_info = {end_info}")
+        print("\n----------------------------------------------------------------\n")
 
-# Customize the plot
-ax.set_yticks(range(len(tasks)))
-ax.set_yticklabels(list(tasks.keys()))
-ax.set_xlabel('Time (hours)')
-ax.set_ylabel('Tasks')
-ax.legend()
-
-# Show the plot
-plt.show()
+machines, planejamento = parse_file('/home/mateus/WSL/IC/data/solutionReport.txt')
+plot_machine(machines, planejamento)
+# printReport(machines, planejamento)

@@ -16,72 +16,7 @@ using namespace std;
 // LOAD DUMMY
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
-void loadInstance(string filename){
-    vector<vector<bool>> toolJob;
-    // Vetor de ferramentas com cada job que ela pode fazer
-    // Era Global Mas tirei
-    
-    //Codigo para converter o JobTools para toolJob
-    // toolJob.resize(numberTools);
-    // for(int i=0; i < numberTools; ++i){
-    //     toolJob[i].resize(numberJobs);
-    // }
-
-    // for(int i=0; i < numberJobs; ++i){
-    //     for(int j=0; j < JobTools[i].size(); ++j){
-    //         toolJob[JobTools[i][j]-1][i] = true;
-    //     }
-    // }
-
-	
-	// Variaveis locais
-	string line; 
-    ifstream ifs;
-	int i=0;
-	int j=0;
-	
-	// Abre o arquivo com a instância
-	ifs.open(filename);
-			
-	// Ler o arquivo
-	if ( ifs.is_open()){
-		getline(ifs,line);
-		numberJobs = stoi(line); // Recupera a quantidade de tarefas
-
-		getline(ifs,line);
-		numberTools = stoi(line); // Recupera a quantidade de Ferramentas
-		
-		getline(ifs,line);
-		capacityMagazine = stoi(line); // Recupera a capacidade do magazine
-		
-		// Redimensiona as variaveis 		
-		toolJob.assign(numberTools, vector<bool>(numberJobs,false));
-		JobTools.resize(numberJobs);
-			
-		// Preenche as variaveis	
-		while(getline(ifs,line)){
-			
-			stringstream ss(line);
-			while ( getline (ss ,line, ' ')){
-				toolJob[i][j] = stoi(line);
-				if(toolJob[i][j]){
-					 JobTools[j].push_back(i);
-					//  ++sum;
-				}
-			j++;
-			}
-		j=0;
-		i++;
-		}
-	// Fecha o arquivo	
-	ifs.close();
-	}else{
-		cout << "Could not open the file! \n";
-	}
-}
-
-int laodRealInstance(string filename){
+int laodInstance(string filename){
     ifstream file(filename);
     int tmpToolSetIndex;
 
@@ -109,6 +44,7 @@ int laodRealInstance(string filename){
 
         getline(ss, value, '\n');
         processingTime.push_back(stoi(value));
+
     }
 
     file.close();
@@ -137,10 +73,9 @@ int laodRealInstance(string filename){
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     planingHorizon = 7;   //ToDo Nunca Muda? 		  
-    unsupervised   = 720; //ToDo Nunca Muda? 			 
+    unsupervised   = 12;  //ToDo Nunca Muda? 			 
     numberMachines = 0;   //ToDo Da onde Carregar?
     priority = {};        //ToDo Da onde Carregar?
-    machine  = {};        //ToDo Parte da Solução
     
     return 0;
 }
@@ -181,20 +116,6 @@ int laodToolSet(string filename) {
 
 void loadDataTypes(){
 
-    for (int i = 0; i < numberJobs; i++){
-        Job jobTmp;
-
-        jobTmp.indexJob = job[i];
-        jobTmp.indexOperation = operation[i];
-        jobTmp.indexToolSet = JobToolsIndex[i];
-        jobTmp.processingTime = processingTime[i];
-        jobTmp.priority = priority[i];
-        jobTmp.indexMachine = -1;
-
-        jobTmp.JobTools = JobTools[i];
-
-        originalJobs.push_back(jobTmp);
-    }
 
     for (auto it = mapToolSets.begin(); it != mapToolSets.end(); ++it) {
         ToolSet toolSetTmp;
@@ -203,6 +124,29 @@ void loadDataTypes(){
         toolSetTmp.tools = it->second;
 
         originalToolSets.push_back(toolSetTmp);
+    }
+
+    for (int i = 0; i < numberJobs; i++){
+        Job jobTmp;
+
+        jobTmp.indexJob = job[i];
+        jobTmp.indexOperation = operation[i];
+        
+        // jobTmp.indexToolSet = JobToolsIndex[i];
+        for (int j = 0; j < originalToolSets.size(); j++){
+            if (originalToolSets[j].indexToolSet == JobToolsIndex[i]){
+                jobTmp.indexToolSet = j;
+                break;
+            }
+        }
+
+
+        jobTmp.processingTime = processingTime[i];
+        jobTmp.priority = priority[i];
+
+        jobTmp.JobTools = JobTools[i];
+
+        originalJobs.push_back(jobTmp);
     }
 
 }
@@ -266,11 +210,16 @@ void printDataReport() {
     }
 
     cout << "\n------------------------------------------------------------------------------------------" << endl;
-    cout << "JOBS DATA TYPE" << endl;
+    cout << "JOBS DATA" << endl;
     cout << "------------------------------------------------------------------------------------------\n" << endl;
 
     for (int i = 0; i < originalJobs.size(); i++){
-        cout << "Job: " << originalJobs[i].indexJob << "\nOperation: " << originalJobs[i].indexOperation << "\nToolSet: " << originalJobs[i].indexToolSet << "\nProcessingTime: " << originalJobs[i].processingTime << "\nPriority: " << originalJobs[i].priority << "\nMachine: " << originalJobs[i].indexMachine << "\nJobTools: ";
+        cout << "Job: " << originalJobs[i].indexJob << "\n";
+        cout << "Operation: " << originalJobs[i].indexOperation << "\n";
+        cout << "ToolSet: " << originalJobs[i].indexToolSet << "\n";
+        cout << "ProcessingTime: " << originalJobs[i].processingTime << "\n";
+        cout << "Priority: " << originalJobs[i].priority << "\n";
+        cout << "JobTools: ";
         
         for(int j = 0; j < originalJobs[i].JobTools.size(); j++){
             cout << originalJobs[i].JobTools[j] << " ";
@@ -280,11 +229,12 @@ void printDataReport() {
     }
 
     cout << "------------------------------------------------------------------------------------------" << endl;
-    cout << "TOOL SET TYPE" << endl;
+    cout << "TOOL SET" << endl;
     cout << "------------------------------------------------------------------------------------------\n" << endl;
 
     for(int i = 0; i < originalToolSets.size(); i++){
-        cout << "ToolSet: " << originalToolSets[i].indexToolSet << "\nTools: ";
+        cout << "ToolSet: " << originalToolSets[i].indexToolSet << "\n"; 
+        cout << "Tools: ";
 
         for(int j = 0; j < originalToolSets[i].tools.size(); j++){
             cout << originalToolSets[i].tools[j] << " ";
@@ -293,6 +243,45 @@ void printDataReport() {
         cout << "\n\n";
     }
 
+    cout << "------------------------------------------------------------------------------------------" << endl;
+    cout << "SUPER JOBS" << endl;
+    cout << "------------------------------------------------------------------------------------------\n" << endl;
+
+    for(int i = 0; i < superJobs.size(); i++){
+        cout << "indexSuperToolSet: " << superJobs[i].indexSuperToolSet << "\n";
+        cout << "processingTimeSum: " << superJobs[i].processingTimeSum << "\n";
+        cout << "prioritySum: " << superJobs[i].prioritySum << "\n";
+        cout << "originalJobs: ";
+
+        for (auto it = superJobs[i].originalJobs.begin(); it != superJobs[i].originalJobs.end(); ++it){
+            cout << *it << " ";
+        }
+        
+        cout << "\n\n";
+    }
+
+    cout << "------------------------------------------------------------------------------------------" << endl;
+    cout << "SUPER TOOL SET" << endl;
+    cout << "------------------------------------------------------------------------------------------\n" << endl;
+
+    for(int i = 0; i < superToolSet.size(); i++){
+        cout << "indexOriginalToolSet: " << superToolSet[i].indexOriginalToolSet << "\n";
+        cout << "originalToolSets: ";
+
+        for (auto it = superToolSet[i].originalToolSets.begin(); it != superToolSet[i].originalToolSets.end(); ++it){
+            cout << *it << " ";
+        }
+        
+        cout << "\n\n";
+    }
+
+    cout << "------------------------------------------------------------------------------------------" << endl;
+    cout << "PRIORITY INDEX" << endl;
+    cout << "------------------------------------------------------------------------------------------\n" << endl;
+
+    for (auto it = priorityIndex.begin(); it != priorityIndex.end(); ++it) {
+        cout << "SuperJob: " << (*it).first << " OriginalJob: " << (*it).second <<"\n";
+    }
 
 }
 

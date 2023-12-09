@@ -18,7 +18,6 @@ typedef struct{
     int indexToolSet;
     int processingTime;
     bool priority;
-    int indexMachine;
     vector<int> JobTools;  
 
 }Job;
@@ -58,8 +57,7 @@ extern vector<vector<int>> JobTools;       // Vetor de jobs com cada ferramenta 
 extern vector<int> operation;		       // Aperation Vector		
 extern vector<int> job;			           // Job Vector	
 extern vector<int> processingTime;	       // Processing Time de cada Vector	
-extern vector<int> machine;		           // Maquina que cada job vai ser feito (Index comeca no 0)	
-extern vector<int> priority;		       // Prioridade de cada job (0 ou 1)
+extern vector<int> priority;	      
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // VARIVEIS RESOLVER O PROBLEMA
@@ -88,6 +86,9 @@ extern set<pair<int,int>> priorityIndex;
 #define COSTSWITCHINSTANCE 10
 #define COSTPRIORITY       30
 #define PROFITYPRIORITY    30
+
+// #define TIMESCALE          24
+#define TIMESCALE          1440
 
 #define DEBUG
 

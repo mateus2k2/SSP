@@ -4,9 +4,7 @@
 
 using namespace std;
 
-void loadInstance(string filename);
-
-int laodRealInstance(string filename);
+int laodInstance(string filename);
 int laodToolSet(string filename);
 
 void loadDataTypes();
