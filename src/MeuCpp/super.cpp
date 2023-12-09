@@ -32,7 +32,6 @@ map<int, bool> makeMapSubSetsToolSets(){
     return subSetsToolSets;
 }
 
-
 void makeSuper(){
     vector<bool> subSetsJobs(originalJobs.size(), false);
     map<int, bool> subSetsToolSets = makeMapSubSetsToolSets();
@@ -45,15 +44,25 @@ void makeSuper(){
     for(int i = 0; i < originalJobs.size(); i++){
         SuperToolSet SuperToolSetTmp;
         SuperJob SuperJobTmp;
+        int tmpVar = -1;
 
         if(subSetsJobs[i] == false){
             
             SuperToolSetTmp.indexOriginalToolSet = originalJobs[i].indexToolSet;
             SuperToolSetTmp.originalToolSets.push_back(originalJobs[i].indexToolSet);
 
-            SuperJobTmp.indexSuperToolSet = superToolSet.size();
-            if (sameSuperToolSet[i] == -1) SuperJobTmp.originalJobs.push_back(i);
-            else SuperJobTmp.indexSuperToolSet = sameSuperToolSet[i];
+
+            SuperJobTmp.originalJobs.push_back(i);
+            if (sameSuperToolSet[i] == -1){
+                tmpVar = superToolSet.size();
+                SuperJobTmp.indexSuperToolSet = tmpVar;
+            }
+
+            else{
+                tmpVar = sameSuperToolSet[i];
+                SuperJobTmp.indexSuperToolSet = tmpVar;
+            }
+
             SuperJobTmp.prioritySum = originalJobs[i].priority;
             SuperJobTmp.processingTimeSum = originalJobs[i].processingTime;
 
@@ -72,8 +81,8 @@ void makeSuper(){
                     subSetsJobs[j] = true;
                 };
 
-                if ((originalJobs[j].indexToolSet == originalJobs[i].indexToolSet && groopJobsWithSameToolSets) && i != j && subSetsJobs[j] == false){
-                    sameSuperToolSet[j] = superToolSet.size();
+                if ((originalJobs[j].indexToolSet == originalJobs[i].indexToolSet) && i != j){
+                    sameSuperToolSet[j] = tmpVar;
                 };
 
             }
@@ -83,6 +92,7 @@ void makeSuper(){
 
             int indexSuperJob = superJobs.size();
             superJobs[indexSuperJob-1].originalJobs.sort(compareJobsPriority);
+
 
         }
 

@@ -238,7 +238,6 @@ unsigned int KTNS(vector<int> s){
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 unsigned int costReport(vector<int> sol, vector<int> machine, fstream& solutionReportFile){
-	
 	vector<vector<int>> sols(numberMachines);
 	int totalCost = 0;
 	
@@ -250,28 +249,6 @@ unsigned int costReport(vector<int> sol, vector<int> machine, fstream& solutionR
 
     for (int i = 0; i < sols.size(); ++i) {
 
-		// ------------------------------------------------------------------------------------------------
-		// int countCreated = 0;
-
-		// int lastJob = sols[i][sols[i].size()-1];
-		// sols[i].erase(sols[i].end()-1, sols[i].end());
-
-		// for (auto it = superJobs[lastJob].originalJobs.begin(); it != superJobs[lastJob].originalJobs.end(); ++it){
-		// 	SuperJob SuperJobTmp;
-
-		// 	SuperJobTmp.indexSuperToolSet = superJobs[lastJob].indexSuperToolSet;
-		// 	SuperJobTmp.processingTimeSum = originalJobs[*it].processingTime;
-		// 	SuperJobTmp.prioritySum = originalJobs[*it].priority;
-		// 	SuperJobTmp.originalJobs.push_back(*it);
-
-		// 	superJobs.push_back(SuperJobTmp);
-		// 	countCreated++;
-
-		// 	sols[i].push_back(superJobs.size()-1);
-		// }
-
-		// ------------------------------------------------------------------------------------------------
-
         solutionReportFile << "Machine: " << i << " = ";
         for (int j = 0; j < sols[i].size(); ++j)
 			for (auto it = superJobs[sols[i][j]].originalJobs.begin(); it != superJobs[sols[i][j]].originalJobs.end(); ++it){
@@ -280,10 +257,6 @@ unsigned int costReport(vector<int> sol, vector<int> machine, fstream& solutionR
 		solutionReportFile << "\n";
 
         totalCost += KTNSReport(sols[i], solutionReportFile);
-
-		// ------------------------------------------------------------------------------------------------
-
-		// superJobs.erase(superJobs.end() - countCreated, superJobs.end());
 
     }
 
