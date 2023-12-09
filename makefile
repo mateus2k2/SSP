@@ -9,12 +9,14 @@ optmizeTollSetsPy:
 toolSetsAnalysis:
 	clear && echo "\n" && python src/MeuPython/toolSetsAnalysis.py 
 
-testePy:
-	clear && echo "\n" && python src/MeuPython/teste.py 
-
 ganattPy:
 	clear && echo "\n" && python src/MeuPython/ganatt.py 
 
+testePy:
+	clear && echo "\n" && python src/MeuPython/teste.py 
+
+bokeh:
+	clear && echo "\n" && bokeh serve --show src/MeuPython/teste.py
 
 # Codigos Andre
 

@@ -32,14 +32,17 @@ map<int, bool> makeMapSubSetsToolSets(){
     return subSetsToolSets;
 }
 
+
 void makeSuper(){
     vector<bool> subSetsJobs(originalJobs.size(), false);
     map<int, bool> subSetsToolSets = makeMapSubSetsToolSets();
+    
+    vector<int> sameSuperToolSet(originalJobs.size(), -1);
+    bool groopJobsWithSameToolSets = true;
 
     sort(originalJobs.begin(), originalJobs.end(), compareJobsSize);
 
     for(int i = 0; i < originalJobs.size(); i++){
-        if (i == 249) cout << "i: " << i << endl;
         SuperToolSet SuperToolSetTmp;
         SuperJob SuperJobTmp;
 
@@ -49,14 +52,14 @@ void makeSuper(){
             SuperToolSetTmp.originalToolSets.push_back(originalJobs[i].indexToolSet);
 
             SuperJobTmp.indexSuperToolSet = superToolSet.size();
-            SuperJobTmp.originalJobs.push_back(i);
+            if (sameSuperToolSet[i] == -1) SuperJobTmp.originalJobs.push_back(i);
+            else SuperJobTmp.indexSuperToolSet = sameSuperToolSet[i];
             SuperJobTmp.prioritySum = originalJobs[i].priority;
             SuperJobTmp.processingTimeSum = originalJobs[i].processingTime;
 
             for(int j = i; j < originalJobs.size(); j++){
 
-                if ((isSubset(originalJobs[j].JobTools, originalJobs[i].JobTools)) && i != j && subSetsJobs[j] == false){
-                // if ((isSubset(originalJobs[j].JobTools, originalJobs[i].JobTools) || originalJobs[j].indexToolSet == originalJobs[i].indexToolSet ) && i != j && subSetsJobs[j] == false){
+                if ((isSubset(originalJobs[j].JobTools, originalJobs[i].JobTools) || (originalJobs[j].indexToolSet == originalJobs[i].indexToolSet && groopJobsWithSameToolSets)) && i != j && subSetsJobs[j] == false){
                     SuperJobTmp.originalJobs.push_back(j);
                     SuperJobTmp.prioritySum += originalJobs[j].priority;
                     SuperJobTmp.processingTimeSum += originalJobs[j].processingTime;
@@ -68,11 +71,15 @@ void makeSuper(){
 
                     subSetsJobs[j] = true;
                 };
+
+                if ((originalJobs[j].indexToolSet == originalJobs[i].indexToolSet && groopJobsWithSameToolSets) && i != j && subSetsJobs[j] == false){
+                    sameSuperToolSet[j] = superToolSet.size();
+                };
+
             }
 
             superJobs.push_back(SuperJobTmp);
-            superToolSet.push_back(SuperToolSetTmp);
-
+            if (sameSuperToolSet[i] == -1) superToolSet.push_back(SuperToolSetTmp);
 
             int indexSuperJob = superJobs.size();
             superJobs[indexSuperJob-1].originalJobs.sort(compareJobsPriority);
@@ -93,6 +100,24 @@ void makeSuper(){
     //ATUALIZAR NUMBER OF JOBS
     numberJobs = superJobs.size();
 
+    cout << "SUBSETSJOBS: " << subSetsJobs.size() << endl;
+    int countTrueJobs = 0;
+    for (auto it = subSetsJobs.begin(); it != subSetsJobs.end(); ++it){
+        cout << *it << " ";
+        if ((*it) == true) countTrueJobs++;
+    }
+    cout << endl;
+    cout << "NUMERO DE VERDADEIROS: " << countTrueJobs << endl << endl;
+
+    cout << "SUBSETSTOOLSETS: " << subSetsToolSets.size() << endl;
+    int countTrueToolSets = 0;
+    for (auto it = subSetsToolSets.begin(); it != subSetsToolSets.end(); ++it){
+        cout << it->second << " ";
+        if (it->second == true) countTrueToolSets++;
+    }
+    cout << endl;
+    cout << "NUMERO DE VERDADEIROS: " << countTrueToolSets << endl << endl;
+
 }
 
 void makePriorityIndex(){
@@ -103,6 +128,7 @@ void makePriorityIndex(){
                 pair<int,int> tmp(i,originalIndex);
                 priorityIndex.insert(tmp);
             }
+
         }
         
     }

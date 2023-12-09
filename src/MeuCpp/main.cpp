@@ -51,6 +51,7 @@ set<pair<int,int>> priorityIndex;
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 int main(){
+    cout << endl;
 
     fstream solutionReportFile;
     solutionReportFile.open("/home/mateus/WSL/IC/data/solutionReport.txt", ios::out);
@@ -131,7 +132,7 @@ int main(){
     // ---------------------------------------------------------------------
 
     printDataReport();
-    // costReport(sol, machine, solutionReportFile);
+    costReport(sol, machine, solutionReportFile);
 
 	return 0;
 }

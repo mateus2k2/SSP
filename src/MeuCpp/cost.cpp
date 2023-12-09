@@ -120,11 +120,6 @@ unsigned int KTNSReport(vector<int> s, fstream& solutionReportFile){
 						unfineshedPriorityCount += superJobs[s[v]].prioritySum;
 					}
 					// Pode sair do loop 
-					cout << "break1" << endl;
-					cout << "fimJob: " << fimJob << endl;
-					cout << "inicioJob: " << inicioJob << endl;
-					cout << "currantProcessingTime: " << currantProcessingTime << endl;
-					cout << "jL: " << jL << endl;
 					break;
 				}
 				
@@ -175,11 +170,6 @@ unsigned int KTNSReport(vector<int> s, fstream& solutionReportFile){
 						unfineshedPriorityCount += superJobs[s[v]].prioritySum;
 					}
 					// Pode sair do loop 
-					cout << "break2" << endl;
-					cout << "fimJob: " << fimJob << endl;
-					cout << "inicioJob: " << inicioJob << endl;
-					cout << "currantProcessingTime: " << currantProcessingTime << endl;
-					cout << "jL: " << jL << endl;
 					break;
 					
 				}

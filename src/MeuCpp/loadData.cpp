@@ -157,12 +157,17 @@ void printDataReport() {
     cout << "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
 
     cout << "Number of Machines: " << numberMachines << endl;
-    cout << "Number of Tools: " << numberTools << endl;
-    cout << "Number of Jobs: " << numberJobs << endl;
     cout << "Capacity of Magazine: " << capacityMagazine << endl;
     cout << "Planing Horizon: " << planingHorizon << endl;
-    cout << "Unsupervised: " << unsupervised << endl;
-    
+    cout << "Unsupervised: " << unsupervised << endl << endl;
+
+    cout << "Number Of ToolSets Originais: " << originalToolSets.size() << endl;
+    cout << "Number Of ToolSets Super: " << superToolSet.size() << endl;
+    cout << "Number of Tools: " << numberTools << endl << endl;
+
+    cout << "Number of Original Jobs: " << originalJobs.size() << endl;
+    cout << "Number of Super Jobs: " << numberJobs << endl << endl;
+
     cout << endl << endl;
     
     for (const auto& pair : mapToolSets) {

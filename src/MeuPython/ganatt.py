@@ -1,4 +1,7 @@
 import matplotlib.pyplot as plt
+import mpld3
+from mpld3 import plugins
+import numpy as np
 
 def plot_machine(machines, planejamento):
     planingHorizon = planejamento['planingHorizon']
@@ -20,19 +23,20 @@ def plot_machine(machines, planejamento):
         
         for j, operation in enumerate(operations):
             
+            corAtual = colors['priority'] if operation['priority'] == 1 else colors['normal']
+            
             barY = (numberMachines-i-(i%2))
             barWidth = operation['end'] - operation['start']           
-            ax.barh(barY, barWidth, left=operation['start'], align='center', edgecolor='black', height=0.3, color=colors['normal'], label=operation['job'])
+            ax.barh(barY, barWidth, left=operation['start'], align='center', edgecolor='black', height=0.3, color=corAtual, label=operation['job'])
             
             fontsize = 8
             
             jobOperationTextX = operation['start'] + barWidth / 2
             ax.text(jobOperationTextX, barY, f"({operation['job']}, {operation['operation']})", color='white', ha='center', va='center', fontsize=fontsize)
             
-            
-            magazineTextX = operation['start'] + barWidth / 2
-            magazineTextY = (barY - 0.5)
-            ax.text(magazineTextX, magazineTextY, f"{operation['maganize']}", color='black', ha='center', va='center', fontsize=fontsize)
+            # magazineTextX = operation['start'] + barWidth / 2
+            # magazineTextY = (barY - 0.5)
+            # ax.text(magazineTextX, magazineTextY, f"{operation['maganize']}", color='black', ha='center', va='center', fontsize=fontsize)
 
     verticalLines = []
     xticks = []
@@ -59,7 +63,8 @@ def plot_machine(machines, planejamento):
     
     ax.set_xlabel('Time (hours)')
     ax.set_ylabel('Machines')
-
+    
+    
     plt.show()
 
 def parse_machine_section(machine_section):
