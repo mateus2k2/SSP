@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 import mpld3
 from mpld3 import plugins
 import numpy as np
+from bokeh.plotting import figure, show
+from bokeh.models import Span
 
 def plot_machine(machines, planejamento):
     planingHorizon = planejamento['planingHorizon']
@@ -66,6 +68,65 @@ def plot_machine(machines, planejamento):
     
     
     plt.show()
+
+def plot_machine_bokeh(machines, planejamento):
+    planingHorizon = planejamento['planingHorizon']
+    unsupervised = planejamento['unsupervised']
+    timescale = planejamento['timescale']
+    numberMachines = len(machines)
+
+    p = figure(y_range=(-1, numberMachines), plot_height=400, plot_width=800, x_axis_label='Time (hours)', y_axis_label='Machines')
+
+    colors = {
+        'priority': 'blue',
+        'normal': 'orange',
+    }
+
+    for i, machine in enumerate(machines):
+        operations = machine['operations']
+        machine_info = machine['machine_info']
+        end_info = machine['end_info']
+
+        for j, operation in enumerate(operations):
+            corAtual = colors['priority'] if operation['priority'] == 1 else colors['normal']
+
+            barY = (numberMachines - i - (i % 2))
+            barWidth = operation['end'] - operation['start']
+
+            p.hbar(y=barY, left=operation['start'], right=operation['end'], height=0.3, line_color='black', fill_color=corAtual, legend_label=operation['job'])
+
+            fontsize = '8pt'
+
+            job_operation_text_x = operation['start'] + barWidth / 2
+            p.text(x=job_operation_text_x, y=barY, text=f"({operation['job']}, {operation['operation']})", text_color='white', text_align='center', text_baseline='middle', text_font_size=fontsize)
+
+    vertical_lines = []
+    x_ticks = []
+    count = 0
+    for i in range(0, planingHorizon + 1):
+        vertical_lines.append(count)
+        vertical_lines.append(count + unsupervised)
+        x_ticks.append(count)
+        x_ticks.append(count + unsupervised)
+        count += timescale
+
+    vertical_lines.pop()
+
+    for line_position in vertical_lines:
+        vline = Span(location=line_position, dimension='height', line_color='gray', line_dash='dotted', line_width=1)
+        p.add_layout(vline)
+
+    for i in range(0, len(vertical_lines) - 1, 2):
+        vspan = p.varea(x=[vertical_lines[i], vertical_lines[i + 1]], y1=numberMachines, y2=-1, fill_color='lightgray', fill_alpha=0.5, legend_label='Highlighted Area')
+        p.add_layout(vspan)
+
+    p.yaxis.ticker = range(-1, len(machines))
+    p.yaxis.major_label_overrides = {i: str(i) for i in range(-1, len(machines))}
+
+    p.xaxis.ticker = x_ticks
+    p.xaxis.major_label_overrides = {tick: str(tick) for tick in x_ticks}
+
+    show(p)
 
 def parse_machine_section(machine_section):
     lines = machine_section.strip().split('\n')
@@ -155,5 +216,6 @@ def printReport(machines, planejamento):
         print("\n----------------------------------------------------------------\n")
 
 machines, planejamento = parse_file('/home/mateus/WSL/IC/data/solutionReport.txt')
-plot_machine(machines, planejamento)
+# plot_machine(machines, planejamento)
+plot_machine_bokeh(machines, planejamento)
 # printReport(machines, planejamento)
