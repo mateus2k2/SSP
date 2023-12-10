@@ -37,32 +37,29 @@ void makeSuper(){
     map<int, bool> subSetsToolSets = makeMapSubSetsToolSets();
     
     vector<int> sameSuperToolSet(originalJobs.size(), -1);
-    bool groopJobsWithSameToolSets = true;
+    bool groopJobsWithSameToolSets = false;
 
     sort(originalJobs.begin(), originalJobs.end(), compareJobsSize);
 
     for(int i = 0; i < originalJobs.size(); i++){
         SuperToolSet SuperToolSetTmp;
         SuperJob SuperJobTmp;
-        int tmpVar = -1;
+        int superToolSetIndex = -1;
 
         if(subSetsJobs[i] == false){
             
             SuperToolSetTmp.indexOriginalToolSet = originalJobs[i].indexToolSet;
             SuperToolSetTmp.originalToolSets.push_back(originalJobs[i].indexToolSet);
 
-
             SuperJobTmp.originalJobs.push_back(i);
             if (sameSuperToolSet[i] == -1){
-                tmpVar = superToolSet.size();
-                SuperJobTmp.indexSuperToolSet = tmpVar;
+                superToolSetIndex = superToolSet.size();
+                SuperJobTmp.indexSuperToolSet = superToolSetIndex;
             }
-
             else{
-                tmpVar = sameSuperToolSet[i];
-                SuperJobTmp.indexSuperToolSet = tmpVar;
+                superToolSetIndex = sameSuperToolSet[i];
+                SuperJobTmp.indexSuperToolSet = superToolSetIndex;
             }
-
             SuperJobTmp.prioritySum = originalJobs[i].priority;
             SuperJobTmp.processingTimeSum = originalJobs[i].processingTime;
 
@@ -81,8 +78,8 @@ void makeSuper(){
                     subSetsJobs[j] = true;
                 };
 
-                if ((originalJobs[j].indexToolSet == originalJobs[i].indexToolSet) && i != j){
-                    sameSuperToolSet[j] = tmpVar;
+                if ((originalJobs[j].indexToolSet == originalJobs[i].indexToolSet) && i != j && subSetsJobs[j] == false){
+                    sameSuperToolSet[j] = superToolSetIndex;
                 };
 
             }

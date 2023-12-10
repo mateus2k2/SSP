@@ -84,7 +84,7 @@ unsigned int KTNSReport(vector<int> s, fstream& solutionReportFile){
 		if ((inicioJob % TIMESCALE >= unsupervised) && (currantSwitchs > 0)){
 			
 			//Verificar de consigo acabar essa tarefa antes de exceder o horizonte de planejamento
-			if(fimJob + (TIMESCALE - (fimJob % TIMESCALE)) >= planingHorizon * TIMESCALE){
+			if(currantProcessingTime + (inicioJob + (TIMESCALE - (inicioJob % TIMESCALE))) >= planingHorizon * TIMESCALE){
 				
 				if(expanded == false){
 					for(unsigned int v = jL+1; v < numberJobsSol; ++v){
@@ -120,6 +120,9 @@ unsigned int KTNSReport(vector<int> s, fstream& solutionReportFile){
 						unfineshedPriorityCount += superJobs[s[v]].prioritySum;
 					}
 					// Pode sair do loop 
+					cout << "break1" << endl;
+					cout << "fimJob: " << fimJob << endl;
+					cout << "inicioJob: " << inicioJob << endl;
 					break;
 				}
 				
@@ -170,6 +173,9 @@ unsigned int KTNSReport(vector<int> s, fstream& solutionReportFile){
 						unfineshedPriorityCount += superJobs[s[v]].prioritySum;
 					}
 					// Pode sair do loop 
+					cout << "break1" << endl;
+					cout << "fimJob: " << fimJob << endl;
+					cout << "inicioJob: " << inicioJob << endl;
 					break;
 					
 				}

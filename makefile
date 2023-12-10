@@ -3,6 +3,9 @@
 mainCpp:
 	clear && g++ src/MeuCpp/*.cpp -std=c++2a -Wshadow -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native && echo "\n" && clear && src/out/mainCpp
 
+mainCppDebug:
+	clear && g++ src/MeuCpp/*.cpp -std=c++2a -Wshadow -o src/out/mainCppDebug -Wno-unused-result -lpthread -O3 -march=native -g && echo "\n" && clear
+
 optmizeTollSetsPy:
 	clear && echo "\n" && python src/MeuPython/optmizeToolSets.py 
 
@@ -16,7 +19,7 @@ testePy:
 	clear && echo "\n" && python src/MeuPython/teste.py 
 
 bokeh:
-	clear && echo "\n" && bokeh serve --show src/MeuPython/teste.py
+	clear && echo "\n" && bokeh serve --show src/MeuPython/bokeh.py
 
 # Codigos Andre
 
