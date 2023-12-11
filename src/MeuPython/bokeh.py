@@ -1,141 +1,14 @@
-# from bokeh.plotting import figure, curdoc
-# from bokeh.models import ColumnDataSource, HoverTool, TapTool, CustomJS
-# from bokeh.layouts import column
-# from bokeh.models.widgets import Div
-
-# # Create a ColumnDataSource with some data
-# data = {'x': [1, 2, 3, 4, 5],
-#         'y': [6, 7, 2, 4, 8],
-#         'text': ['Point 1', 'Point 2', 'Point 3', 'Point 4', 'Point 5']}
-# source = ColumnDataSource(data=data)
-
-# # Create a figure
-# p = figure(title='Click a point to show/hide text', tools='tap')
-
-# # Plot the points
-# p.circle('x', 'y', size=10, source=source)
-
-# # Add hover tool
-# hover = HoverTool(tooltips=[("Index", "@index"), ("(x, y)", "($x, $y)"), ("Text", "@text")])
-# p.add_tools(hover)
-
-# # Add a Div to display text
-# text_div = Div(text="", width=400)
-# layout = column(p, text_div)
-
-# # Create a CustomJS callback to update the text_div when a point is clicked
-# callback = CustomJS(args=dict(source=source, text_div=text_div), code="""
-#     var selected_index = cb_obj.indices[0];
-#     var text = source.data['text'][selected_index];
-#     text_div.text = "<h2>" + text + "</h2>";
-# """)
-
-# # Add TapTool with the callback to the figure
-# tap_tool = TapTool(callback=callback)
-# p.add_tools(tap_tool)
-
-# curdoc().add_root(layout)
-
-
-
-
-
-
-
-# from bokeh.io import curdoc
-# from bokeh.layouts import column
-# from bokeh.models import Button, Div
-
-# # Initial content
-# initial_content = """
-# <h3>Click the button to expand and collapse</h3>
-# <p>This is some information that can be expanded or collapsed.</p>
-# """
-
-# # Create a Div widget to display content
-# info_div = Div(text=initial_content, width=400)
-
-# # Create a Button widget for expand/collapse action
-# expand_collapse_button = Button(label="Expand/Collapse", button_type="success")
-
-# # Callback function for the button click event
-# def expand_collapse():
-#     if info_div.visible:
-#         info_div.visible = False
-#         expand_collapse_button.label = "Expand"
-#     else:
-#         info_div.visible = True
-#         expand_collapse_button.label = "Collapse"
-
-# # Attach the callback function to the button click event
-# expand_collapse_button.on_click(expand_collapse)
-
-# # Set up the layout
-# layout = column(expand_collapse_button, info_div)
-
-# # Add the layout to the current document
-# curdoc().add_root(layout)
-
-
-
-
-# from bokeh.models import ColumnDataSource, Div
-# from bokeh.plotting import figure, curdoc
-# from bokeh.layouts import column
-# from bokeh.events import Tap
-
-# # Sample data
-# data = {'x': [1, 2, 3, 4, 5],
-#         'y': [6, 7, 2, 4, 8],
-#         'info': ['Point 1', 'Point 2', 'Point 3', 'Point 4', 'Point 5']}
-
-# # Create a ColumnDataSource
-# source = ColumnDataSource(data=data)
-
-# # Create a figure
-# plot = figure(width=400, height=400, tools='tap', title='Click on a point')
-
-# # Plot the points
-# plot.circle('x', 'y', size=10, source=source)
-
-# # Create a Div to display information
-# info_div = Div(width=300, height=400, text='Click on a point to see information')
-
-# # Callback function to update the info_div when a point is clicked
-# def callback(event):
-#     selected_index = source.selected.indices
-#     if selected_index:
-#         info_text = f"Information about {data['info'][selected_index[0]]}"
-#     else:
-#         info_text = "Click on a point to see information"
-#     info_div.text = info_text
-
-# # Attach the callback function to the Tap event
-# plot.on_event(Tap, callback)
-
-# # Create a layout with the plot and info_div
-# layout = column(plot, info_div)
-
-# # Add the layout to the current document
-# curdoc().add_root(layout)
-
-
-
-
-
-
-
-
 import matplotlib.pyplot as plt
 import mpld3
 from mpld3 import plugins
 import numpy as np
 from bokeh.plotting import figure, show
 from bokeh.models import Span
-from bokeh.models import ColumnDataSource, Div, Text, VArea
-from bokeh.plotting import figure, curdoc
-from bokeh.layouts import column
+from bokeh.models import ColumnDataSource, Div, Text, VArea, Patch, Button, Label
+from bokeh.plotting import figure, curdoc, save
+from bokeh.layouts import column, row
 from bokeh.events import Tap
+from bokeh.models.callbacks import CustomJS
 
 def plot_machine_bokeh(machines, planejamento):
     planingHorizon = planejamento['planingHorizon']
@@ -143,31 +16,34 @@ def plot_machine_bokeh(machines, planejamento):
     timescale = planejamento['timescale']
     numberMachines = len(machines)
 
-    p = figure(y_range=(-1, numberMachines), height=400, width=800, x_axis_label='Time (hours)', y_axis_label='Machines')
+    p = figure(y_range=(-1, numberMachines+4), height=400, width=800, x_axis_label='Time (hours)', y_axis_label='Machines')
 
+    machines_source = ColumnDataSource(data={
+        'machines': machines,
+    })
+    
     colors = {
         'priority': 'blue',
         'normal': 'orange',
     }
+    
+    # task_info_list = Div(width=400, height=200, text="<ol></ol>")
 
-    for i, machine in enumerate(machines):
-        operations = machine['operations']
-        machine_info = machine['machine_info']
-        end_info = machine['end_info']
+    # button_callback = CustomJS(args=dict(task_info_list=task_info_list), code="""
+    #     // Remove the clicked list item when the button is pressed
+    #     var selected_li = document.querySelector('.selected');
+    #     selected_li.parentNode.removeChild(selected_li);
+    # """)
 
-        for j, operation in enumerate(operations):
-            corAtual = colors['priority'] if operation['priority'] == 1 else colors['normal']
+    # tap_callback = CustomJS(args=dict(task_info_list=task_info_list, machines_source=machines_source, button_callback=button_callback), code="""
+    #     var x_click = cb_obj.x;
+    #     var y_click = cb_obj.y;
+    #     var machines_data = machines_source.data;
+    #     var task_info = "Task Information: ...";  // Update this line with the actual task information
+    #     task_info_list.text += "<li class='selected'>" + task_info + "<button onclick='button_callback.execute()'>Close</button></li>";
+    # """)
+    
 
-            barY = (numberMachines - i - (i % 2))
-            barWidth = operation['end'] - operation['start']
-
-            p.hbar(y=barY, left=operation['start'], right=operation['end'], height=0.3, line_color='black', fill_color=corAtual, legend_label=f"operation['job']")
-
-            job_operation_text_x = operation['start'] + barWidth / 2
-            source = ColumnDataSource(data=dict(x=[job_operation_text_x], y=[barY], text=[f"({operation['job']}, {operation['operation']})"]))
-            glyph = Text(x="x", y="y", text="text", angle=0, text_color="#96deb3")
-            p.add_glyph(source, glyph)
-            
     vertical_lines = []
     x_ticks = []
     count = 0
@@ -185,23 +61,60 @@ def plot_machine_bokeh(machines, planejamento):
         p.add_layout(vline)
 
     for i in range(0, len(vertical_lines) - 1, 2):
-        N = 30
-        x = np.linspace(-2, 3, N)
-        y1 = np.zeros(N)
-        y2 = 10 - x**2
-        
-        source = ColumnDataSource(dict(x=x, y1=y1, y2=y2))
-        glyph = VArea(x="x", y1="y1", y2="y2", fill_color="#f46d43")
-        p.add_glyph(source, glyph)
+        overlay_x = [vertical_lines[i], vertical_lines[i + 1], vertical_lines[i + 1], vertical_lines[i]]
+        overlay_y = [-1, -1, numberMachines, numberMachines]
+        p.patch(overlay_x, overlay_y, color='gray', alpha=0.3)
         
     # p.yaxis.ticker = [i in range(-1, len(machines))]
     # p.yaxis.major_label_overrides = {i: str(i) for i in range(-1, len(machines))}
 
-    # p.xaxis.ticker = x_ticks
-    # p.xaxis.major_label_overrides = {tick: str(tick) for tick in x_ticks}
+    p.xaxis.ticker = x_ticks
+    p.xaxis.major_label_overrides = {tick: str(tick) for tick in x_ticks}
 
-    layout = column(p)
+
+    textsList = []
+    
+    for i, machine in enumerate(machines):
+        operations = machine['operations']
+        machine_info = machine['machine_info']
+        end_info = machine['end_info']
+
+        for j, operation in enumerate(operations):
+            corAtual = colors['priority'] if operation['priority'] == 1 else colors['normal']
+
+            barY = (numberMachines - i - (i % 2))
+            barWidth = operation['end'] - operation['start']
+
+            p.hbar(y=barY, left=operation['start'], right=operation['end'], height=0.3, line_color='black', fill_color="blue", legend_label=f"operation['job']", alpha=0.3)
+
+            label_x = operation['start'] + barWidth / 2
+            label_y = barY
+            label_text = f"({operation['job']}, {operation['operation']})"
+            
+            text = Label(x=label_x, y=label_y, text=label_text, text_align='center', text_baseline='middle', text_color='black', text_font_size='10pt')
+            textsList.append(text)
+            p.add_layout(text)
+            
+
+
+    x_callback = CustomJS(args=dict(textsList=textsList, init_font_size=1, init_xrange=9360), code="""
+    let xzoom = ((init_font_size * init_xrange) / (cb_obj.end - cb_obj.start));
+    
+    for (let i = 0; i < textsList.length; i++) {
+        textsList[i]['text_font_size'] = xzoom + 'pt';
+    }
+    """)
+    p.x_range.js_on_change('start', x_callback)      
+            
+    p.grid.grid_line_color = None
+    p.ygrid.grid_line_color = None
+    
+    # p.js_on_event('tap', tap_callback)
+    # layout = row(p, column(task_info_list))
+
+    layout = row(p, column())
     curdoc().add_root(layout)
+    save(layout, filename='/home/mateus/WSL/IC/data/bokeh.html')
 
 
 def parse_machine_section(machine_section):
