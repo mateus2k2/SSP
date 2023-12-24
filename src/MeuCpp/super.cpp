@@ -37,7 +37,7 @@ void makeSuper(){
     map<int, bool> subSetsToolSets = makeMapSubSetsToolSets();
     
     vector<int> sameSuperToolSet(originalJobs.size(), -1);
-    bool groopJobsWithSameToolSets = false;
+    bool groopJobsWithSameToolSets = true;
 
     sort(originalJobs.begin(), originalJobs.end(), compareJobsSize);
 
