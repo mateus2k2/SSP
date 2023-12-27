@@ -107,23 +107,23 @@ void makeSuper(){
     //ATUALIZAR NUMBER OF JOBS
     numberJobs = superJobs.size();
 
-    cout << "SUBSETSJOBS: " << subSetsJobs.size() << endl;
-    int countTrueJobs = 0;
-    for (auto it = subSetsJobs.begin(); it != subSetsJobs.end(); ++it){
-        cout << *it << " ";
-        if ((*it) == true) countTrueJobs++;
-    }
-    cout << endl;
-    cout << "NUMERO DE VERDADEIROS: " << countTrueJobs << endl << endl;
+    // cout << "SUBSETSJOBS: " << subSetsJobs.size() << endl;
+    // int countTrueJobs = 0;
+    // for (auto it = subSetsJobs.begin(); it != subSetsJobs.end(); ++it){
+    //     cout << *it << " ";
+    //     if ((*it) == true) countTrueJobs++;
+    // }
+    // cout << endl;
+    // cout << "NUMERO DE VERDADEIROS: " << countTrueJobs << endl << endl;
 
-    cout << "SUBSETSTOOLSETS: " << subSetsToolSets.size() << endl;
-    int countTrueToolSets = 0;
-    for (auto it = subSetsToolSets.begin(); it != subSetsToolSets.end(); ++it){
-        cout << it->second << " ";
-        if (it->second == true) countTrueToolSets++;
-    }
-    cout << endl;
-    cout << "NUMERO DE VERDADEIROS: " << countTrueToolSets << endl << endl;
+    // cout << "SUBSETSTOOLSETS: " << subSetsToolSets.size() << endl;
+    // int countTrueToolSets = 0;
+    // for (auto it = subSetsToolSets.begin(); it != subSetsToolSets.end(); ++it){
+    //     cout << it->second << " ";
+    //     if (it->second == true) countTrueToolSets++;
+    // }
+    // cout << endl;
+    // cout << "NUMERO DE VERDADEIROS: " << countTrueToolSets << endl << endl;
 
 }
 

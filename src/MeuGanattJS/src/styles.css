@@ -1,0 +1,35 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+#gantt-chart {
+    overflow-x: auto;
+}
+
+.chart-block {
+    position: absolute;
+    height: 30px;
+    background-color: #3498db;
+    border: 1px solid #2980b9;
+    cursor: pointer;
+}
+
+.chart-block:hover {
+    background-color: #2980b9;
+}
+
+.chart-details {
+    display: none;
+    position: absolute;
+    background-color: #ecf0f1;
+    padding: 10px;
+    border: 1px solid #bdc3c7;
+    z-index: 1;
+}
+
+.chart-machine {
+    position: relative;
+    margin-bottom: 20px; /* Adjust as needed to create space between machines */
+}

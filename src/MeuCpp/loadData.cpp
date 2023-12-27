@@ -69,13 +69,15 @@ int laodInstance(string filename){
         }
     }
     numberTools = allTools.size();
-
+    
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     planingHorizon = 7;   //ToDo Nunca Muda? 		  
     unsupervised   = 12;  //ToDo Nunca Muda? 			 
     numberMachines = 0;   //ToDo Da onde Carregar?
     priority = {};        //ToDo Da onde Carregar?
+    
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
     
     return 0;
 }
@@ -115,7 +117,6 @@ int laodToolSet(string filename) {
 }
 
 void loadDataTypes(){
-
 
     for (auto it = mapToolSets.begin(); it != mapToolSets.end(); ++it) {
         ToolSet toolSetTmp;
