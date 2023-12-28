@@ -2,22 +2,27 @@ let parsedData = null;
 const fileInput = document.getElementById('fileInput');
 fileInput.addEventListener('change', handleFileSelect);
 
+
+
+
+
+
+
+
+
+
 function Timeline(data) {
     const margin = ({ top: 10, right: 20, bottom: 50, left: 20 });
 
     const barHeight = 20;
 
-    const labelStep = 720; //---------------------------------------
-
     const maxYear = data['planejamentoObj']["planingHorizon"] * data['planejamentoObj']['timescale'];
-    const minYear = 0
+    const minYear = 0;
 
-    const width = maxYear + margin.left + margin.right;
+    const width = 1500;
 
-    const yPos = Array.from({ length: 100 }, () => 50); //---------------------------------------
-
-    const yPosMax = Math.max(...yPos);
-    const yPosMin = Math.min(...yPos);
+    const yPosMax = data['machines'].length * 2;
+    const yPosMin = -1;
     const chartHeight = (yPosMax - yPosMin) * barHeight * 2;
     const height = chartHeight + margin.top + margin.bottom;
 
@@ -28,13 +33,21 @@ function Timeline(data) {
         .attr("width", width)
         .attr("height", height);
 
-    const centuries = d3.range(0, maxYear, data['planejamentoObj']['unsupervised']); //---------------------------------------
+    const timescale = data.planejamentoObj.timescale;
+    const unsupervised = data.planejamentoObj.unsupervised;
+    const planningHorizon = data.planejamentoObj.planingHorizon;
+    let accumulatedValue = 0;
+
+    const increments = [timescale - unsupervised, unsupervised];
+    const steplist = Array.from({ length: planningHorizon * 2 + 1 }, (_, i) => {
+        if (i > 0) accumulatedValue += increments[i % 2];
+        return accumulatedValue;
+    });
 
     const linesLayer = svg.append("g").attr("class", "lines-layer");
-
     linesLayer.append("g")
         .selectAll("line")
-        .data(centuries)
+        .data(steplist)
         .join("line")
         .attr("x1", d => xScale(d))
         .attr("x2", d => xScale(d))
@@ -44,75 +57,137 @@ function Timeline(data) {
         .style("stroke-dasharray", "2,2");
 
     svg.append("g")
+        .attr("class", "axis axis--x")
         .attr("transform", `translate(0,${chartHeight})`)
         .call(d3.axisBottom(xScale)
-            .tickValues(d3.range(Math.floor(minYear / labelStep) * labelStep, maxYear, labelStep)) //---------------------------------------
+            .tickValues(steplist)
             .tickFormat(d3.format(".0f"))
             .tickSizeOuter(0));
 
-
     for (let i = 0; i < data['machines'].length; i++) {
-        // TimelineOne(data['machines'][i]['operations'], svg, yPos, barHeight);
         dataAtual = data['machines'][i]['operations'];
+
+        const yPos = Array.from({ length: dataAtual.length }, () => i);
 
         const bars = svg.append("g")
             .selectAll("g")
             .data(dataAtual)
-            .join("g");
+            .join("g")
+            .on("click", handleClick);
 
         bars.append("rect")
             .attr("x", d => xScale(d["start"]))
             .attr("width", d => xScale(d["end"]) - xScale(d["start"]))
             .attr("y", (d, i) => yScale(yPos[i]))
             .attr("height", barHeight)
-            .attr("fill", "steelblue");
+            .attr("fill", "steelblue")
+            .attr("class", "chart-block")
+            .attr("stroke", "black")
+            .attr("stroke-width", 1);
 
         bars.append("text")
             .text(d => `${d["job"]} - ${d["operation"]}`)
-            .attr("x", d => xScale(d["start"]) + 4)
+            .attr("x", d => xScale((d["start"]) + d["end"]) / 2)
             .attr("y", (d, i) => yScale(yPos[i]) + barHeight / 2)
             .attr("alignment-baseline", "central")
             .attr("font-size", 12)
             .attr("fill", "white")
             .attr("white-space", "nowrap")
             .attr("text-overflow", "ellipsis");
+
+    }
+
+
+    for (let i = 1; i < steplist.length; i += 2) {
+        svg.append("rect")
+            .data([{ start: steplist[i], end: steplist[i + 1] }])
+            .attr("x", xScale(steplist[i]))
+            .attr("y", 0)
+            .attr("width", xScale(steplist[i + 1]) - xScale(steplist[i]))
+            .attr("height", chartHeight)
+            .attr("fill", "lightgray")
+            .attr("opacity", 0.5)
+            .attr("class", "usupervised-area")
+    }
+
+
+
+    const zoom = d3.zoom()
+        .scaleExtent([1, 320])
+        .on("zoom", zoomed);
+
+    svg.call(zoom);
+
+    function zoomed(event) {
+        const new_xScale = event.transform.rescaleX(xScale);
+        linesLayer.select("g").selectAll("line")
+            .attr("x1", d => new_xScale(d))
+            .attr("x2", d => new_xScale(d));
+
+        svg.selectAll("rect.chart-block")
+            .attr("x", d => new_xScale(d["start"]))
+            .attr("width", d => new_xScale(d["end"]) - new_xScale(d["start"]));
+
+        svg.selectAll("rect.usupervised-area")
+            .attr("x", d => new_xScale(d["start"]))
+            .attr("width", d => new_xScale(d["end"]) - new_xScale(d["start"]));
+
+        svg.selectAll("text")
+            .attr("x", function (d) {
+                return new_xScale((d["start"] + d["end"]) / 2);
+            });
+
+        svg.select(".axis--x").call(d3.axisBottom(new_xScale).tickValues(steplist).tickFormat(d3.format(".0f")).tickSizeOuter(0));
+
     }
 
     return svg.node();
+
 }
 
-function TimelineOne(data, svg, yPos, barHeight) {
+let clicked = [];
 
-    // Create bars and labels
-    const bars = svg.append("g")
-        .selectAll("g")
-        .data(data)
-        .join("g");
+function handleClick(event, d) {
+    console.log("Bar Clicked:", d);
 
-    // Create bars
-    bars.append("rect")
-        .attr("x", d => xScale(d["start"]))
-        .attr("width", d => xScale(d["end"]) - xScale(d["start"]))
-        .attr("y", (d, i) => yScale(yPos[i]))
-        .attr("height", barHeight)
-        .attr("fill", "steelblue");
+    let containsObject = clicked.some(item => JSON.stringify(item) === JSON.stringify(d));
+    if (containsObject) {
+        console.log("Already clicked");
+        return;
+    }
 
-    // Create labels displaying only name
-    bars.append("text")
-        .text(d => `${d["job"]} - ${d["operation"]}`)
-        .attr("x", d => xScale(d["start"]) + 4)
-        .attr("y", (d, i) => yScale(yPos[i]) + barHeight / 2)
-        .attr("alignment-baseline", "central")
-        .attr("font-size", 12)
-        .attr("fill", "white")
-        .attr("white-space", "nowrap")
-        // .attr("overflow", "hidden")
-        .attr("text-overflow", "ellipsis");
+    const cardContainer = document.getElementById("gantt-chart");
+    const dataCard = document.createElement("div");
+    dataCard.classList.add("data-card");
 
+    const cardProperties = [
+        { label: "Job", value: d.job },
+        { label: "Operation", value: d.operation },
+        { label: "Start", value: d.start },
+        { label: "End", value: d.end },
+        { label: "Priority", value: d.priority },
+        { label: "Magazine", value: d.maganize.join(", ") },
+    ];
 
-    // Return the SVG node as a value
-    return svg.node();
+    cardProperties.forEach(property => {
+        const propertyElement = document.createElement("div");
+        propertyElement.classList.add("card-property");
+        propertyElement.textContent = `${property.label}: ${property.value}`;
+        dataCard.appendChild(propertyElement);
+    });
+
+    cardContainer.appendChild(dataCard);
+
+    clicked.push(d);
+
 }
+
+
+
+
+
+
+
 
 
 
@@ -125,9 +200,6 @@ function handleFileSelect(event) {
             const fileContent = e.target.result;
             parsedData = parseFileFunc(fileContent);
             console.log(parsedData);
-
-            // createGanttChart(parsedData);
-            // Timeline(parsedData);
 
             const direction = "center";
             const timelineChart = Timeline(parsedData, direction);
