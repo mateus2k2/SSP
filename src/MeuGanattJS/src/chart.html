@@ -5,9 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solution Report</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
 
     <link rel="stylesheet" href="styles.css">
+
+    <script src="uteis/d3.js"></script>
+    <script src="uteis/jquery-3.7.1.min.js"></script>
+    <script src="../node_modules/jquery.json-viewer/json-viewer/jquery.json-viewer.js"></script>
+    <link href="../node_modules/jquery.json-viewer/json-viewer/jquery.json-viewer.css" type="text/css" rel="stylesheet">
+
+    
 </head>
 <body>
     <h1>Solution Report</h1>
@@ -16,6 +22,9 @@
     <pre id="output"></pre>
     
     <div id="gantt-chart"></div>
+    <div id="info-cards">
+        <pre id="json-renderer"></pre>
+    </div>
 
     <script src="parse.js"></script>
     <script src="chart.js"></script>

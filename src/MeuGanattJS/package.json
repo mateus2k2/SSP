@@ -1,5 +1,8 @@
 {
   "dependencies": {
+    "jquery": "^3.7.1",
+    "jQuery": "^1.7.4",
+    "jquery.json-viewer": "^1.5.0",
     "jsdom": "^23.0.1"
   }
 }

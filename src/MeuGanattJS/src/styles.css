@@ -1,40 +1,37 @@
-body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-}
-
-#gantt-chart {
-    overflow-x: auto;
-    display: flex;
-    flex-direction: column;
-    margin-left: auto;
-    margin-right: auto;
-
-}
-
 .chart-block {
-    /* position: absolute; */
     border: 1px solid #2980b9;
     cursor: pointer;
 }
 
-.chart-block:hover {
-    background-color: #2980b9;
-}
+.chart-block-div {
+    cursor: pointer;
 
-.chart-details {
-    display: none;
-    position: absolute;
-    background-color: #ecf0f1;
     padding: 10px;
-    border: 1px solid #bdc3c7;
-    z-index: 1;
+    box-sizing: border-box;
+    white-space: nowrap;
+    overflow: hidden;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    /* Add left padding to create space between rectangle border and text */
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    color: rgb(255, 255, 255);
 }
 
-.chart-machine {
-    /* position: relative; */
-    margin-bottom: 20px; /* Adjust as needed to create space between machines */
-    display: flex;
+.chart-block-div p {
+    color: white; /* Set text color to white for visibility */
+    text-align: center; /* Center-align text */
+    margin: 0; /* Remove default margin to ensure proper layout */
+}
+
+.chart-block-div:hover {
+    background-color: #033a5e;
 
 }

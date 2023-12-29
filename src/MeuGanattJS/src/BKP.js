@@ -1,34 +1,38 @@
+let parsedData = null;
+const fileInput = document.getElementById('fileInput');
+fileInput.addEventListener('change', handleFileSelect);
+
+
+
+
+
+
+
+
+
+
 function Timeline(data) {
     const margin = ({ top: 10, right: 20, bottom: 50, left: 20 });
+
+    const barHeight = 20;
 
     const maxYear = data['planejamentoObj']["planingHorizon"] * data['planejamentoObj']['timescale'];
     const minYear = 0;
 
+    const width = 1500;
+
     const yPosMax = data['machines'].length * 2;
     const yPosMin = -1;
-    
-    const barHeight = 20;
     const chartHeight = (yPosMax - yPosMin) * barHeight * 2;
-    
-    const width = 1500;
     const height = chartHeight + margin.top + margin.bottom;
 
     const xScale = d3.scaleLinear().domain([minYear, maxYear]).range([margin.left, width - margin.right]);
     const yScale = d3.scalePoint().domain(d3.range(yPosMin, yPosMax + 1)).range([height - margin.bottom, margin.top]).padding(1.5);
 
-
-    // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
     const svg = d3.select(document.createElementNS("http://www.w3.org/2000/svg", "svg"))
         .attr("width", width)
         .attr("height", height);
 
-
-    // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-    //Calculation the setps based on the timescale and unsupervised
     const timescale = data.planejamentoObj.timescale;
     const unsupervised = data.planejamentoObj.unsupervised;
     const planningHorizon = data.planejamentoObj.planingHorizon;
@@ -40,7 +44,6 @@ function Timeline(data) {
         return accumulatedValue;
     });
 
-    // Add the lines to the chart
     const linesLayer = svg.append("g").attr("class", "lines-layer");
     linesLayer.append("g")
         .selectAll("line")
@@ -53,7 +56,6 @@ function Timeline(data) {
         .style("stroke", "rgba(0,0,0,0.2)")
         .style("stroke-dasharray", "2,2");
 
-    // Add the x-axis to the chart with the ticks
     svg.append("g")
         .attr("class", "axis axis--x")
         .attr("transform", `translate(0,${chartHeight})`)
@@ -62,7 +64,6 @@ function Timeline(data) {
             .tickFormat(d3.format(".0f"))
             .tickSizeOuter(0));
 
-    // Add the unsupervised areas to the chart
     for (let i = 1; i < steplist.length; i += 2) {
         svg.append("rect")
             .data([{ start: steplist[i], end: steplist[i + 1] }])
@@ -76,22 +77,18 @@ function Timeline(data) {
     }
 
 
-    // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
     for (let i = 0; i < data['machines'].length; i++) {
         dataAtual = data['machines'][i]['operations'];
 
         const yPos = i;
-        
-        //Group for the bars and text
+
         const bars = svg.append("g")
             .selectAll("g")
             .data(dataAtual)
             .join("g")
             .on("click", handleClick);
 
-        //Add the bars to the chart
+
         bars.append("rect")
             .attr("x", d => xScale(d["start"]))
             .attr("width", d => xScale(d["end"]) - xScale(d["start"]))
@@ -103,33 +100,25 @@ function Timeline(data) {
             .attr("stroke-width", 1)
             .on("click", handleClick);
 
-        //Add the text to the chart (inside the bars) (inside the foreignObject) (inside the div) (inside the p)
-        const groupDivs = bars.append("foreignObject")
-            .attr("x", d => xScale(d["start"]))
-            .attr("y", (d, i) => yScale(yPos))
-            .attr("width", d => xScale(d["end"]) - xScale(d["start"]))
-            .attr("height", barHeight)
-            .append("xhtml:div")
-            .style("width", d => (xScale(d["end"]) - xScale(d["start"])) + "px")
-            .style("height", barHeight + "px")
-            .style("text-anchor", "middle")
-            .style("alignment-baseline", "middle")
-            .style("white-space", "nowrap")
-            .attr("class", "chart-block-div")
-            .on("click", handleClick);
-
-        // Add the p to the div
-        groupDivs.append("p")
+        bars.append("text")
             .text(d => `${d["job"]} - ${d["operation"]}`)
+            .attr("x", d => xScale((d["start"] + d["end"]) / 2))
+            .attr("y", (d, i) => yScale(yPos) + barHeight / 2)
+            .attr("text-anchor", "middle") // Center the text horizontally
+            .attr("dominant-baseline", "middle") // Center the text vertically
+            .attr("font-size", 12)
+            .attr("fill", "white")
+            .attr("white-space", "nowrap")
+            .attr("text-overflow", "ellipsis")
+            .attr("class", "chart-block-text")
             .on("click", handleClick);
 
     }
 
-    
-    // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-    // Zoom difinitions
+
+
     const zoom = d3.zoom()
         .scaleExtent([-32, 320])
         .on("zoom", zoomed);
@@ -139,44 +128,34 @@ function Timeline(data) {
     function zoomed(event) {
         const new_xScale = event.transform.rescaleX(xScale);
 
-        // Update the lines
         linesLayer.select("g").selectAll("line")
             .attr("x1", d => new_xScale(d))
             .attr("x2", d => new_xScale(d));
 
-        // Update the recs 
         svg.selectAll("rect.chart-block")
             .attr("x", d => new_xScale(d["start"]))
             .attr("width", d => new_xScale(d["end"]) - new_xScale(d["start"]));
 
-        // Update the from the unsipervised areas
         svg.selectAll("rect.usupervised-area")
             .attr("x", d => new_xScale(d["start"]))
             .attr("width", d => new_xScale(d["end"]) - new_xScale(d["start"]));
 
-        // Update the text (the divs)
-        svg.selectAll("foreignObject")
-            .attr("x", d => new_xScale(d["start"]))
-            .attr("width", d => new_xScale(d["end"]) - new_xScale(d["start"]))
-            .style("width", d => (new_xScale(d["end"]) - new_xScale(d["start"])) + "px")
-            .select("div.chart-block-div")
+        svg.selectAll("text")
+            .attr("x", function (d) {
+                return new_xScale((d["start"] + d["end"]) / 2);
+            });
 
         svg.select(".axis--x").call(d3.axisBottom(new_xScale).tickValues(steplist).tickFormat(d3.format(".0f")).tickSizeOuter(0));
+
+
     }
-
-
-    // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 
     return svg.node();
 
 }
 
+let clicked = [];
 
-// ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-// Click handler
 function handleClick(event, d) {
     console.log("Bar Clicked:", d);
 
@@ -197,11 +176,13 @@ function handleClick(event, d) {
 
 
 
-// ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
-// File handler
+
+
+
+
 function handleFileSelect(event) {
     const file = event.target.files[0];
 
@@ -221,12 +202,3 @@ function handleFileSelect(event) {
         reader.readAsText(file);
     }
 }
-
-
-// ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-let clicked = [];
-const fileInput = document.getElementById('fileInput');
-fileInput.addEventListener('change', handleFileSelect);
