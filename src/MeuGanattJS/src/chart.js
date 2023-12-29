@@ -158,8 +158,8 @@ function Timeline(data) {
         svg.selectAll("foreignObject")
             .attr("x", d => new_xScale(d["start"]))
             .attr("width", d => new_xScale(d["end"]) - new_xScale(d["start"]))
-            .style("width", d => (new_xScale(d["end"]) - new_xScale(d["start"])) + "px")
             .select("div.chart-block-div")
+            .style("width", d => (new_xScale(d["end"]) - new_xScale(d["start"])) + "px")
 
         svg.select(".axis--x").call(d3.axisBottom(new_xScale).tickValues(steplist).tickFormat(d3.format(".0f")).tickSizeOuter(0));
     }
