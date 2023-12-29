@@ -24,58 +24,7 @@ function Timeline(data) {
         .attr("width", width)
         .attr("height", height);
 
-
-    // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-    //Calculation the setps based on the timescale and unsupervised
-    const timescale = data.planejamentoObj.timescale;
-    const unsupervised = data.planejamentoObj.unsupervised;
-    const planningHorizon = data.planejamentoObj.planingHorizon;
-    let accumulatedValue = 0;
-
-    const increments = [timescale - unsupervised, unsupervised];
-    const steplist = Array.from({ length: planningHorizon * 2 + 1 }, (_, i) => {
-        if (i > 0) accumulatedValue += increments[i % 2];
-        return accumulatedValue;
-    });
-
-    // Add the lines to the chart
-    const linesLayer = svg.append("g").attr("class", "lines-layer");
-    linesLayer.append("g")
-        .selectAll("line")
-        .data(steplist)
-        .join("line")
-        .attr("x1", d => xScale(d))
-        .attr("x2", d => xScale(d))
-        .attr("y1", margin.bottom)
-        .attr("y2", chartHeight)
-        .style("stroke", "rgba(0,0,0,0.2)")
-        .style("stroke-dasharray", "2,2");
-
-    // Add the x-axis to the chart with the ticks
-    svg.append("g")
-        .attr("class", "axis axis--x")
-        .attr("transform", `translate(0,${chartHeight})`)
-        .call(d3.axisBottom(xScale)
-            .tickValues(steplist)
-            .tickFormat(d3.format(".0f"))
-            .tickSizeOuter(0));
-
-    // Add the unsupervised areas to the chart
-    for (let i = 1; i < steplist.length; i += 2) {
-        svg.append("rect")
-            .data([{ start: steplist[i], end: steplist[i + 1] }])
-            .attr("x", xScale(steplist[i]))
-            .attr("y", 0)
-            .attr("width", xScale(steplist[i + 1]) - xScale(steplist[i]))
-            .attr("height", chartHeight)
-            .attr("fill", "lightgray")
-            .attr("opacity", 0.5)
-            .attr("class", "usupervised-area")
-    }
-
-
+    
     // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -126,6 +75,63 @@ function Timeline(data) {
     }
 
     
+
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+    //Calculation the setps based on the timescale and unsupervised
+    const timescale = data.planejamentoObj.timescale;
+    const unsupervised = data.planejamentoObj.unsupervised;
+    const planningHorizon = data.planejamentoObj.planingHorizon;
+    let accumulatedValue = 0;
+
+    const increments = [timescale - unsupervised, unsupervised];
+    const steplist = Array.from({ length: planningHorizon * 2 + 1 }, (_, i) => {
+        if (i > 0) accumulatedValue += increments[i % 2];
+        return accumulatedValue;
+    });
+
+    // Add the lines to the chart
+    const linesLayer = svg.append("g").attr("class", "lines-layer");
+    linesLayer.append("g")
+        .selectAll("line")
+        .data(steplist)
+        .join("line")
+        .attr("x1", d => xScale(d))
+        .attr("x2", d => xScale(d))
+        .attr("y1", margin.bottom)
+        .attr("y2", chartHeight)
+        .style("stroke", "rgba(0,0,0,0.2)")
+        .style("stroke-dasharray", "2,2");
+
+    // Add the x-axis to the chart with the ticks
+    svg.append("g")
+        .attr("class", "axis axis--x")
+        .attr("transform", `translate(0,${chartHeight})`)
+        .call(d3.axisBottom(xScale)
+            .tickValues(steplist)
+            .tickFormat(d3.format(".0f"))
+            .tickSizeOuter(0));
+
+    // Add the unsupervised areas to the chart
+    for (let i = 1; i < steplist.length; i += 2) {
+        svg.append("rect")
+            .data([{ start: steplist[i], end: steplist[i + 1] }])
+            .attr("x", xScale(steplist[i]))
+            .attr("y", 0)
+            .attr("width", xScale(steplist[i + 1]) - xScale(steplist[i]))
+            .attr("height", chartHeight)
+            .attr("fill", "lightgray")
+            .attr("opacity", 0.5)
+            .attr("class", "usupervised-area")
+            .style("pointer-events", "none")
+    }
+
+
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
     // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -178,15 +184,15 @@ function Timeline(data) {
 
 // Click handler
 function handleClick(event, d) {
-    console.log("Bar Clicked:", d);
 
     let containsObject = clicked.some(item => JSON.stringify(item) === JSON.stringify(d));
     if (containsObject) {
-        console.log("Already clicked");
         return;
     }
 
-    let newInfo = document.getElementById('json-renderer').cloneNode();
+    var newInfo = document.createElement('pre');
+    newInfo.id = 'json-renderer';
+
     newInfo.textContent = JSON.stringify(d, undefined, 2);
     $(newInfo).jsonViewer(d, { collapsed: true });
     document.getElementById("info-cards").appendChild(newInfo);

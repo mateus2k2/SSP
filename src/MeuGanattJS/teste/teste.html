@@ -1,33 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        /* Style for the div */
-        #blueBox {
-            width: 100px;
-            height: 50px;
-            background-color: blue;
-            padding: 10px; /* Add padding to create space around the content */
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
 
-        /* Style for the paragraph inside the div */
-        #blueBox p {
-            color: white; /* Set text color to white for visibility */
-            text-align: center; /* Center-align text */
-            line-height: 30px; /* Adjust line height to center text vertically within the div */
-            margin: 0; /* Remove default margin to ensure proper layout */
-        }
-    </style>
+    .container {
+      position: relative;
+    }
+
+    .larger-div {
+      width: 200px;
+      height: 200px;
+      background-color: lightblue;
+      opacity: 0.5; /* Set opacity to make the larger-div transparent */
+    }
+
+    .smaller-div {
+      width: 100px;
+      height: 100px;
+      background-color: lightcoral;
+      position: absolute;
+      top: 50px;
+      left: 50px;
+      /* Make the smaller-div clickable even though it's under the larger-div */
+      pointer-events: auto;
+      cursor: pointer; /* Optional: Change cursor on hover to indicate it's clickable */
+      z-index: 1; /* Optional: Bring the smaller-div to the front visually */
+    }
+  </style>
+  <title>Clickable Smaller Div with Transparent Larger Div Demo</title>
 </head>
 <body>
 
-    <!-- The div with the specified styles and a paragraph inside -->
-    <div id="blueBox">
-        <p>This is a blue box!</p>
-    </div>
+<div class="container">
+  <div class="larger-div">
+    <div class="smaller-div"></div>
+  </div>
+  
+</div>
 
 </body>
 </html>
-  

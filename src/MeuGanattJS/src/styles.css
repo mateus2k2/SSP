@@ -16,19 +16,22 @@
     align-items: center;
     text-align: center;
 
-    /* Add left padding to create space between rectangle border and text */
     padding-left: 20px;
     padding-right: 20px;
     padding-top: 10px;
     padding-bottom: 10px;
 
+    pointer-events: auto;
+
     color: rgb(255, 255, 255);
+
+
 }
 
 .chart-block-div p {
-    color: white; /* Set text color to white for visibility */
-    text-align: center; /* Center-align text */
-    margin: 0; /* Remove default margin to ensure proper layout */
+    color: white;
+    text-align: center;
+    margin: 0;
 }
 
 .chart-block-div:hover {
