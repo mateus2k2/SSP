@@ -6,10 +6,10 @@ function Timeline(data) {
 
     const yPosMax = data['machines'].length * 2;
     const yPosMin = -1;
-    
+
     const barHeight = 20;
     const chartHeight = (yPosMax - yPosMin) * barHeight * 2;
-    
+
     const width = 1500;
     const height = chartHeight + margin.top + margin.bottom;
 
@@ -24,7 +24,7 @@ function Timeline(data) {
         .attr("width", width)
         .attr("height", height);
 
-    
+
     // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -32,7 +32,7 @@ function Timeline(data) {
         dataAtual = data['machines'][i]['operations'];
 
         const yPos = i;
-        
+
         //Group for the bars and text
         const bars = svg.append("g")
             .selectAll("g")
@@ -74,7 +74,7 @@ function Timeline(data) {
 
     }
 
-    
+
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -126,6 +126,24 @@ function Timeline(data) {
             .attr("class", "usupervised-area")
             .style("pointer-events", "none")
     }
+
+
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+    // var yAxis = d3.axisRight(yScale);
+
+    // svg.append("g")
+    //     .attr("transform", "translate(100, 0)") // Adjust the position of the axis
+    //     .call(yAxis);
+
+    // svg.append("g")
+    //     .attr("class", "axis axis--x")
+    //     .attr("transform", `translate(0,${chartHeight})`)
+    //     .call(d3.axisBottom(xScale)
+    //         .tickValues(steplist)
+    //         .tickFormat(d3.format(".0f"))
+    //         .tickSizeOuter(0));
 
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
