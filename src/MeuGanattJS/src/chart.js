@@ -1,5 +1,6 @@
 function Timeline(data) {
-    const margin = ({ top: 10, right: 20, bottom: 50, left: 20 });
+    const margin = ({ top: 50, right: 20, bottom: 50, left: 80 });
+
 
     const maxYear = data['planejamentoObj']["planingHorizon"] * data['planejamentoObj']['timescale'];
     const minYear = 0;
@@ -10,19 +11,36 @@ function Timeline(data) {
     const barHeight = 20;
     const chartHeight = (yPosMax - yPosMin) * barHeight * 2;
 
-    const width = 1500;
+    const width = 1100;
     const height = chartHeight + margin.top + margin.bottom;
 
     const xScale = d3.scaleLinear().domain([minYear, maxYear]).range([margin.left, width - margin.right]);
-    const yScale = d3.scalePoint().domain(d3.range(yPosMin, yPosMax + 1)).range([height - margin.bottom, margin.top]).padding(1.5);
-
+    const yScale = d3.scalePoint()
+        .domain(d3.range(yPosMin + 1, data['machines'].length))
+        .range([height - margin.bottom, margin.top])
+        .padding(1.5);
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-    const svg = d3.select(document.createElementNS("http://www.w3.org/2000/svg", "svg"))
+    const realThing = d3.select(document.createElementNS("http://www.w3.org/2000/svg", "svg"))
         .attr("width", width)
         .attr("height", height);
+
+    const clip = realThing.append("defs").append("clipPath")
+        .attr("id", "clip")
+        .append("rect")
+        .attr("x", margin.left)
+        .attr("y", margin.top)
+        .attr("width", width - margin.left - margin.right)
+        .attr("height", chartHeight);
+
+    const svg = realThing.append("g")
+        .attr("clip-path", "url(#clip)")
+
+    
+    const zoomRect = realThing.append("rect")
+
 
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -131,24 +149,14 @@ function Timeline(data) {
     // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-    // var yAxis = d3.axisRight(yScale);
+    const machineLabels = Array.from({ length: data['machines'].length }, (_, i) => {
+        return "Machine " + (i + 1);
+    });
 
-    // svg.append("g")
-    //     .attr("transform", "translate(100, 0)") // Adjust the position of the axis
-    //     .call(yAxis);
-
-    // svg.append("g")
-    //     .attr("class", "axis axis--x")
-    //     .attr("transform", `translate(0,${chartHeight})`)
-    //     .call(d3.axisBottom(xScale)
-    //         .tickValues(steplist)
-    //         .tickFormat(d3.format(".0f"))
-    //         .tickSizeOuter(0));
-
-
-    // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
+    realThing.append("g")
+        .attr("class", "axis axis--y")
+        .attr("transform", `translate(${margin.left},0)`)
+        .call(d3.axisLeft(yScale).tickSizeOuter(0).tickFormat((d, i) => machineLabels[i]));
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -158,7 +166,8 @@ function Timeline(data) {
         .scaleExtent([-32, 320])
         .on("zoom", zoomed);
 
-    svg.call(zoom);
+    // zoom.scaleTo(zoomRect, -32);
+    zoomRect.call(zoom);
 
     function zoomed(event) {
         const new_xScale = event.transform.rescaleX(xScale);
@@ -185,14 +194,23 @@ function Timeline(data) {
             .select("div.chart-block-div")
             .style("width", d => (new_xScale(d["end"]) - new_xScale(d["start"])) + "px")
 
-        svg.select(".axis--x").call(d3.axisBottom(new_xScale).tickValues(steplist).tickFormat(d3.format(".0f")).tickSizeOuter(0));
+        realThing.select(".axis--x").call(d3.axisBottom(new_xScale).tickValues(steplist).tickFormat(d3.format(".0f")).tickSizeOuter(0));
     }
 
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+    realThing.attr("width", width)
+      .attr("height", height)
+      .style("fill", "none")
+      .style("pointer-events", "all")
+      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+      .attr("class", "zoom-rect")
+      .call(zoom);
 
-    return svg.node();
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    return realThing.node();
 
 }
 

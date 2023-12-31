@@ -1,44 +1,78 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
+<svg width="960" height="500"></svg>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script>
 
-    .container {
-      position: relative;
-    }
+  var svg = d3.select("svg"),
+    margin = { top: 20, right: 20, bottom: 30, left: 60 },
+    width = +svg.attr("width") - margin.left - margin.right,
+    height = +svg.attr("height") - margin.top - margin.bottom,
+    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    .larger-div {
-      width: 200px;
-      height: 200px;
-      background-color: lightblue;
-      opacity: 0.5; /* Set opacity to make the larger-div transparent */
-    }
+  var parseDate = d3.timeParse("%Y-%m-%d"),
+    formatDate = d3.timeFormat("%Y");
 
-    .smaller-div {
-      width: 100px;
-      height: 100px;
-      background-color: lightcoral;
-      position: absolute;
-      top: 50px;
-      left: 50px;
-      /* Make the smaller-div clickable even though it's under the larger-div */
-      pointer-events: auto;
-      cursor: pointer; /* Optional: Change cursor on hover to indicate it's clickable */
-      z-index: 1; /* Optional: Bring the smaller-div to the front visually */
-    }
-  </style>
-  <title>Clickable Smaller Div with Transparent Larger Div Demo</title>
-</head>
-<body>
+  var x = d3.scaleTime()
+    .domain([new Date(1999, 0, 1), new Date(2003, 0, 0)])
+    .range([0, width]);
 
-<div class="container">
-  <div class="larger-div">
-    <div class="smaller-div"></div>
-  </div>
-  
-</div>
+  var y = d3.scaleLinear()
+    .range([height, 0]);
 
-</body>
-</html>
+  var xAxis = d3.axisBottom(x);
+
+  var yAxis = d3.axisLeft(y);
+
+  var area = d3.area()
+    .curve(d3.curveStepAfter)
+    .y0(y(0))
+    .y1(function (d) { return y(d.value); });
+
+  var areaPath = g.append("path")
+    .attr("clip-path", "url(#clip)")
+    .attr("fill", "steelblue");
+
+  var yGroup = g.append("g");
+
+  var xGroup = g.append("g")
+    .attr("transform", "translate(0," + height + ")");
+
+  var zoom = d3.zoom()
+    .scaleExtent([1 / 4, 8])
+    .translateExtent([[-width, -Infinity], [2 * width, Infinity]])
+    .on("zoom", zoomed);
+
+  var zoomRect = svg.append("rect")
+    .attr("width", width)
+    .attr("height", height)
+    .attr("fill", "none")
+    .attr("pointer-events", "all")
+    .call(zoom);
+
+  g.append("clipPath")
+    .attr("id", "clip")
+    .append("rect")
+    .attr("width", width)
+    .attr("height", height);
+
+  d3.csv("f.csv", function (d) {
+    d.date = parseDate(d.date);
+    d.value = +d.value;
+    return d;
+  }, function (error, data) {
+    if (error) throw error;
+    var xExtent = d3.extent(data, function (d) { return d.date; });
+    zoom.translateExtent([[x(xExtent[0]), -Infinity], [x(xExtent[1]), Infinity]])
+    y.domain([0, d3.max(data, function (d) { return d.value; })]);
+    yGroup.call(yAxis).select(".domain").remove();
+    areaPath.datum(data);
+    zoomRect.call(zoom.transform, d3.zoomIdentity);
+  });
+
+  function zoomed() {
+    var xz = d3.event.transform.rescaleX(x);
+    xGroup.call(xAxis.scale(xz));
+    areaPath.attr("d", area.x(function (d) { return xz(d.date); }));
+  }
+
+</script>
