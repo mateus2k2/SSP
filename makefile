@@ -21,7 +21,7 @@ testePy:
 bokeh:
 	clear && echo "\n" && bokeh serve --show src/MeuPython/bokeh.py
 
-# Codigos Andre
+# Codigos Andre 
 
 KTNS:
 	clear && g++ ./src/KTNS/main.cpp ./src/KTNS/src/*.cpp -std=c++2a -Wshadow -o ./src/out/KTNS -Wno-unused-result -lpthread -O3 && echo "\n"
