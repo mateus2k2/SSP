@@ -1,0 +1,2 @@
+git rm -r /home/mateus/WSL/IC/dataRaw/KTNS
+git lfs track "/dataRaw/KTNS/SolList/Files/*"
