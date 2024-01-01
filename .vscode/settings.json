@@ -52,5 +52,5 @@
         "typeinfo": "cpp",
         "unordered_set": "cpp"
     },
-    "git.enabled": false
+    // "git.enabled": false
 }
