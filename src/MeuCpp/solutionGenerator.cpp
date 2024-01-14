@@ -193,7 +193,7 @@ void full1000(){
 
 void randonSolution(){
     fstream solutionReportFile;
-    solutionReportFile.open("/home/mateus/WSL/IC/data/solutionReport.txt", ios::out);
+    solutionReportFile.open("/home/mateus/WSL/IC/data/SolutionReports/solutionReport.txt", ios::out);
     
     // ---------------------------------------------------------------------
 

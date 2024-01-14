@@ -55,7 +55,7 @@
     .attr("width", width)
     .attr("height", height);
 
-  d3.csv("f.csv", function (d) {
+  d3.csv("fligths.csv", function (d) {
     d.date = parseDate(d.date);
     d.value = +d.value;
     return d;

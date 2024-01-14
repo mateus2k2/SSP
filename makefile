@@ -15,11 +15,12 @@ toolSetsAnalysis:
 ganattPy:
 	clear && echo "\n" && python src/MeuPython/ganatt.py 
 
+instanceGenerator:
+	clear && echo "\n" && python src/MeuPython/instanceGenerator.py 
+
 testePy:
 	clear && echo "\n" && python src/MeuPython/teste.py 
 
-bokeh:
-	clear && echo "\n" && bokeh serve --show src/MeuPython/bokeh.py
 
 # Codigos Andre 
 
