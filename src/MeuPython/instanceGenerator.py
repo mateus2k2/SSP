@@ -71,9 +71,9 @@ toolRatio = {
 countNumerJobs1 = 0
 countNumerJobs2 = 0
 
-def calculatioNumberOfSetups(countNumerJobs2, numeroAtual):
+def calculationNumberOfSetups(countNumerJobs2, numeroAtual):
     # conta = countNumerJobs2 / (numeroAtual-countNumerJobs2 + 1)
-    conta = countNumerJobs2 / (maxJobs['2M1']-countNumerJobs2 + 1)
+    conta = countNumerJobs2*2 / (numeroAtual + 1)
     
     if conta > reentrantRatio['2M1']:
         return 1
@@ -81,19 +81,19 @@ def calculatioNumberOfSetups(countNumerJobs2, numeroAtual):
         return 2
 
 
-for i in range(0, len(original)):
+for i in range(0, 282):
     if len(modificado) >= maxJobs['2M1']:
         break 
 
-    if calculatioNumberOfSetups(countNumerJobs2, len(modificado)) == 1:
+    if calculationNumberOfSetups(countNumerJobs2, len(modificado)) == 1:
         countNumerJobs1 += 1
-        modificado.append(original[i])
+        modificado.append(original[i%250])
     else:
         countNumerJobs2 += 1
-        modificado.append(original[i])
-        modificado.append(original[i])
+        modificado.append(original[i%250])
+        modificado.append(original[i%250])
 
-print("len(original) "  , len(original))
+print("len(original)   ", len(original))
 print("len(modificado) ", len(modificado))
 print("countNumerJobs2 ", countNumerJobs2)
 print("countNumerJobs1 ", countNumerJobs1)

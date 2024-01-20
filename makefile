@@ -18,6 +18,9 @@ ganattPy:
 instanceGenerator:
 	clear && echo "\n" && python src/MeuPython/instanceGenerator.py 
 
+myInstanceGenerator:
+	clear && echo "\n" && python src/MeuPython/myInstanceGenerator.py 
+
 testePy:
 	clear && echo "\n" && python src/MeuPython/teste.py 
 
