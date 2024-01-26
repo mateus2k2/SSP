@@ -232,6 +232,6 @@ void randonSolution(){
     // ---------------------------------------------------------------------
 
     printDataReport();
-    // costReport(sol, machine, solutionReportFile);
+    costReport(sol, machine, solutionReportFile);
    
 }
