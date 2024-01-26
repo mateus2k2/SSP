@@ -72,6 +72,7 @@ def makeInstance(reentrantRatio, jobsDict, toolSetList):
         # VARIAVEL PRIORIDADE
         for priorityLevel in priorityLivels:
             
+            #embaralhar e fazer os dois ------------------------------
             ponto = int(len(newJobsDict) * priorityLevel)
             for j in range(0, ponto):                newJobsDict[j]['Priority'] = 1
             for j in range(ponto, len(newJobsDict)): newJobsDict[j]['Priority'] = 0

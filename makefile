@@ -21,6 +21,9 @@ instanceGenerator:
 myInstanceGenerator:
 	clear && echo "\n" && python src/MeuPython/myInstanceGenerator.py 
 
+checkDuration:
+	clear && echo "\n" && python src/MeuPython/checkDuration.py 
+
 testePy:
 	clear && echo "\n" && python src/MeuPython/teste.py 
 
