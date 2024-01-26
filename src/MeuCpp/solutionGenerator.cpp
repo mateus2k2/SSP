@@ -203,8 +203,8 @@ void randonSolution(){
     // laodToolSet("/home/mateus/WSL/IC/data/750ToolSet.csv");
 	// laodInstance("/home/mateus/WSL/IC/data/750.csv");
 
-    laodToolSet("/home/mateus/WSL/IC/data/250ToolSet.csv");
-	laodInstance("/home/mateus/WSL/IC/data/250.csv");
+    laodToolSet("/home/mateus/WSL/IC/data/1000ToolSet.csv");
+	laodInstance("/home/mateus/WSL/IC/data/1000.csv");
 
     priority.resize(numberJobs);
     for (int i = 0; i < numberJobs; ++i) {
@@ -232,6 +232,6 @@ void randonSolution(){
     // ---------------------------------------------------------------------
 
     printDataReport();
-    costReport(sol, machine, solutionReportFile);
+    // costReport(sol, machine, solutionReportFile);
    
 }

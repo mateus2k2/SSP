@@ -64,26 +64,47 @@ def makeInstance(reentrantRatio, jobsDict, toolSetList):
         
         ponto = int(len(jobsDict) * reentrantRatio)
         for j in range(0, ponto):
-            newJobsDict.append(jobsDict[listShuffle[j]])
-            newJobsDict.append(jobsDict[listShuffle[j]])
-        for j in range(ponto, len(jobsDict)): 
+            copia1 = jobsDict[listShuffle[j]].copy()
+            copia1['Job'] = j
+            copia1['Operation'] = 0
+            newJobsDict.append(copia1)
+            
+            copia2 = jobsDict[listShuffle[j]].copy()
+            copia2['Job'] = j
+            copia2['Operation'] = 1
+            newJobsDict.append(copia2)
+
+        for j in range(ponto, len(jobsDict)):
+            jobsDict[listShuffle[j]]['Job'] = j
+            jobsDict[listShuffle[j]]['Operation'] = 0
             newJobsDict.append(jobsDict[listShuffle[j]])
         
         # VARIAVEL PRIORIDADE
         for priorityLevel in priorityLivels:
             
-            #embaralhar e fazer os dois ------------------------------
+            # fazer um shuffle de novo para nao ficar na mesma ordem
+            random.shuffle(newJobsDict)
+
             ponto = int(len(newJobsDict) * priorityLevel)
-            for j in range(0, ponto):                newJobsDict[j]['Priority'] = 1
-            for j in range(ponto, len(newJobsDict)): newJobsDict[j]['Priority'] = 0
-            
-            #ANALISANDO FERRAMENTAS UNICAS
+            numberOfPriority = 0
+            while(numberOfPriority < ponto):
+                randomDecision = random.randint(0, len(newJobsDict)-1)
+                for k in range(0, len(newJobsDict)):
+                    if newJobsDict[k]['Job'] == randomDecision and numberOfPriority < ponto:
+                        newJobsDict[k]['Priority'] = 1
+                        numberOfPriority += 1
+                    elif newJobsDict[k]['Job'] == randomDecision and numberOfPriority < ponto:
+                        newJobsDict[k]['Priority'] = 0
+            for j in range(0, len(newJobsDict)):
+                if (not('Priority' in newJobsDict[j])): newJobsDict[j]['Priority'] = 0
+
+            # ANALISANDO FERRAMENTAS UNICAS
             for toolRatioItem in toolRatio:
-                
                 for job in newJobsDict:
                     for tool in toolSetList[job['ToolSet']-2]:
                         unicTools.add(tool)
-
+            
+            newJobsDict.sort(key=lambda x: x['Job'])
             instancias.append({'instance': newJobsDict, 'size': len(newJobsDict), 'priority': priorityLevel, 'reentrant': reentrantRatio, 'unicTools': len(unicTools)})
             
     return instancias
@@ -95,9 +116,9 @@ def makeInstance(reentrantRatio, jobsDict, toolSetList):
 
 toolSetList = loadToolSet()
 
-instancias376 = makeInstance(reentrantRatio['2M1376'], loadJobs(250),  toolSetList)
-instancias1201 = makeInstance(reentrantRatio['6M1201'], loadJobs(750),  toolSetList)
-instancias1401 = makeInstance(reentrantRatio['6M1401'], loadJobs(1000), toolSetList)
+instancias376  = makeInstance(reentrantRatio['2M1376'], loadJobs("250Filtered"),  toolSetList)
+instancias1201 = makeInstance(reentrantRatio['6M1201'], loadJobs("750Filtered"),  toolSetList)
+instancias1401 = makeInstance(reentrantRatio['6M1401'], loadJobs("1000Filtered"), toolSetList)
 
 instancias = instancias376 + instancias1201 + instancias1401
 

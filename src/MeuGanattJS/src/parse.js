@@ -11,7 +11,7 @@ function parseMachineSection(machineSection) {
         'start': parseInt(operation[2]),
         'end': parseInt(operation[3]),
         'priority': parseInt(operation[4]),
-        'maganize': operation[5].slice(0, -1).split(',').map(num => parseInt(num))
+        'magazine': operation[5].slice(0, -1).split(',').map(num => parseInt(num))
     }));
 
     const machineInfoObj = machineInfo.slice(0, -1).split(";").map(pair => {

@@ -1,82 +1,78 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import csv
 
-
-def countMaiores80():
-    ToolSetAll = pd.read_csv("/home/mateus/WSL/IC/data/Data Tool Set Compositions.csv", delimiter=';',header=None, dtype=str)
-
-    toolSets = ToolSetAll.values.tolist()
-    toolSets = [[int(x) for x in row if x == x] for row in toolSets]
-
-    maiores = []
+def loadJobs(number):
+    jobsFilePath = f'/home/mateus/WSL/IC/data/{number}.csv'
+    jobsDF = pd.read_csv(jobsFilePath, delimiter=';')
+    jobsDict = jobsDF.to_dict(orient='records')
     
-    # Depois de limpar os toolSets nescessarios apenas para os Jobs de cada instancia 
-    print("ToolsSets Maiores que 80")
-    for toolset in toolSets:
-        if len(toolset) - 1 > 80:
-            print(f'Indice do ToolSet: {toolset[0]}, size {len(toolset)-1}')
-            maiores.append(toolset[0])
-    
-    JobsAll1 = pd.read_csv("/home/mateus/WSL/IC/data/Data Jobs 250.csv", delimiter=';', dtype=int)
-    JobsAll2 = pd.read_csv("/home/mateus/WSL/IC/data/Data Jobs 750.csv", delimiter=';', dtype=int)
-    JobsAll3 = pd.read_csv("/home/mateus/WSL/IC/data/Data Jobs 1000.csv", delimiter=';', dtype=int)
+    return jobsDict
 
-    toolSetNeaded1 = ([], [], [], [])
-    toolSetNeaded2 = ([], [], [], [])
-    toolSetNeaded3 = ([], [], [], [])
+def loadToolSet():
+    toolSetsFilePath = '/home/mateus/WSL/IC/data/ToolSetInt.csv'
+    toolSetsDF = pd.read_csv(toolSetsFilePath, delimiter=';')
+    toolSetsDF = toolSetsDF.drop(toolSetsDF.columns[0], axis=1)
+    toolSetsDF = toolSetsDF.fillna('NaNPlaceholder')
+    toolSetsDict = toolSetsDF.to_dict(orient='records')
+    toolSetList = []
+    for i in range(0, len(toolSetsDict)):
+        toolSetList.append([])
+        for coisa in toolSetsDict[i].values():
+            if coisa != 'NaNPlaceholder':
+                toolSetList[i].append(int(coisa))
 
-    for i in range(len(JobsAll1)):
-        toolSetNeaded1[0].append(JobsAll1['Operation'][i])
-        toolSetNeaded1[1].append(JobsAll1['Job'][i])
-        toolSetNeaded1[2].append(JobsAll1['ToolSet'][i])
-        toolSetNeaded1[3].append(JobsAll1['Processing Time'][i])
-    for i in range(len(JobsAll2)):
-        toolSetNeaded2[0].append(JobsAll2['Operation'][i])
-        toolSetNeaded2[1].append(JobsAll2['Job'][i])
-        toolSetNeaded2[2].append(JobsAll2['ToolSet'][i])
-        toolSetNeaded2[3].append(JobsAll2['Processing Time'][i])
-    for i in range(len(JobsAll3)):
-        toolSetNeaded3[0].append(JobsAll3['Operation'][i])
-        toolSetNeaded3[1].append(JobsAll3['Job'][i])
-        toolSetNeaded3[2].append(JobsAll3['ToolSet'][i])
-        toolSetNeaded3[3].append(JobsAll3['Processing Time'][i])
-       
-    print("\nFile 250\n")
-    for i, item in enumerate(toolSetNeaded1[2]):
-        if item in maiores:
-            print(f'Operation {toolSetNeaded1[0][i]} Job {toolSetNeaded1[1][i]} ToolSet {toolSetNeaded1[2][i]} Processing Time {toolSetNeaded1[3][i]} ')
-    
-    print("\nFile 750\n")
-    for i, item in enumerate(toolSetNeaded2[2]):
-        if item in maiores:
-            print(f'Operation {toolSetNeaded2[0][i]} Job {toolSetNeaded2[1][i]} ToolSet {toolSetNeaded2[2][i]} Processing Time {toolSetNeaded2[3][i]} ')
-            
-    print("\nFile 1000\n")
-    for i, item in enumerate(toolSetNeaded3[2]):
-        if item in maiores:
-            print(f'Operation {toolSetNeaded3[0][i]} Job {toolSetNeaded3[1][i]} ToolSet {toolSetNeaded3[2][i]} Processing Time {toolSetNeaded3[3][i]} ')
+    return toolSetList
 
-def subSets():
-    ToolSetAll = pd.read_csv("/home/mateus/WSL/IC/data/ToolSetPruned.csv", delimiter=';', header=None, dtype=str)
+def saveFile(jobs, fileName):
+    fields = ["Job","Operation","ToolSet","Processing Time"]
+    csv_file = open(f"/home/mateus/WSL/IC/data/{fileName}", 'w', newline='')
+    csv_writer = csv.DictWriter(csv_file, fieldnames=fields, delimiter=';')
+    
+    csv_writer.writeheader()
+    csv_writer.writerows(jobs)
 
-    toolSets = ToolSetAll.values.tolist()
-    toolSets = [[int(x) for x in row if x == x] for row in toolSets]
+def subSets(toolSet, jobs):
+    
+    removedDuplicates = []
+    
+    setFound = set()
+    for job in jobs:
+        setFound.add(job['ToolSet'])
+    
+    # Remove iguais
+    foundList = list(setFound)
+    for item in foundList:
+        for job in jobs:
+            if job['ToolSet'] == item:
+                removedDuplicates.append(job)
+                break
+    
+    removedDuplicates.sort(key=lambda x: len(toolSet[x['ToolSet']-2]), reverse=True)
+    deletedSubSets = []
+    FilteredList = removedDuplicates.copy()
+    
+    # Remove subconjuntos
+    for i, job in enumerate(removedDuplicates):
+        jobSet = set(toolSet[job['ToolSet']-2])
+        for j in range(i+1, len(removedDuplicates)):
+            jobsInsideSet = set(toolSet[removedDuplicates[j]['ToolSet']-2])
+            if jobsInsideSet.issubset(jobSet) and removedDuplicates[j] not in deletedSubSets:
+                # print(f'jobSet        {jobSet}          | {job["ToolSet"]       }')
+                # print(f'jobsInsideSet {jobsInsideSet}   | {removedDuplicates[j]["ToolSet"]}')
+                # print("------") 
+                deletedSubSets.append(removedDuplicates[j])
+                FilteredList.remove(removedDuplicates[j])
+    
+    return FilteredList
 
-    toolSets.sort(key=len, reverse=True)
-    index = [item.pop(0) for item in toolSets]
-    sets = [set(x) for x in toolSets]
-    boolVector = [False for x in range(len(sets))]
-    
-    for i in range(0, len(sets)):
-        print(f'QUEM É SUBSET DO {index[i]} Tamanho: {len(sets[i])}\n')
-        for j in range(i, len(sets)):
-            if (sets[j].issubset(sets[i])) and (i != j ) and (sets[i] != sets[j]):
-                boolVector[j] = True
-                print(f'{index[j]} é subset do {index[i]}')
-        print(f'\n----------------------------------------------------------------------------\n')
-    
-    print(f'Quantidade de Subsets: {boolVector.count(True)}')
-    print(f'Quantidade de Sets: {len(sets)}')
-    print(boolVector)
-    
-subSets()
+toolSets = loadToolSet()
+
+jobs = loadJobs(250)
+saveFile(subSets(toolSets, jobs), "250Filtered.csv")
+
+jobs = loadJobs(750)
+saveFile(subSets(toolSets, jobs), "750Filtered.csv")
+
+jobs = loadJobs(1000)
+saveFile(subSets(toolSets, jobs), "1000Filtered.csv")
