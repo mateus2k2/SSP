@@ -1,34 +1,9 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import csv
+import loadData as ld
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-def loadJobs(number):
-    jobsFilePath = f'/home/mateus/WSL/IC/data/{number}.csv'
-    jobsDF = pd.read_csv(jobsFilePath, delimiter=';')
-    jobsDict = jobsDF.to_dict(orient='records')
-    
-    return jobsDict
-
-def loadToolSet():
-    toolSetsFilePath = '/home/mateus/WSL/IC/data/ToolSetInt.csv'
-    toolSetsDF = pd.read_csv(toolSetsFilePath, header=None, delimiter=';')
-    
-    indices = toolSetsDF.columns[0]
-    indicesList = [indices]
-    
-    toolSetsDF = toolSetsDF.drop(toolSetsDF.columns[0], axis=1)
-    toolSetsDF = toolSetsDF.fillna('NaNPlaceholder')
-    toolSetsDict = toolSetsDF.to_dict(orient='records')
-    toolSetList = []
-    for i in range(0, len(toolSetsDict)):
-        toolSetList.append([])
-        for coisa in toolSetsDict[i].values():
-            if coisa != 'NaNPlaceholder':
-                toolSetList[i].append(int(coisa))
-
-    return toolSetList
 
 def saveFile(jobs, fileName):
     fields = ["Job","Operation","ToolSet","Processing Time"]
@@ -103,7 +78,7 @@ def getUnsuedToolSets(jobs, toolSets):
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-toolSets = loadToolSet()
+toolSets = ld.loadToolSet("ToolSetInt.csv")
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -128,5 +103,5 @@ toolSets = loadToolSet()
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-allJobs = loadJobs("AllFiltered")
+allJobs = ld.loadJobs("AllFiltered.csv")
 getUnsuedToolSets(allJobs, toolSets)

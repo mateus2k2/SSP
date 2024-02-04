@@ -1,6 +1,7 @@
 import pandas as pd
 import random
 import csv
+import loadData as ld
 
 
 # ------------------------------------------------------------------------------------------------
@@ -20,32 +21,6 @@ priorityLivels = [0.25, 0.5, 0.75]
 
 toolRatio     = [1, 1.25, 1.50, 1.75, 2]
 
-
-# ------------------------------------------------------------------------------------------------
-# CARREGAR DADOS
-# ------------------------------------------------------------------------------------------------
-
-def loadToolSet():
-    toolSetsFilePath = '/home/mateus/WSL/IC/data/ToolSetInt.csv'
-    toolSetsDF = pd.read_csv(toolSetsFilePath, header=None, delimiter=';')
-    toolSetsDF = toolSetsDF.drop(toolSetsDF.columns[0], axis=1)
-    toolSetsDF = toolSetsDF.fillna('NaNPlaceholder')
-    toolSetsDict = toolSetsDF.to_dict(orient='records')
-    toolSetList = []
-    for i in range(0, len(toolSetsDict)):
-        toolSetList.append([])
-        for coisa in toolSetsDict[i].values():
-            if coisa != 'NaNPlaceholder':
-                toolSetList[i].append(int(coisa))
-
-    return toolSetList
-
-def loadJobs(number):
-    jobsFilePath = f'/home/mateus/WSL/IC/data/{number}.csv'
-    jobsDF = pd.read_csv(jobsFilePath, delimiter=';')
-    jobsDict = jobsDF.to_dict(orient='records')
-    
-    return jobsDict
 
 # ------------------------------------------------------------------------------------------------
 # CREATING
@@ -140,9 +115,9 @@ def makeInstance(reentrantRatio, jobsDict, toolSetList):
 # ------------------------------------------------------------------------------------------------
 
 
-toolSetList = loadToolSet()
+toolSetList = ld.loadToolSet("ToolSetInt.csv")
 
-instancias376  = makeInstance(reentrantRatio['2M1376'], loadJobs("250Filtered"),  toolSetList)
+instancias376  = makeInstance(reentrantRatio['2M1376'], ld.loadJobs("250Filtered.csv"),  toolSetList)
 # instancias1201 = makeInstance(reentrantRatio['6M1201'], loadJobs("750Filtered"),  toolSetList)
 # instancias1401 = makeInstance(reentrantRatio['6M1401'], loadJobs("1000Filtered"), toolSetList)
 

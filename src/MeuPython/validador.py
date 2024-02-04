@@ -1,6 +1,6 @@
-import math
+import loadData as ld
 
-def parse_machine_section(machine_section):
+def parseMachineSection(machine_section):
     lines = machine_section.strip().split('\n')
     machine_info = lines[0].split('=')[1].strip()
     operations = [line.split(';') for line in lines[1:-1]]
@@ -36,18 +36,24 @@ def parse_machine_section(machine_section):
         
     return machineInfoObj, operationsObj, endInfoObj
 
-def parse_file(file_path):
+def parseReport(file_path):
     file = open(file_path, 'r')
     file_content = file.read()
     
     lines = file_content.splitlines()
+    
+    instancesName = lines.pop(0)
+    jobsFileName = instancesName.split(';')[0]
+    toolSetFileName = instancesName.split(';')[1]
+    
     header = lines.pop(0)
     planejamento = [int(num) for num in header.split(';')]
     planejamentoObj = {
         'planingHorizon': planejamento[0],
         'unsupervised': planejamento[1],
-        'timescale': planejamento[2]
-        
+        'timescale': planejamento[2],
+        'jobsFileName': jobsFileName,
+        'toolSetFileName': toolSetFileName
     }
     
     modified_string = '\n'.join(lines)
@@ -55,7 +61,7 @@ def parse_file(file_path):
     machines = []
     machine_sections = modified_string.strip().split('Machine:')
     for machine_section in machine_sections[1:]:
-        machine_info, operations, end_info = parse_machine_section(machine_section)
+        machine_info, operations, end_info = parseMachineSection(machine_section)
         machines.append({
             'machine_info': machine_info,
             'operations': operations,
@@ -66,6 +72,9 @@ def parse_file(file_path):
 def printReport(machines, planejamento):
     print(f"planingHorizon = {planejamento['planingHorizon']}")
     print(f"unsupervised = {planejamento['unsupervised']}")
+    print(f"timescale = {planejamento['timescale']}")
+    print(f"instanceName = {planejamento['instanceName']}")
+    
     print("\n----------------------------------------------------------------\n")
     
     for machine in machines:
@@ -87,7 +96,12 @@ def printReport(machines, planejamento):
         print(f"end_info = {end_info}")
         print("\n----------------------------------------------------------------\n")
 
-machines, planejamento = parse_file('/home/mateus/WSL/IC/data/SolutionReports/solutionReport.txt')
-printReport(machines, planejamento)
+machines, planejamento = parseReport('/home/mateus/WSL/IC/data/SolutionReports/solutionReport.txt')
+toolSet, indexList = ld.loadToolSet(planejamento['toolSetFileName'], returnIndex=True)
+jobs = ld.loadJobs(planejamento['jobsFileName'])
 
-# listar coisas para validar
+print(len(jobs))
+print(len(toolSet))
+print(len(indexList))
+
+# listar oq precisar validar

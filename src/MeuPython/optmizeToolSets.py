@@ -16,7 +16,7 @@ def stringToInt(filemameIn, filemameOut,jsonName):
     stringToIntMapping = {string: i+1 for i, string in enumerate(uniqueStrings)}
     stringToIntMapping['NaNPlaceholder'] = ''
 
-    df = df.map(lambda x: stringToIntMapping[x])
+    df = df.applymap(lambda x: stringToIntMapping[x])
     
     df.insert(0, '', columnIndex)
 
@@ -82,7 +82,7 @@ def pruneNotNeadedOne(filemameIn, filemameOut):
 
     df = pd.read_csv('/home/mateus/WSL/IC/data/ToolSetOG.csv', sep=';', header=None)
     df_filtered = df[df[0].isin(toolSetNeaded)]
-    df_filtered = df_filtered.map(lambda x: '' if pd.isna(x) else (x))
+    df_filtered = df_filtered.applymap(lambda x: '' if pd.isna(x) else (x))
     df_filtered.to_csv(filemameOut, index=False, sep=';', header=False)
 
 
