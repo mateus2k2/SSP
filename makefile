@@ -9,26 +9,14 @@ mainCppDebug:
 optmizeTollSetsPy:
 	clear && echo "\n" && python src/MeuPython/optmizeToolSets.py 
 
-toolSetsAnalysis:
-	clear && echo "\n" && python src/MeuPython/toolSetsAnalysis.py 
-
-ganattPy:
-	clear && echo "\n" && python src/MeuPython/ganatt.py 
-
-instanceGenerator:
-	clear && echo "\n" && python src/MeuPython/instanceGenerator.py 
+filterJobs:
+	clear && echo "\n" && python src/MeuPython/filterJobs.py 
 
 myInstanceGenerator:
 	clear && echo "\n" && python src/MeuPython/myInstanceGenerator.py 
 
-checkDuration:
-	clear && echo "\n" && python src/MeuPython/checkDuration.py 
-
 validador:
 	clear && echo "\n" && python src/MeuPython/validador.py 
-
-testePy:
-	clear && echo "\n" && python src/MeuPython/teste.py 
 
 
 # Codigos Andre 

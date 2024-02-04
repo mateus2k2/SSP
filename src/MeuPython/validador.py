@@ -89,3 +89,5 @@ def printReport(machines, planejamento):
 
 machines, planejamento = parse_file('/home/mateus/WSL/IC/data/SolutionReports/solutionReport.txt')
 printReport(machines, planejamento)
+
+# listar coisas para validar

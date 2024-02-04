@@ -27,7 +27,7 @@ toolRatio     = [1, 1.25, 1.50, 1.75, 2]
 
 def loadToolSet():
     toolSetsFilePath = '/home/mateus/WSL/IC/data/ToolSetInt.csv'
-    toolSetsDF = pd.read_csv(toolSetsFilePath, delimiter=';')
+    toolSetsDF = pd.read_csv(toolSetsFilePath, header=None, delimiter=';')
     toolSetsDF = toolSetsDF.drop(toolSetsDF.columns[0], axis=1)
     toolSetsDF = toolSetsDF.fillna('NaNPlaceholder')
     toolSetsDict = toolSetsDF.to_dict(orient='records')
@@ -62,22 +62,22 @@ def makeInstance(reentrantRatio, jobsDict, toolSetList):
         listShuffle = [i for i in range(0, len(jobsDict))]
         random.shuffle(listShuffle)
         
+        countTmp = 0
+        
         ponto = int(len(jobsDict) * reentrantRatio)
         for j in range(0, ponto):
-            copia1 = jobsDict[listShuffle[j]].copy()
-            copia1['Job'] = j
-            copia1['Operation'] = 0
-            newJobsDict.append(copia1)
-            
-            copia2 = jobsDict[listShuffle[j]].copy()
-            copia2['Job'] = j
-            copia2['Operation'] = 1
-            newJobsDict.append(copia2)
+            jobsDict[listShuffle[j]]['Job'] = j
+            jobsDict[listShuffle[j]]['Operation'] = 0
+            jobsDict[listShuffle[j]]['Reentrant'] = True
+            newJobsDict.append(jobsDict[listShuffle[j]])
+            countTmp += 2
 
         for j in range(ponto, len(jobsDict)):
             jobsDict[listShuffle[j]]['Job'] = j
             jobsDict[listShuffle[j]]['Operation'] = 0
+            jobsDict[listShuffle[j]]['Reentrant'] = False
             newJobsDict.append(jobsDict[listShuffle[j]])
+            countTmp += 1
         
         # VARIAVEL PRIORIDADE
         for priorityLevel in priorityLivels:
@@ -85,28 +85,54 @@ def makeInstance(reentrantRatio, jobsDict, toolSetList):
             # fazer um shuffle de novo para nao ficar na mesma ordem
             random.shuffle(newJobsDict)
 
-            ponto = int(len(newJobsDict) * priorityLevel)
+            ponto = int(countTmp * priorityLevel)
             numberOfPriority = 0
-            while(numberOfPriority < ponto):
-                randomDecision = random.randint(0, len(newJobsDict)-1)
-                for k in range(0, len(newJobsDict)):
-                    if newJobsDict[k]['Job'] == randomDecision and numberOfPriority < ponto:
-                        newJobsDict[k]['Priority'] = 1
+            for trem in newJobsDict:
+                # print(trem)
+                if numberOfPriority < ponto:
+                    if trem['Reentrant']:
+                        trem['Priority'] = True
+                        numberOfPriority += 2
+                    else:
+                        trem['Priority'] = True
                         numberOfPriority += 1
-                    elif newJobsDict[k]['Job'] == randomDecision and numberOfPriority < ponto:
-                        newJobsDict[k]['Priority'] = 0
-            for j in range(0, len(newJobsDict)):
-                if (not('Priority' in newJobsDict[j])): newJobsDict[j]['Priority'] = 0
-
+                else:
+                    trem['Priority'] = False
+            
             # ANALISANDO FERRAMENTAS UNICAS
             for toolRatioItem in toolRatio:
                 for job in newJobsDict:
-                    for tool in toolSetList[job['ToolSet']-2]:
+                    for tool in toolSetList[job['ToolSet']-1]:
                         unicTools.add(tool)
             
-            newJobsDict.sort(key=lambda x: x['Job'])
-            instancias.append({'instance': newJobsDict, 'size': len(newJobsDict), 'priority': priorityLevel, 'reentrant': reentrantRatio, 'unicTools': len(unicTools)})
+            # EXPANDIR JOBS
+            definitiveJobs = []
+            for i, job in enumerate(newJobsDict):
+                if job['Reentrant'] == True:
+                    copia = job.copy()
+                    del copia['Reentrant']
+                    
+                    instance1 = copia.copy()
+                    instance1['Job'] = i
+                    instance1['Operation'] = 0
+                    
+                    instance2 = copia.copy()
+                    instance2['Job'] = i
+                    instance2['Operation'] = 1
+                    
+                    definitiveJobs.append(instance1)
+                    definitiveJobs.append(instance2)
+                else:
+                    copia = job.copy()
+                    del copia['Reentrant']
+                    
+                    copia['Job'] = i
+                    copia['Operation'] = 0
+                    definitiveJobs.append(copia)
             
+            definitiveJobs.sort(key=lambda x: x['Job'])
+            instancias.append({'instance': definitiveJobs, 'size': len(definitiveJobs), 'priority': f"{numberOfPriority/(len(definitiveJobs)):.2f}", 'reentrant': reentrantRatio, 'unicTools': len(unicTools)})
+    
     return instancias
 
 # ------------------------------------------------------------------------------------------------
@@ -117,10 +143,10 @@ def makeInstance(reentrantRatio, jobsDict, toolSetList):
 toolSetList = loadToolSet()
 
 instancias376  = makeInstance(reentrantRatio['2M1376'], loadJobs("250Filtered"),  toolSetList)
-instancias1201 = makeInstance(reentrantRatio['6M1201'], loadJobs("750Filtered"),  toolSetList)
-instancias1401 = makeInstance(reentrantRatio['6M1401'], loadJobs("1000Filtered"), toolSetList)
+# instancias1201 = makeInstance(reentrantRatio['6M1201'], loadJobs("750Filtered"),  toolSetList)
+# instancias1401 = makeInstance(reentrantRatio['6M1401'], loadJobs("1000Filtered"), toolSetList)
 
-instancias = instancias376 + instancias1201 + instancias1401
+instancias = instancias376 # + instancias1201 + instancias1401
 
 print(len(instancias))
 
