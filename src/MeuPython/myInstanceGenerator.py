@@ -118,10 +118,11 @@ def makeInstance(reentrantRatio, jobsDict, toolSetList):
 toolSetList = ld.loadToolSet("ToolSetInt.csv")
 
 instancias376  = makeInstance(reentrantRatio['2M1376'], ld.loadJobs("250Filtered.csv"),  toolSetList)
-# instancias1201 = makeInstance(reentrantRatio['6M1201'], loadJobs("750Filtered"),  toolSetList)
-# instancias1401 = makeInstance(reentrantRatio['6M1401'], loadJobs("1000Filtered"), toolSetList)
+instancias1201 = makeInstance(reentrantRatio['6M1201'], ld.loadJobs("750Filtered.csv"),  toolSetList)
+instancias1401 = makeInstance(reentrantRatio['6M1401'], ld.loadJobs("1000Filtered.csv"), toolSetList)
+#315
 
-instancias = instancias376 # + instancias1201 + instancias1401
+instancias = instancias376 + instancias1201 + instancias1401
 
 print(len(instancias))
 

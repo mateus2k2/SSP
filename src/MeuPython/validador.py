@@ -25,7 +25,7 @@ def parseMachineSection(machine_section):
             'start': int(operation[2]),
             'end': int(operation[3]),
             'priority': int(operation[4]),
-            'maganize': list(map(int, operation[5][:-1].split(',')))
+            'magazine': list(map(int, operation[5][:-1].split(',')))
         })
     
     endInfoObj['fineshedPriorityCount'] = int(end_info[1])
@@ -90,7 +90,7 @@ def printReport(machines, planejamento):
             print(f"start = {operation['start']}")
             print(f"end = {operation['end']}")
             print(f"priority = {operation['priority']}")
-            print(f"maganize = {operation['maganize']}") 
+            print(f"magazine = {operation['magazine']}") 
             print()      
         
         print(f"end_info = {end_info}")
@@ -104,4 +104,9 @@ print(len(jobs))
 print(len(toolSet))
 print(len(indexList))
 
-# listar oq precisar validar
+# Validar se nao ha trocas em periodos nao supervisionados = Fazer a contagem do tempo independete 
+# Validar se a magazine contem as ferramentas para realizar o dado trabalho
+# Validar se a sequencia de tarefas resulta no numero de trocas esperado = Tanto em termos de numero de vezes q foram trocadas quanto no numero de trocas em si = PREJUIZO 
+# Validar se a sequencia de tarefas resulta no numero de tarefas prioritarias nao terminadas esperado = PREJUIZO
+# Validar se a sequencia de tarefas resulta no numero de tarefas prioritarias nao terminadas esperado = LUCRO
+# Fazer a conta do prejuizo e do lucro e validar com a recebida
