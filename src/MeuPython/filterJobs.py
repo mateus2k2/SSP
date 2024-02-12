@@ -49,7 +49,6 @@ def subSets(toolSet, jobs):
     
     return FilteredList
 
-
 def getUnsuedToolSets(jobs, toolSets):
     indices = [i for i in range(1, len(toolSets)+1)]
     indices.sort(key=lambda x: len(toolSets[x-1]), reverse=True)
@@ -64,7 +63,6 @@ def getUnsuedToolSets(jobs, toolSets):
             if not((toolSets[job["ToolSet"]-1] == toolSet) or (toolSets[job["ToolSet"]-1] in toolSet) or (toolSet in toolSets[job["ToolSet"]-1])) and (toolSet not in toolSetsUnused):
                 toolSetsUnused.append(toolSet)
                 incdicesUnused.append(indices[i])
-                # print(f"{indices[i]} = {toolSet}")
                 
     largestUnused = max(toolSetsUnused, key=lambda x: len(x))
     for i, item in enumerate(toolSetsUnused):    

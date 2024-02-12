@@ -14,7 +14,7 @@ def loadToolSet(fileName, returnIndex=False):
             if coisa != 'NaNPlaceholder':
                 toolSetList[i].append(int(coisa))
     
-    if returnIndex: return toolSetList, index
+    if returnIndex: return toolSetList, index.to_list()
     else:           return toolSetList
 
 def loadJobs(fileName):

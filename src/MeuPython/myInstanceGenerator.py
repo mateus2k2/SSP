@@ -2,33 +2,17 @@ import pandas as pd
 import random
 import csv
 import loadData as ld
+from uteis import ProcessingTimeGenerator
 
-
-# ------------------------------------------------------------------------------------------------
-# PARAMETROS
-# ------------------------------------------------------------------------------------------------
-
-reentrantRatio = {
-    '2M1376': 0.5,
-    '6M1201': 0.6,
-    '6M1401': 0.4,
-}
-
-quantidadeInstancias = 5
-
-# priorityLivels = [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75]
-priorityLivels = [0.25, 0.5, 0.75]
-
-toolRatio     = [1, 1.25, 1.50, 1.75, 2]
-
+geradorProcessingTime = ProcessingTimeGenerator()
 
 # ------------------------------------------------------------------------------------------------
-# CREATING
+# UTEIS
 # ------------------------------------------------------------------------------------------------
 
-def makeInstance(reentrantRatio, jobsDict, toolSetList):
+def makeInstance(quantidadeInstancias, reentrantRatio, priorityLivels, toolRatio, jobsDict, toolSetList, fix=1):
     instancias = []
-    
+
     # VARIANDO REENTRANTES
     for i in range(0, quantidadeInstancias):
         unicTools = set()
@@ -77,7 +61,7 @@ def makeInstance(reentrantRatio, jobsDict, toolSetList):
             # ANALISANDO FERRAMENTAS UNICAS
             for toolRatioItem in toolRatio:
                 for job in newJobsDict:
-                    for tool in toolSetList[job['ToolSet']-1]:
+                    for tool in toolSetList[job['ToolSet']-fix]:
                         unicTools.add(tool)
             
             # EXPANDIR JOBS
@@ -110,33 +94,103 @@ def makeInstance(reentrantRatio, jobsDict, toolSetList):
     
     return instancias
 
+def makeJobs(toolSets):
+    jobs = []
+    processingTime = geradorProcessingTime.generate_random_numbers(len(toolSets))
+
+    for i, toolSet in enumerate(toolSets):
+        jobs.append({
+            "Job": i,
+            "Operation": 0,
+            "ToolSet": toolSet,
+            "Processing Time": processingTime[i],
+        })
+    
+    return jobs
+
+def saveInstances(instancias):
+    folder = "/home/mateus/WSL/IC/data/MyInstances"
+    fields = ["Job","Operation","ToolSet","Processing Time","Priority"]
+    for i, instancia in enumerate(instancias):
+        fileName = f"n={instancia['size']},p={instancia['priority']},r={instancia['reentrant']},t={instancia['unicTools']},v{i}.csv"
+            
+        csv_file = open(f"{folder}/{fileName}", 'w', newline='')
+        csv_writer = csv.DictWriter(csv_file, fieldnames=fields)
+        
+        csv_writer.writeheader()
+        csv_writer.writerows(instancia['instance'])
+
 # ------------------------------------------------------------------------------------------------
-# CONSTRUINDO INSTANCIAS
+# CONSTRUINDO INSTANCIAS PELAS BASE
 # ------------------------------------------------------------------------------------------------
 
+def makeInstaceBase():
+    quantidadeInstancias = 1
 
-toolSetList = ld.loadToolSet("ToolSetInt.csv")
+    reentrantRatio = {
+        '2M1376': 0.5,
+        '6M1201': 0.6,
+        '6M1401': 0.4,
+    }
 
-instancias376  = makeInstance(reentrantRatio['2M1376'], ld.loadJobs("250Filtered.csv"),  toolSetList)
-instancias1201 = makeInstance(reentrantRatio['6M1201'], ld.loadJobs("750Filtered.csv"),  toolSetList)
-instancias1401 = makeInstance(reentrantRatio['6M1401'], ld.loadJobs("1000Filtered.csv"), toolSetList)
-#315
+    priorityLivels = [0.25, 0.5, 0.75]
 
-instancias = instancias376 + instancias1201 + instancias1401
+    toolRatio     = [1, 1.25, 1.50, 1.75, 2]
 
-print(len(instancias))
+    toolSetList = ld.loadToolSet("ToolSetInt.csv")
+
+    instancias376  = makeInstance(quantidadeInstancias, reentrantRatio['2M1376'], priorityLivels, toolRatio, ld.loadJobs("250Filtered.csv"),  toolSetList)
+    instancias1201 = makeInstance(quantidadeInstancias, reentrantRatio['6M1201'], priorityLivels, toolRatio, ld.loadJobs("750Filtered.csv"),  toolSetList)
+    instancias1401 = makeInstance(quantidadeInstancias, reentrantRatio['6M1401'], priorityLivels, toolRatio, ld.loadJobs("1000Filtered.csv"), toolSetList)
+
+    return instancias376, instancias1201, instancias1401
+
+# ------------------------------------------------------------------------------------------------
+# CONSTRUINDO INSTANCIAS EXTRAS
+# ------------------------------------------------------------------------------------------------
+
+def makeInstaceExtra():
+    instanciasToReturn = []
+
+    toolUnused, toolSetIndex = ld.loadToolSet("UnusedToolSets.csv", returnIndex=True)
+    toolUnusedMap = {toolSetIndex[i]: toolUnused[i] for i in range(0, len(toolUnused))}
+
+    quantidadeInstancias = 1
+    reentrantRatio = {
+        376: 0.5,
+        1201: 0.6,
+        1401: 0.4,
+    }
+    priorityLivels = [0.25, 0.5, 0.75]
+    toolRatio     = [1, 1.25, 1.50, 1.75, 2]
+
+    for i in range(400, min(len(toolSetIndex), 1100), 100):
+        closer = min(reentrantRatio, key=lambda x:abs(x-i))
+        closer = reentrantRatio[closer]
+        corte = int(i - (closer * i))
+
+        print(f"{closer} | {i} | {corte}")
+
+        random.shuffle(toolSetIndex)
+        toolSets = toolSetIndex[:corte]
+        jobs = makeJobs(toolSets)
+        instancias = makeInstance(quantidadeInstancias, closer, priorityLivels, toolRatio, jobs, toolUnusedMap, fix=0)
+        instanciasToReturn += instancias
+
+    for i in range(1250, len(toolSetIndex), 250):
+        pass
+
+    return instanciasToReturn
 
 # ------------------------------------------------------------------------------------------------
 # SALVANDO INSTANCIAS
 # ------------------------------------------------------------------------------------------------
 
-folder = "/home/mateus/WSL/IC/data/MyInstances"
-fields = ["Job","Operation","ToolSet","Processing Time","Priority"]
-for i, instancia in enumerate(instancias):
-    fileName = f"n={instancia['size']},p={instancia['priority']},r={instancia['reentrant']},t={instancia['unicTools']},v{i}.csv"
+# instancias376, instancias1201, instancias1401 = makeInstaceBase()
+# saveInstances(instancias376 + instancias1201 + instancias1401)
         
-    csv_file = open(f"{folder}/{fileName}", 'w', newline='')
-    csv_writer = csv.DictWriter(csv_file, fieldnames=fields)
-    
-    csv_writer.writeheader()
-    csv_writer.writerows(instancia['instance'])
+instances = makeInstaceExtra()
+saveInstances(instances)
+
+# ssh-add ~/.ssh/id_ed25519
+# chmod  400 ~/.ssh/id_ed25519

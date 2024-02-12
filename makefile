@@ -18,6 +18,9 @@ myInstanceGenerator:
 validador:
 	clear && echo "\n" && python src/MeuPython/validador.py 
 
+uteis:
+	clear && echo "\n" && python src/MeuPython/uteis.py 
+
 
 # Codigos Andre 
 
