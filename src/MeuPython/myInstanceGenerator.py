@@ -10,7 +10,7 @@ geradorProcessingTime = ProcessingTimeGenerator()
 # UTEIS
 # ------------------------------------------------------------------------------------------------
 
-def makeInstance(quantidadeInstancias, reentrantRatio, priorityLivels, toolRatio, jobsDict, toolSetList, fix=1):
+def makeInstance(quantidadeInstancias, reentrantRatio, priorityLivels, toolRatio, jobsDict, toolSetList):
     instancias = []
 
     # VARIANDO REENTRANTES
@@ -50,18 +50,18 @@ def makeInstance(quantidadeInstancias, reentrantRatio, priorityLivels, toolRatio
                 # print(trem)
                 if numberOfPriority < ponto:
                     if trem['Reentrant']:
-                        trem['Priority'] = True
+                        trem['Priority'] = 1
                         numberOfPriority += 2
                     else:
-                        trem['Priority'] = True
+                        trem['Priority'] = 1
                         numberOfPriority += 1
                 else:
-                    trem['Priority'] = False
+                    trem['Priority'] = 0
             
             # ANALISANDO FERRAMENTAS UNICAS
             for toolRatioItem in toolRatio:
                 for job in newJobsDict:
-                    for tool in toolSetList[job['ToolSet']-fix]:
+                    for tool in toolSetList[job['ToolSet']]:
                         unicTools.add(tool)
             
             # EXPANDIR JOBS
@@ -115,7 +115,7 @@ def saveInstances(instancias):
         fileName = f"n={instancia['size']},p={instancia['priority']},r={instancia['reentrant']},t={instancia['unicTools']},v{i}.csv"
             
         csv_file = open(f"{folder}/{fileName}", 'w', newline='')
-        csv_writer = csv.DictWriter(csv_file, fieldnames=fields)
+        csv_writer = csv.DictWriter(csv_file, fieldnames=fields, delimiter=';')
         
         csv_writer.writeheader()
         csv_writer.writerows(instancia['instance'])
@@ -152,8 +152,8 @@ def makeInstaceBase():
 def makeInstaceExtra():
     instanciasToReturn = []
 
-    toolUnused, toolSetIndex = ld.loadToolSet("UnusedToolSets.csv", returnIndex=True)
-    toolUnusedMap = {toolSetIndex[i]: toolUnused[i] for i in range(0, len(toolUnused))}
+    toolUnusedMap = ld.loadToolSet("UnusedToolSets.csv")
+    toolSetIndex = list(toolUnusedMap.keys())
 
     quantidadeInstancias = 1
     reentrantRatio = {
@@ -169,12 +169,12 @@ def makeInstaceExtra():
         closer = reentrantRatio[closer]
         corte = int(i - (closer * i))
 
-        print(f"{closer} | {i} | {corte}")
+        # print(f"{closer} | {i} | {corte}")
 
         random.shuffle(toolSetIndex)
-        toolSets = toolSetIndex[:corte]
+        toolSets = toolSetIndex[:i-corte]
         jobs = makeJobs(toolSets)
-        instancias = makeInstance(quantidadeInstancias, closer, priorityLivels, toolRatio, jobs, toolUnusedMap, fix=0)
+        instancias = makeInstance(quantidadeInstancias, closer, priorityLivels, toolRatio, jobs, toolUnusedMap)
         instanciasToReturn += instancias
 
     for i in range(1250, len(toolSetIndex), 250):
@@ -186,11 +186,11 @@ def makeInstaceExtra():
 # SALVANDO INSTANCIAS
 # ------------------------------------------------------------------------------------------------
 
-# instancias376, instancias1201, instancias1401 = makeInstaceBase()
-# saveInstances(instancias376 + instancias1201 + instancias1401)
+instancias376, instancias1201, instancias1401 = makeInstaceBase()
+saveInstances(instancias376 + instancias1201 + instancias1401)
         
-instances = makeInstaceExtra()
-saveInstances(instances)
+# instances = makeInstaceExtra()
+# saveInstances(instances)
 
 # ssh-add ~/.ssh/id_ed25519
-# chmod  400 ~/.ssh/id_ed25519
+# chmod  400 ~/.ssh/id_ed25519      

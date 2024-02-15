@@ -31,19 +31,23 @@ int laodInstance(string filename){
         stringstream ss(line);
         string value;
 
+        getline(ss, value, ';');
+        job.push_back(stoi(value));
+
         getline(ss, value, ';');    
         operation.push_back(stoi(value));
 
         getline(ss, value, ';');
-        job.push_back(stoi(value));
+        tmpToolSetIndex = stoi(value);
+        sort(mapToolSets[tmpToolSetIndex].begin(), mapToolSets[tmpToolSetIndex].end()); // ****************************
+        JobTools.push_back(mapToolSets[tmpToolSetIndex]);
+        JobToolsIndex.push_back(tmpToolSetIndex + 1); // ****************************
 
         getline(ss, value, ';');
-        tmpToolSetIndex = stoi(value);
-        JobTools.push_back(mapToolSets[tmpToolSetIndex]);
-        JobToolsIndex.push_back(tmpToolSetIndex);
+        processingTime.push_back(stoi(value));
 
         getline(ss, value, '\n');
-        processingTime.push_back(stoi(value));
+        priority.push_back(stoi(value));
 
     }
 
@@ -61,21 +65,29 @@ int laodInstance(string filename){
         });
     capacityMagazine = maxIt->size();
 
-    // Numero de ferramentas;
-    set <int> allTools;
+    // Numero de ferramentas ****************************
+    // set <int> allTools;
+    // for(int i = 0; i < JobTools.size(); i++){
+    //     for(int j = 0; j < JobTools[i].size(); j++){
+    //         allTools.insert(JobTools[i][j]);
+    //     }
+    // }
+    // numberTools = allTools.size();
+    int maxTool = -1;
     for(int i = 0; i < JobTools.size(); i++){
         for(int j = 0; j < JobTools[i].size(); j++){
-            allTools.insert(JobTools[i][j]);
+            if (JobTools[i][j] > maxTool){
+                maxTool = JobTools[i][j];
+            }
         }
     }
-    numberTools = allTools.size();
+    numberTools = maxTool; 
+    
     
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    planingHorizon = 7;   //ToDo Nunca Muda? 		  
-    unsupervised   = 12;  //ToDo Nunca Muda? 			 
-    numberMachines = 0;   //ToDo Da onde Carregar?
-    priority = {};        //ToDo Da onde Carregar?
+    planingHorizon = 7;   
+    unsupervised   = 0.5*TIMESCALE;
     
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     
@@ -162,7 +174,7 @@ void printDataReport() {
     cout << "Planing Horizon: " << planingHorizon << endl;
     cout << "Unsupervised: " << unsupervised << endl << endl;
 
-    cout << "Number Of ToolSets Originais: " << originalToolSets.size() << endl;
+    cout << "Number Of ToolSets Originais: " << originalToolSets.size() << " | " << mapToolSets.size() << endl;
     cout << "Number Of ToolSets Super: " << superToolSet.size() << endl;
     cout << "Number of Tools: " << numberTools << endl << endl;
 

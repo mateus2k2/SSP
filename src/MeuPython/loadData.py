@@ -1,9 +1,9 @@
 import pandas as pd
 
-def loadToolSet(fileName, returnIndex=False):
+def loadToolSet(fileName):
     toolSetsFilePath = f'/home/mateus/WSL/IC/data/{fileName}'
     toolSetsDF = pd.read_csv(toolSetsFilePath, header=None, delimiter=';')
-    index = toolSetsDF.iloc[:, 0]        
+    index = toolSetsDF.iloc[:, 0]
     toolSetsDF = toolSetsDF.drop(toolSetsDF.columns[0], axis=1)
     toolSetsDF = toolSetsDF.fillna('NaNPlaceholder')
     toolSetsDict = toolSetsDF.to_dict(orient='records')
@@ -14,8 +14,8 @@ def loadToolSet(fileName, returnIndex=False):
             if coisa != 'NaNPlaceholder':
                 toolSetList[i].append(int(coisa))
     
-    if returnIndex: return toolSetList, index.to_list()
-    else:           return toolSetList
+    toolSetMap = {indexAtual : toolSetAtual for indexAtual, toolSetAtual in zip(index, toolSetList)}
+    return toolSetMap
 
 def loadJobs(fileName):
     jobsFilePath = f'/home/mateus/WSL/IC/data/{fileName}'

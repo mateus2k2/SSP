@@ -96,16 +96,34 @@ def printReport(machines, planejamento):
         print(f"end_info = {end_info}")
         print("\n----------------------------------------------------------------\n")
 
+def jobLookup(jobs, job, operation):
+    for j in jobs:
+        if j['Job'] == job and j['Operation'] == operation:
+            return j
+    return None
+
+def checkMagazine (machine, toolSets, jobs):
+    for machine in machines:
+        for operation in machine['operations']:
+            realJob = jobLookup(jobs, operation['job'], operation['operation'])
+            
+            if realJob == None:
+                print(f"Job {operation['job']} Operation {operation['operation']} not found")
+            
+            if toolSets[realJob['ToolSet']] not in operation['magazine']:
+                print(f"Job {operation['job']} Operation {operation['operation']} ToolSet {realJob['ToolSet']} not found in magazine")
+            
+            break
+        break
+
 machines, planejamento = parseReport('/home/mateus/WSL/IC/data/SolutionReports/solutionReport.txt')
-toolSet, indexList = ld.loadToolSet(planejamento['toolSetFileName'], returnIndex=True)
+toolSets = ld.loadToolSet(planejamento['toolSetFileName'])
 jobs = ld.loadJobs(planejamento['jobsFileName'])
 
-print(len(jobs))
-print(len(toolSet))
-print(len(indexList))
+checkMagazine(machines, toolSets, jobs)
 
-# Validar se nao ha trocas em periodos nao supervisionados = Fazer a contagem do tempo independete 
 # Validar se a magazine contem as ferramentas para realizar o dado trabalho
+# Validar se nao ha trocas em periodos nao supervisionados = Fazer a contagem do tempo independete 
 # Validar se a sequencia de tarefas resulta no numero de trocas esperado = Tanto em termos de numero de vezes q foram trocadas quanto no numero de trocas em si = PREJUIZO 
 # Validar se a sequencia de tarefas resulta no numero de tarefas prioritarias nao terminadas esperado = PREJUIZO
 # Validar se a sequencia de tarefas resulta no numero de tarefas prioritarias nao terminadas esperado = LUCRO
