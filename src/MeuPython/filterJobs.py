@@ -31,15 +31,15 @@ def subSets(toolSet, jobs):
                 removedDuplicates.append(job)
                 break
     
-    removedDuplicates.sort(key=lambda x: len(toolSet[x['ToolSet']-1]), reverse=True)
+    removedDuplicates.sort(key=lambda x: len(toolSet[x['ToolSet']]), reverse=True)
     deletedSubSets = []
     FilteredList = removedDuplicates.copy()
     
     # Remove subconjuntos
     for i, job in enumerate(removedDuplicates):
-        jobSet = set(toolSet[job['ToolSet']-1])
+        jobSet = set(toolSet[job['ToolSet']])
         for j in range(i+1, len(removedDuplicates)):
-            jobsInsideSet = set(toolSet[removedDuplicates[j]['ToolSet']-1])
+            jobsInsideSet = set(toolSet[removedDuplicates[j]['ToolSet']])
             if jobsInsideSet.issubset(jobSet) and removedDuplicates[j] not in deletedSubSets:
                 # print(f'jobSet        {jobSet}          | {job["ToolSet"]       }')
                 # print(f'jobsInsideSet {jobsInsideSet}   | {removedDuplicates[j]["ToolSet"]}')
@@ -49,21 +49,35 @@ def subSets(toolSet, jobs):
     
     return FilteredList
 
-def getUnsuedToolSets(jobs, toolSets):
-    indices = [i for i in range(1, len(toolSets)+1)]
-    indices.sort(key=lambda x: len(toolSets[x-1]), reverse=True)
+def getUnsuedToolSets(jobs, toolSetsDict):
+    indices = list(toolSetsDict.keys())
+    toolSets = list(toolSetsDict.values())
+
+    indices.sort(key=lambda x: len(toolSetsDict[x]), reverse=True)
     toolSets.sort(key=lambda x: len(x), reverse=True)
     
     toolSetsUnused = []
     incdicesUnused = []
 
-    for i, toolSet in enumerate(toolSets):
+    for i in range(len(toolSets)):
         print(f"{i+1}/{len(toolSets)}")
-        for job in jobs:
-            if not((toolSets[job["ToolSet"]-1] == toolSet) or (toolSets[job["ToolSet"]-1] in toolSet) or (toolSet in toolSets[job["ToolSet"]-1])) and (toolSet not in toolSetsUnused):
-                toolSetsUnused.append(toolSet)
-                incdicesUnused.append(indices[i])
-                
+        var = False
+        for j in range(i, len(toolSets)):
+            if ((toolSets[i] == toolSets[j]) or (set(toolSets[j]).issubset(set(toolSets[i])))) and (i != j) and (len(toolSets[j]) > 0):
+                var = True
+                break
+        if not var:
+            toolSetsUnused.append(toolSets[i])
+            incdicesUnused.append(indices[i])
+    
+    for job in jobs:
+        if job['ToolSet'] in incdicesUnused:
+            toolSetsUnused.remove(toolSetsDict[job['ToolSet']])
+            incdicesUnused.remove(job['ToolSet'])
+
+    print(f"Unused ToolSets: {len(toolSetsUnused)}")
+    print(f"Total ToolSets: {len(toolSets)}")
+
     largestUnused = max(toolSetsUnused, key=lambda x: len(x))
     for i, item in enumerate(toolSetsUnused):    
         with open(f'/home/mateus/WSL/IC/data/UnusedToolSets.csv', 'a', newline='') as file:
@@ -80,20 +94,20 @@ toolSets = ld.loadToolSet("ToolSetInt.csv")
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-# jobs = loadJobs(250)
+# jobs = ld.loadJobs("250.csv")
 # saveFile(subSets(toolSets, jobs), "250Filtered.csv")
 
-# jobs = loadJobs(750)
+# jobs = ld.loadJobs("750.csv")
 # saveFile(subSets(toolSets, jobs), "750Filtered.csv")
 
-# jobs = loadJobs(1000)
+# jobs = ld.loadJobs("1000.csv")
 # saveFile(subSets(toolSets, jobs), "1000Filtered.csv")
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-# jobs250 = loadJobs("250Filtered")
-# jobs750 = loadJobs("750Filtered")
-# jobs1000 = loadJobs("1000Filtered")
+# jobs250 = ld.loadJobs("250Filtered.csv")
+# jobs750 = ld.loadJobs("750Filtered.csv")
+# jobs1000 = ld.loadJobs("1000Filtered.csv")
 # concactedJobs = jobs250 + jobs750 + jobs1000
 # print(len(concactedJobs)) # 347
 # saveFile(subSets(toolSets, concactedJobs), "AllFiltered.csv")
@@ -101,7 +115,7 @@ toolSets = ld.loadToolSet("ToolSetInt.csv")
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-# allJobs = ld.loadJobs("AllFiltered.csv")
-# getUnsuedToolSets(allJobs, toolSets)
+allJobs = ld.loadJobs("AllFiltered.csv")
+getUnsuedToolSets(allJobs, toolSets)
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

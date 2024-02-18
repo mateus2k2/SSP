@@ -110,7 +110,7 @@ def checkMagazine (machine, toolSets, jobs):
             if realJob == None:
                 print(f"Job {operation['job']} Operation {operation['operation']} not found")
             
-            if toolSets[realJob['ToolSet']] not in operation['magazine']:
+            if set(toolSets[realJob['ToolSet']]).issubset(set(operation['magazine'])):
                 print(f"Job {operation['job']} Operation {operation['operation']} ToolSet {realJob['ToolSet']} not found in magazine")
             
             break
@@ -120,7 +120,9 @@ machines, planejamento = parseReport('/home/mateus/WSL/IC/data/SolutionReports/s
 toolSets = ld.loadToolSet(planejamento['toolSetFileName'])
 jobs = ld.loadJobs(planejamento['jobsFileName'])
 
-checkMagazine(machines, toolSets, jobs)
+# checkMagazine(machines, toolSets, jobs)
+
+
 
 # Validar se a magazine contem as ferramentas para realizar o dado trabalho
 # Validar se nao ha trocas em periodos nao supervisionados = Fazer a contagem do tempo independete 
