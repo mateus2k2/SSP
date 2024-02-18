@@ -189,8 +189,5 @@ def makeInstaceExtra():
 instancias376, instancias1201, instancias1401 = makeInstaceBase()
 saveInstances(instancias376 + instancias1201 + instancias1401)
         
-# instances = makeInstaceExtra()
-# saveInstances(instances)
-
-# ssh-add ~/.ssh/id_ed25519
-# chmod  400 ~/.ssh/id_ed25519      
+instances = makeInstaceExtra()
+saveInstances(instances)

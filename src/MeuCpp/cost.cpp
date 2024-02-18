@@ -175,7 +175,7 @@ unsigned int KTNSReport(vector<int> s, fstream& solutionReportFile){
 		int cmL = 0;
 
 		while((cmL < capacityMagazine) && (left < numberJobsSol)){
-			for (auto it=originalToolSets[originalJobs[s[left]].indexToolSet].tools.begin(); ((it!=originalToolSets[originalJobs[s[left]].indexToolSet].tools.end()) && (cmL < capacityMagazine)); ++it){
+			for (auto it=originalToolSets[originalJobs[s[left]].indexToolSet-1].tools.begin(); ((it!=originalToolSets[originalJobs[s[left]].indexToolSet-1].tools.end()) && (cmL < capacityMagazine)); ++it){
 				
 				if((magazineL[*it]) && (!magazineCL[*it])){
 					magazineCL[*it] = true;

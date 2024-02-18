@@ -15,7 +15,7 @@ def saveFile(jobs, fileName):
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-def subSets(toolSet, jobs):
+def removeSubSets(toolSet, jobs):
     
     removedDuplicates = []
     
@@ -95,13 +95,13 @@ toolSets = ld.loadToolSet("ToolSetInt.csv")
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # jobs = ld.loadJobs("250.csv")
-# saveFile(subSets(toolSets, jobs), "250Filtered.csv")
+# saveFile(removeSubSets(toolSets, jobs), "250Filtered.csv")
 
 # jobs = ld.loadJobs("750.csv")
-# saveFile(subSets(toolSets, jobs), "750Filtered.csv")
+# saveFile(removeSubSets(toolSets, jobs), "750Filtered.csv")
 
 # jobs = ld.loadJobs("1000.csv")
-# saveFile(subSets(toolSets, jobs), "1000Filtered.csv")
+# saveFile(removeSubSets(toolSets, jobs), "1000Filtered.csv")
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -110,7 +110,7 @@ toolSets = ld.loadToolSet("ToolSetInt.csv")
 # jobs1000 = ld.loadJobs("1000Filtered.csv")
 # concactedJobs = jobs250 + jobs750 + jobs1000
 # print(len(concactedJobs)) # 347
-# saveFile(subSets(toolSets, concactedJobs), "AllFiltered.csv")
+# saveFile(removeSubSets(toolSets, concactedJobs), "AllFiltered.csv")
 
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
