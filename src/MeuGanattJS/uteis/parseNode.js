@@ -76,7 +76,7 @@ function parseFileFunc(file_path) {
 }
 
 // Example usage
-// const filePath = '/home/mateus/WSL/IC/data/solutionReport.txt';
+// const filePath = '/home/mateus/WSL/IC/Meu/data/solutionReport.txt';
 // const parsedData = parseFile(filePath);
 // const stringData = JSON.stringify(parsedData, null, 4);
 // fs.writeFileSync('parsedData.json', stringData);

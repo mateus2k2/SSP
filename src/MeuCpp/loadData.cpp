@@ -39,7 +39,7 @@ int laodInstance(string filename){
 
         getline(ss, value, ';');
         tmpToolSetIndex = stoi(value);
-        sort(mapToolSets[tmpToolSetIndex].begin(), mapToolSets[tmpToolSetIndex].end()); // ****************************
+        // sort(mapToolSets[tmpToolSetIndex].begin(), mapToolSets[tmpToolSetIndex].end()); // ****************************
         JobTools.push_back(mapToolSets[tmpToolSetIndex]);
         JobToolsIndex.push_back(tmpToolSetIndex + 1); // ****************************
 
@@ -59,11 +59,11 @@ int laodInstance(string filename){
     numberJobs = job.size();    
 
     // Capacidade do magazine, mapacidade do maior toolSet
-    auto maxIt = max_element(JobTools.begin(), JobTools.end(),
-        [](const vector<int>& a, const vector<int>& b) {
-            return a.size() < b.size();
-        });
-    capacityMagazine = maxIt->size();
+    // auto maxIt = max_element(JobTools.begin(), JobTools.end(),
+    //     [](const vector<int>& a, const vector<int>& b) {
+    //         return a.size() < b.size();
+    //     });
+    // capacityMagazine = maxIt->size();
 
     // Numero de ferramentas ****************************
     // set <int> allTools;
@@ -73,6 +73,8 @@ int laodInstance(string filename){
     //     }
     // }
     // numberTools = allTools.size();
+    capacityMagazine = 80;
+
     int maxTool = -1;
     for(int i = 0; i < JobTools.size(); i++){
         for(int j = 0; j < JobTools[i].size(); j++){
@@ -129,7 +131,6 @@ int laodToolSet(string filename) {
 }
 
 void loadDataTypes(){
-
     for (auto it = mapToolSets.begin(); it != mapToolSets.end(); ++it) {
         ToolSet toolSetTmp;
 

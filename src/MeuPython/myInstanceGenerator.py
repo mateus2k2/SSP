@@ -109,7 +109,7 @@ def makeJobs(toolSets):
     return jobs
 
 def saveInstances(instancias):
-    folder = "/home/mateus/WSL/IC/data/MyInstances"
+    folder = "/home/mateus/WSL/IC/Meu/data/MyInstances"
     fields = ["Job","Operation","ToolSet","Processing Time","Priority"]
     for i, instancia in enumerate(instancias):
         fileName = f"n={instancia['size']},p={instancia['priority']},r={instancia['reentrant']},t={instancia['unicTools']},v{i}.csv"
@@ -164,21 +164,32 @@ def makeInstaceExtra():
     priorityLivels = [0.25, 0.5, 0.75]
     toolRatio     = [1, 1.25, 1.50, 1.75, 2]
 
+    random.shuffle(toolSetIndex)
+
     for i in range(400, min(len(toolSetIndex), 1100), 100):
         closer = min(reentrantRatio, key=lambda x:abs(x-i))
         closer = reentrantRatio[closer]
-        corte = int(i - (closer * i))
+        corte = int((i) / (1+closer))
 
-        # print(f"{closer} | {i} | {corte}")
+        print(f"{closer} | {i} | {corte}")
 
-        random.shuffle(toolSetIndex)
-        toolSets = toolSetIndex[:i-corte]
+        toolSets = toolSetIndex[:corte]
         jobs = makeJobs(toolSets)
         instancias = makeInstance(quantidadeInstancias, closer, priorityLivels, toolRatio, jobs, toolUnusedMap)
         instanciasToReturn += instancias
 
-    for i in range(1250, len(toolSetIndex), 250):
-        pass
+    maxToolSets = 1238
+    # maxToolSets = 1266
+    closer = min(reentrantRatio, key=lambda x:abs(x-maxToolSets))
+    closer = reentrantRatio[closer]
+    corte = int((maxToolSets) / (1+closer))
+
+    print(f"{closer} | {maxToolSets} | {corte}")
+
+    toolSets = toolSetIndex[:corte]
+    jobs = makeJobs(toolSets)
+    instancias = makeInstance(quantidadeInstancias, closer, priorityLivels, toolRatio, jobs, toolUnusedMap)
+    instanciasToReturn += instancias
 
     return instanciasToReturn
 

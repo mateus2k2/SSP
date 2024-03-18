@@ -1,5 +1,57 @@
-clear && echo "\n" && python src/MeuPython/validador.py 
+clear && echo "\n" && python src/MeuPython/validador.py single /home/mateus/WSL/IC/Meu/data/SolutionReports/solutionReport.txt
 [H[2J[3J
 
-{'Job': 15, 'Operation': 0, 'ToolSet': 3173, 'Processing Time': 122, 'Priority': 0}
-[15, 41, 16, 42, 34, 43, 44, 45, 17, 18, 46, 35, 48, 19, 49, 36, 50, 51, 494, 20, 21, 52, 53, 54, 55, 56, 57, 22, 37, 38, 58, 59, 23, 39, 40, 24, 60, 61, 25, 110, 111, 495, 496, 778, 26, 1423, 3717, 2091, 1311, 5825, 6244]
+---Validating /home/mateus/WSL/IC/Meu/data/SolutionReports/solutionReport.txt---
+Checking Magazine
+Machine 1/2
+OK
+Machine 2/2
+OK
+
+Checking Unsupervised Switchs
+Machine 1/2
+OK
+Machine 2/2
+OK
+
+Checking Switchs
+Machine 1/2
+OK
+Machine 2/2
+OK
+
+Checking Unfinished Jobs
+Machine 1/2
+OK
+Machine 2/2
+OK
+
+Checking Operations Done Once
+Machine 1/2
+OK
+Machine 2/2
+OK
+
+Machine 1/2
+OK
+Machine 2/2
+OK
+
+Checking Profit
+Machine 1/2
+OK
+Machine 2/2
+OK
+
+Checking Total Cost
+OK
+
+Running New KTNS
+fineshedPriorityCount = 9 | switchs = 517 | switchsInstances = 25 | unfineshedPriorityCount = 0 | cost = -497
+OK
+fineshedPriorityCount = 9 | switchs = 183 | switchsInstances = 20 | unfineshedPriorityCount = 0 | cost = -113
+OK
+
+Checking Total Cost
+OK
+

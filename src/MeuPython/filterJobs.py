@@ -7,7 +7,7 @@ import loadData as ld
 
 def saveFile(jobs, fileName):
     fields = ["Job","Operation","ToolSet","Processing Time"]
-    csv_file = open(f"/home/mateus/WSL/IC/data/{fileName}", 'w', newline='')
+    csv_file = open(f"/home/mateus/WSL/IC/Meu/data/{fileName}", 'w', newline='')
     csv_writer = csv.DictWriter(csv_file, fieldnames=fields, delimiter=';')
     
     csv_writer.writeheader()
@@ -47,6 +47,11 @@ def removeSubSets(toolSet, jobs):
                 deletedSubSets.append(removedDuplicates[j])
                 FilteredList.remove(removedDuplicates[j])
     
+    # Remove Larger Then 80 and Smaller Then 1
+    for job in FilteredList:
+        if len(toolSet[job['ToolSet']]) > 80 or len(toolSet[job['ToolSet']]) < 1:
+            FilteredList.remove(job)
+
     return FilteredList
 
 def getUnsuedToolSets(jobs, toolSetsDict):
@@ -66,7 +71,7 @@ def getUnsuedToolSets(jobs, toolSetsDict):
             if ((toolSets[i] == toolSets[j]) or (set(toolSets[j]).issubset(set(toolSets[i])))) and (i != j) and (len(toolSets[j]) > 0):
                 var = True
                 break
-        if not var:
+        if not var and len(toolSets[i]) > 0 and len(toolSets[i]) < 80:
             toolSetsUnused.append(toolSets[i])
             incdicesUnused.append(indices[i])
     
@@ -80,7 +85,7 @@ def getUnsuedToolSets(jobs, toolSetsDict):
 
     largestUnused = max(toolSetsUnused, key=lambda x: len(x))
     for i, item in enumerate(toolSetsUnused):    
-        with open(f'/home/mateus/WSL/IC/data/UnusedToolSets.csv', 'a', newline='') as file:
+        with open(f'/home/mateus/WSL/IC/Meu/data/UnusedToolSets.csv', 'a', newline='') as file:
             writer = csv.writer(file, delimiter=';')
             targetLength = len(largestUnused) - (len(item) + 1)
             emptyList = [''] * targetLength
@@ -112,10 +117,9 @@ toolSets = ld.loadToolSet("ToolSetInt.csv")
 # print(len(concactedJobs)) # 347
 # saveFile(removeSubSets(toolSets, concactedJobs), "AllFiltered.csv")
 
-
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-allJobs = ld.loadJobs("AllFiltered.csv")
-getUnsuedToolSets(allJobs, toolSets)
+# allJobs = ld.loadJobs("AllFiltered.csv")
+# getUnsuedToolSets(allJobs, toolSets)
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

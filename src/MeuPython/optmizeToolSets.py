@@ -45,9 +45,9 @@ def stringToIntAll(filemameIn, filemameOut, jsonName):
         json.dump(stringToIntMapping, fp, indent=4)
 
 def pruneNotNeadedAll(filemameIn, filemameOut, typeInput):
-    JobsAll1 = pd.read_csv("/home/mateus/WSL/IC/data/250.csv", delimiter=';', dtype=int)
-    JobsAll2 = pd.read_csv("/home/mateus/WSL/IC/data/750.csv", delimiter=';', dtype=int)
-    JobsAll3 = pd.read_csv("/home/mateus/WSL/IC/data/1000.csv", delimiter=';', dtype=int)
+    JobsAll1 = pd.read_csv("/home/mateus/WSL/IC/Meu/data/250.csv", delimiter=';', dtype=int)
+    JobsAll2 = pd.read_csv("/home/mateus/WSL/IC/Meu/data/750.csv", delimiter=';', dtype=int)
+    JobsAll3 = pd.read_csv("/home/mateus/WSL/IC/Meu/data/1000.csv", delimiter=';', dtype=int)
 
     toolSetNeaded1 = []
     toolSetNeaded2 = []
@@ -80,28 +80,28 @@ def pruneNotNeadedOne(filemameIn, filemameOut):
     
     toolSetNeaded = set(toolSetNeaded)
 
-    df = pd.read_csv('/home/mateus/WSL/IC/data/ToolSetOG.csv', sep=';', header=None)
+    df = pd.read_csv('/home/mateus/WSL/IC/Meu/data/ToolSetOG.csv', sep=';', header=None)
     df_filtered = df[df[0].isin(toolSetNeaded)]
     df_filtered = df_filtered.applymap(lambda x: '' if pd.isna(x) else (x))
     df_filtered.to_csv(filemameOut, index=False, sep=';', header=False)
 
 
-# pruneNotNeadedOne('/home/mateus/WSL/IC/data/250.csv', '/home/mateus/WSL/IC/data/250ToolSetString.csv')
-# stringToInt('/home/mateus/WSL/IC/data/250ToolSetString.csv', '/home/mateus/WSL/IC/data/250ToolSet.csv', '/home/mateus/WSL/IC/data/Map/250ToolSetMapping.json')
-# os.remove("/home/mateus/WSL/IC/data/250ToolSetString.csv")
+# pruneNotNeadedOne('/home/mateus/WSL/IC/Meu/data/250.csv', '/home/mateus/WSL/IC/Meu/data/250ToolSetString.csv')
+# stringToInt('/home/mateus/WSL/IC/Meu/data/250ToolSetString.csv', '/home/mateus/WSL/IC/Meu/data/250ToolSet.csv', '/home/mateus/WSL/IC/Meu/data/Map/250ToolSetMapping.json')
+# os.remove("/home/mateus/WSL/IC/Meu/data/250ToolSetString.csv")
 
-# pruneNotNeadedOne('/home/mateus/WSL/IC/data/750.csv', '/home/mateus/WSL/IC/data/750ToolSetString.csv')
-# stringToInt('/home/mateus/WSL/IC/data/750ToolSetString.csv', '/home/mateus/WSL/IC/data/750ToolSet.csv', '/home/mateus/WSL/IC/data/Map/750ToolSetMapping.json')
-# os.remove("/home/mateus/WSL/IC/data/750ToolSetString.csv")
+# pruneNotNeadedOne('/home/mateus/WSL/IC/Meu/data/750.csv', '/home/mateus/WSL/IC/Meu/data/750ToolSetString.csv')
+# stringToInt('/home/mateus/WSL/IC/Meu/data/750ToolSetString.csv', '/home/mateus/WSL/IC/Meu/data/750ToolSet.csv', '/home/mateus/WSL/IC/Meu/data/Map/750ToolSetMapping.json')
+# os.remove("/home/mateus/WSL/IC/Meu/data/750ToolSetString.csv")
 
-# pruneNotNeadedOne('/home/mateus/WSL/IC/data/1000.csv', '/home/mateus/WSL/IC/data/1000ToolSetString.csv')
-# stringToInt('/home/mateus/WSL/IC/data/1000ToolSetString.csv', '/home/mateus/WSL/IC/data/1000ToolSet.csv', '/home/mateus/WSL/IC/data/Map/1000ToolSetMapping.json')
-# os.remove("/home/mateus/WSL/IC/data/1000ToolSetString.csv")
+# pruneNotNeadedOne('/home/mateus/WSL/IC/Meu/data/1000.csv', '/home/mateus/WSL/IC/Meu/data/1000ToolSetString.csv')
+# stringToInt('/home/mateus/WSL/IC/Meu/data/1000ToolSetString.csv', '/home/mateus/WSL/IC/Meu/data/1000ToolSet.csv', '/home/mateus/WSL/IC/Meu/data/Map/1000ToolSetMapping.json')
+# os.remove("/home/mateus/WSL/IC/Meu/data/1000ToolSetString.csv")
 
-# pruneNotNeadedAll('/home/mateus/WSL/IC/data/ToolSetOG.csv', '/home/mateus/WSL/IC/data/ToolSetString.csv', None)
-# stringToInt('/home/mateus/WSL/IC/data/ToolSetString.csv', '/home/mateus/WSL/IC/data/ToolSetPruned.csv', '/home/mateus/WSL/IC/data/Map/ToolSetMappingPruned.json')
-# os.remove("/home/mateus/WSL/IC/data/ToolSetString.csv")
+# pruneNotNeadedAll('/home/mateus/WSL/IC/Meu/data/ToolSetOG.csv', '/home/mateus/WSL/IC/Meu/data/ToolSetString.csv', None)
+# stringToInt('/home/mateus/WSL/IC/Meu/data/ToolSetString.csv', '/home/mateus/WSL/IC/Meu/data/ToolSetPruned.csv', '/home/mateus/WSL/IC/Meu/data/Map/ToolSetMappingPruned.json')
+# os.remove("/home/mateus/WSL/IC/Meu/data/ToolSetString.csv")
 
-# stringToIntAll('/home/mateus/WSL/IC/data/ToolSetOG.csv', '/home/mateus/WSL/IC/data/ToolSetInt.csv', '/home/mateus/WSL/IC/data/Map/ToolSetMappingAll.json')
-# pruneNotNeadedAll('/home/mateus/WSL/IC/data/ToolSetInt.csv', '/home/mateus/WSL/IC/data/ToolSetAll.csv', int)
-# os.remove("/home/mateus/WSL/IC/data/ToolSetInt.csv")
+# stringToIntAll('/home/mateus/WSL/IC/Meu/data/ToolSetOG.csv', '/home/mateus/WSL/IC/Meu/data/ToolSetInt.csv', '/home/mateus/WSL/IC/Meu/data/Map/ToolSetMappingAll.json')
+# pruneNotNeadedAll('/home/mateus/WSL/IC/Meu/data/ToolSetInt.csv', '/home/mateus/WSL/IC/Meu/data/ToolSetAll.csv', int)
+# os.remove("/home/mateus/WSL/IC/Meu/data/ToolSetInt.csv")

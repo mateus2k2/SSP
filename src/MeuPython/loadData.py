@@ -1,7 +1,7 @@
 import pandas as pd
 
 def loadToolSet(fileName):
-    toolSetsFilePath = f'/home/mateus/WSL/IC/data/{fileName}'
+    toolSetsFilePath = f'/home/mateus/WSL/IC/Meu/data/{fileName}'
     toolSetsDF = pd.read_csv(toolSetsFilePath, header=None, delimiter=';')
     index = toolSetsDF.iloc[:, 0]
     toolSetsDF = toolSetsDF.drop(toolSetsDF.columns[0], axis=1)
@@ -18,7 +18,7 @@ def loadToolSet(fileName):
     return toolSetMap
 
 def loadJobs(fileName):
-    jobsFilePath = f'/home/mateus/WSL/IC/data/{fileName}'
+    jobsFilePath = f'/home/mateus/WSL/IC/Meu/data/{fileName}'
     jobsDF = pd.read_csv(jobsFilePath, delimiter=';')
     jobsDict = jobsDF.to_dict(orient='records')
     return jobsDict

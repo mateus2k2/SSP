@@ -16,7 +16,7 @@ myInstanceGenerator:
 	clear && echo "\n" && python src/MeuPython/myInstanceGenerator.py 
 
 validador:
-	clear && echo "\n" && python src/MeuPython/validador.py 
+	clear && echo "\n" && python src/MeuPython/validador.py $(arg1) $(arg2)
 
 uteis:
 	clear && echo "\n" && python src/MeuPython/uteis.py 

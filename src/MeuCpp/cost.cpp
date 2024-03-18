@@ -34,6 +34,8 @@ unsigned int KTNSReport(vector<int> s, fstream& solutionReportFile){
 	int fineshedPriorityCount = 0;
 	int unfineshedPriorityCount = 0;
 
+	int clear = 0;
+
 	// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// SUPER
 	// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -50,6 +52,7 @@ unsigned int KTNSReport(vector<int> s, fstream& solutionReportFile){
 
 		while((cmL < capacityMagazine) && (left < numberJobsSol)){
 			for (auto it=originalToolSets[superToolSet[superJobs[s[left]].indexSuperToolSet].indexOriginalToolSet-1].tools.begin(); ((it!=originalToolSets[superToolSet[superJobs[s[left]].indexSuperToolSet].indexOriginalToolSet-1].tools.end()) && (cmL < capacityMagazine)); ++it){ // ****************************
+				// cout << *it << " ";
 				if((magazineL[*it]) && (!magazineCL[*it])){
 					magazineCL[*it] = true;
 					++cmL;
@@ -59,6 +62,8 @@ unsigned int KTNSReport(vector<int> s, fstream& solutionReportFile){
 					++currantSwitchs;
 				}
 			}
+			// cout << endl;
+			// exit(0);
 			++left;
 		}
 
@@ -86,6 +91,7 @@ unsigned int KTNSReport(vector<int> s, fstream& solutionReportFile){
 			
 				int lastJob = s[s.size()-1];
 				s.clear();
+				clear = 1;
 
 				for (auto it = superJobs[lastJob].originalJobs.begin(); it != superJobs[lastJob].originalJobs.end(); ++it){
 					s.push_back(*it);
@@ -110,6 +116,7 @@ unsigned int KTNSReport(vector<int> s, fstream& solutionReportFile){
 				
 				int lastJob = s[s.size()-1];
 				s.clear();
+				clear = 1;
 
 				for (auto it = superJobs[lastJob].originalJobs.begin(); it != superJobs[lastJob].originalJobs.end(); ++it){
 					s.push_back(*it);
@@ -164,6 +171,7 @@ unsigned int KTNSReport(vector<int> s, fstream& solutionReportFile){
 	// JOBS NORMAIS
 	// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+	if (clear == 0) s.clear();
 	numberJobsSol = s.size();
 
 	for(jL= 0; jL < numberJobsSol; ++jL){
@@ -325,8 +333,10 @@ unsigned int costReport(vector<int> sol, vector<int> machine, fstream& solutionR
 		solutionReportFile << "\n";
 
         totalCost += KTNSReport(sols[i], solutionReportFile);
+
     }
 
+	solutionReportFile << totalCost << "\n";
 	return totalCost;
 
 }

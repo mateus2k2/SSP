@@ -17,15 +17,15 @@ using namespace std;
 
 void randonSolution(){
     fstream solutionReportFile;
-    solutionReportFile.open("/home/mateus/WSL/IC/data/SolutionReports/solutionReport.txt", ios::out);
+    solutionReportFile.open("/home/mateus/WSL/IC/Meu/data/SolutionReports/solutionReport.txt", ios::out);
     
     // ---------------------------------------------------------------------
 
-    string jobsFileName = "MyInstances/n=75,p=0.25,r=0.5,t=650,v0.csv";
+    string jobsFileName = "MyInstances/n=75,p=0.24,r=0.5,t=650,v0.csv";
     string toolSetFileName = "ToolSetInt.csv";
 
-    laodToolSet("/home/mateus/WSL/IC/data/" + toolSetFileName);
-	laodInstance("/home/mateus/WSL/IC/data/" + jobsFileName);
+    laodToolSet("/home/mateus/WSL/IC/Meu/data/" + toolSetFileName);
+	laodInstance("/home/mateus/WSL/IC/Meu/data/" + jobsFileName);
 	solutionReportFile << jobsFileName << ";" << toolSetFileName << endl;
 
     // ---------------------------------------------------------------------

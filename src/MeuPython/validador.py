@@ -1,4 +1,9 @@
 import loadData as ld
+import sys
+
+# ---------------------------------------------------------------------------------------------------
+# REPORT PARSER
+# ---------------------------------------------------------------------------------------------------
 
 def parseMachineSection(machine_section):
     lines = machine_section.strip().split('\n')
@@ -42,6 +47,7 @@ def parseReport(file_path):
     
     lines = file_content.splitlines()
     
+    totalCost = int(lines.pop())
     instancesName = lines.pop(0)
     jobsFileName = instancesName.split(';')[0]
     toolSetFileName = instancesName.split(';')[1]
@@ -53,7 +59,8 @@ def parseReport(file_path):
         'unsupervised': planejamento[1],
         'timescale': planejamento[2],
         'jobsFileName': jobsFileName,
-        'toolSetFileName': toolSetFileName
+        'toolSetFileName': toolSetFileName,
+        'totalCost': totalCost
     }
     
     modified_string = '\n'.join(lines)
@@ -96,34 +103,51 @@ def printReport(machines, planejamento):
         print(f"end_info = {end_info}")
         print("\n----------------------------------------------------------------\n")
 
-def jobLookup(jobs, job, operation):
-    for j in jobs:
+# ---------------------------------------------------------------------------------------------------
+# VALIDADOR
+# ---------------------------------------------------------------------------------------------------
+
+def jobLookup(jobs, job, operation, returnIndex=False):
+    for index, j in enumerate(jobs):
         if j['Job'] == job and j['Operation'] == operation:
-            return j
+            if returnIndex: return j, index
+            else: return j
     return None
 
-def checkMagazine (machine, toolSets, jobs):
+def checkMagazine (machines, toolSets, jobs):
+    print(f"Checking Magazine")
+
     for i, machine in enumerate(machines):
         print(f"Machine {i+1}/{len(machines)}")
+        error = False
         for j, operation in enumerate(machine['operations']):
             realJob = jobLookup(jobs, operation['job'], operation['operation'])
 
             if realJob == None:
-                print(f"{i+1}/{len(machine['operations'])} | Job {operation['job']} Operation {operation['operation']} not found")
+                print(f"Error = Job {operation['job']} Operation {operation['operation']} not found in the instance")
+                error = True
             
             if not set(toolSets[realJob['ToolSet']]).issubset(set(operation['magazine'])):
-                print(f"{i+1}/{len(machine['operations'])} | Job {operation['job']} Operation {operation['operation']} ToolSet {realJob['ToolSet']} not found in magazine")
-                print(f"Magazine: {operation['magazine']}")
-                print(f"ToolSet: {toolSets[realJob['ToolSet']]}")
-                print(f"Diference: {set(toolSets[realJob['ToolSet']]) - set(operation['magazine'])}")
-                print()
+                print(f"Error = Job {operation['job']} Operation {operation['operation']} ToolSet {realJob['ToolSet']} not found in magazine")
+                error = True
+
+        if error:
+            print("ERROR")
+
+        else: 
+            print("OK")
 
 def checkUnsupervisedSwitchs(machines, toolSets, jobs, planejamento):
+    print("Checking Unsupervised Switchs")
+
     unsupervisedStart = planejamento['unsupervised']
     timeScale = planejamento['timescale']
 
     for i, machine in enumerate(machines):
+        print(f"Machine {i+1}/{len(machines)}")
+
         curTime = 0
+        error = False
 
         for j, operation in enumerate(machine['operations']):
             curJob = jobLookup(jobs, operation['job'], operation['operation'])
@@ -134,32 +158,28 @@ def checkUnsupervisedSwitchs(machines, toolSets, jobs, planejamento):
 
             curTime = operation['start']
 
-            # if (curTime + expectedTime) != operation['end'] or (expectedTime) != curTime:
-            #     print("TEMPO ERRADO")
-            #     print(f"expectedTime = {expectedTime}")
-            #     print(f"curTime = {curTime}")
-            #     print()                    
-
             if curTime%timeScale >= unsupervisedStart:
                 if operation['magazine'] != machine['operations'][j-1]['magazine'] and len(set(curToolSet) - set(lastToolSet)) > 0:
-                    print(f"Unsupervised Switch in Machine {i+1}/{len(machines)}")
-                    print(f"Job {operation['job']} Operation {operation['operation']}")
-                    print(f"Magazine: {operation['magazine']}")
-                    print(f"Previous Magazine: {machine['operations'][j-1]['magazine']}")
-                    print(f"curentTime = {curTime} | timeScale = {timeScale} | unsupervisedStart = {unsupervisedStart} | curTime%timeScale = {curTime%timeScale}")
-                    print()
-        #     break
-        # break
+                    print(f"Error = Unsupervised Switch in Machine {i+1}/{len(machines)} | Job {operation['job']} Operation {operation['operation']}")
+                    error = True
+            
+        if error:
+            print("ERROR")
+        else:
+            print("OK")
 
 def checkSwitchs(machines, toolSets, jobs):
+    print("Checking Switchs")
 
     for i, machine in enumerate(machines):
+        print(f"Machine {i+1}/{len(machines)}")
+
         switchInstance = 0
         toolSwitchs = 0
 
+        error = False
+
         for j, operation in enumerate(machine['operations']):
-            realJob = jobLookup(jobs, operation['job'], operation['operation'])
-            realToolSet = toolSets[realJob['ToolSet']]
 
             if j == 0:
                 switchInstance += 1
@@ -169,57 +189,302 @@ def checkSwitchs(machines, toolSets, jobs):
                     switchInstance += 1
                     toolSwitchs += len(set(operation['magazine']) - set(machine['operations'][j-1]['magazine']))
         
-        print(f"switchInstance = {switchInstance} | toolSwitchs = {toolSwitchs}")
-        print(f"end_info = {machine['end_info']}")
-        print()
+        if (switchInstance != machine['end_info']['switchsInstances'] or toolSwitchs != machine['end_info']['switchs']):
+            print(f"Error = Found {switchInstance} switchInstances and {toolSwitchs} toolSwitchs, expected {machine['end_info']['switchsInstances']} switchInstances and {machine['end_info']['switchs']} toolSwitchs")
+            error = True
+        
+        if error:
+            print("ERROR")
+        else:
+            print("OK")
 
 def checkUnfinishedJobs(machines, jobs):
+    print("Checking Unfinished Jobs")
+
     for i, machine in enumerate(machines):
+        print(f"Machine {i+1}/{len(machines)}")
+
         numberOfPriorityJobsExpected = 0
         numerOfFinishedPriorityJobs = 0
 
-        for k, job in enumerate(jobs):
-            if job['Priority'] == 1: numberOfPriorityJobsExpected += 1
+        error = False
 
-        for j, operation in enumerate(machine['operations']):
+        for job in machine["machine_info"]:
+            realJob = jobLookup(jobs, job['job'], job['operation'])
+            if realJob['Priority'] == 1: numberOfPriorityJobsExpected += 1
+
+        for operation in machine['operations']:
             realJob = jobLookup(jobs, operation['job'], operation['operation'])
             if realJob['Priority'] == 1 and operation['priority'] == 1: numerOfFinishedPriorityJobs += 1            
 
-        print(f"numberOfPriorityJobsExpected = {numberOfPriorityJobsExpected} | numerOfFinishedPriorityJobs = {numerOfFinishedPriorityJobs}")
-        print(f"end_info = {machine['end_info']}")
-        print()
+        if (numberOfPriorityJobsExpected != numerOfFinishedPriorityJobs):
+            print(f"Error = Found {numerOfFinishedPriorityJobs} finished priority jobs, expected {numberOfPriorityJobsExpected}")
+            error = True
+        
+        if error:
+            print("ERROR")
+        else:
+            print("OK")
 
-# endInfoObj['fineshedPriorityCount'] = int(end_info[1])
-# endInfoObj['switchs'] = int(end_info[2])
-# endInfoObj['switchsInstances'] = int(end_info[3])
-# endInfoObj['unfinesedPriorityCount'] = int(end_info[4])
-# endInfoObj['cost'] = int(end_info[5])
+def checkProfit(machines, jobs, planejamento):
+    print("Checking Profit")
 
-# int cost = (PROFITYPRIORITY * fineshedPriorityCount) - (COSTSWITCH * switchs) - (COSTSWITCHINSTANCE * switchsInstances) - (COSTPRIORITY * unfineshedPriorityCount);
+    acumulatorFound = 0
 
-def checkProfit(machines, jobs):
     for i, machine in enumerate(machines):
+        print(f"Machine {i+1}/{len(machines)}")
+
+        error = False
+
         cost = machine['end_info']['cost']
         conta = (30 * machine['end_info']['fineshedPriorityCount']) - (1 * machine['end_info']['switchs']) - (10 * machine['end_info']['switchsInstances']) - (30 * machine['end_info']['unfinesedPriorityCount'])
         
-        print(f"cost = {cost}")
-        print(f"conta = {conta}")
+        acumulatorFound += conta
+
+        if (cost != conta):
+            print(f"Error = Found cost {cost}, expected {conta}")
+            error = True
+
+        if error:
+            print("ERROR")
+        else:
+            print("OK")
+
+    print()
+    print(f"Checking Total Cost")
+
+
+    if (acumulatorFound != planejamento['totalCost']):
+        print(f"Error = Found total cost {acumulatorFound}, expected {planejamento['totalCost']}")
+    else:
+        print("OK")
+
+def checkOperations(machines, jobs):
+    print("Checking Operations Done Once")
+
+    acumulator = []
+
+    def tupleLookup(acumulator, job, operation):
+        for i, t in enumerate(acumulator):
+            if t[0] == job and t[1] == operation:
+                return True
+        return False
+
+    for i, machine in enumerate(machines):
+        print(f"Machine {i+1}/{len(machines)}")
+        error = False
+
+        operations = machine['operations']
+        
+        for operation in operations:
+            if tupleLookup(acumulator, operation["job"], operation["operation"]):
+                print(f"Error = operation {operation['job']} Operation {operation['operation']} found more than once")
+                error = True
+            else:
+                tupleTeste = (operation["job"], operation["operation"])
+                acumulator.append(tupleTeste)
+        
+        if error:
+            print("ERROR")
+        else:
+            print("OK")        
+
+def checkOrder(machines):
+    for i, machine in enumerate(machines):
+        print(f"Machine {i+1}/{len(machines)}")
+        error = False
+
+        operations = machine['operations']
+        machine_info = machine['machine_info']
+
+        for j, operation in enumerate(operations):
+            if operation["job"] != machine_info[j]["job"] or operation["operation"] != machine_info[j]["operation"]:
+                print(f"Error = Job {operation['job']} Operation {operation['operation']} found in the wrong order")
+                error = True
+        
+        if error:
+            print("ERROR")
+        else:
+            print("OK")
+
+def newKTNS(machines, toolSets, jobs, planejamento):
+    print("Running New KTNS")
+
+    totalCost = 0
+
+    TIMESCALE = planejamento['timescale']
+
+    COSTSWITCH         = 1
+    COSTSWITCHINSTANCE = 10
+    COSTPRIORITY       = 30
+    PROFITYPRIORITY    = 30
+
+    unsupervised = planejamento['unsupervised']
+    planingHorizon = planejamento['planingHorizon']
+    
+    capacityMagazine = 80
+
+    numberTools = 0
+    for machine in machines:
+        for operation in machine['machine_info']:
+            job = jobLookup(jobs, operation['job'], operation['operation'])
+            for tool in toolSets[job['ToolSet']]:
+                if tool > numberTools:
+                    numberTools = tool
+    numberTools += 1
+    
+    for i, machine in enumerate(machines):
+        s = []
+
+        for operation in (machine['machine_info']):
+            job, index = jobLookup(jobs, operation['job'], operation['operation'], True)
+            s.append(index)
+
+        magazineL = [True] * numberTools
+        switchs = 0
+        jL = 0
+
+        switchsInstances = 0      # Conta quantas trocas de instancia foram feitas, quando pelo menos uma troca de ferramenta foi trocada do magazine
+        currantSwitchs = 0        # Conta quantas trocas de ferramenta foram feitas, no job atual
+        currantProcessingTime = 0 
+
+        inicioJob = 0             # Conta quantas horas ja foram usadas no dia atual  
+        fimJob = 0                # Conta quantos dias ja foram usados no horizonte de planejamento
+
+        fineshedPriorityCount = 0 
+        unfineshedPriorityCount = 0 
+
+        numberJobsSol = len(s) 
+        
+        while jL < numberJobsSol:
+
+            currantSwitchs = 0 
+            magazineCL = [False] * numberTools
+            left = jL
+            cmL = 0
+
+            while cmL < capacityMagazine and left < numberJobsSol:
+                for tool in toolSets[jobs[s[left]]['ToolSet']]:
+                    if cmL > capacityMagazine-1: break
+                    if magazineL[tool] and not magazineCL[tool]:
+                        magazineCL[tool] = True
+                        cmL += 1
+                    elif jL == left and not magazineCL[tool]:
+                        magazineCL[tool] = True
+                        cmL += 1
+                        currantSwitchs += 1
+                    
+                left += 1
+
+            t = 0
+            while t < numberTools and cmL < capacityMagazine:
+                if magazineL[t] and not magazineCL[t]:
+                    magazineCL[t] = True
+                    cmL += 1
+                t += 1
+
+            magazineL = magazineCL 
+
+            if jL == 0:
+                currantSwitchs = capacityMagazine 
+
+            currantProcessingTime = jobs[s[jL]]['Processing Time'] 
+            fimJob = inicioJob + currantProcessingTime 
+
+            if inicioJob % TIMESCALE >= unsupervised and currantSwitchs > 0: 
+                if currantProcessingTime + (inicioJob + (TIMESCALE - (inicioJob % TIMESCALE))) >= planingHorizon * TIMESCALE: 
+                    break
+                else:
+                    inicioJob += TIMESCALE - (inicioJob % TIMESCALE)
+                    fimJob = inicioJob + currantProcessingTime
+
+            if (inicioJob % TIMESCALE) + currantProcessingTime >= TIMESCALE:
+                if fimJob >= planingHorizon * TIMESCALE:
+                    break
+
+            inicioJob = fimJob
+
+            switchs += currantSwitchs
+            if currantSwitchs > 0:
+                switchsInstances += 1
+
+            fineshedPriorityCount += jobs[s[jL]]['Priority']
+
+            jL += 1
+
+
+        curCost = (PROFITYPRIORITY * fineshedPriorityCount) - (COSTSWITCH * switchs) - (COSTSWITCHINSTANCE * switchsInstances) - (COSTPRIORITY * unfineshedPriorityCount)
+        totalCost += curCost
+
+        print(f"fineshedPriorityCount = {fineshedPriorityCount} | switchs = {switchs} | switchsInstances = {switchsInstances} | unfineshedPriorityCount = {unfineshedPriorityCount} | cost = {curCost}")
+
+        if curCost != machine['end_info']['cost']:
+            print(f"Error = Found cost {curCost}, expected {machine['end_info']['cost']}")
+        else:
+            print("OK")
+    
+    print()
+    print("Checking Total Cost")
+    if totalCost != planejamento['totalCost']:
+        print(f"Error = Found total cost {totalCost}, expected {planejamento['totalCost']}")
+    else:
+        print("OK")
+
+    return totalCost
+
+# ---------------------------------------------------------------------------------------------------
+# MAIN
+# ---------------------------------------------------------------------------------------------------
+
+def main():
+    option = sys.argv[1]
+
+    if option == 'single':
+        report = sys.argv[2]
+
+        print(f"---Validating {report}---")
+
+        machines, planejamento = parseReport(report)
+        toolSets = ld.loadToolSet(planejamento['toolSetFileName'])
+        jobs = ld.loadJobs(planejamento['jobsFileName'])
+
+        checkMagazine(machines, toolSets, jobs)
         print()
+        checkUnsupervisedSwitchs(machines, toolSets, jobs, planejamento)
+        print()
+        checkSwitchs(machines, toolSets, jobs)
+        print()
+        checkUnfinishedJobs(machines, jobs)
+        print()
+        checkOperations(machines, jobs)
+        print()
+        checkOrder(machines)
+        print()
+        checkProfit(machines, jobs, planejamento)
+        print()
+        newKTNS(machines, toolSets, jobs, planejamento)
+        print()
+    
+    if option == 'multiple':
+        batchFile = sys.argv[2]
+        file = open(batchFile, 'r')
 
-machines, planejamento = parseReport('/home/mateus/WSL/IC/data/SolutionReports/solutionReport.txt')
-toolSets = ld.loadToolSet(planejamento['toolSetFileName'])
-jobs = ld.loadJobs(planejamento['jobsFileName'])
+        for i, line in enumerate(file):
+            report = line.strip()
 
-# checkMagazine(machines, toolSets, jobs)
-# checkUnsupervisedSwitchs(machines, toolSets, jobs, planejamento)
-# checkSwitchs(machines, toolSets, jobs)
-# checkUnfinishedJobs(machines, jobs)
-# checkProfit(machines, jobs)
+            print(f"---Validating {report}---")
 
+            machines, planejamento = parseReport(report)
+            toolSets = ld.loadToolSet(planejamento['toolSetFileName'])
+            jobs = ld.loadJobs(planejamento['jobsFileName'])
 
-# OK Validar se a magazine contem as ferramentas para realizar o dado trabalho
-# OK Validar se nao ha trocas em periodos nao supervisionados = Fazer a contagem do tempo independete 
-# OK Validar se a sequencia de tarefas resulta no numero de trocas esperado = Tanto em termos de numero de vezes q foram trocadas quanto no numero de trocas em si = PREJUIZO 
-# OK Validar se a sequencia de tarefas resulta no numero de tarefas prioritarias nao terminadas esperado = PREJUIZO
-# OK Validar se a sequencia de tarefas resulta no numero de tarefas prioritarias terminadas esperado = LUCRO
-# OK Fazer a conta do prejuizo e do lucro e validar com a recebida
+            # checkMagazine(machines, toolSets, jobs)
+            # checkUnsupervisedSwitchs(machines, toolSets, jobs, planejamento)
+            # checkSwitchs(machines, toolSets, jobs)
+            # checkUnfinishedJobs(machines, jobs)
+            # checkProfit(machines, jobs)
+            print()
+
+main()	
+
+# make validador arg1=single arg2=/home/mateus/WSL/IC/Meu/data/SolutionReports/solutionReport.txt
