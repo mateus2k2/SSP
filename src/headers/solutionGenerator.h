@@ -8,3 +8,4 @@
 #include <algorithm> 
 
 void randonSolution();
+void exemploArtigo();

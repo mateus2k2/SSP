@@ -45,6 +45,7 @@ function parseMachineSection(machineSection) {
 
 function parseFileFunc(fileContent) {
     const lines = fileContent.split('\n');
+    const fileName = lines.shift();
     const header = lines.shift();
     const [planingHorizon, unsupervised, timescale] = header.split(';');
     const planejamentoObj = {

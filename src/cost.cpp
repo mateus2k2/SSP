@@ -52,7 +52,7 @@ unsigned int KTNSReport(vector<int> s, fstream& solutionReportFile){
 
 		while((cmL < capacityMagazine) && (left < numberJobsSol)){
 			for (auto it=originalToolSets[superToolSet[superJobs[s[left]].indexSuperToolSet].indexOriginalToolSet-1].tools.begin(); ((it!=originalToolSets[superToolSet[superJobs[s[left]].indexSuperToolSet].indexOriginalToolSet-1].tools.end()) && (cmL < capacityMagazine)); ++it){ // ****************************
-				// cout << *it << " ";
+				cout << *it << " ";
 				if((magazineL[*it]) && (!magazineCL[*it])){
 					magazineCL[*it] = true;
 					++cmL;
@@ -62,7 +62,7 @@ unsigned int KTNSReport(vector<int> s, fstream& solutionReportFile){
 					++currantSwitchs;
 				}
 			}
-			// cout << endl;
+			cout << endl;
 			// exit(0);
 			++left;
 		}

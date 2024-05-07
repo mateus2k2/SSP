@@ -21,7 +21,8 @@ def plotMachines(machines, planejamento):
         
         for j, operation in enumerate(operations):
             
-            corAtual = colors['priority'] if operation['priority'] == 1 else colors['normal']
+            corAtual = colors['normal']
+            # corAtual = colors['priority'] if operation['priority'] == 1 else colors['normal']
             
             barY = (numberMachines-i-(i%2))
             barWidth = operation['end'] - operation['start']           

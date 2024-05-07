@@ -54,12 +54,9 @@ set<pair<int,int>> priorityIndex;
 int main(){
     cout << endl;
 
-    // exempleOriginal();
-    // exempleDupe();
-    // full250();
-    // full750();
-    // full100();
     randonSolution();
+    // exemploArtigo();
+
 
 	return 0;
 }
