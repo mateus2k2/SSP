@@ -1,26 +1,29 @@
 # Meus Codigos
 
 mainCpp:
-	clear && g++ src/MeuCpp/*.cpp -std=c++2a -Wshadow -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native && echo "\n" && clear && src/out/mainCpp
+	clear && g++ src/*.cpp -std=c++2a -Wshadow -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native && echo "\n" && clear && src/out/mainCpp
 
 mainCppDebug:
-	clear && g++ src/MeuCpp/*.cpp -std=c++2a -Wshadow -o src/out/mainCppDebug -Wno-unused-result -lpthread -O3 -march=native -g && echo "\n" && clear
+	clear && g++ src/*.cpp -std=c++2a -Wshadow -o src/out/mainCppDebug -Wno-unused-result -lpthread -O3 -march=native -g && echo "\n" && clear
 
 optmizeTollSetsPy:
-	clear && echo "\n" && python src/MeuPython/optmizeToolSets.py 
+	clear && echo "\n" && python uteis/optmizeToolSets.py 
 
 filterJobs:
-	clear && echo "\n" && python src/MeuPython/filterJobs.py 
+	clear && echo "\n" && python uteis/filterJobs.py 
 
 myInstanceGenerator:
-	clear && echo "\n" && python src/MeuPython/myInstanceGenerator.py 
+	clear && echo "\n" && python uteis/myInstanceGenerator.py 
 
-validador:
-	clear && echo "\n" && python src/MeuPython/validador.py $(arg1) $(arg2)
+gantt:
+	clear && echo "\n" && python uteis/gantt.py 
+
+# make validador arg1=single arg2=/home/mateus/WSL/IC/SSP/output/solutionReport.txt
+validador: 
+	clear && echo "\n" && python uteis/validador.py $(arg1) $(arg2)
 
 uteis:
-	clear && echo "\n" && python src/MeuPython/uteis.py 
-
+	clear && echo "\n" && python uteis/uteis.py 
 
 # Codigos Andre 
 
