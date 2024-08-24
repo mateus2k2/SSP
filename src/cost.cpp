@@ -344,3 +344,4 @@ unsigned int costReport(vector<int> sol, vector<int> machine, fstream& solutionR
 unsigned int cost(vector<int> sol){
 	return 0;
 }
+

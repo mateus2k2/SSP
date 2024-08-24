@@ -164,5 +164,5 @@ def printReport(machines, planejamento):
         print(f"end_info = {end_info}")
         print("\n----------------------------------------------------------------\n")
 
-machines, planejamento = parseReport('/home/mateus/WSL/IC/SSP/output/solutionReport.txt')
+machines, planejamento = parseReport('/home/mateus/WSL/IC/SSP/output/exemploArtigoRuim.txt')
 plotMachines(machines, planejamento)

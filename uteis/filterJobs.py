@@ -13,8 +13,6 @@ def saveFile(jobs, fileName):
     csv_writer.writeheader()
     csv_writer.writerows(jobs)
 
-# ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 def removeSubSets(toolSet, jobs):
     
     removedDuplicates = []
@@ -24,12 +22,12 @@ def removeSubSets(toolSet, jobs):
         setFound.add(job['ToolSet'])
     
     # Remove iguais
-    foundList = list(setFound)
-    for item in foundList:
-        for job in jobs:
-            if job['ToolSet'] == item:
-                removedDuplicates.append(job)
-                break
+    # foundList = list(setFound)
+    # for item in foundList:
+    #     for job in jobs:
+    #         if job['ToolSet'] == item:
+    #             removedDuplicates.append(job)
+    #             break
     
     removedDuplicates.sort(key=lambda x: len(toolSet[x['ToolSet']]), reverse=True)
     deletedSubSets = []
@@ -41,9 +39,6 @@ def removeSubSets(toolSet, jobs):
         for j in range(i+1, len(removedDuplicates)):
             jobsInsideSet = set(toolSet[removedDuplicates[j]['ToolSet']])
             if jobsInsideSet.issubset(jobSet) and removedDuplicates[j] not in deletedSubSets:
-                # print(f'jobSet        {jobSet}          | {job["ToolSet"]       }')
-                # print(f'jobsInsideSet {jobsInsideSet}   | {removedDuplicates[j]["ToolSet"]}')
-                # print("------") 
                 deletedSubSets.append(removedDuplicates[j])
                 FilteredList.remove(removedDuplicates[j])
     
@@ -54,44 +49,42 @@ def removeSubSets(toolSet, jobs):
 
     return FilteredList
 
-def getUnsuedToolSets(jobs, toolSetsDict):
-    indices = list(toolSetsDict.keys())
-    toolSets = list(toolSetsDict.values())
-
-    indices.sort(key=lambda x: len(toolSetsDict[x]), reverse=True)
-    toolSets.sort(key=lambda x: len(x), reverse=True)
+def removeSubSetsGPT(jobsOG):
+    # Sort toolSets by length of toolSets[jobs['ToolSet']]
+    jobsOG.sort(key=lambda x: len(toolSets[x['ToolSet']]), reverse=True)
     
-    toolSetsUnused = []
-    incdicesUnused = []
+    # Collect indices of jobs to remove
+    to_remove = set()
 
-    for i in range(len(toolSets)):
-        print(f"{i+1}/{len(toolSets)}")
-        var = False
-        for j in range(i, len(toolSets)):
-            if ((toolSets[i] == toolSets[j]) or (set(toolSets[j]).issubset(set(toolSets[i])))) and (i != j) and (len(toolSets[j]) > 0):
-                var = True
-                break
-        if not var and len(toolSets[i]) > 0 and len(toolSets[i]) < 80:
-            toolSetsUnused.append(toolSets[i])
-            incdicesUnused.append(indices[i])
+    for i, jobs in enumerate(jobsOG):
+        if i in to_remove:
+            continue
+        for j in range(i + 1, len(jobsOG)):
+            if j in to_remove:
+                continue
+            if set(toolSets[jobsOG[j]['ToolSet']]).issubset(set(toolSets[jobs['ToolSet']])):
+                to_remove.add(j)
+
+    # remove larger then 80 and smaller then 1
+    for i, job in enumerate(jobsOG):
+        if len(toolSets[job['ToolSet']]) > 80 or len(toolSets[job['ToolSet']]) < 1:
+            to_remove.add(i)
     
-    for job in jobs:
-        if job['ToolSet'] in incdicesUnused:
-            toolSetsUnused.remove(toolSetsDict[job['ToolSet']])
-            incdicesUnused.remove(job['ToolSet'])
+    # remove duplicates
+    foundSet = set()
+    for job in jobsOG:
+        foundSet.add(job['ToolSet'])
+    for item in foundSet:
+        for i, job in enumerate(jobsOG):
+            if job['ToolSet'] == item:
+                to_remove.add(i)
 
-    print(f"Unused ToolSets: {len(toolSetsUnused)}")
-    print(f"Total ToolSets: {len(toolSets)}")
+    # Remove elements in reverse order to avoid index shifting
+    for index in sorted(to_remove, reverse=True):
+        del jobsOG[index]
 
-    largestUnused = max(toolSetsUnused, key=lambda x: len(x))
-    for i, item in enumerate(toolSetsUnused):    
-        with open(f'/home/mateus/WSL/IC/SSP/input/UnusedToolSets.csv', 'a', newline='') as file:
-            writer = csv.writer(file, delimiter=';')
-            targetLength = len(largestUnused) - (len(item) + 1)
-            emptyList = [''] * targetLength
-            writer.writerow([incdicesUnused[i]] + item + emptyList)
-                
-    return toolSetsUnused
+    return jobsOG
+
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -115,11 +108,16 @@ toolSets = ld.loadToolSet("ToolSetInt.csv")
 # jobs1000 = ld.loadJobs("1000Filtered.csv")
 # concactedJobs = jobs250 + jobs750 + jobs1000
 # print(len(concactedJobs)) # 347
-# saveFile(removeSubSets(toolSets, concactedJobs), "AllFiltered.csv")
+# saveFile(removeSubSets(toolSets, concactedJobs), "AllJobsFiltered.csv")
+
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-# allJobs = ld.loadJobs("AllFiltered.csv")
-# getUnsuedToolSets(allJobs, toolSets)
+toolSets = ld.loadToolSet("UsedToolSet.csv")
 
-# ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+jobs250 = ld.loadJobs("250.csv")
+jobs750 = ld.loadJobs("750.csv")
+jobs1000 = ld.loadJobs("1000.csv")
+
+print(len(removeSubSets(toolSets, jobs250)))
+

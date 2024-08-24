@@ -1,9 +1,36 @@
-clear && g++ src/*.cpp -std=c++2a -Wshadow -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native && echo "\n" && clear && src/out/mainCpp
+clear && echo "\n" && python uteis/validador.py single /home/mateus/WSL/IC/SSP/output/exemploArtigoBoa.txt
 [H[2J[3J
 
-[H[2J[3J
-4 5 8 9 10 11 12 13 
-12 13 14 15 16 17 18 
-5 6 7 
-1 2 3 4 5 
-1 2 3 4 5 
+---Validating /home/mateus/WSL/IC/SSP/output/exemploArtigoBoa.txt---
+Running New KTNS
+MACHINE:  0
+JOB:  0
+(4,12,13,14,15,16,17,18,)
+JOB:  1
+(4,12,13,14,15,16,17,18,)
+JOB:  2
+(4,12,13,14,15,16,17,18,)
+JOB:  3
+(4,5,8,9,10,11,12,13,)
+JOB:  4
+(4,5,8,9,10,11,12,13,)
+fineshedPriorityCount = 5 | switchs = 13 | switchsInstances = 2 | unfineshedPriorityCount = 0 | cost = 117
+Error = Found cost 117, expected 0
+MACHINE:  1
+JOB:  0
+(5,6,7,15,16,17,18,19,)
+JOB:  1
+(5,6,15,16,17,18,19,20,)
+JOB:  2
+(1,2,3,4,5,6,15,16,)
+JOB:  3
+(1,2,3,4,5,6,15,16,)
+JOB:  4
+(1,2,3,4,5,6,15,16,)
+fineshedPriorityCount = 5 | switchs = 13 | switchsInstances = 3 | unfineshedPriorityCount = 0 | cost = 107
+Error = Found cost 107, expected 0
+
+Checking Total Cost
+Error = Found total cost 224, expected 0
+
+33

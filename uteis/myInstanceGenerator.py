@@ -2,7 +2,7 @@ import pandas as pd
 import random
 import csv
 import loadData as ld
-from uteis import ProcessingTimeGenerator
+from ProcessingTimeGenerator import ProcessingTimeGenerator
 
 geradorProcessingTime = ProcessingTimeGenerator()
 
@@ -152,7 +152,7 @@ def makeInstaceBase():
 def makeInstaceExtra():
     instanciasToReturn = []
 
-    toolUnusedMap = ld.loadToolSet("UnusedToolSets.csv")
+    toolUnusedMap = ld.loadToolSet("UnusedToolSetsClean.csv")
     toolSetIndex = list(toolUnusedMap.keys())
 
     quantidadeInstancias = 1

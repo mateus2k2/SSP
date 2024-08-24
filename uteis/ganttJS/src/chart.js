@@ -8,11 +8,14 @@ function Timeline(data) {
     const yPosMax = data['machines'].length * 2;
     const yPosMin = -1;
 
-    const barHeight = 20;
+    const barHeight = 80;
     const chartHeight = (yPosMax - yPosMin) * barHeight * 2;
 
-    const width = 1100;
+    // const width = 1100;
+    const width = 1500; // Increase width for more horizontal space
     const height = chartHeight + margin.top + margin.bottom;
+    // const height = chartHeight + margin.top + margin.bottom + 100; // Increase height to accommodate more vertical space
+
 
     const xScale = d3.scaleLinear().domain([minYear, maxYear]).range([margin.left, width - margin.right]);
     const yScale = d3.scalePoint()
@@ -42,7 +45,7 @@ function Timeline(data) {
     
     // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
+    // let yPos = data['machines'].length-1;
     for (let i = 0; i < data['machines'].length; i++) {
         dataAtual = data['machines'][i]['operations'];
 
@@ -67,8 +70,7 @@ function Timeline(data) {
             .attr("stroke-width", 1)
             .on("click", handleClick);
 
-        //Add the text to the chart (inside the bars) (inside the foreignObject) (inside the div) (inside the p)
-        const groupDivs = bars.append("foreignObject")
+        const groupDivs1 = bars.append("foreignObject")
             .attr("x", d => xScale(d["start"]))
             .attr("y", (d, i) => yScale(yPos))
             .attr("width", d => xScale(d["end"]) - xScale(d["start"]))
@@ -79,14 +81,33 @@ function Timeline(data) {
             .style("text-anchor", "middle")
             .style("alignment-baseline", "middle")
             .style("white-space", "nowrap")
+            .style("font-weight", "bold")
             .attr("class", "chart-block-div")
             .on("click", handleClick);
 
-        // Add the p to the div
-        groupDivs.append("p")
-            .text(d => `${d["job"]} - ${d["operation"]}`)
+        groupDivs1.append("p")
+            .text(d => `(${d["job"]}, ${d["operation"]})`)
             .on("click", handleClick);
 
+        // const groupDivs2 = bars.append("foreignObject")
+        //     .attr("x", d => xScale(d["start"]))
+        //     .attr("y", (d, i) => yScale(yPos) + (barHeight/2))
+        //     .attr("width", d => xScale(d["end"]) - xScale(d["start"]))
+        //     .attr("height", barHeight/2)
+        //     .append("xhtml:div")
+        //     .style("width", d => (xScale(d["end"]) - xScale(d["start"])) + "px")
+        //     .style("height", barHeight/2 + "px")
+        //     .style("text-anchor", "middle")
+        //     .style("alignment-baseline", "middle")
+        //     .style("white-space", "nowrap")
+        //     .attr("class", "chart-block-div")
+        //     .on("click", handleClick);
+
+        // groupDivs2.append("p")
+        //     .text(d => `${d["magazine"]}`)
+        //     .on("click", handleClick);
+
+        // yPos--;
     }
 
 
@@ -122,6 +143,7 @@ function Timeline(data) {
     // Add the x-axis to the chart with the ticks
     svg.append("g")
         .attr("class", "axis axis--x")
+        .style("font-size", "15px")
         .attr("transform", `translate(0,${chartHeight})`)
         .call(d3.axisBottom(xScale)
             .tickValues(steplist)
@@ -147,11 +169,12 @@ function Timeline(data) {
 
 
     const machineLabels = Array.from({ length: data['machines'].length }, (_, i) => {
-        return "Machine " + (i + 1);
+        return "Maquina " + (i + 1);
     });
 
     realThing.append("g")
         .attr("class", "axis axis--y")
+        .style("font-size", "15px")
         .attr("transform", `translate(${margin.left},0)`)
         .call(d3.axisLeft(yScale).tickSizeOuter(0).tickFormat((d, i) => machineLabels[i]));
 

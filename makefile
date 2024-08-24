@@ -6,8 +6,8 @@ mainCpp:
 mainCppDebug:
 	clear && g++ src/*.cpp -std=c++2a -Wshadow -o src/out/mainCppDebug -Wno-unused-result -lpthread -O3 -march=native -g && echo "\n" && clear
 
-optmizeTollSetsPy:
-	clear && echo "\n" && python uteis/optmizeToolSets.py 
+filterToolSets:
+	clear && echo "\n" && python uteis/filterToolSets.py 
 
 filterJobs:
 	clear && echo "\n" && python uteis/filterJobs.py 
@@ -18,7 +18,7 @@ myInstanceGenerator:
 gantt:
 	clear && echo "\n" && python uteis/gantt.py 
 
-# make validador arg1=single arg2=/home/mateus/WSL/IC/SSP/output/solutionReport.txt
+# make validador arg1=single arg2=/home/mateus/WSL/IC/SSP/output/exemploArtigoBoa.txt
 validador: 
 	clear && echo "\n" && python uteis/validador.py $(arg1) $(arg2)
 

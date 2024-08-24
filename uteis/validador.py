@@ -322,7 +322,7 @@ def newKTNS(machines, toolSets, jobs, planejamento):
     unsupervised = planejamento['unsupervised']
     planingHorizon = planejamento['planingHorizon']
     
-    capacityMagazine = 80
+    capacityMagazine = 8
 
     numberTools = 0
     for machine in machines:
@@ -355,8 +355,11 @@ def newKTNS(machines, toolSets, jobs, planejamento):
         unfineshedPriorityCount = 0 
 
         numberJobsSol = len(s) 
+
+        print("MACHINE: ", i)
         
         while jL < numberJobsSol:
+            print("JOB: ", jL)
 
             currantSwitchs = 0 
             magazineCL = [False] * numberTools
@@ -410,6 +413,12 @@ def newKTNS(machines, toolSets, jobs, planejamento):
 
             fineshedPriorityCount += jobs[s[jL]]['Priority']
 
+            print("(", end="")
+            for i, item in enumerate(magazineCL):
+                if(item): print(i, end=",")
+            print(")", end="")
+            print()
+
             jL += 1
 
 
@@ -448,20 +457,20 @@ def main():
         toolSets = ld.loadToolSet(planejamento['toolSetFileName'])
         jobs = ld.loadJobs(planejamento['jobsFileName'])
 
-        checkMagazine(machines, toolSets, jobs)
-        print()
-        checkUnsupervisedSwitchs(machines, toolSets, jobs, planejamento)
-        print()
-        checkSwitchs(machines, toolSets, jobs)
-        print()
-        checkUnfinishedJobs(machines, jobs)
-        print()
-        checkOperations(machines, jobs)
-        print()
-        checkOrder(machines)
-        print()
-        checkProfit(machines, jobs, planejamento)
-        print()
+        # checkMagazine(machines, toolSets, jobs)
+        # print()
+        # checkUnsupervisedSwitchs(machines, toolSets, jobs, planejamento)
+        # print()
+        # checkSwitchs(machines, toolSets, jobs)
+        # print()
+        # checkUnfinishedJobs(machines, jobs)
+        # print()
+        # checkOperations(machines, jobs)
+        # print()
+        # checkOrder(machines)
+        # print()
+        # checkProfit(machines, jobs, planejamento)
+        # print()
         newKTNS(machines, toolSets, jobs, planejamento)
         print()
     
@@ -478,21 +487,20 @@ def main():
             toolSets = ld.loadToolSet(planejamento['toolSetFileName'])
             jobs = ld.loadJobs(planejamento['jobsFileName'])
 
-            checkMagazine(machines, toolSets, jobs)
-            
-            print()
-            checkUnsupervisedSwitchs(machines, toolSets, jobs, planejamento)
-            print()
-            checkSwitchs(machines, toolSets, jobs)
-            print()
-            checkUnfinishedJobs(machines, jobs)
-            print()
-            checkOperations(machines, jobs)
-            print()
-            checkOrder(machines)
-            print()
-            checkProfit(machines, jobs, planejamento)
-            print()
+            # checkMagazine(machines, toolSets, jobs)
+            # print()
+            # checkUnsupervisedSwitchs(machines, toolSets, jobs, planejamento)
+            # print()
+            # checkSwitchs(machines, toolSets, jobs)
+            # print()
+            # checkUnfinishedJobs(machines, jobs)
+            # print()
+            # checkOperations(machines, jobs)
+            # print()
+            # checkOrder(machines)
+            # print()
+            # checkProfit(machines, jobs, planejamento)
+            # print()
             newKTNS(machines, toolSets, jobs, planejamento)
             print()
 
