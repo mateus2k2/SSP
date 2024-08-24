@@ -6,11 +6,12 @@
 #include <sstream>
 #include <string>
 #include <algorithm> 
+#include <fmt/ranges.h>
+#include <fmt/core.h>
 
 #include "headers/GlobalVars.h"
 #include "headers/loadData.h"
 #include "headers/cost.h"
-#include "headers/super.h"
 #include "headers/solutionGenerator.h"
 
 using namespace std;
@@ -42,21 +43,19 @@ int capacityMagazine;
 vector<Job> originalJobs;
 vector<ToolSet> originalToolSets;
 
-vector<SuperJob> superJobs;
-vector<SuperToolSet> superToolSet;
-
-set<pair<int,int>> priorityIndex;
-
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // MAIN
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 int main(){
     cout << endl;
+    
+    // std::vector<int> vec = {1, 2, 3, 4, 5};
+    // fmt::print("Vector elements: {}\n", vec);
 
-    randonSolution();
-    // exemploArtigo();
-
+    // randonSolution();
+    exemploArtigo();
+    
 
 	return 0;
 }

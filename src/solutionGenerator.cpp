@@ -10,7 +10,6 @@
 #include "headers/GlobalVars.h"
 #include "headers/loadData.h"
 #include "headers/cost.h"
-#include "headers/super.h"
 #include "headers/solutionGenerator.h"
 
 using namespace std;
@@ -33,8 +32,6 @@ void exemploArtigo(){
     unsupervised   = 0.5*TIMESCALE;
 
     loadDataTypes();
-    makeSuper();
-    makePriorityIndex();
 
     vector<int> sol(numberJobs);
     for (int i = 0; i < numberJobs; ++i) {
@@ -50,7 +47,7 @@ void exemploArtigo(){
     // ---------------------------------------------------------------------
 
     printDataReport();
-    costReport(sol, machine, solutionReportFile);
+    // costReport(sol, machine, solutionReportFile);
    
 }
 
@@ -73,8 +70,6 @@ void randonSolution(){
     numberMachines = 2;
 
     loadDataTypes();
-    makeSuper();
-    makePriorityIndex();
 
     vector<int> sol(numberJobs);
     for (int i = 0; i < numberJobs; ++i) {

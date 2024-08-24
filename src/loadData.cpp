@@ -5,10 +5,11 @@
 #include <string>
 #include <algorithm> 
 #include <unordered_set>
+#include <fmt/core.h>
+#include <fmt/ranges.h>
 
 #include "headers/loadData.h"
 #include "headers/GlobalVars.h"
-#include <set>
 
 using namespace std;
 
@@ -166,141 +167,55 @@ void loadDataTypes(){
 }
 
 void printDataReport() {
-    cout << "\n------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl;
-    cout << "DATA REPORT" << endl;
-    cout << "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n" << endl;
+    fmt::print("\n------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+    fmt::print("DATA REPORT\n");
+    fmt::print("------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n\n");
 
-    cout << "Number of Machines: " << numberMachines << endl;
-    cout << "Capacity of Magazine: " << capacityMagazine << endl;
-    cout << "Planing Horizon: " << planingHorizon << endl;
-    cout << "Unsupervised: " << unsupervised << endl << endl;
+    fmt::print("Number of Machines: {}\n", numberMachines);
+    fmt::print("Capacity of Magazine: {}\n", capacityMagazine);
+    fmt::print("Planing Horizon: {}\n", planingHorizon);
+    fmt::print("Unsupervised: {}\n\n", unsupervised);
 
-    cout << "Number Of ToolSets Originais: " << originalToolSets.size() << " | " << mapToolSets.size() << endl;
-    cout << "Number Of ToolSets Super: " << superToolSet.size() << endl;
-    cout << "Number of Tools: " << numberTools << endl << endl;
+    fmt::print("Number Of ToolSets Originais: {} | {}\n", originalToolSets.size(), mapToolSets.size());
+    fmt::print("Number of Tools: {}\n\n", numberTools);
 
-    cout << "Number of Original Jobs: " << originalJobs.size() << endl;
-    cout << "Number of Super Jobs: " << numberJobs << endl << endl;
+    fmt::print("Number of Original Jobs: {}\n", originalJobs.size());
+    fmt::print("Number of Super Jobs: {}\n\n", numberJobs);
 
-    cout << endl << endl;
-    
-    for (const auto& pair : mapToolSets) {
-        cout << "Key: " << pair.first << ", Values: ";
-        for (const auto& value : pair.second) {
-            cout << value << " ";
-        }
-        cout << endl;
+    for (const auto& [key, values] : mapToolSets) {
+        fmt::print("Key: {}, Values: {}\n", key, fmt::join(values, " "));
     }
 
-    cout << endl << endl;
+    fmt::print("\nPriority:\n{}\n", fmt::join(priority, " "));
+    fmt::print("Operation:\n{}\n", fmt::join(operation, " "));
+    fmt::print("Job:\n{}\n", fmt::join(job, " "));
+    fmt::print("Processing Time:\n{}\n", fmt::join(processingTime, " "));
 
-    cout << "Priority: " << endl;
-    for (const auto &p : priority) {
-        cout << p << " ";
-    }
-    
-    cout << endl;
-    
-    cout << "Operation: " << endl;
-    for (const auto &op : operation) {
-        cout << op << " ";
-    }
-    cout << endl;
-
-    cout << "Job: " << endl;
-    for (const auto &j : job) {
-        cout << j << " ";
-    }
-    cout << endl;
-
-    cout << "Processing Time: " << endl;
-    for (const auto &pt : processingTime) {
-        cout << pt << " ";
+    fmt::print("\nJobTools:\n");
+    for (const auto& ts : JobTools) {
+        fmt::print("{}\n", fmt::join(ts, " "));
     }
 
-    cout << endl << endl << endl;
+    fmt::print("\n------------------------------------------------------------------------------------------\n");
+    fmt::print("JOBS DATA\n");
+    fmt::print("------------------------------------------------------------------------------------------\n\n");
 
-    cout << "JobTools: " << endl;
-    for (const auto &ts : JobTools) {
-        for (const auto &t : ts) {
-            cout << t << " ";
-        }
-        cout << endl;
+    for (const auto& thisJob : originalJobs) {
+        fmt::print("Job: {}\n", thisJob.indexJob);
+        fmt::print("Operation: {}\n", thisJob.indexOperation);
+        fmt::print("ToolSet: {}\n", thisJob.indexToolSet);
+        fmt::print("ProcessingTime: {}\n", thisJob.processingTime);
+        fmt::print("Priority: {}\n", thisJob.priority);
+        fmt::print("JobTools: {}\n\n", fmt::join(thisJob.JobTools, " "));
     }
 
-    cout << "\n------------------------------------------------------------------------------------------" << endl;
-    cout << "JOBS DATA" << endl;
-    cout << "------------------------------------------------------------------------------------------\n" << endl;
+    fmt::print("------------------------------------------------------------------------------------------\n");
+    fmt::print("TOOL SET\n");
+    fmt::print("------------------------------------------------------------------------------------------\n\n");
 
-    for (int i = 0; i < originalJobs.size(); i++){
-        cout << "Job: " << originalJobs[i].indexJob << "\n";
-        cout << "Operation: " << originalJobs[i].indexOperation << "\n";
-        cout << "ToolSet: " << originalJobs[i].indexToolSet << "\n";
-        cout << "ProcessingTime: " << originalJobs[i].processingTime << "\n";
-        cout << "Priority: " << originalJobs[i].priority << "\n";
-        cout << "JobTools: ";
-        
-        for(int j = 0; j < originalJobs[i].JobTools.size(); j++){
-            cout << originalJobs[i].JobTools[j] << " ";
-        }
-
-        cout << "\n\n";
+    for (const auto& toolSet : originalToolSets) {
+        fmt::print("ToolSet: {}\n", toolSet.indexToolSet);
+        fmt::print("Tools: {}\n\n", fmt::join(toolSet.tools, " "));
     }
-
-    cout << "------------------------------------------------------------------------------------------" << endl;
-    cout << "TOOL SET" << endl;
-    cout << "------------------------------------------------------------------------------------------\n" << endl;
-
-    for(int i = 0; i < originalToolSets.size(); i++){
-        cout << "ToolSet: " << originalToolSets[i].indexToolSet << "\n"; 
-        cout << "Tools: ";
-
-        for(int j = 0; j < originalToolSets[i].tools.size(); j++){
-            cout << originalToolSets[i].tools[j] << " ";
-        }
-        
-        cout << "\n\n";
-    }
-
-    cout << "------------------------------------------------------------------------------------------" << endl;
-    cout << "SUPER JOBS" << endl;
-    cout << "------------------------------------------------------------------------------------------\n" << endl;
-
-    for(int i = 0; i < superJobs.size(); i++){
-        cout << "indexSuperToolSet: " << superJobs[i].indexSuperToolSet << "\n";
-        cout << "processingTimeSum: " << superJobs[i].processingTimeSum << "\n";
-        cout << "prioritySum: " << superJobs[i].prioritySum << "\n";
-        cout << "originalJobs: ";
-
-        for (auto it = superJobs[i].originalJobs.begin(); it != superJobs[i].originalJobs.end(); ++it){
-            cout << *it << " ";
-        }
-        
-        cout << "\n\n";
-    }
-
-    cout << "------------------------------------------------------------------------------------------" << endl;
-    cout << "SUPER TOOL SET" << endl;
-    cout << "------------------------------------------------------------------------------------------\n" << endl;
-
-    for(int i = 0; i < superToolSet.size(); i++){
-        cout << "indexOriginalToolSet: " << superToolSet[i].indexOriginalToolSet << "\n";
-        cout << "originalToolSets: ";
-
-        for (auto it = superToolSet[i].originalToolSets.begin(); it != superToolSet[i].originalToolSets.end(); ++it){
-            cout << *it << " ";
-        }
-        
-        cout << "\n\n";
-    }
-
-    cout << "------------------------------------------------------------------------------------------" << endl;
-    cout << "PRIORITY INDEX" << endl;
-    cout << "------------------------------------------------------------------------------------------\n" << endl;
-
-    for (auto it = priorityIndex.begin(); it != priorityIndex.end(); ++it) {
-        cout << "SuperJob: " << (*it).first << " OriginalJob: " << (*it).second <<"\n";
-    }
-
 }
 

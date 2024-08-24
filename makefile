@@ -1,10 +1,10 @@
 # Meus Codigos
 
 mainCpp:
-	clear && g++ src/*.cpp -std=c++2a -Wshadow -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native && echo "\n" && clear && src/out/mainCpp
+	clear && g++ src/*.cpp -std=c++2a -Wshadow -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lfmt -lstdc++ && echo "\n" && clear && src/out/mainCpp
 
 mainCppDebug:
-	clear && g++ src/*.cpp -std=c++2a -Wshadow -o src/out/mainCppDebug -Wno-unused-result -lpthread -O3 -march=native -g && echo "\n" && clear
+	clear && g++ src/*.cpp -std=c++2a -Wshadow -o src/out/mainCppDebug -Wno-unused-result -lpthread -O3 -march=native -g -lfmt -lstdc++ && echo "\n" && clear
 
 filterToolSets:
 	clear && echo "\n" && python uteis/filterToolSets.py 

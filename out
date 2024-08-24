@@ -1,36 +1,135 @@
-clear && echo "\n" && python uteis/validador.py single /home/mateus/WSL/IC/SSP/output/exemploArtigoBoa.txt
-[H[2J[3J
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+DATA REPORT
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
----Validating /home/mateus/WSL/IC/SSP/output/exemploArtigoBoa.txt---
-Running New KTNS
-MACHINE:  0
-JOB:  0
-(4,12,13,14,15,16,17,18,)
-JOB:  1
-(4,12,13,14,15,16,17,18,)
-JOB:  2
-(4,12,13,14,15,16,17,18,)
-JOB:  3
-(4,5,8,9,10,11,12,13,)
-JOB:  4
-(4,5,8,9,10,11,12,13,)
-fineshedPriorityCount = 5 | switchs = 13 | switchsInstances = 2 | unfineshedPriorityCount = 0 | cost = 117
-Error = Found cost 117, expected 0
-MACHINE:  1
-JOB:  0
-(5,6,7,15,16,17,18,19,)
-JOB:  1
-(5,6,15,16,17,18,19,20,)
-JOB:  2
-(1,2,3,4,5,6,15,16,)
-JOB:  3
-(1,2,3,4,5,6,15,16,)
-JOB:  4
-(1,2,3,4,5,6,15,16,)
-fineshedPriorityCount = 5 | switchs = 13 | switchsInstances = 3 | unfineshedPriorityCount = 0 | cost = 107
-Error = Found cost 107, expected 0
+Number of Machines: 2
+Capacity of Magazine: 8
+Planing Horizon: 2
+Unsupervised: 720
 
-Checking Total Cost
-Error = Found total cost 224, expected 0
+Number Of ToolSets Originais: 5 | 5
+Number of Tools: 21
 
-33
+Number of Original Jobs: 10
+Number of Super Jobs: 10
+
+Key: 1, Values: 1 2 3 4 5
+Key: 2, Values: 12 13 14 15 16 17 18
+Key: 3, Values: 4 5 8 9 10 11 12 13
+Key: 4, Values: 5 6 7
+Key: 5, Values: 15 16 17 18 19 20
+
+Priority:
+1 1 1 1 1 1 1 1 1 1
+Operation:
+1 2 1 1 2 1 2 1 1 1
+Job:
+1 1 2 3 3 4 4 5 6 7
+Processing Time:
+180 300 420 360 480 240 540 360 600 300
+
+JobTools:
+1 2 3 4 5
+1 2 3 4 5
+12 13 14 15 16 17 18
+4 5 8 9 10 11 12 13
+4 5 8 9 10 11 12 13
+12 13 14 15 16 17 18
+12 13 14 15 16 17 18
+5 6 7
+15 16 17 18 19 20
+1 2 3 4 5
+
+------------------------------------------------------------------------------------------
+JOBS DATA
+------------------------------------------------------------------------------------------
+
+Job: 1
+Operation: 1
+ToolSet: 1
+ProcessingTime: 180
+Priority: true
+JobTools: 1 2 3 4 5
+
+Job: 1
+Operation: 2
+ToolSet: 1
+ProcessingTime: 300
+Priority: true
+JobTools: 1 2 3 4 5
+
+Job: 2
+Operation: 1
+ToolSet: 2
+ProcessingTime: 420
+Priority: true
+JobTools: 12 13 14 15 16 17 18
+
+Job: 3
+Operation: 1
+ToolSet: 3
+ProcessingTime: 360
+Priority: true
+JobTools: 4 5 8 9 10 11 12 13
+
+Job: 3
+Operation: 2
+ToolSet: 3
+ProcessingTime: 480
+Priority: true
+JobTools: 4 5 8 9 10 11 12 13
+
+Job: 4
+Operation: 1
+ToolSet: 2
+ProcessingTime: 240
+Priority: true
+JobTools: 12 13 14 15 16 17 18
+
+Job: 4
+Operation: 2
+ToolSet: 2
+ProcessingTime: 540
+Priority: true
+JobTools: 12 13 14 15 16 17 18
+
+Job: 5
+Operation: 1
+ToolSet: 4
+ProcessingTime: 360
+Priority: true
+JobTools: 5 6 7
+
+Job: 6
+Operation: 1
+ToolSet: 4
+ProcessingTime: 600
+Priority: true
+JobTools: 15 16 17 18 19 20
+
+Job: 7
+Operation: 1
+ToolSet: 1
+ProcessingTime: 300
+Priority: true
+JobTools: 1 2 3 4 5
+
+------------------------------------------------------------------------------------------
+TOOL SET
+------------------------------------------------------------------------------------------
+
+ToolSet: 1
+Tools: 1 2 3 4 5
+
+ToolSet: 2
+Tools: 12 13 14 15 16 17 18
+
+ToolSet: 3
+Tools: 4 5 8 9 10 11 12 13
+
+ToolSet: 4
+Tools: 5 6 7
+
+ToolSet: 5
+Tools: 15 16 17 18 19 20
+

@@ -30,22 +30,6 @@ typedef struct{
 }ToolSet;
 
 
-typedef struct{
-    int indexSuperToolSet;
-    int processingTimeSum;
-    int prioritySum;
-    list<int> originalJobs;
-
-}SuperJob;
-
-
-typedef struct{
-    int indexOriginalToolSet;
-    list<int> originalToolSets;
-
-}SuperToolSet;
-
-
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // VARIVEIS PARA CARREGAR DADOS
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -72,11 +56,6 @@ extern int capacityMagazine;         // Capacidade do magazine das maquina
 
 extern vector<Job> originalJobs;
 extern vector<ToolSet> originalToolSets;
-
-extern vector<SuperJob> superJobs;
-extern vector<SuperToolSet> superToolSet;
-
-extern set<pair<int,int>> priorityIndex;
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // DEFINIÇÕES DO PLOBLEMA
