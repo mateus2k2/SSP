@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <algorithm> 
+#include <numeric>
 #include <unordered_set>
 #include <fmt/core.h>
 #include <fmt/ranges.h>
@@ -19,7 +20,6 @@ using namespace std;
 
 int laodInstance(string filename){
     ifstream file(filename);
-    int tmpToolSetIndex;
 
     if (!file.is_open()) {
         cerr << "Error opening file!" << endl;
@@ -29,68 +29,45 @@ int laodInstance(string filename){
     string line;
 	getline(file, line);
     while (getline(file, line)) {
+        Job tmpJob;
         stringstream ss(line);
         string value;
 
         getline(ss, value, ';');
-        job.push_back(stoi(value));
+        tmpJob.indexJob = stoi(value);
 
         getline(ss, value, ';');    
-        operation.push_back(stoi(value));
+        tmpJob.indexOperation = stoi(value);
 
         getline(ss, value, ';');
-        tmpToolSetIndex = stoi(value);
-        // sort(mapToolSets[tmpToolSetIndex].begin(), mapToolSets[tmpToolSetIndex].end()); // ****************************
-        JobTools.push_back(mapToolSets[tmpToolSetIndex]);
-        JobToolsIndex.push_back(tmpToolSetIndex + 1); // ****************************
+        tmpJob.indexToolSet = stoi(value);
 
         getline(ss, value, ';');
-        processingTime.push_back(stoi(value));
+        tmpJob.processingTime = stoi(value);
 
         getline(ss, value, '\n');
-        priority.push_back(stoi(value));
+        tmpJob.priority = stoi(value);
 
+        tmpJob.toolSet = originalToolSets[tmpJob.indexToolSet];
+
+        originalJobs.push_back(tmpJob);
     }
+
 
     file.close();
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    // Numbero total de jobs
-    numberJobs = job.size();    
-
-    // Capacidade do magazine, mapacidade do maior toolSet
-    // auto maxIt = max_element(JobTools.begin(), JobTools.end(),
-    //     [](const vector<int>& a, const vector<int>& b) {
-    //         return a.size() < b.size();
-    //     });
-    // capacityMagazine = maxIt->size();
-
-    // Numero de ferramentas ****************************
-    // set <int> allTools;
-    // for(int i = 0; i < JobTools.size(); i++){
-    //     for(int j = 0; j < JobTools[i].size(); j++){
-    //         allTools.insert(JobTools[i][j]);
-    //     }
-    // }
-    // numberTools = allTools.size();
+    numberJobs = originalJobs.size();    
     capacityMagazine = 80;
+    numberTools = accumulate(originalJobs.begin(), originalJobs.end(), unordered_set<int>(), [](auto tools, const auto& job) { tools.insert(job.toolSet.tools.begin(), job.toolSet.tools.end()); return tools; }).size();
 
-    int maxTool = -1;
-    for(int i = 0; i < JobTools.size(); i++){
-        for(int j = 0; j < JobTools[i].size(); j++){
-            if (JobTools[i][j] > maxTool){
-                maxTool = JobTools[i][j];
-            }
-        }
-    }
-    numberTools = maxTool+1; 
-    
-    
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    planingHorizon = 7;   
-    unsupervised   = 0.5*TIMESCALE;
+    // planingHorizon = 7   * (24*60); // 7 dias em minutos
+    // unsupervised   = 0.5 * (24*60); // 0.5 dia em minutos
+    planingHorizon = 7;
+    unsupervised   = 0.5;
     
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     
@@ -111,6 +88,7 @@ int laodToolSet(string filename) {
         stringstream ss(line);
         string value;
         vector<int> lineData;
+        ToolSet tmpToolSet;
 
 		getline(ss, value, ';');
         tmpIndex = stoi(value);
@@ -123,47 +101,14 @@ int laodToolSet(string filename) {
 			}
         }
 
-        mapToolSets.insert(pair<int, vector<int>>(tmpIndex, lineData));
+        tmpToolSet.indexToolSet = tmpIndex;
+        tmpToolSet.tools = lineData;
+        originalToolSets[tmpIndex] = tmpToolSet;
     }
 
     file.close();
 
     return 0;
-}
-
-void loadDataTypes(){
-    for (auto it = mapToolSets.begin(); it != mapToolSets.end(); ++it) {
-        ToolSet toolSetTmp;
-
-        toolSetTmp.indexToolSet = it->first;
-        toolSetTmp.tools = it->second;
-
-        originalToolSets.push_back(toolSetTmp);
-    }
-
-    for (int i = 0; i < numberJobs; i++){
-        Job jobTmp;
-
-        jobTmp.indexJob = job[i];
-        jobTmp.indexOperation = operation[i];
-        
-        // jobTmp.indexToolSet = JobToolsIndex[i];
-        for (int j = 0; j < originalToolSets.size(); j++){
-            if (originalToolSets[j].indexToolSet == JobToolsIndex[i]){
-                jobTmp.indexToolSet = j;
-                break;
-            }
-        }
-
-
-        jobTmp.processingTime = processingTime[i];
-        jobTmp.priority = priority[i];
-
-        jobTmp.JobTools = JobTools[i];
-
-        originalJobs.push_back(jobTmp);
-    }
-
 }
 
 void printDataReport() {
@@ -175,26 +120,10 @@ void printDataReport() {
     fmt::print("Capacity of Magazine: {}\n", capacityMagazine);
     fmt::print("Planing Horizon: {}\n", planingHorizon);
     fmt::print("Unsupervised: {}\n\n", unsupervised);
-
-    fmt::print("Number Of ToolSets Originais: {} | {}\n", originalToolSets.size(), mapToolSets.size());
     fmt::print("Number of Tools: {}\n\n", numberTools);
-
     fmt::print("Number of Original Jobs: {}\n", originalJobs.size());
     fmt::print("Number of Super Jobs: {}\n\n", numberJobs);
 
-    for (const auto& [key, values] : mapToolSets) {
-        fmt::print("Key: {}, Values: {}\n", key, fmt::join(values, " "));
-    }
-
-    fmt::print("\nPriority:\n{}\n", fmt::join(priority, " "));
-    fmt::print("Operation:\n{}\n", fmt::join(operation, " "));
-    fmt::print("Job:\n{}\n", fmt::join(job, " "));
-    fmt::print("Processing Time:\n{}\n", fmt::join(processingTime, " "));
-
-    fmt::print("\nJobTools:\n");
-    for (const auto& ts : JobTools) {
-        fmt::print("{}\n", fmt::join(ts, " "));
-    }
 
     fmt::print("\n------------------------------------------------------------------------------------------\n");
     fmt::print("JOBS DATA\n");
@@ -206,16 +135,19 @@ void printDataReport() {
         fmt::print("ToolSet: {}\n", thisJob.indexToolSet);
         fmt::print("ProcessingTime: {}\n", thisJob.processingTime);
         fmt::print("Priority: {}\n", thisJob.priority);
-        fmt::print("JobTools: {}\n\n", fmt::join(thisJob.JobTools, " "));
+        fmt::print("toolSet Tools: {}\n", fmt::join(thisJob.toolSet.tools, " "));
+        fmt::print("toolSet Index: {}\n\n", thisJob.toolSet.indexToolSet);
     }
 
     fmt::print("------------------------------------------------------------------------------------------\n");
     fmt::print("TOOL SET\n");
     fmt::print("------------------------------------------------------------------------------------------\n\n");
 
-    for (const auto& toolSet : originalToolSets) {
-        fmt::print("ToolSet: {}\n", toolSet.indexToolSet);
-        fmt::print("Tools: {}\n\n", fmt::join(toolSet.tools, " "));
+    //print the tool set map
+    for (const auto& [key, value] : originalToolSets) {
+        fmt::print("ToolSet: {}\n", key);
+        fmt::print("Tools: {}\n\n", fmt::join(value.tools, " "));
     }
+
 }
 

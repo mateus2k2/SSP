@@ -53,61 +53,52 @@ function Timeline(data) {
 
         //Group for the bars and text
         const bars = svg.append("g")
-            .selectAll("g")
-            .data(dataAtual)
-            .join("g")
-            .on("click", handleClick);
-
-        //Add the bars to the chart
-        bars.append("rect")
-            .attr("x", d => xScale(d["start"]))
-            .attr("width", d => xScale(d["end"]) - xScale(d["start"]))
-            .attr("y", (d, i) => yScale(yPos))
-            .attr("height", barHeight)
-            .attr("fill", "steelblue")
-            .attr("class", "chart-block")
-            .attr("stroke", "black")
-            .attr("stroke-width", 1)
-            .on("click", handleClick);
-
-        const groupDivs1 = bars.append("foreignObject")
-            .attr("x", d => xScale(d["start"]))
-            .attr("y", (d, i) => yScale(yPos))
-            .attr("width", d => xScale(d["end"]) - xScale(d["start"]))
-            .attr("height", barHeight)
-            .append("xhtml:div")
-            .style("width", d => (xScale(d["end"]) - xScale(d["start"])) + "px")
-            .style("height", barHeight + "px")
-            .style("text-anchor", "middle")
-            .style("alignment-baseline", "middle")
-            .style("white-space", "nowrap")
-            .style("font-weight", "bold")
-            .attr("class", "chart-block-div")
-            .on("click", handleClick);
-
-        groupDivs1.append("p")
-            .text(d => `(${d["job"]}, ${d["operation"]})`)
-            .on("click", handleClick);
-
-        // const groupDivs2 = bars.append("foreignObject")
-        //     .attr("x", d => xScale(d["start"]))
-        //     .attr("y", (d, i) => yScale(yPos) + (barHeight/2))
-        //     .attr("width", d => xScale(d["end"]) - xScale(d["start"]))
-        //     .attr("height", barHeight/2)
-        //     .append("xhtml:div")
-        //     .style("width", d => (xScale(d["end"]) - xScale(d["start"])) + "px")
-        //     .style("height", barHeight/2 + "px")
-        //     .style("text-anchor", "middle")
-        //     .style("alignment-baseline", "middle")
-        //     .style("white-space", "nowrap")
-        //     .attr("class", "chart-block-div")
-        //     .on("click", handleClick);
-
-        // groupDivs2.append("p")
-        //     .text(d => `${d["magazine"]}`)
-        //     .on("click", handleClick);
-
-        // yPos--;
+        .selectAll("g")
+        .data(dataAtual)
+        .join("g")
+        .on("click", handleClick);
+    
+    // Add the bars to the chart
+    bars.append("rect")
+        .attr("x", d => xScale(d["start"]))
+        .attr("width", d => {
+            const width = xScale(d["end"]) - xScale(d["start"]);
+            return width > 0 ? width : 0;  // Ensure non-negative width
+        })
+        .attr("y", (d, i) => yScale(yPos))
+        .attr("height", barHeight)
+        .attr("fill", "steelblue")
+        .attr("class", "chart-block")
+        .attr("stroke", "black")
+        .attr("stroke-width", 1)
+        .on("click", handleClick);
+    
+    // Add the foreignObject with the div inside
+    const groupDivs1 = bars.append("foreignObject")
+        .attr("x", d => xScale(d["start"]))
+        .attr("y", (d, i) => yScale(yPos))
+        .attr("width", d => {
+            const width = xScale(d["end"]) - xScale(d["start"]);
+            return width > 0 ? width : 0;  // Ensure non-negative width
+        })
+        .attr("height", barHeight)
+        .append("xhtml:div")
+        .style("width", d => {
+            const width = xScale(d["end"]) - xScale(d["start"]);
+            return width > 0 ? width + "px" : "0px";  // Ensure non-negative width
+        })
+        .style("height", barHeight + "px")
+        .style("text-anchor", "middle")
+        .style("alignment-baseline", "middle")
+        .style("white-space", "nowrap")
+        .style("font-weight", "bold")
+        .attr("class", "chart-block-div")
+        .on("click", handleClick);
+    
+    // Add the paragraph text inside the div
+    groupDivs1.append("p")
+        .text(d => `(${d["job"]}, ${d["operation"]})`)
+        .on("click", handleClick);
     }
 
 
@@ -198,7 +189,10 @@ function Timeline(data) {
         // Update the recs 
         svg.selectAll("rect.chart-block")
             .attr("x", d => new_xScale(d["start"]))
-            .attr("width", d => new_xScale(d["end"]) - new_xScale(d["start"]));
+            .attr("width", d => {
+                const width = new_xScale(d["end"]) - new_xScale(d["start"]);
+                return width > 0 ? width : 0;  // Ensure non-negative width
+            });
 
         // Update the from the unsipervised areas
         svg.selectAll("rect.usupervised-area")
@@ -208,9 +202,15 @@ function Timeline(data) {
         // Update the text (the divs)
         svg.selectAll("foreignObject")
             .attr("x", d => new_xScale(d["start"]))
-            .attr("width", d => new_xScale(d["end"]) - new_xScale(d["start"]))
+            .attr("width", d => {
+                const width = new_xScale(d["end"]) - new_xScale(d["start"]);
+                return width > 0 ? width : 0;  // Ensure non-negative width
+            })
             .select("div.chart-block-div")
-            .style("width", d => (new_xScale(d["end"]) - new_xScale(d["start"])) + "px")
+            .style("width", d => {
+                const width = new_xScale(d["end"]) - new_xScale(d["start"]);
+                return width > 0 ? width + "px" : "0px";  // Ensure non-negative width
+            });
 
         realThing.select(".axis--x").call(d3.axisBottom(new_xScale).tickValues(steplist).tickFormat(d3.format(".0f")).tickSizeOuter(0));
     }

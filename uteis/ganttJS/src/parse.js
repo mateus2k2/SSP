@@ -1,7 +1,6 @@
 
 function parseMachineSection(machineSection) {
     const lines = machineSection.trim().split('\n');
-    const machineInfo = lines[0].split('=')[1].trim();
     const operations = lines.slice(1, -1).map(line => line.split(';'));
     const endInfo = lines[lines.length - 1].split(';');
 
@@ -14,20 +13,6 @@ function parseMachineSection(machineSection) {
         'magazine': operation[5].slice(0, -1).split(',').map(num => parseInt(num))
     }));
 
-    const machineInfoObj = machineInfo.slice(0, -1).split(";").map(pair => {
-        const pairList = pair.split(',')
-        pairList[0] = pairList[0].slice(1)
-        pairList[1] = pairList[1].slice(0, -1)
-
-        pairList[0] = parseInt(pairList[0])
-        pairList[1] = parseInt(pairList[1])
-
-        return {
-            'job': pairList[0],
-            'operation': pairList[1]
-        };
-    });
-
     const endInfoObj = {
         'fineshedPriorityCount': parseInt(endInfo[1]),
         'switchs': parseInt(endInfo[2]),
@@ -37,7 +22,6 @@ function parseMachineSection(machineSection) {
     };
 
     return {
-        machineInfo: machineInfoObj,
         operations: operationsObj,
         endInfo: endInfoObj
     };

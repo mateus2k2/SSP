@@ -13,39 +13,26 @@ using namespace std;
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 typedef struct{
+    int indexToolSet;
+    vector<int> tools;
+}ToolSet;
+
+typedef struct{
     int indexJob;
     int indexOperation;
     int indexToolSet;
     int processingTime;
     bool priority;
-    vector<int> JobTools;  
-
+    ToolSet toolSet;
 }Job;
 
 
-typedef struct{
-    int indexToolSet;
-    vector<int> tools;
-
-}ToolSet;
-
-
-// ------------------------------------------------------------------------------------------------------------------------------------------------------
-// VARIVEIS PARA CARREGAR DADOS
-// ------------------------------------------------------------------------------------------------------------------------------------------------------
-
-extern map<int, vector<int>>  mapToolSets; // Vetor com cada ToolSet
-extern vector<int> JobToolsIndex;          // Vetor de jobs com cada ferramenta que ele usa
-extern vector<vector<int>> JobTools;       // Vetor de jobs com cada ferramenta que ele usa
-
-extern vector<int> operation;		       // Aperation Vector		
-extern vector<int> job;			           // Job Vector	
-extern vector<int> processingTime;	       // Processing Time de cada Vector	
-extern vector<int> priority;	      
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // VARIVEIS RESOLVER O PROBLEMA
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+extern fstream solutionReportFile;
 
 extern int planingHorizon;  		 // Horizonte de planejamento (Dias)
 extern int unsupervised; 			 // Horas nao supervisionadas (Horas em cada dia)
@@ -55,7 +42,7 @@ extern int numberJobs; 	   	         // Numero de Jobs
 extern int capacityMagazine;         // Capacidade do magazine das maquina
 
 extern vector<Job> originalJobs;
-extern vector<ToolSet> originalToolSets;
+extern map<int, ToolSet> originalToolSets;
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // DEFINIÇÕES DO PLOBLEMA
@@ -66,10 +53,9 @@ extern vector<ToolSet> originalToolSets;
 #define COSTPRIORITY       30
 #define PROFITYPRIORITY    30
 
-// #define TIMESCALE          24
-#define TIMESCALE          1440
+#define DAY                1440
 
-#define DEBUG
+// #define PRINTS
 
 
 #endif

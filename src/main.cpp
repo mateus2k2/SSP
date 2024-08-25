@@ -16,18 +16,7 @@
 
 using namespace std;
 
-// ------------------------------------------------------------------------------------------------------------------------------------------------------
-// VARIVEIS PARA CARREGAR DADOS
-// ------------------------------------------------------------------------------------------------------------------------------------------------------
-
-map<int, vector<int>>  mapToolSets;
-vector<int> JobToolsIndex;
-vector<vector<int>> JobTools;
-
-vector<int> operation;		 	
-vector<int> job;			  
-vector<int> processingTime;	 
-vector<int> priority;		 
+fstream solutionReportFile;
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // VARIVEIS RESOLVER O PROBLEMA
@@ -41,7 +30,7 @@ int numberJobs;
 int capacityMagazine;     
 
 vector<Job> originalJobs;
-vector<ToolSet> originalToolSets;
+map<int, ToolSet> originalToolSets;
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // MAIN

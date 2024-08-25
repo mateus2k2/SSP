@@ -15,7 +15,6 @@
 using namespace std;
 
 void exemploArtigo(){
-    fstream solutionReportFile;
     solutionReportFile.open("/home/mateus/WSL/IC/SSP/output/exemploArtigo.txt", ios::out);
     
     // ---------------------------------------------------------------------
@@ -29,31 +28,22 @@ void exemploArtigo(){
     capacityMagazine = 8;
     numberMachines = 2;
     planingHorizon = 2;   
-    unsupervised   = 0.5*TIMESCALE;
-
-    loadDataTypes();
+    unsupervised   = 0.5*DAY;
 
     vector<int> sol(numberJobs);
     for (int i = 0; i < numberJobs; ++i) {
         sol[i] = i;
     }
 
-    vector<int> machine(numberMachines);
-    int step = numberJobs/numberMachines;
-    for (int i = 0; i < numberMachines; ++i) {
-        machine[i] = i*step;
-    }
-
     // ---------------------------------------------------------------------
 
     printDataReport();
-    // costReport(sol, machine, solutionReportFile);
+    // KTNS(sol);
    
 }
 
 
 void randonSolution(){
-    fstream solutionReportFile;
     solutionReportFile.open("/home/mateus/WSL/IC/SSP/output/solutionReport.txt", ios::out);
     
     // ---------------------------------------------------------------------
@@ -68,23 +58,16 @@ void randonSolution(){
     // ---------------------------------------------------------------------
 
     numberMachines = 2;
-
-    loadDataTypes();
-
     vector<int> sol(numberJobs);
     for (int i = 0; i < numberJobs; ++i) {
         sol[i] = i;
     }
 
-    vector<int> machine(numberMachines);
-    int step = numberJobs/numberMachines;
-    for (int i = 0; i < numberMachines; ++i) {
-        machine[i] = i*step;
-    }
-
     // ---------------------------------------------------------------------
+    
+    //fazer divisao entre as maquinas baseado no contador de tempo
 
     // printDataReport();
-    costReport(sol, machine, solutionReportFile);
+    KTNS(sol);
    
 }

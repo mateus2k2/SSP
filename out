@@ -1,44 +1,17 @@
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 DATA REPORT
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Number of Machines: 2
 Capacity of Magazine: 8
 Planing Horizon: 2
 Unsupervised: 720
 
-Number Of ToolSets Originais: 5 | 5
-Number of Tools: 21
+Number of Tools: 1
 
 Number of Original Jobs: 10
 Number of Super Jobs: 10
 
-Key: 1, Values: 1 2 3 4 5
-Key: 2, Values: 12 13 14 15 16 17 18
-Key: 3, Values: 4 5 8 9 10 11 12 13
-Key: 4, Values: 5 6 7
-Key: 5, Values: 15 16 17 18 19 20
-
-Priority:
-1 1 1 1 1 1 1 1 1 1
-Operation:
-1 2 1 1 2 1 2 1 1 1
-Job:
-1 1 2 3 3 4 4 5 6 7
-Processing Time:
-180 300 420 360 480 240 540 360 600 300
-
-JobTools:
-1 2 3 4 5
-1 2 3 4 5
-12 13 14 15 16 17 18
-4 5 8 9 10 11 12 13
-4 5 8 9 10 11 12 13
-12 13 14 15 16 17 18
-12 13 14 15 16 17 18
-5 6 7
-15 16 17 18 19 20
-1 2 3 4 5
 
 ------------------------------------------------------------------------------------------
 JOBS DATA
@@ -49,70 +22,80 @@ Operation: 1
 ToolSet: 1
 ProcessingTime: 180
 Priority: true
-JobTools: 1 2 3 4 5
+toolSet Tools: 1 2 3 4 5
+toolSet Index: 1
 
 Job: 1
 Operation: 2
 ToolSet: 1
 ProcessingTime: 300
 Priority: true
-JobTools: 1 2 3 4 5
+toolSet Tools: 1 2 3 4 5
+toolSet Index: 1
 
 Job: 2
 Operation: 1
 ToolSet: 2
 ProcessingTime: 420
 Priority: true
-JobTools: 12 13 14 15 16 17 18
+toolSet Tools: 12 13 14 15 16 17 18
+toolSet Index: 2
 
 Job: 3
 Operation: 1
 ToolSet: 3
 ProcessingTime: 360
 Priority: true
-JobTools: 4 5 8 9 10 11 12 13
+toolSet Tools: 4 5 8 9 10 11 12 13
+toolSet Index: 3
 
 Job: 3
 Operation: 2
 ToolSet: 3
 ProcessingTime: 480
 Priority: true
-JobTools: 4 5 8 9 10 11 12 13
+toolSet Tools: 4 5 8 9 10 11 12 13
+toolSet Index: 3
 
 Job: 4
 Operation: 1
 ToolSet: 2
 ProcessingTime: 240
 Priority: true
-JobTools: 12 13 14 15 16 17 18
+toolSet Tools: 12 13 14 15 16 17 18
+toolSet Index: 2
 
 Job: 4
 Operation: 2
 ToolSet: 2
 ProcessingTime: 540
 Priority: true
-JobTools: 12 13 14 15 16 17 18
+toolSet Tools: 12 13 14 15 16 17 18
+toolSet Index: 2
 
 Job: 5
 Operation: 1
 ToolSet: 4
 ProcessingTime: 360
 Priority: true
-JobTools: 5 6 7
+toolSet Tools: 5 6 7
+toolSet Index: 4
 
 Job: 6
 Operation: 1
-ToolSet: 4
+ToolSet: 5
 ProcessingTime: 600
 Priority: true
-JobTools: 15 16 17 18 19 20
+toolSet Tools: 15 16 17 18 19 20
+toolSet Index: 5
 
 Job: 7
 Operation: 1
 ToolSet: 1
 ProcessingTime: 300
 Priority: true
-JobTools: 1 2 3 4 5
+toolSet Tools: 1 2 3 4 5
+toolSet Index: 1
 
 ------------------------------------------------------------------------------------------
 TOOL SET

@@ -15,14 +15,6 @@ def parseMachineSection(machine_section):
     endInfoObj = {}
     machineInfoObj = []
     
-    pairs = machine_info[:-1].split(";")
-    job_operation_list = [tuple(map(int, pair.strip('()').split(','))) for pair in pairs]
-    for job_operation in job_operation_list:
-        machineInfoObj.append({
-            'job': int(job_operation[0]),
-            'operation': int(job_operation[1])
-        })
-
     for operation in operations:
         operationsObj.append({
             'job': int(operation[0]),
@@ -31,6 +23,11 @@ def parseMachineSection(machine_section):
             'end': int(operation[3]),
             'priority': int(operation[4]),
             'magazine': list(map(int, operation[5][:-1].split(',')))
+        })
+
+        machineInfoObj.append({
+            'job': int(operation[0]),
+            'operation': int(operation[1])
         })
     
     endInfoObj['fineshedPriorityCount'] = int(end_info[1])
