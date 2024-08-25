@@ -7,6 +7,8 @@
 #include <string>
 #include <algorithm> 
 #include <fstream>
+#include <fmt/core.h>
+#include <fmt/ranges.h>
 
 #include "headers/GlobalVars.h"
 #include "headers/loadData.h"
@@ -36,10 +38,10 @@ unsigned int KTNS(vector<int> s){
 
 	int currantProcessingTime = 0; 
 	int logicalMachine = 0;	
+	int extendedPlaningHorizon = (planingHorizon * numberMachines)*DAY;
 
 	#ifdef PRINTS
 	solutionReportFile << planingHorizon << ";" << unsupervised << ";" << DAY << endl;
-	solutionReportFile << "Machine: " << logicalMachine << endl;
 	#endif
 
 	for(jL= 0; jL < numberJobsSol; ++jL){
@@ -80,37 +82,38 @@ unsigned int KTNS(vector<int> s){
 		// TIME VERIFICATIONS
 		// ---------------------------------------------------------------------------
 
-		currantProcessingTime = originalJobs[s[jL]].processingTime;
-		fimJob = inicioJob + currantProcessingTime;
-		int jobStartInDay = inicioJob % DAY;
+		fimJob = inicioJob + originalJobs[s[jL]].processingTime;
 
-		// verifica se a hora é sem supervisao e se houve troca de ferramenta
-		if ((jobStartInDay >= unsupervised) && (currantSwitchs > 0)){
-			//Verificar de consigo acabar essa tarefa antes de exceder o horizonte de planejamento
-			if(fimJob >= planingHorizon * DAY * numberMachines){
-				break;
-			}
-			else{
-				inicioJob += DAY - jobStartInDay;
-				fimJob = inicioJob + currantProcessingTime;
-			}
+		//normalize o fimJob e inicioJob para estarem em relacao ao primeiro dia
+		int normalizedFimJob = fimJob % DAY;
+		int normalizedInicioJob = inicioJob % DAY;
+
+		//verificar e estou em um periodo sem supervisao e houve troca de ferramenta
+		if((normalizedInicioJob >= unsupervised && (currantSwitchs > 0))){
+			inicioJob += DAY - normalizedInicioJob;
+			fimJob = inicioJob + originalJobs[s[jL]].processingTime;
 		}
 
-		//Tarefa vai vazar para o proximo dia
-		if (jobStartInDay + currantProcessingTime >= DAY){
-			//Verificar de consigo acabar essa tarefa antes de exceder o horizonte de planejamento extendido
-			if(fimJob >= planingHorizon * DAY * numberMachines){
-				break;
-			}
-			else{
-				inicioJob += DAY - jobStartInDay;
-				fimJob = inicioJob + currantProcessingTime;
-				#ifdef PRINTS
-				locagicalMachine = logicalMachine + 1;
-				solutionReportFile << "Machine: " << logicalMachine << endl;
-				#endif
-			}
+		// verificar se o job excede o horizonte de planejamento unico
+		if(inicioJob % (planingHorizon*DAY) + (originalJobs[s[jL]].processingTime) > (planingHorizon*DAY)){
+			inicioJob += DAY - normalizedInicioJob;
+			fimJob = inicioJob + originalJobs[s[jL]].processingTime;
+			#ifdef PRINTS
+			logicalMachine = logicalMachine + 1;
+			solutionReportFile << "Machine: " << logicalMachine << endl;
+			#endif
 		}
+		
+		//verificar se o job excede o horizonte de planejamento extendido
+		if(fimJob > extendedPlaningHorizon) break;
+		
+		// o job comeca exatamente no inicio do horizonte de planejamento ou comeca no fim do anterior e termina no inicio do proximo
+		#ifdef PRINTS
+		if(inicioJob % (planingHorizon*DAY) == 0){
+			solutionReportFile << "Machine: " << logicalMachine << endl;
+			logicalMachine = logicalMachine + 1;
+		}
+		#endif
 
 		inicioJob = fimJob;
 
@@ -119,14 +122,10 @@ unsigned int KTNS(vector<int> s){
 		// ---------------------------------------------------------------------------
 
 		#ifdef PRINTS
-		int inicioTmp = fimJob - currantProcessingTime;
-		int fimTmp = fimJob;
-
-		fimTmp = inicioTmp + originalJobs[s[jL]].processingTime;
 		solutionReportFile << originalJobs[s[jL]].indexJob << ";";
 		solutionReportFile << originalJobs[s[jL]].indexOperation << ";";
-		solutionReportFile << inicioTmp % (logicalMachine + 1) << ";";
-		solutionReportFile << fimTmp % (logicalMachine + 1) << ";";
+		solutionReportFile << (fimJob-originalJobs[s[jL]].processingTime) % (planingHorizon*DAY) << ";";
+		solutionReportFile << fimJob % (planingHorizon*DAY) << ";";
 		solutionReportFile << originalJobs[s[jL]].priority << ";";
 
 		for(unsigned int t = 0; t < magazineCL.size(); ++t){
@@ -135,7 +134,6 @@ unsigned int KTNS(vector<int> s){
 			}
 		}
 		solutionReportFile << "\n";
-		inicioTmp = fimTmp;
 		#endif
 		
 		// ---------------------------------------------------------------------------

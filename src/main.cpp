@@ -38,9 +38,6 @@ map<int, ToolSet> originalToolSets;
 
 int main(){
     cout << endl;
-    
-    // std::vector<int> vec = {1, 2, 3, 4, 5};
-    // fmt::print("Vector elements: {}\n", vec);
 
     // randonSolution();
     exemploArtigo();

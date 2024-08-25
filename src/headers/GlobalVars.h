@@ -55,7 +55,6 @@ extern map<int, ToolSet> originalToolSets;
 
 #define DAY                1440
 
-// #define PRINTS
-
+#define PRINTS
 
 #endif

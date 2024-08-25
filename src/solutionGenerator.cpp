@@ -6,6 +6,8 @@
 #include <sstream>
 #include <string>
 #include <algorithm> 
+#include <fmt/core.h>
+#include <fmt/ranges.h>
 
 #include "headers/GlobalVars.h"
 #include "headers/loadData.h"
@@ -37,8 +39,8 @@ void exemploArtigo(){
 
     // ---------------------------------------------------------------------
 
-    printDataReport();
-    // KTNS(sol);
+    // printDataReport();
+    KTNS(sol);
    
 }
 
