@@ -12,7 +12,7 @@
 
 #include "headers/GlobalVars.h"
 #include "headers/loadData.h"
-#include "headers/cost.h"
+#include "headers/evaluate.h"
 
 using namespace std;
 
@@ -20,22 +20,24 @@ using namespace std;
 // KTNS
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-unsigned int KTNS(vector<int> s){
+unsigned int evaluate(vector<int> s){
 	vector<bool> magazineL(numberTools, true);	
 	unsigned int switchs = 0; 
+	int numberJobsSol = s.size();
 	int jL;
 
-	int switchsInstances = 0; 		// Conta quantas trocas de instancia foram feitas, quando pelo menos uma troca de ferramenta foi trocada do magazine
-	int currantSwitchs = 0; 		// Conta quantas trocas de ferramenta foram feitas, no job atual
-
-	int inicioJob = 0; 				// Conta quantas horas ja foram usadas no dia atual  		       
-	int fimJob = 0; 				// Conta quantos dias ja foram usados no horizonte de planejamento 
-
+	int switchsInstances = 0;
+	int currantSwitchs = 0;
 	int fineshedPriorityCount = 0;
 	int unfineshedPriorityCount = 0;
 
-	int numberJobsSol = s.size();
+	// int switchsInstances = 0;
+	// int currantSwitchs = 0;
+	// int fineshedPriorityCount = 0;
+	// int unfineshedPriorityCount = 0;
 
+	int inicioJob = 0; 				
+	int fimJob = 0; 				
 	int currantProcessingTime = 0; 
 	int logicalMachine = 0;	
 	int extendedPlaningHorizon = (planingHorizon * numberMachines)*DAY;
@@ -45,9 +47,7 @@ unsigned int KTNS(vector<int> s){
 	#endif
 
 	for(jL= 0; jL < numberJobsSol; ++jL){
-		
 		currantSwitchs = 0;
-
 		vector<bool> magazineCL(numberTools);		
 		int left = jL;
 		int cmL = 0;
@@ -77,55 +77,58 @@ unsigned int KTNS(vector<int> s){
 
 		magazineL = magazineCL;
 
-
 		// ---------------------------------------------------------------------------
 		// TIME VERIFICATIONS
 		// ---------------------------------------------------------------------------
 
 		fimJob = inicioJob + originalJobs[s[jL]].processingTime;
-
-		//normalize o fimJob e inicioJob para estarem em relacao ao primeiro dia
-		int normalizedFimJob = fimJob % DAY;
-		int normalizedInicioJob = inicioJob % DAY;
-
-		//verificar e estou em um periodo sem supervisao e houve troca de ferramenta
-		if((normalizedInicioJob >= unsupervised && (currantSwitchs > 0))){
-			inicioJob += DAY - normalizedInicioJob;
+		
+		if( ((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) || 								        //verificar e estou em um periodo sem supervisao e houve troca de ferramenta
+		    (inicioJob % (planingHorizon*DAY) + (originalJobs[s[jL]].processingTime) > (planingHorizon*DAY)) ){ //verificar se o job excede o horizonte de planejamento unico (iria extender de uma maquina para outra)
+			
+			inicioJob += DAY - (inicioJob % DAY);
 			fimJob = inicioJob + originalJobs[s[jL]].processingTime;
-		}
-
-		// verificar se o job excede o horizonte de planejamento unico
-		if(inicioJob % (planingHorizon*DAY) + (originalJobs[s[jL]].processingTime) > (planingHorizon*DAY)){
-			inicioJob += DAY - normalizedInicioJob;
-			fimJob = inicioJob + originalJobs[s[jL]].processingTime;
-			#ifdef PRINTS
-			logicalMachine = logicalMachine + 1;
-			solutionReportFile << "Machine: " << logicalMachine << endl;
-			#endif
 		}
 		
-		//verificar se o job excede o horizonte de planejamento extendido
 		if(fimJob > extendedPlaningHorizon) break;
 		
-		// o job comeca exatamente no inicio do horizonte de planejamento ou comeca no fim do anterior e termina no inicio do proximo
-		#ifdef PRINTS
-		if(inicioJob % (planingHorizon*DAY) == 0){
-			solutionReportFile << "Machine: " << logicalMachine << endl;
-			logicalMachine = logicalMachine + 1;
-		}
-		#endif
-
 		inicioJob = fimJob;
+		
+		// ---------------------------------------------------------------------------
+		// COSTS
+		// ---------------------------------------------------------------------------
+
+		switchs += currantSwitchs;
+		if(currantSwitchs > 0) ++switchsInstances;
+		fineshedPriorityCount += originalJobs[s[jL]].priority;
 
 		// ---------------------------------------------------------------------------
 		// PRINTS
 		// ---------------------------------------------------------------------------
-
+		
 		#ifdef PRINTS
+		int inicioTMP = (fimJob - originalJobs[s[jL]].processingTime) % (planingHorizon*DAY);
+		int fimTMP    = ((fimJob-1) % (planingHorizon*DAY))+1;
+		
+		if(inicioTMP % (planingHorizon*DAY) == 0){
+			// if (logicalMachine > 0){
+			// 	for(unsigned int v = jL; v < numberJobsSol; ++v) unfineshedPriorityCount += originalJobs[s[v]].priority;
+			// 	int cost = (PROFITYPRIORITY * fineshedPriorityCount) - (COSTSWITCH * switchs) - (COSTSWITCHINSTANCE * switchsInstances) - (COSTPRIORITY * unfineshedPriorityCount);
+			// 	solutionReportFile << "END;";
+			// 	solutionReportFile << fineshedPriorityCount << ";";
+			// 	solutionReportFile << switchs << ";";
+			// 	solutionReportFile << switchsInstances << ";";
+			// 	solutionReportFile << unfineshedPriorityCount << ";";
+			// 	solutionReportFile << cost << "\n";
+			// }
+			solutionReportFile << "Machine: " << logicalMachine << endl;
+			logicalMachine = logicalMachine + 1;
+		}
+
 		solutionReportFile << originalJobs[s[jL]].indexJob << ";";
 		solutionReportFile << originalJobs[s[jL]].indexOperation << ";";
-		solutionReportFile << (fimJob-originalJobs[s[jL]].processingTime) % (planingHorizon*DAY) << ";";
-		solutionReportFile << fimJob % (planingHorizon*DAY) << ";";
+		solutionReportFile << inicioTMP << ";";
+		solutionReportFile << fimTMP << ";";
 		solutionReportFile << originalJobs[s[jL]].priority << ";";
 
 		for(unsigned int t = 0; t < magazineCL.size(); ++t){
@@ -135,14 +138,6 @@ unsigned int KTNS(vector<int> s){
 		}
 		solutionReportFile << "\n";
 		#endif
-		
-		// ---------------------------------------------------------------------------
-		// COSTS
-		// ---------------------------------------------------------------------------
-
-		switchs += currantSwitchs;
-		if(currantSwitchs > 0) ++switchsInstances;
-		fineshedPriorityCount += originalJobs[s[jL]].priority;
 
 	}
 

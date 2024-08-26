@@ -11,7 +11,7 @@
 
 #include "headers/GlobalVars.h"
 #include "headers/loadData.h"
-#include "headers/cost.h"
+#include "headers/evaluate.h"
 #include "headers/solutionGenerator.h"
 
 using namespace std;

@@ -11,7 +11,7 @@
 
 #include "headers/GlobalVars.h"
 #include "headers/loadData.h"
-#include "headers/cost.h"
+#include "headers/evaluate.h"
 #include "headers/solutionGenerator.h"
 
 using namespace std;
@@ -40,7 +40,7 @@ void exemploArtigo(){
     // ---------------------------------------------------------------------
 
     // printDataReport();
-    KTNS(sol);
+    evaluate(sol);
    
 }
 
@@ -70,6 +70,6 @@ void randonSolution(){
     //fazer divisao entre as maquinas baseado no contador de tempo
 
     // printDataReport();
-    KTNS(sol);
+    evaluate(sol);
    
 }

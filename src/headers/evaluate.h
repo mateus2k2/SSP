@@ -5,6 +5,6 @@
 
 using namespace std;
 
-unsigned int KTNS(vector<int> s);
+unsigned int evaluate(vector<int> s);
 
 #endif
