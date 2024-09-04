@@ -47,7 +47,7 @@ function Timeline(data) {
 
     // let yPos = data['machines'].length-1;
     for (let i = 0; i < data['machines'].length; i++) {
-        dataAtual = data['machines'][i]['operations'];
+        dataAtual = data['machines'][i];
 
         const yPos = i;
 

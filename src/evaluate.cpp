@@ -47,6 +47,10 @@ unsigned int evaluate(vector<int> s){
 	#endif
 
 	for(jL= 0; jL < numberJobsSol; ++jL){
+		// ---------------------------------------------------------------------------
+		// switchs
+		// ---------------------------------------------------------------------------
+
 		currantSwitchs = 0;
 		vector<bool> magazineCL(numberTools);		
 		int left = jL;

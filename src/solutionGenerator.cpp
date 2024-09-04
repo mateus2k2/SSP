@@ -41,7 +41,6 @@ void exemploArtigo(){
 
     // printDataReport();
     evaluate(sol);
-   
 }
 
 
