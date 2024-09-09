@@ -1,4 +1,5 @@
 #ifndef GlobalVarsH
+#define GlobalVarsH
 #include <atomic>
 #include <vector>
 #include <list>
@@ -27,20 +28,10 @@ typedef struct{
 }Job;
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
-// VARIVEIS RESOLVER O PROBLEMA
+// VARIVEIS
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 extern fstream solutionReportFile;
-
-extern int planingHorizon;  		 // Horizonte de planejamento (Dias)
-extern int unsupervised; 			 // Horas nao supervisionadas (Horas em cada dia)
-extern int numberMachines;		     // Nuemro de maquinas
-extern int numberTools;      	     // Numero de Ferramentas diferentes 
-extern int numberJobs; 	   	         // Numero de Jobs
-extern int capacityMagazine;         // Capacidade do magazine das maquina
-
-extern vector<Job> originalJobs;
-extern map<int, ToolSet> originalToolSets;
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // DEFINIÇÕES DO PLOBLEMA
@@ -53,6 +44,6 @@ extern map<int, ToolSet> originalToolSets;
 
 #define DAY                1440
 
-#define PRINTS
+// #define PRINTS
 
 #endif

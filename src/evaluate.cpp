@@ -11,8 +11,7 @@
 #include <fmt/ranges.h>
 
 #include "headers/GlobalVars.h"
-#include "headers/loadData.h"
-#include "headers/evaluate.h"
+#include "headers/SSP.h"
 
 using namespace std;
 
@@ -20,7 +19,9 @@ using namespace std;
 // KTNS
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-unsigned int evaluate(vector<int> s){
+double SSP::evaluate(solSSP solution){
+	vector<int> s = solution.sol;
+
 	vector<bool> magazineL(numberTools, true);	
 	unsigned int switchs = 0; 
 	int numberJobsSol = s.size();
@@ -31,15 +32,10 @@ unsigned int evaluate(vector<int> s){
 	int fineshedPriorityCount = 0;
 	int unfineshedPriorityCount = 0;
 
-	// int switchsInstances = 0;
-	// int currantSwitchs = 0;
-	// int fineshedPriorityCount = 0;
-	// int unfineshedPriorityCount = 0;
-
 	int inicioJob = 0; 				
 	int fimJob = 0; 				
-	int currantProcessingTime = 0; 
-	int logicalMachine = 0;	
+	// int currantProcessingTime = 0; 
+	// int logicalMachine = 0;	
 	int extendedPlaningHorizon = (planingHorizon * numberMachines)*DAY;
 
 	#ifdef PRINTS
@@ -146,7 +142,7 @@ unsigned int evaluate(vector<int> s){
 	}
 
 	// Contar quantar tarefas prioritarias faltaram
-	for(unsigned int v = jL; v < numberJobsSol; ++v){
+	for(int v = jL; v < numberJobsSol; ++v){
 		unfineshedPriorityCount += originalJobs[s[v]].priority;
 	}
 

@@ -1,10 +1,16 @@
+# --------------------------------------------------------
 # Meus Codigos
+# --------------------------------------------------------
 
 mainCpp:
-	clear && g++ src/*.cpp -std=c++2a -Wshadow -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lfmt -lstdc++ && echo "\n" && clear && src/out/mainCpp
+	clear && g++ ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lfmt -lstdc++ && echo "\n" && clear && src/out/mainCpp
+
+mainCppPT:
+	clear && g++ ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lfmt -lstdc++ && echo "\n" && src/out/mainCpp /home/mateus/WSL/IC/SSP/input/ExemploArtigo/Jobs.csv /home/mateus/WSL/IC/SSP/input/ExemploArtigo/ToolSets.csv --TEMP_INIT 0.2 --TEMP_FIM 1 --N_REPLICAS 16 --MCL 400 --PTL 1000 --TEMP_DIST 1 --TYPE_UPDATE 2 --TEMP_UPDATE 35000
+
 
 mainCppDebug:
-	clear && g++ src/*.cpp -std=c++2a -Wshadow -o src/out/mainCppDebug -Wno-unused-result -lpthread -O3 -march=native -g -lfmt -lstdc++ && echo "\n" && clear
+	clear && g++ src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCppDebug -Wno-unused-result -lpthread -O3 -march=native -g -lfmt -lstdc++ && echo "\n" && clear
 
 filterToolSets:
 	clear && echo "\n" && python uteis/filterToolSets.py 
@@ -25,7 +31,9 @@ validador:
 uteis:
 	clear && echo "\n" && python uteis/uteis.py 
 
+# --------------------------------------------------------
 # Codigos Andre 
+# --------------------------------------------------------
 
 KTNS:
 	clear && g++ ./src/KTNS/main.cpp ./src/KTNS/src/*.cpp -std=c++2a -Wshadow -o ./src/out/KTNS -Wno-unused-result -lpthread -O3 && echo "\n"
@@ -36,7 +44,9 @@ KTNSTest1:
 KTNSTest2:
 	clear && ./src/out/KTNS ./dataRaw/KTNS/Instances/Catanzaro/Tabela1/datA1 6 ./dataRaw/KTNS/SolList/Files/sollist10.txt && echo "\n"
 
+# --------------------------------------------------------
 # Update Git
+# --------------------------------------------------------
 
 git:
 	clear && git add . && git commit -m "update" && git push origin master

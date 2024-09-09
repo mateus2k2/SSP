@@ -9,16 +9,15 @@
 #include <fmt/core.h>
 #include <fmt/ranges.h>
 
-#include "headers/loadData.h"
-#include "headers/GlobalVars.h"
+#include "headers/SSP.h"
 
 using namespace std;
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
-// LOAD DUMMY
+// LOAD FUNCTIONS
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-int laodInstance(string filename){
+int SSP::laodInstance(string filename){
     ifstream file(filename);
 
     if (!file.is_open()) {
@@ -74,7 +73,7 @@ int laodInstance(string filename){
     return 0;
 }
 
-int laodToolSet(string filename) {
+int SSP::laodToolSet(string filename) {
     ifstream file(filename);
     int tmpIndex;
 
@@ -111,7 +110,11 @@ int laodToolSet(string filename) {
     return 0;
 }
 
-void printDataReport() {
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
+// LOAD PRINTS
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+void SSP::printDataReport() {
     fmt::print("\n------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
     fmt::print("DATA REPORT\n");
     fmt::print("------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n\n");
@@ -121,8 +124,7 @@ void printDataReport() {
     fmt::print("Planing Horizon: {}\n", planingHorizon);
     fmt::print("Unsupervised: {}\n\n", unsupervised);
     fmt::print("Number of Tools: {}\n\n", numberTools);
-    fmt::print("Number of Original Jobs: {}\n", originalJobs.size());
-    fmt::print("Number of Super Jobs: {}\n\n", numberJobs);
+    fmt::print("Number of Original Jobs: {}\n\n", numberJobs);
 
 
     fmt::print("\n------------------------------------------------------------------------------------------\n");
