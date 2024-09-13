@@ -19,7 +19,7 @@
 function parseMachineSection(machineSection) {
     const lines = machineSection.trim().split('\n');
     const operations = lines.slice(1).map(line => line.split(';'));  // Changed to slice(1) to include the last line
-
+    
     const operationsObj = operations.map(operation => (
         {
         'job': parseInt(operation[0]),
@@ -39,9 +39,11 @@ function parseMachineSection(machineSection) {
 
 function parseFileFunc(fileContent) {
     let lines = fileContent.split('\n');
-    let endInfo = lines.pop();  // Pop the last line (e.g. "END;11;17;5;1;233")
+    lines.pop(); 
+    let timeInfo = lines.pop();
+    let endInfo = lines.pop();
 
-    const fileName = lines.shift();  // Remove the first line with file paths
+    const fileName = lines.shift().split(';');  // Remove the first line with file paths
     const header = lines.shift();  // Remove the second line (the header)
 
     // Parse the header
@@ -49,7 +51,9 @@ function parseFileFunc(fileContent) {
     const planejamentoObj = {
         'planingHorizon': parseInt(planingHorizon),
         'unsupervised': parseInt(unsupervised),
-        'timescale': parseInt(timescale)
+        'timescale': parseInt(timescale),
+        'filenameJobs': fileName[0],
+        'filenameToolSets': fileName[1]
     };
 
     // Join the remaining lines to process machine sections
@@ -70,7 +74,8 @@ function parseFileFunc(fileContent) {
         'switchs': parseInt(endInfoParts[2]),
         'switchsInstances': parseInt(endInfoParts[3]),
         'unfinesedPriorityCount': parseInt(endInfoParts[4]),
-        'cost': parseInt(endInfoParts[5])
+        'cost': parseInt(endInfoParts[5]),
+        'time': parseInt(timeInfo.split(';')[1])
     };
 
     return {
@@ -78,4 +83,6 @@ function parseFileFunc(fileContent) {
         planejamentoObj: planejamentoObj,
         endInfo: endInfoObj
     };
+
+    
 }

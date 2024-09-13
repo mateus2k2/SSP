@@ -134,11 +134,11 @@ void SSP::printDataReport() {
     for (const auto& thisJob : originalJobs) {
         fmt::print("Job: {}\n", thisJob.indexJob);
         fmt::print("Operation: {}\n", thisJob.indexOperation);
-        fmt::print("ToolSet: {}\n", thisJob.indexToolSet);
         fmt::print("ProcessingTime: {}\n", thisJob.processingTime);
         fmt::print("Priority: {}\n", thisJob.priority);
         fmt::print("toolSet Tools: {}\n", fmt::join(thisJob.toolSet.tools, " "));
-        fmt::print("toolSet Index: {}\n\n", thisJob.toolSet.indexToolSet);
+        fmt::print("thisJob.indexToolSet: {}\n", thisJob.indexToolSet);
+        fmt::print("thisJob.toolSet.indexToolSet: {}\n\n", thisJob.toolSet.indexToolSet);
     }
 
     fmt::print("------------------------------------------------------------------------------------------\n");

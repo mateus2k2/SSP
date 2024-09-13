@@ -1,16 +1,35 @@
 # --------------------------------------------------------
-# Meus Codigos
+# Meus Codigos cpp
 # --------------------------------------------------------
 
 mainCpp:
-	clear && g++ ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lfmt -lstdc++ && echo "\n" && clear && src/out/mainCpp
+	clear
+	g++ ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lfmt -lstdc++ 
+	echo "\n" 
+	clear 
+	src/out/mainCpp
 
-mainCppPT:
-	clear && g++ ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lfmt -lstdc++ && echo "\n" && src/out/mainCpp /home/mateus/WSL/IC/SSP/input/ExemploArtigo/Jobs.csv /home/mateus/WSL/IC/SSP/input/ExemploArtigo/ToolSets.csv --TEMP_INIT 0.2 --TEMP_FIM 1 --N_REPLICAS 16 --MCL 400 --PTL 1000 --TEMP_DIST 1 --TYPE_UPDATE 2 --TEMP_UPDATE 35000
+mainCppPTTest:
+	clear
+	g++ ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lfmt -lstdc++
+	echo "\n"
+	src/out/mainCpp /home/mateus/WSL/IC/SSP/input/ExemploArtigo/Jobs.csv /home/mateus/WSL/IC/SSP/input/ExemploArtigo/ToolSets.csv /home/mateus/WSL/IC/SSP/output/exemploArtigo.txt --TEMP_INIT 0.2 --TEMP_FIM 1 --N_REPLICAS 16 --MCL 400 --PTL 1000 --TEMP_DIST 1 --TYPE_UPDATE 2 --TEMP_UPDATE 35000 --CAPACITY 8 --MACHINES 2 --DAYS 2 --UNSUPERVISEDMINUTS 720
 
+mainCppPTReal:
+	clear 
+	g++ ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lfmt -lstdc++ 
+	echo "\n" 
+	src/out/mainCpp /home/mateus/WSL/IC/SSP/input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv /home/mateus/WSL/IC/SSP/input/ToolSetInt.csv /home/mateus/WSL/IC/SSP/output/output1.txt --TEMP_INIT 0.2 --TEMP_FIM 1 --N_REPLICAS 16 --MCL 400 --PTL 1000 --TEMP_DIST 1 --TYPE_UPDATE 2 --TEMP_UPDATE 35000 --CAPACITY 80 --MACHINES 2 --DAYS 2 --UNSUPERVISEDMINUTS 720
 
 mainCppDebug:
-	clear && g++ src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCppDebug -Wno-unused-result -lpthread -O3 -march=native -g -lfmt -lstdc++ && echo "\n" && clear
+	clear 
+	g++ src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCppDebug -Wno-unused-result -lpthread -O3 -march=native -g -lfmt -lstdc++ 
+	echo "\n" 
+	clear
+
+# --------------------------------------------------------
+# Meus python
+# --------------------------------------------------------
 
 filterToolSets:
 	clear && echo "\n" && python uteis/filterToolSets.py 

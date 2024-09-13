@@ -57,6 +57,9 @@ class SSP: public Problem<solSSP>{
 		solSSP construction();
 		solSSP neighbor(solSSP sol);
 		double evaluate(solSSP sol);
+		double evaluateReport(solSSP sol, string filenameJobs, string filenameTools, string solutionReportFileName, int time);
+		void lowerBound();	
+		void destroyToolSets();
 };
 
 #endif 

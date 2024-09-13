@@ -62,3 +62,11 @@ solSSP SSP::neighbor(solSSP sol){
 	return s;
 }
 
+void SSP::lowerBound(){
+	int lb = 0;
+	lb = numberJobs * PROFITYFINISHED;
+}
+
+void SSP::destroyToolSets(){
+	originalToolSets.clear();
+}

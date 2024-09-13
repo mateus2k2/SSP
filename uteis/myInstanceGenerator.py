@@ -3,8 +3,42 @@ import random
 import csv
 import loadData as ld
 from ProcessingTimeGenerator import ProcessingTimeGenerator
+import os
 
 geradorProcessingTime = ProcessingTimeGenerator()
+
+# ------------------------------------------------------------------------------------------------
+# REFACTORY PARA TER TOOLSET UNICOS PARA CADA OPERACAO
+# ------------------------------------------------------------------------------------------------
+
+def refactory():
+    folder_path = '/home/mateus/WSL/IC/SSP/input/MyInstancesDiferentToolSets'
+    files = os.listdir(folder_path)
+    fileWithPath = [f"{folder_path}/{file}" for file in files]  
+    
+    for file in fileWithPath:
+        # load the file
+        df = pd.read_csv(file, delimiter=';')
+        
+        # get the toolSets
+        toolSets = df['ToolSet'].unique()
+        toolSets = list(toolSets)
+        
+        # iterate over each line of the df
+        # and change the toolSet to a new one
+        deleteOver = 0
+        for i, row in df.iterrows():
+            if len(toolSets) == 0: break
+            deleteOver = i
+            newToolSet = toolSets[0]
+            toolSets = toolSets[1:]
+            df.at[i, 'ToolSet'] = newToolSet
+        
+        #delete all the lines that are over the DeleteOver index
+        df = df.drop(df.index[deleteOver+1:])
+        
+        # save the file
+        df.to_csv(file, sep=';', index=False)
 
 # ------------------------------------------------------------------------------------------------
 # UTEIS
@@ -70,15 +104,18 @@ def makeInstance(quantidadeInstancias, reentrantRatio, priorityLivels, toolRatio
                 if job['Reentrant'] == True:
                     copia = job.copy()
                     del copia['Reentrant']
+                    time1, time2 = geradorProcessingTime.generate_random_numbers(2)
                     
                     instance1 = copia.copy()
                     instance1['Job'] = i
                     instance1['Operation'] = 0
+                    instance1['Processing Time'] = time1
                     
                     instance2 = copia.copy()
                     instance2['Job'] = i
                     instance2['Operation'] = 1
-                    
+                    instance2['Processing Time'] = time2
+                    i
                     definitiveJobs.append(instance1)
                     definitiveJobs.append(instance2)
                 else:
@@ -109,7 +146,7 @@ def makeJobs(toolSets):
     return jobs
 
 def saveInstances(instancias):
-    folder = "/home/mateus/WSL/IC/SSP/input/MyInstances"
+    folder = "/home/mateus/WSL/IC/SSP/input/MyInstancesSameToolSets"
     fields = ["Job","Operation","ToolSet","Processing Time","Priority"]
     for i, instancia in enumerate(instancias):
         fileName = f"n={instancia['size']},p={instancia['priority']},r={instancia['reentrant']},t={instancia['unicTools']},v{i}.csv"
@@ -202,3 +239,9 @@ saveInstances(instancias376 + instancias1201 + instancias1401)
         
 instances = makeInstaceExtra()
 saveInstances(instances)
+
+# refactory()
+
+# toolUnusedMap = ld.loadToolSet("UnusedToolSetsClean.csv")
+# toolSetIndex = list(toolUnusedMap.keys())
+# print(toolSetIndex)
