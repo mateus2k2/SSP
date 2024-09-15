@@ -8,8 +8,6 @@ mainCpp:
 	clear
 	g++ ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lstdc++ 
 	echo "\n" 
-	clear 
-	src/out/mainCpp
 
 goMainCppPTTest:
 	clear

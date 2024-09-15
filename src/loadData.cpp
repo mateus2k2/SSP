@@ -7,6 +7,8 @@
 #include <numeric>
 #include <unordered_set>
 
+#include "headers/GlobalVars.h"
+
 #ifndef FMT
 #include <fmt/core.h>
 #include <fmt/ranges.h>

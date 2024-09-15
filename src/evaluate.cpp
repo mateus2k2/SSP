@@ -8,13 +8,14 @@
 #include <algorithm> 
 #include <fstream>
 
+#include "headers/GlobalVars.h"
+#include "headers/SSP.h"
+
 #ifndef FMT
 #include <fmt/core.h>
 #include <fmt/ranges.h>
 #endif
 
-#include "headers/GlobalVars.h"
-#include "headers/SSP.h"
 
 using namespace std;
 

@@ -8,13 +8,14 @@
 #include <algorithm> 
 #include <cstdlib>
 
+#include "headers/GlobalVars.h"
+#include "headers/SSP.h"
+
 #ifndef FMT
 #include <fmt/ranges.h>
 #include <fmt/core.h>
 #endif
 
-#include "headers/GlobalVars.h"
-#include "headers/SSP.h"
 
 #include "../../PTAPI/include/ExecTime.h"
 #include "../../PTAPI/include/PT.h"
