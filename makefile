@@ -19,7 +19,7 @@ goMainCppPTReal:
 	clear 
 	g++ ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lstdc++ 
 	echo "\n" 
-	src/out/mainCpp ./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv ./input/ToolSetInt.csv ./output/output1.txt --TEMP_INIT 0.2 --TEMP_FIM 1 --N_REPLICAS 16 --MCL 400 --PTL 1000 --TEMP_DIST 1 --TYPE_UPDATE 2 --TEMP_UPDATE 35000 --CAPACITY 80 --MACHINES 2 --DAYS 2 --UNSUPERVISEDMINUTS 720
+	src/out/mainCpp ./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv ./input/ToolSetInt.csv ./output/output1.txt --TEMP_INIT 0.2 --TEMP_FIM 1 --N_REPLICAS 16 --MCL 400 --PTL 1000 --TEMP_DIST 1 --TYPE_UPDATE 2 --TEMP_UPDATE 35000 --CAPACITY 80 --MACHINES 2 --DAYS 6 --UNSUPERVISEDMINUTS 720
 
 goMainCppDebug:
 	clear 
@@ -49,7 +49,7 @@ gantt:
 	clear && echo "\n" && python uteis/gantt.py 
 
 validador: 
-	clear && echo "\n" && python uteis/validador.py single ./output/output1.txt
+	clear && echo "\n" && python uteis/validador.py single ./output/n=75,p=0.24,r=0.5,t=650,v0.csv
 
 uteis:
 	clear && echo "\n" && python uteis/uteis.py 

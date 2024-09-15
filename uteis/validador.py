@@ -351,13 +351,11 @@ def main():
     if option == 'single':
         report = sys.argv[2]
 
-        # print(f"---Validating {report}---")
+        print(f"---Validating {report}---")
 
         planejamento, machines, endInfo = rp.parseReport(report)
         toolSets = ld.loadToolSet(planejamento['toolSetFileName'])
         jobs = ld.loadJobs(planejamento['jobsFileName'])
-        
-        print(endInfo)
 
         # checkMagazine(machines, toolSets, jobs)
         # print()
@@ -383,6 +381,8 @@ def main():
         for i, line in enumerate(file):
             report = line.strip()
 
+            print(f"---Validating {report}---")
+        
             planejamento, machines, endInfo = rp.parseReport(report)
             toolSets = ld.loadToolSet(planejamento['toolSetFileName'])
             jobs = ld.loadJobs(planejamento['jobsFileName'])

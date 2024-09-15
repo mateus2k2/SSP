@@ -11,38 +11,124 @@ geradorProcessingTime = ProcessingTimeGenerator()
 # REFACTORY PARA TER TOOLSET UNICOS PARA CADA OPERACAO
 # ------------------------------------------------------------------------------------------------
 
+def parseFileName(input_string):
+    parts = input_string.split(',')
+
+    # Initialize variables
+    n, p, r, t, v = None, None, None, None, None
+
+    # Parse each part
+    for part in parts:
+        if part.startswith('n='):
+            n = int(part.split('=')[1])
+        elif part.startswith('p='):
+            p = float(part.split('=')[1])
+        elif part.startswith('r='):
+            r = float(part.split('=')[1])
+        elif part.startswith('t='):
+            t = int(part.split('=')[1])
+        else:
+            v = part
+    return n, p, r, t, v
+    
 def refactory():
-    folder_path = '/home/mateus/WSL/IC/SSP/input/MyInstancesDiferentToolSets'
+    folder_path = './input/MyInstancesSameToolSets'
     files = os.listdir(folder_path)
     fileWithPath = [f"{folder_path}/{file}" for file in files]  
     
+    toolUnusedMap = ld.loadToolSet("./input/UnusedToolSetsClean.csv")
+    toolSetIndex = list(toolUnusedMap.keys())
+    
     for file in fileWithPath:
         # load the file
-        df = pd.read_csv(file, delimiter=';')
+        random.shuffle(toolSetIndex)
+        numberOfJobs, priorityLevel, reentrantLevel, unicTools, version = parseFileName(file.split('/')[-1])
         
-        # get the toolSets
-        toolSets = df['ToolSet'].unique()
-        toolSets = list(toolSets)
+        toolSets = toolSetIndex[:int(numberOfJobs*(1+reentrantLevel))]
+        instances = makeInstanceDiferentToolSets(numberOfJobs, reentrantLevel, priorityLevel, toolSets)
         
-        # iterate over each line of the df
-        # and change the toolSet to a new one
-        deleteOver = 0
-        for i, row in df.iterrows():
-            if len(toolSets) == 0: break
-            deleteOver = i
-            newToolSet = toolSets[0]
-            toolSets = toolSets[1:]
-            df.at[i, 'ToolSet'] = newToolSet
-        
-        #delete all the lines that are over the DeleteOver index
-        df = df.drop(df.index[deleteOver+1:])
-        
-        # save the file
-        df.to_csv(file, sep=';', index=False)
-
 # ------------------------------------------------------------------------------------------------
 # UTEIS
 # ------------------------------------------------------------------------------------------------
+
+def makeInstanceDiferentToolSets(numberOfJobs, reentrantRatio, priorityLevel, toolSets):
+    toMakeReentrant = int(numberOfJobs/(1+reentrantRatio))
+    toMakeReentrant = int(toMakeReentrant/2)
+    
+    jobsDict = []
+    curToolSetIndex = 0
+    for i in range(0, toMakeReentrant):
+        jobsDict.append({
+            "Job": i,
+            "Operation": 0,
+            "Processing Time": 1,
+            "Priority": 0,
+            
+            "Reentrant": True,
+            "ToolSet": [toolSets[curToolSetIndex], toolSets[curToolSetIndex+1]],
+        })
+        curToolSetIndex += 2
+    
+    for i in range(toMakeReentrant*2, numberOfJobs):
+        jobsDict.append({
+            "Job": i,
+            "Operation": 0,
+            "Processing Time": 1,
+            "Priority": 0,
+            
+            "Reentrant": False,
+            "ToolSet": [toolSets[curToolSetIndex]],
+        })
+        curToolSetIndex += 1
+    
+    random.shuffle(jobsDict)
+    
+    toMakePriority = int(numberOfJobs * priorityLevel)
+    priorityCount = 0
+    for i in range(0, len(jobsDict)):
+        if priorityCount >= toMakePriority: break
+        if jobsDict[i]['Reentrant']:
+            jobsDict[i]['Priority'] = 1
+            priorityCount += 2
+        else:
+            jobsDict[i]['Priority'] = 1
+            priorityCount += 1
+
+    # get len(jobsDict) processing times
+    processingTime = geradorProcessingTime.generate_random_numbers(numberOfJobs)
+    processingTimeIndex = 0
+    realList = []
+    for i, job in enumerate(jobsDict):
+        if job['Reentrant']:
+            realList.append({
+                "Job": job['Job'],
+                "Operation": 0,
+                "Processing Time": processingTime[processingTimeIndex],
+                "ToolSet": job['ToolSet'][0],
+                "Priority": job['Priority'],
+
+            })
+            realList.append({
+                "Job": job['Job'],
+                "Operation": 1,
+                "Processing Time": processingTime[processingTimeIndex+1],
+                "ToolSet": job['ToolSet'][1],
+                "Priority": job['Priority'],
+            })
+            processingTimeIndex += 2
+        else:
+            realList.append({
+                "Job": job['Job'],
+                "Operation": 0,
+                "Processing Time": processingTime[processingTimeIndex],
+                "ToolSet": job['ToolSet'][0],
+                "Priority": job['Priority'],
+            })
+            processingTimeIndex += 1
+    
+    realList.sort(key=lambda x: x['Job'])
+    
+    saveInstances([{'instance': realList, 'size': len(realList), 'priority': f"{priorityLevel:.2f}", 'reentrant': reentrantRatio, 'unicTools': len(toolSets)}], "MyInstancesDiferentToolSets")
 
 def makeInstance(quantidadeInstancias, reentrantRatio, priorityLivels, toolRatio, jobsDict, toolSetList):
     instancias = []
@@ -145,8 +231,8 @@ def makeJobs(toolSets):
     
     return jobs
 
-def saveInstances(instancias):
-    folder = "/home/mateus/WSL/IC/SSP/input/MyInstancesSameToolSets"
+def saveInstances(instancias, folder="MyInstancesSameToolSets"):
+    folder = f"/home/mateus/WSL/IC/SSP/input/{folder}"
     fields = ["Job","Operation","ToolSet","Processing Time","Priority"]
     for i, instancia in enumerate(instancias):
         fileName = f"n={instancia['size']},p={instancia['priority']},r={instancia['reentrant']},t={instancia['unicTools']},v{i}.csv"
@@ -189,7 +275,7 @@ def makeInstaceBase():
 def makeInstaceExtra():
     instanciasToReturn = []
 
-    toolUnusedMap = ld.loadToolSet("UnusedToolSetsClean.csv")
+    toolUnusedMap = ld.loadToolSet("./input/UnusedToolSetsClean.csv")
     toolSetIndex = list(toolUnusedMap.keys())
 
     quantidadeInstancias = 1
@@ -234,14 +320,14 @@ def makeInstaceExtra():
 # SALVANDO INSTANCIAS
 # ------------------------------------------------------------------------------------------------
 
-instancias376, instancias1201, instancias1401 = makeInstaceBase()
-saveInstances(instancias376 + instancias1201 + instancias1401)
+# instancias376, instancias1201, instancias1401 = makeInstaceBase()
+# saveInstances(instancias376 + instancias1201 + instancias1401)
         
-instances = makeInstaceExtra()
-saveInstances(instances)
+# instances = makeInstaceExtra()
+# saveInstances(instances)
 
-# refactory()
+refactory()
 
-# toolUnusedMap = ld.loadToolSet("UnusedToolSetsClean.csv")
+# toolUnusedMap = ld.loadToolSet("./input/UnusedToolSetsClean.csv")
 # toolSetIndex = list(toolUnusedMap.keys())
 # print(toolSetIndex)

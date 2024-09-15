@@ -4,7 +4,7 @@ import loadData as ld
 
 class ProcessingTimeGenerator:
     def __init__(self):
-        numbers = self.getAllProcessTime(ld.loadJobs("250.csv")) + self.getAllProcessTime(ld.loadJobs("750.csv")) + self.getAllProcessTime(ld.loadJobs("1000.csv"))
+        numbers = self.getAllProcessTime(ld.loadJobs("./input/250.csv")) + self.getAllProcessTime(ld.loadJobs("./input/750.csv")) + self.getAllProcessTime(ld.loadJobs("./input/1000.csv"))
         self.distribution = self.calculate_distribution(numbers)
 
     def getAllProcessTime(self, jobsDict):
