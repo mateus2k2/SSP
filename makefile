@@ -2,30 +2,37 @@
 # Meus Codigos cpp
 # --------------------------------------------------------
 
+# -march=native -lfmt -lstdc++  
+
 mainCpp:
 	clear
-	g++ ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lfmt -lstdc++ 
+	g++ ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lstdc++ 
 	echo "\n" 
 	clear 
 	src/out/mainCpp
 
-mainCppPTTest:
+goMainCppPTTest:
 	clear
-	g++ ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lfmt -lstdc++
+	g++ ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lstdc++
 	echo "\n"
-	src/out/mainCpp /home/mateus/WSL/IC/SSP/input/ExemploArtigo/Jobs.csv /home/mateus/WSL/IC/SSP/input/ExemploArtigo/ToolSets.csv /home/mateus/WSL/IC/SSP/output/exemploArtigo.txt --TEMP_INIT 0.2 --TEMP_FIM 1 --N_REPLICAS 16 --MCL 400 --PTL 1000 --TEMP_DIST 1 --TYPE_UPDATE 2 --TEMP_UPDATE 35000 --CAPACITY 8 --MACHINES 2 --DAYS 2 --UNSUPERVISEDMINUTS 720
+	src/out/mainCpp ./input/ExemploArtigo/Jobs.csv ./input/ExemploArtigo/ToolSets.csv ./output/exemploArtigo.txt --TEMP_INIT 0.2 --TEMP_FIM 1 --N_REPLICAS 16 --MCL 400 --PTL 1000 --TEMP_DIST 1 --TYPE_UPDATE 2 --TEMP_UPDATE 35000 --CAPACITY 8 --MACHINES 2 --DAYS 2 --UNSUPERVISEDMINUTS 720
 
-mainCppPTReal:
+goMainCppPTReal:
 	clear 
-	g++ ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lfmt -lstdc++ 
+	g++ ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lstdc++ 
 	echo "\n" 
-	src/out/mainCpp /home/mateus/WSL/IC/SSP/input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv /home/mateus/WSL/IC/SSP/input/ToolSetInt.csv /home/mateus/WSL/IC/SSP/output/output1.txt --TEMP_INIT 0.2 --TEMP_FIM 1 --N_REPLICAS 16 --MCL 400 --PTL 1000 --TEMP_DIST 1 --TYPE_UPDATE 2 --TEMP_UPDATE 35000 --CAPACITY 80 --MACHINES 2 --DAYS 2 --UNSUPERVISEDMINUTS 720
+	src/out/mainCpp ./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv ./input/ToolSetInt.csv ./output/output1.txt --TEMP_INIT 0.2 --TEMP_FIM 1 --N_REPLICAS 16 --MCL 400 --PTL 1000 --TEMP_DIST 1 --TYPE_UPDATE 2 --TEMP_UPDATE 35000 --CAPACITY 80 --MACHINES 2 --DAYS 2 --UNSUPERVISEDMINUTS 720
 
-mainCppDebug:
+goMainCppDebug:
 	clear 
-	g++ src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCppDebug -Wno-unused-result -lpthread -O3 -march=native -g -lfmt -lstdc++ 
+	g++ src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCppDebug -Wno-unused-result -lpthread -O3 -march=native -g -lstdc++ 
 	echo "\n" 
 	clear
+
+runMainCppPTTest:
+	echo "\n" 
+	clear 
+	src/out/mainCpp ./input/ExemploArtigo/Jobs.csv ./input/ExemploArtigo/ToolSets.csv ./output/exemploArtigo.txt --TEMP_INIT 0.2 --TEMP_FIM 1 --N_REPLICAS 16 --MCL 400 --PTL 1000 --TEMP_DIST 1 --TYPE_UPDATE 2 --TEMP_UPDATE 35000 --CAPACITY 80 --MACHINES 2 --DAYS 2 --UNSUPERVISEDMINUTS 720
 
 # --------------------------------------------------------
 # Meus python
@@ -43,9 +50,8 @@ myInstanceGenerator:
 gantt:
 	clear && echo "\n" && python uteis/gantt.py 
 
-# make validador arg1=single arg2=/home/mateus/WSL/IC/SSP/output/exemploArtigoBoa.txt
 validador: 
-	clear && echo "\n" && python uteis/validador.py $(arg1) $(arg2)
+	clear && echo "\n" && python uteis/validador.py single ./output/output1.txt
 
 uteis:
 	clear && echo "\n" && python uteis/uteis.py 

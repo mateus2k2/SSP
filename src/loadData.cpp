@@ -6,8 +6,11 @@
 #include <algorithm> 
 #include <numeric>
 #include <unordered_set>
+
+#ifndef FMT
 #include <fmt/core.h>
 #include <fmt/ranges.h>
+#endif
 
 #include "headers/SSP.h"
 
@@ -59,7 +62,15 @@ int SSP::laodInstance(string filename){
 
     numberJobs = originalJobs.size();    
     capacityMagazine = 80;
-    numberTools = accumulate(originalJobs.begin(), originalJobs.end(), unordered_set<int>(), [](auto tools, const auto& job) { tools.insert(job.toolSet.tools.begin(), job.toolSet.tools.end()); return tools; }).size();
+    // numberTools = accumulate(originalJobs.begin(), originalJobs.end(), unordered_set<int>(), [](auto tools, const auto& job) { tools.insert(job.toolSet.tools.begin(), job.toolSet.tools.end()); return tools; }).size();
+    numberTools = 0;
+    for (const auto& [key, value] : originalToolSets) {
+        for (const auto& tool : value.tools) {
+            if (tool > numberTools) {
+                numberTools = tool;
+            }
+        }
+    }
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -115,6 +126,7 @@ int SSP::laodToolSet(string filename) {
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 void SSP::printDataReport() {
+    #ifndef FMT
     fmt::print("\n------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
     fmt::print("DATA REPORT\n");
     fmt::print("------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n\n");
@@ -150,6 +162,7 @@ void SSP::printDataReport() {
         fmt::print("ToolSet: {}\n", key);
         fmt::print("Tools: {}\n\n", fmt::join(value.tools, " "));
     }
+    #endif
 
 }
 

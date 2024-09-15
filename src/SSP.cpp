@@ -24,6 +24,7 @@ solSSP SSP::construction(){
 		ss.sol.push_back(i);
 	}
 	
+
 	std::shuffle(begin(ss.sol), end(ss.sol), mersenne_engine);
 	
 	ss.evalSol = evaluate(ss);

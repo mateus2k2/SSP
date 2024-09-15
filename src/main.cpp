@@ -7,8 +7,11 @@
 #include <string>
 #include <algorithm> 
 #include <cstdlib>
+
+#ifndef FMT
 #include <fmt/ranges.h>
 #include <fmt/core.h>
+#endif
 
 #include "headers/GlobalVars.h"
 #include "headers/SSP.h"
@@ -22,6 +25,13 @@ using namespace std;
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // MAIN
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+solSSP makeTestSol(int length){
+	solSSP sol;
+	for(int i=0; i<length; i++)
+		sol.sol.push_back(i);
+	return sol;
+}
 
 int main(int argc, char* argv[]){
     cout << endl;
@@ -49,6 +59,7 @@ int main(int argc, char* argv[]){
 	string filenameTools = arguments[1];
 	string filenameoutput = arguments[2];
 	
+
 	// Read arguments
 	for(unsigned int i=3; i<arguments.size(); i+=2)
 	{
@@ -89,14 +100,15 @@ int main(int argc, char* argv[]){
 
 	// prob->printDataReport();
 	// solSSP sol = prob->construction();
+	// solSSP sol = makeTestSol(11);
 	// fmt::print("Initial solution: {}\n", sol.sol);
-	// prob->evaluateReport(sol, "filenameJobs", "filenameTools", filenameoutput, 1);
+	// prob->evaluateReport(sol, filenameJobs, filenameTools, filenameoutput, 1);
 
 	// Create and start PT
 	PT<solSSP> algo(tempIni,tempfim,tempN,MCL,PTL,tempD,uType,tempUp);
 	ExecTime et;
 	solSSP sol = algo.start(thN, prob);
-	prob->evaluateReport(sol, "filenameJobs", "filenameTools", filenameoutput, et.getTimeMs());
+	prob->evaluateReport(sol, filenameJobs, filenameTools, filenameoutput, et.getTimeMs());
 
 	return 0;
 }

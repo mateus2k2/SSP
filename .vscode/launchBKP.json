@@ -7,9 +7,9 @@
         "request": "launch",
         "program": "${workspaceFolder}/src/out/mainCppDebug",
         "args": [
-          "/home/mateus/WSL/IC/SSP/input/ExemploArtigo/Jobs.csv",
-          "/home/mateus/WSL/IC/SSP/input/ExemploArtigo/ToolSets.csv",
-          "/home/mateus/WSL/IC/SSP/output/exemploArtigo.txt",
+          "/home/mateus/WSL/IC/SSP/input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv",
+          "/home/mateus/WSL/IC/SSP/input/ToolSetInt.csv",
+          "/home/mateus/WSL/IC/SSP/output/output1.txt",
           "--TEMP_INIT", "0.2",
           "--TEMP_FIM", "1",
           "--N_REPLICAS", "16",
@@ -35,7 +35,6 @@
             "ignoreFailures": true
           }
         ],
-        // "preLaunchTask": "Build C++",
         "miDebuggerPath": "/usr/bin/gdb"
       }
     ]

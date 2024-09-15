@@ -4,8 +4,7 @@
 
 def parseMachineSection(machine_section):
     lines = machine_section.strip().split('\n')
-    operations = [line.split(';') for line in lines[1:-1]]
-    print(operations)
+    operations = [line.split(';') for line in lines[1:]]
     
     operationsObj = []
     
@@ -59,11 +58,7 @@ def parseReport(file_path):
     endInfoObj['cost'] = int(end_info[5])
     endInfoObj['timeSpent'] = timeSpent
     
-    return {
-        'planejamento': planejamentoObj,
-        'machines': machines,
-        'endInfo': endInfoObj
-    }
+    return  planejamentoObj, machines, endInfoObj
 
 def printReport(machines, planejamento):
     print(f"planingHorizon = {planejamento['planingHorizon']}")
