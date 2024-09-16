@@ -35,7 +35,9 @@ solSSP makeTestSol(int length){
 }
 
 int main(int argc, char* argv[]){
-    cout << endl;
+	// srand(time(0));
+	// cout << rand() % 10000 + 100;
+	// return 0;
 
     //pt varibles
 	float tempIni = 0.01;
@@ -51,16 +53,17 @@ int main(int argc, char* argv[]){
 
     //problem varibles
 	int capacityMagazine = 8;
-    int numberMachines = 2;
-    int planingHorizon = 2;   
-    int unsupervised   = 0.5*DAY;
+    int numberMachines   = 2;
+    int planingHorizon   = 2;   
+    int unsupervised     = 0.5*DAY;
+	int result_report    = 0;
+	int instance_report  = 0;
 	
 	// Instance file name
 	string filenameJobs = arguments[0];
 	string filenameTools = arguments[1];
 	string filenameoutput = arguments[2];
 	
-
 	// Read arguments
 	for(unsigned int i=3; i<arguments.size(); i+=2)
 	{
@@ -91,8 +94,12 @@ int main(int argc, char* argv[]){
 			numberMachines = stoi(arguments[i+1]);
 		else if(arguments[i]== "--DAYS")
 			planingHorizon = stoi(arguments[i+1]);
-		else if(arguments[i]== "--UNSUPERVISEDMINUTS")
+		else if(arguments[i]== "--UNSUPERVISED_MINUTS")
 			unsupervised = stoi(arguments[i+1]);
+		else if(arguments[i]== "--RESULT_REPORT")
+			result_report = stoi(arguments[i+1]);
+		else if(arguments[i]== "--INSTANCE_REPORT")
+			instance_report = stoi(arguments[i+1]);
     }
 	
 	// Create SSP object
@@ -106,10 +113,12 @@ int main(int argc, char* argv[]){
 	// prob->evaluateReport(sol, filenameJobs, filenameTools, filenameoutput, 1);
 
 	// Create and start PT
+	if (instance_report)	prob->printDataReport();
 	PT<solSSP> algo(tempIni,tempfim,tempN,MCL,PTL,tempD,uType,tempUp);
 	ExecTime et;
 	solSSP sol = algo.start(thN, prob);
-	prob->evaluateReport(sol, filenameJobs, filenameTools, filenameoutput, et.getTimeMs());
+	if (result_report)	prob->evaluateReport(sol, filenameJobs, filenameTools, filenameoutput, et.getTimeMs());
+	cout << sol.evalSol << endl;
 
 	return 0;
 }
