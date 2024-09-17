@@ -36,7 +36,7 @@ CONFIG_PARAMS=$*
 # EDIT THIS: Path to your executable
 EXE=./../src/out/mainCpp
 # EDIT THIS: Specify how parameters are given to your executable
-EXE_PARAMS="$INSTANCE ./../input/ToolSetInt.csv ./../output/none.txt  ${CONFIG_PARAMS}"
+EXE_PARAMS="$INSTANCE ./../input/ToolSetInt.csv ./../output/none.txt --CAPACITY 80 --MACHINES 6 --DAYS 7 --UNSUPERVISED_MINUTS 720  ${CONFIG_PARAMS}"
 
 if [ ! -x "$(command -v ${EXE})" ]; then
     error "${EXE}: not found or not executable (pwd: $(pwd))"

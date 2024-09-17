@@ -118,7 +118,7 @@ int main(int argc, char* argv[]){
 	ExecTime et;
 	solSSP sol = algo.start(thN, prob);
 	if (result_report)	prob->evaluateReport(sol, filenameJobs, filenameTools, filenameoutput, et.getTimeMs());
-	cout << sol.evalSol << endl;
+	cout << (-1) * sol.evalSol << endl;
 
 	return 0;
 }

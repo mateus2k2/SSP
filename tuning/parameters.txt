@@ -25,20 +25,44 @@
 ##    other parameters. This expression must return TRUE if the 
 ##    condition is satisfied, FALSE otherwise.
 
-# 1:              2:                   3: 4:                                                                  5:
-# param1          "--param1 "          i  (1, 10)                                                             | mode %in% c("x1", "x2")
-# param2          "--param2 "          i  (1, 10)                                                             | mode %in% c("x1", "x3") && real > 2.5 && real <= 3.5
-# mode            "--"                 c  ("x1" ,"x2", "x3")
-# real            "--paramreal="       r  (1.5, 4.5)
-# mutation        "--mutation="        o  ("none", "very low", "low", "medium", "high", "very high", "all")
-# unused         "-u "                 c  (1, 2, 10, 20)
+# ----------------------------------------------------------------
+# PRIMEIRO ESTUDO DE CASO
+# ----------------------------------------------------------------
+# 1:            2:                3:        4:                                      5:
+tempInit        "--TEMP_INIT "    c         (0.001, 0.01, 0.1, 0.2, 0.3) 
+tempFim         "--TEMP_FIM "     c         (0.5, 1, 5)       
+nReplicas       "--N_REPLICAS "   c         (12,16,20,24)       
+mcl             "--MCL "          c         (300,400,500,600)       
+ptl             "--PTL "          c         (40000, 70000, 100000, 130000, 160000)          
+tempDist        "--TEMP_DIST "    c         (1,2,3,4)           
+# movimentType  "--TYPE_UPDATE "  c         (1,2,3)       
+typeUpdate      "--TYPE_UPDATE "  c         (0,1,2,3)       
+tempUpdate      "--TEMP_UPDATE "  c         (5000, 10000, 20000, 25000, 30000, 35000)       
 
-# 1:            2:            3:        4:               5:
-tempInit    "--TEMP_INIT "    r         (0, 5) 
-tempFim     "--TEMP_FIM "     r         (0, 5)       
-nReplicas   "--N_REPLICAS "   i         (8,64)       
-mcl         "--MCL "          i         (100, 1000)       
-ptl         "--PTL "          i         (100, 3000)          
-tempDist    "--TEMP_DIST "    c         (1,2,3,4)           
-typeUpdate  "--TYPE_UPDATE "  c         (0,1,2,3)       
-tempUpdate  "--TEMP_UPDATE "  i         (1000, 100000)       
+# ----------------------------------------------------------------
+# SEGUNDO ESTUDO DE CASO
+# ----------------------------------------------------------------
+# 1:            2:                3:        4:                                      5:
+# tempInit        "--TEMP_INIT "    c         (0.001, 0.01, 0.1, 0.2) 
+# tempFim         "--TEMP_FIM "     c         (0.5, 1, 5, 10)       
+# nReplicas       "--N_REPLICAS "   c         (8, 12,16,20)       
+# mcl             "--MCL "          c         (200,300,400,500)       
+# ptl             "--PTL "          c         (25000, 50000, 75000, 100000)          
+# tempDist        "--TEMP_DIST "    c         (1,2,3,4)           
+# # movimentType  "--TYPE_UPDATE "  c         (1,2,3)       
+# typeUpdate      "--TYPE_UPDATE "  c         (0,1,2,3)       
+# tempUpdate      "--TEMP_UPDATE "  c         (5000, 10000, 15000, 20000)       
+
+# ----------------------------------------------------------------
+# TERCEIRO ESTUDO DE CASO
+# ----------------------------------------------------------------
+# 1:            2:                3:        4:                                      5:
+# tempInit        "--TEMP_INIT "    c         (0.001, 0.01, 0.1, 0.2) 
+# tempFim         "--TEMP_FIM "     c         (0.5, 1, 5, 10)       
+# nReplicas       "--N_REPLICAS "   c         (8, 12,16,20)       
+# mcl             "--MCL "          c         (200,300,400,500)       
+# ptl             "--PTL "          c         (300,400,500,600)          
+# tempDist        "--TEMP_DIST "    c         (1,2,3,4)           
+# # movimentType  "--TYPE_UPDATE "  c         (1,2,3)       
+# typeUpdate      "--TYPE_UPDATE "  c         (0,1,2,3)       
+# tempUpdate      "--TEMP_UPDATE "  c         (50,100,150,200)       
