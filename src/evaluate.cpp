@@ -11,7 +11,7 @@
 #include "headers/GlobalVars.h"
 #include "headers/SSP.h"
 
-#ifndef FMT
+#ifndef IGNORE_FMT
 #include <fmt/core.h>
 #include <fmt/ranges.h>
 #endif
