@@ -25,6 +25,7 @@ def parseReport(file_path):
     file_content = file.read()
     
     lines = file_content.splitlines()
+    lowerBound = int(lines.pop().split(';')[1])    
     timeSpent = int(lines.pop().split(';')[1])    
     end_info = lines.pop().split(';')
     
@@ -57,6 +58,7 @@ def parseReport(file_path):
     endInfoObj['unfinesedPriorityCount'] = int(end_info[4])
     endInfoObj['cost'] = int(end_info[5])
     endInfoObj['timeSpent'] = timeSpent
+    endInfoObj['lowerBound'] = lowerBound
     
     return  planejamentoObj, machines, endInfoObj
 

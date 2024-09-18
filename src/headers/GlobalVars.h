@@ -39,6 +39,6 @@ typedef struct{
 #define DAY                1440
 
 #define PRINTS
-#define FMT
+// #define FMT
 
 #endif

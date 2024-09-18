@@ -259,6 +259,9 @@ double SSP::evaluateReport(solSSP solution, string filenameJobs, string filename
 
 	solutionReportFile << "TIME;" << time << endl;
 
+	int lowerBoundValue = lowerBound();
+	solutionReportFile << "LOWERBOUND;" << lowerBoundValue << endl;
+	
 	solutionReportFile.close();
 
 	return cost;

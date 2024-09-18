@@ -40,6 +40,7 @@ function parseMachineSection(machineSection) {
 function parseFileFunc(fileContent) {
     let lines = fileContent.split('\n');
     lines.pop(); 
+    let lowerBoundInfo = lines.pop();
     let timeInfo = lines.pop();
     let endInfo = lines.pop();
 
@@ -75,7 +76,8 @@ function parseFileFunc(fileContent) {
         'switchsInstances': parseInt(endInfoParts[3]),
         'unfinesedPriorityCount': parseInt(endInfoParts[4]),
         'cost': parseInt(endInfoParts[5]),
-        'time': parseInt(timeInfo.split(';')[1])
+        'time': parseInt(timeInfo.split(';')[1]),
+        'lowerBound': parseInt(lowerBoundInfo.split(';')[1])
     };
 
     return {
