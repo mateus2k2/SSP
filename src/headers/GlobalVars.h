@@ -25,6 +25,7 @@ typedef struct{
     int processingTime;
     bool priority;
     ToolSet toolSet;
+    ToolSet toolSetNormalized;
 }Job;
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -39,6 +40,6 @@ typedef struct{
 #define DAY                1440
 
 #define PRINTS
-#define IGNORE_FMT
+// #define IGNORE_FMT
 
 #endif

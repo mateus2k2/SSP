@@ -1,5 +1,10 @@
 #include "headers/SSP.h"
 
+#ifndef IGNORE_FMT
+#include <fmt/ranges.h>
+#include <fmt/core.h>
+#endif
+
 SSP::SSP(std::string filenameJobs, std::string filenameTools){
     laodToolSet(filenameTools);
     laodInstance(filenameJobs);
@@ -77,13 +82,13 @@ int SSP::lowerBound(){
 	int accumulatedTime = 0;
 	for(int i = 0; i < numberJobs; i++){
 		accumulatedTime += originalJobs[i].processingTime;
-		if(accumulatedTime > planingHorizon) break;
+		if(accumulatedTime > planingHorizon*DAY) break;
 		finishedJobs++;
 	}
 
 	//itate over the remaning jobs and get the number of priority 1 jobs that didint fit in the planning horizon
 	for (int j = finishedJobs; j < numberJobs; j++) {
-		if (originalJobs[j].priority == 1) {
+		if (originalJobs[j].priority) {
 			unfinesedPriority++;
 		}
 	}

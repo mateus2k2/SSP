@@ -6,12 +6,12 @@
 
 mainCpp:
 	clear
-	g++ ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lstdc++ 
+	g++ ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lfmt -lstdc++ 
 	echo "\n" 
 
 goMainCppDebug:
 	clear 
-	g++ src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCppDebug -Wno-unused-result -lpthread -O3 -g -march=native -lstdc++ 
+	g++ src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCppDebug -Wno-unused-result -lpthread -O3 -g -march=native -lfmt -lstdc++ 
 	echo "\n" 
 	clear
 
@@ -22,15 +22,15 @@ runMainCppPTTest:
 
 goMainCppPTTest:
 	clear
-	g++ ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lstdc++
+	g++ ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lfmt -lstdc++
 	echo "\n"
 	src/out/mainCpp ./input/ExemploArtigo/Jobs.csv ./input/ExemploArtigo/ToolSets.csv ./output/exemploArtigo.txt --TEMP_INIT 0.2 --TEMP_FIM 1 --N_REPLICAS 16 --MCL 400 --PTL 1000 --TEMP_DIST 1 --TYPE_UPDATE 2 --TEMP_UPDATE 35000 --CAPACITY 8 --MACHINES 2 --DAYS 2 --UNSUPERVISED_MINUTS 720 --RESULT_REPORT 1
 
 goMainCppPTReal:
 	clear 
-	g++ ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lstdc++ 
+	g++ ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lfmt -lstdc++ 
 	echo "\n" 
-	src/out/mainCpp ./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv ./input/ToolSetInt.csv ./output/output1.txt --TEMP_INIT 0.2 --TEMP_FIM 1 --N_REPLICAS 16 --MCL 400 --PTL 1000 --TEMP_DIST 1 --TYPE_UPDATE 2 --TEMP_UPDATE 35000 --CAPACITY 80 --MACHINES 2 --DAYS 6 --UNSUPERVISED_MINUTS 720 --RESULT_REPORT 1
+	src/out/mainCpp ./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv ./input/ToolSetInt.csv ./output/output1.txt --TEMP_INIT 0.2 --TEMP_FIM 1 --N_REPLICAS 16 --MCL 400 --PTL 1000 --TEMP_DIST 1 --TYPE_UPDATE 2 --TEMP_UPDATE 35000 --CAPACITY 80 --MACHINES 2 --DAYS 7 --UNSUPERVISED_MINUTS 720 --RESULT_REPORT 1
 
 
 

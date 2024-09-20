@@ -57,6 +57,31 @@ int SSP::laodInstance(string filename){
         originalJobs.push_back(tmpJob);
     }
 
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    map<int, int> ferramentas;
+
+    //iterate over all the toolSets in the originalJobs 
+    int ferramentaIndex = 0;
+    for (auto& thisJob : originalJobs) {
+        for(auto& tool : thisJob.toolSet.tools){
+            if (ferramentas.find(tool) == ferramentas.end()) {
+                ferramentas[tool] = ferramentaIndex;
+                ferramentaIndex++;
+            }
+        }
+    }
+
+    //iterate over all iriginalJobs toolsets and create the normalized toolsets
+    for (auto& thisJob : originalJobs) {
+        ToolSet tmpToolSet;
+        tmpToolSet.indexToolSet = thisJob.indexToolSet;
+        for(auto& tool : thisJob.toolSet.tools){
+            tmpToolSet.tools.push_back(ferramentas[tool]);
+        }
+        normalizedToolSets[thisJob.indexToolSet] = tmpToolSet;
+        thisJob.toolSetNormalized = normalizedToolSets[thisJob.indexToolSet];
+    }
 
     file.close();
 
@@ -64,12 +89,12 @@ int SSP::laodInstance(string filename){
 
     numberJobs = originalJobs.size();    
     capacityMagazine = 80;
-    // numberTools = accumulate(originalJobs.begin(), originalJobs.end(), unordered_set<int>(), [](auto tools, const auto& job) { tools.insert(job.toolSet.tools.begin(), job.toolSet.tools.end()); return tools; }).size();
-    numberTools = 0;
+    numberTools = ferramentaIndex;
+    numberToolsReal = 0;
     for (const auto& [key, value] : originalToolSets) {
         for (const auto& tool : value.tools) {
-            if (tool > numberTools) {
-                numberTools = tool;
+            if (tool > numberToolsReal) {
+                numberToolsReal = tool;
             }
         }
     }
@@ -152,7 +177,8 @@ void SSP::printDataReport() {
         fmt::print("Priority: {}\n", thisJob.priority);
         fmt::print("toolSet Tools: {}\n", fmt::join(thisJob.toolSet.tools, " "));
         fmt::print("thisJob.indexToolSet: {}\n", thisJob.indexToolSet);
-        fmt::print("thisJob.toolSet.indexToolSet: {}\n\n", thisJob.toolSet.indexToolSet);
+        fmt::print("thisJob.toolSet.indexToolSet: {}\n", thisJob.toolSet.indexToolSet);
+        fmt::print("Normalized toolSet Tools: {}\n\n", fmt::join(normalizedToolSets[thisJob.indexToolSet].tools, " "));
     }
 
     fmt::print("------------------------------------------------------------------------------------------\n");
@@ -164,6 +190,17 @@ void SSP::printDataReport() {
         fmt::print("ToolSet: {}\n", key);
         fmt::print("Tools: {}\n\n", fmt::join(value.tools, " "));
     }
+
+    fmt::print("------------------------------------------------------------------------------------------\n");
+    fmt::print("TOOL NORMALIZED\n");
+    fmt::print("------------------------------------------------------------------------------------------\n\n");
+
+    //print the tool set map
+    for (const auto& [key, value] : normalizedToolSets) {
+        fmt::print("ToolSet: {}\n", key);
+        fmt::print("Tools: {}\n\n", fmt::join(value.tools, " "));
+    }
+
     #endif
 
 }

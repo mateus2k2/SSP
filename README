@@ -1,18 +1,1 @@
-// sudo add-apt-repository universe
-// sudo apt update
-// sudo apt install libfmt-dev
-
-// clang-18 teste.cpp -o teste -lfmt -lstdc++
-
-#include <fmt/ranges.h>
-#include <vector>
-
-int main()
-{
-    std::vector<int> vec = {1, 2, 3, 4, 5};
-
-    // Directly print the whole vector using fmt::print with ranges support
-    fmt::print("Vector elements: {}\n", vec);
-
-    return 0;
-}
+// /home/mateus/R/x86_64-pc-linux-gnu-library/4.1/irace/bin/irace > out

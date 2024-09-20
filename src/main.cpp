@@ -108,9 +108,9 @@ int main(int argc, char* argv[]){
 
 	// prob->printDataReport();
 	// solSSP sol = prob->construction();
-	// solSSP sol = makeTestSol(11);
-	// fmt::print("Initial solution: {}\n", sol.sol);
 	// prob->evaluateReport(sol, filenameJobs, filenameTools, filenameoutput, 1);
+	// cout << "Initial solution cost: " << prob->evaluate(sol) << endl;
+	// cout << "prob->lowerBound(): " << prob->lowerBound();
 
 	// Create and start PT
 	if (instance_report)	prob->printDataReport();

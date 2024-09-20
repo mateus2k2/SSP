@@ -39,11 +39,13 @@ class SSP: public Problem<solSSP>{
 		int unsupervised;
 		int numberMachines;
 		int numberTools;
+		int numberToolsReal;
 		int numberJobs;
 		int capacityMagazine;
 
 		vector<Job> originalJobs;
 		map<int, ToolSet> originalToolSets;
+		map<int, ToolSet> normalizedToolSets;
 		
 	public:
 		SSP(std::string filenameJobs, std::string filenameTools);

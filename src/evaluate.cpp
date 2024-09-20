@@ -72,7 +72,7 @@ double SSP::evaluate(solSSP solution){
 		int cmL = 0;
 
 		while((cmL < capacityMagazine) && (left < numberJobsSol)){
-			for (auto it=originalJobs[s[left]].toolSet.tools.begin(); ((it!=originalJobs[s[left]].toolSet.tools.end()) && (cmL < capacityMagazine)); ++it){
+			for (auto it=originalJobs[s[left]].toolSetNormalized.tools.begin(); ((it!=originalJobs[s[left]].toolSetNormalized.tools.end()) && (cmL < capacityMagazine)); ++it){
 				
 				if((magazineL[*it]) && (!magazineCL[*it])){
 					magazineCL[*it] = true;
@@ -122,7 +122,7 @@ double SSP::evaluateReport(solSSP solution, string filenameJobs, string filename
 	fstream solutionReportFile;
 	solutionReportFile.open(solutionReportFileName, ios::out);
 
-	vector<bool> magazineL(numberTools, true);	
+	vector<bool> magazineL(numberToolsReal, true);	
 	unsigned int switchs = 0; 
 	int numberJobsSol = s.size();
 	int jL;
@@ -132,8 +132,8 @@ double SSP::evaluateReport(solSSP solution, string filenameJobs, string filename
 	int fineshedJobsCount = 0;
 	int unfineshedPriorityCount = 0;
 
-	int inicioJob = 0; 				
-	int fimJob = 0; 				
+	int inicioJob = 0;
+	int fimJob = 0;
 	int extendedPlaningHorizon = (planingHorizon * numberMachines)*DAY;
 	int isFirstJobOfMachine = 1;
 
@@ -168,13 +168,12 @@ double SSP::evaluateReport(solSSP solution, string filenameJobs, string filename
 		// ---------------------------------------------------------------------------
 
 		currantSwitchs = 0;
-		vector<bool> magazineCL(numberTools);		
+		vector<bool> magazineCL(numberToolsReal);		
 		int left = jL;
 		int cmL = 0;
 
 		while((cmL < capacityMagazine) && (left < numberJobsSol)){
 			for (auto it=originalJobs[s[left]].toolSet.tools.begin(); ((it!=originalJobs[s[left]].toolSet.tools.end()) && (cmL < capacityMagazine)); ++it){
-				
 				if((magazineL[*it]) && (!magazineCL[*it])){
 					magazineCL[*it] = true;
 					++cmL;
@@ -188,7 +187,7 @@ double SSP::evaluateReport(solSSP solution, string filenameJobs, string filename
 		}
 
 		
-		for(int t=0; ((t < numberTools) && (cmL < capacityMagazine)); t++){
+		for(int t=0; ((t < numberToolsReal) && (cmL < capacityMagazine)); t++){
 			if((magazineL[t]) && (!magazineCL[t])){
 				magazineCL[t] = true;
 				++cmL;			
