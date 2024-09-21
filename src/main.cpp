@@ -102,15 +102,29 @@ int main(int argc, char* argv[]){
 			instance_report = stoi(arguments[i+1]);
     }
 	
-	// Create SSP object
 	SSP* prob = new SSP(filenameJobs,filenameTools);
 	prob->setParans(capacityMagazine, numberMachines, planingHorizon, unsupervised);
 
+	// ------------------------------------------------------------------------------
+	// TEST
+	// ------------------------------------------------------------------------------
+
 	// prob->printDataReport();
+
 	// solSSP sol = prob->construction();
+	// solSSP sol = makeTestSol(75);
+	
+	// auto start = chrono::high_resolution_clock::now();
+	// prob->GPCA(sol);
+	// auto end = chrono::high_resolution_clock::now();
+	// chrono::duration<double> duration = end - start;
+	// cout << "Execution time: " << duration.count() << " seconds" << endl;
+
 	// prob->evaluateReport(sol, filenameJobs, filenameTools, filenameoutput, 1);
-	// cout << "Initial solution cost: " << prob->evaluate(sol) << endl;
-	// cout << "prob->lowerBound(): " << prob->lowerBound();
+
+	// ------------------------------------------------------------------------------
+	// TEST
+	// ------------------------------------------------------------------------------
 
 	// Create and start PT
 	if (instance_report)	prob->printDataReport();
@@ -119,6 +133,7 @@ int main(int argc, char* argv[]){
 	solSSP sol = algo.start(thN, prob);
 	if (result_report)	prob->evaluateReport(sol, filenameJobs, filenameTools, filenameoutput, et.getTimeMs());
 	cout << (-1) * sol.evalSol << endl;
+	cout << et.getTimeMs() << endl;
 
 	return 0;
 }

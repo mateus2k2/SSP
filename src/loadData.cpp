@@ -108,6 +108,19 @@ int SSP::laodInstance(string filename){
     
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     
+    // make a for loop numberTools and push a vector of numberJobs with false
+    for (int i = 0; i < numberTools; i++) {
+        vector<bool> tmpVector(numberJobs, false);
+        toolJob.push_back(tmpVector);
+    }
+
+    //iterate of the originalJobs and create the toolJob matrix
+    for (auto& thisJob : originalJobs) {
+        for(auto& tool : thisJob.toolSetNormalized.tools){
+            toolJob[tool][thisJob.indexJob] = true;
+        }
+    }
+
     return 0;
 }
 
@@ -199,6 +212,16 @@ void SSP::printDataReport() {
     for (const auto& [key, value] : normalizedToolSets) {
         fmt::print("ToolSet: {}\n", key);
         fmt::print("Tools: {}\n\n", fmt::join(value.tools, " "));
+    }
+
+    fmt::print("------------------------------------------------------------------------------------------\n");
+    fmt::print("TOOL JOB\n");
+    fmt::print("------------------------------------------------------------------------------------------\n\n");
+
+    //print the toolJob matrix
+    for (int i = 0; i < numberTools; i++) {
+        fmt::print("Tool: {}\n", i);
+        fmt::print("Jobs: {}\n\n", fmt::join(toolJob[i], " "));
     }
 
     #endif

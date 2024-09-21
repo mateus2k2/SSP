@@ -23,7 +23,7 @@ using namespace std;
 // KTNS
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-double SSP::evaluate(solSSP solution){
+double SSP::GPCA(solSSP solution){
 	vector<int> s = solution.sol;
 
 	vector<bool> magazineL(numberTools, true);	
@@ -264,4 +264,92 @@ double SSP::evaluateReport(solSSP solution, string filenameJobs, string filename
 	solutionReportFile.close();
 
 	return cost;
+}
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
+// GPCA
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+double SSP::evaluate(solSSP solution){	
+
+	int inicioJob = 0; 				
+	int fimJob = 0; 				
+	int extendedPlaningHorizon = (planingHorizon * numberMachines)*DAY;
+
+	int switchsInstances = 0;
+	int currantSwitchs = 0;
+	int fineshedJobsCount = 0;
+	int unfineshedPriorityCount = 0;
+	
+	int pipes_count = 0;
+	int last_full = 0;
+	vector<int> last_seen(numberTools);
+	vector<vector<int>> M;
+	vector<int> s = solution.sol;
+	
+	//Completa o last_seen
+	for(unsigned int i = 0; i < numberTools; ++i){
+		if(toolJob[i][s[0]]) last_seen[i] = 0;
+		else last_seen[i] = -1;
+	}
+	M.push_back(originalJobs[s[0]].toolSetNormalized.tools);
+	fineshedJobsCount += 1;
+	
+	for(unsigned int e = 1; e < numberJobs; ++e){
+		int toolChange = false;
+
+		// ---------------------------------------------------------------------------
+		// TIME VERIFICATIONS
+		// ---------------------------------------------------------------------------
+
+		fimJob = inicioJob + originalJobs[e].processingTime;
+		
+		if( ((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) || 								    //verificar se estou em um periodo sem supervisao e houve troca de ferramenta
+		    (inicioJob % (planingHorizon*DAY) + (originalJobs[e].processingTime) > (planingHorizon*DAY)) ){ //verificar se o job excede o horizonte de planejamento unico (iria extender de uma maquina para outra)
+			
+			inicioJob += DAY - (inicioJob % DAY);
+			fimJob = inicioJob + originalJobs[e].processingTime;
+		}
+		
+		if(fimJob > extendedPlaningHorizon) break;
+		
+		inicioJob = fimJob;
+		
+		// ---------------------------------------------------------------------------
+		// METODO
+		// ---------------------------------------------------------------------------
+		
+		M.push_back(originalJobs[s[e]].toolSetNormalized.tools);
+				
+		for (auto t = originalJobs[s[e]].toolSetNormalized.tools.begin(); t != originalJobs[s[e]].toolSetNormalized.tools.end(); ++t){
+			
+			if(last_full <= last_seen[*t]){
+				++pipes_count;
+				toolChange = true;
+				for(unsigned int i = (last_seen[*t]+1); i < e; ++i){
+					M[i].push_back(*t);					
+					if(M[i].size() == capacityMagazine) last_full = i;
+				}
+			}
+			last_seen[*t] = e; 	
+		}
+		
+		if(M[e].size() == capacityMagazine) last_full = e;
+
+		fineshedJobsCount += 1;
+		if (toolChange) ++switchsInstances;
+	}
+
+	// Contar quantar tarefas prioritarias faltaram
+	for(int v = fineshedJobsCount; v < numberJobs; ++v){
+		unfineshedPriorityCount += originalJobs[s[v]].priority;
+	}
+
+	int cost = (PROFITYFINISHED * fineshedJobsCount) - (COSTSWITCH * pipes_count-capacityMagazine) - (COSTSWITCHINSTANCE * switchsInstances) - (COSTPRIORITY * unfineshedPriorityCount);
+	// cout << "fineshedJobsCount: " << fineshedJobsCount << endl;
+	// cout << "pipes_count: " << pipes_count-capacityMagazine << endl;
+	// cout << "switchsInstances: " << switchsInstances << endl;
+	// cout << "unfineshedPriorityCount: " << unfineshedPriorityCount << endl;
+	// cout << cost << endl;
+	return -cost;
 }

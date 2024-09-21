@@ -43,6 +43,9 @@ class SSP: public Problem<solSSP>{
 		int numberJobs;
 		int capacityMagazine;
 
+	    unsigned int sum = 0;
+
+		vector<vector<bool>> toolJob;
 		vector<Job> originalJobs;
 		map<int, ToolSet> originalToolSets;
 		map<int, ToolSet> normalizedToolSets;
@@ -58,6 +61,7 @@ class SSP: public Problem<solSSP>{
 
 		solSSP construction();
 		solSSP neighbor(solSSP sol);
+		double GPCA(solSSP solution);
 		double evaluate(solSSP sol);
 		double evaluateReport(solSSP sol, string filenameJobs, string filenameTools, string solutionReportFileName, int time);
 		int lowerBound();	
