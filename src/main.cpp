@@ -131,7 +131,7 @@ int main(int argc, char* argv[]){
 	PT<solSSP> algo(tempIni,tempfim,tempN,MCL,PTL,tempD,uType,tempUp);
 	ExecTime et;
 	solSSP sol = algo.start(thN, prob);
-	if (result_report)	prob->evaluateReport(sol, filenameJobs, filenameTools, filenameoutput, et.getTimeMs());
+	if (result_report)	prob->evaluateReportGPCA(sol, filenameJobs, filenameTools, filenameoutput, et.getTimeMs());
 	cout << (-1) * sol.evalSol << endl;
 	cout << et.getTimeMs() << endl;
 

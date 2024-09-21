@@ -75,14 +75,13 @@ def checkSwitchs(machines, endInfo, toolSets, jobs):
     error = False
 
     for i, machine in enumerate(machines):
-        print(f"Machine {i+1}/{len(machines)}")
         for j, operation in enumerate(machine):
-
             if j == 0:
                 switchInstance += 0
                 toolSwitchs += 0
             else:
                 numberOfSwitchs = len(set(operation['magazine']) - set(machine[j-1]['magazine']))
+                # print(set(operation['magazine']) - set(machine[j-1]['magazine']))
                 toolSwitchs += numberOfSwitchs
                 if numberOfSwitchs > 0: switchInstance += 1
         
@@ -357,8 +356,8 @@ def main():
         toolSets = ld.loadToolSet(planejamento['toolSetFileName'])
         jobs = ld.loadJobs(planejamento['jobsFileName'])
 
-        # checkMagazine(machines, toolSets, jobs)
-        # print()
+        checkMagazine(machines, toolSets, jobs)
+        print()
         # checkUnsupervisedSwitchs(machines, toolSets, jobs, planejamento)
         # print()
         checkSwitchs(machines, endInfo, toolSets, jobs)

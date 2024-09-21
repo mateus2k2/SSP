@@ -59,8 +59,6 @@ int SSP::laodInstance(string filename){
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    map<int, int> ferramentas;
-
     //iterate over all the toolSets in the originalJobs 
     int ferramentaIndex = 0;
     for (auto& thisJob : originalJobs) {
