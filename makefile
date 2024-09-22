@@ -9,6 +9,7 @@ mainCpp:
 	g++ ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lstdc++ -lfmt 
 	echo "\n" 
 
+# https://stackoverflow.com/questions/2876357/determine-the-line-of-code-that-causes-a-segmentation-fault
 goMainCppDebug:
 	clear 
 	g++ src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCppDebug -Wno-unused-result -lpthread -O3 -g -march=native -lstdc++ -lfmt 
@@ -39,6 +40,9 @@ goMainCppPTReal:
 # --------------------------------------------------------
 # Meus python
 # --------------------------------------------------------
+
+lowerBound:
+	clear && echo "\n" && python uteis/lowerBound.py 
 
 filterToolSets:
 	clear && echo "\n" && python uteis/filterToolSets.py 

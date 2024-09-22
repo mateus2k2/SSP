@@ -112,28 +112,29 @@ int main(int argc, char* argv[]){
 	// prob->printDataReport();
 
 	// solSSP sol = prob->construction();
-	// solSSP sol = makeTestSol(75);
+	solSSP sol = makeTestSol(75);
 	
-	// auto start = chrono::high_resolution_clock::now();
-	// prob->GPCA(sol);
-	// auto end = chrono::high_resolution_clock::now();
-	// chrono::duration<double> duration = end - start;
-	// cout << "Execution time: " << duration.count() << " seconds" << endl;
+	auto start = chrono::high_resolution_clock::now();
+	prob->evaluate(sol);
+	auto end = chrono::high_resolution_clock::now();
+	chrono::duration<double> duration = end - start;
+	cout << "Execution time: " << duration.count() << " seconds" << endl;
 
-	// prob->evaluateReport(sol, filenameJobs, filenameTools, filenameoutput, 1);
+	prob->evaluateReportGPCA(sol, filenameJobs, filenameTools, filenameoutput, 1);
 
 	// ------------------------------------------------------------------------------
 	// TEST
 	// ------------------------------------------------------------------------------
 
 	// Create and start PT
-	if (instance_report)	prob->printDataReport();
-	PT<solSSP> algo(tempIni,tempfim,tempN,MCL,PTL,tempD,uType,tempUp);
-	ExecTime et;
-	solSSP sol = algo.start(thN, prob);
-	if (result_report)	prob->evaluateReportGPCA(sol, filenameJobs, filenameTools, filenameoutput, et.getTimeMs());
-	cout << (-1) * sol.evalSol << endl;
-	cout << et.getTimeMs() << endl;
+	// if (instance_report)	prob->printDataReport();
+	// PT<solSSP> algo(tempIni,tempfim,tempN,MCL,PTL,tempD,uType,tempUp);
+	// ExecTime et;
+	// solSSP sol = algo.start(thN, prob);
+	// if (result_report)	prob->evaluateReportGPCA(sol, filenameJobs, filenameTools, filenameoutput, et.getTimeMs());
+	// auto end = chrono::high_resolution_clock::now();
+	// cout << (-1) * sol.evalSol << endl;
+	// cout << et.getTimeMs() << endl;
 
 	return 0;
 }

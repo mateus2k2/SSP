@@ -26,22 +26,23 @@ double reverseSearchMap(int value, map<int, int> ferramentas){
 }
 
 double SSP::evaluate(solSSP solution){	
-
-	int inicioJob = 0; 				
-	int fimJob = 0; 				
-	int extendedPlaningHorizon = (planingHorizon * numberMachines)*DAY;
-
-	int switchsInstances = 0;
-	int currantSwitchs = 0;
-	int fineshedJobsCount = 0;
-	int unfineshedPriorityCount = 0;
+	vector<int> s = solution.sol;
 	
 	int pipes_count = 0;
 	int last_full = 0;
 	vector<int> last_seen(numberTools);
 	vector<vector<int>> M;
-	vector<int> s = solution.sol;
 	
+	int switchsInstances = 0;
+	int toolSwitches = 0;
+	int fineshedJobsCount = 0;
+	int unfineshedPriorityCount = 0;
+
+	int inicioJob = 0;
+	int fimJob = originalJobs[s[0]].processingTime;
+	int extendedPlaningHorizon = ((planingHorizon * numberMachines)*DAY);
+	int isFirstJobOfMachine = 0;
+
 	//Completa o last_seen
 	for(unsigned int i = 0; i < numberTools; ++i){
 		if(toolJob[i][s[0]]) last_seen[i] = 0;
@@ -49,39 +50,25 @@ double SSP::evaluate(solSSP solution){
 	}
 	M.push_back(originalJobs[s[0]].toolSetNormalized.tools);
 	fineshedJobsCount += 1;
+
+	inicioJob = fimJob;
 	
 	for(unsigned int e = 1; e < numberJobs; ++e){
 		int toolChange = false;
+		int currantSwitchs = 0;
 
-		// ---------------------------------------------------------------------------
-		// TIME VERIFICATIONS
-		// ---------------------------------------------------------------------------
-
-		fimJob = inicioJob + originalJobs[e].processingTime;
-		
-		if( ((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) || 								    //verificar se estou em um periodo sem supervisao e houve troca de ferramenta
-		    (inicioJob % (planingHorizon*DAY) + (originalJobs[e].processingTime) > (planingHorizon*DAY)) ){ //verificar se o job excede o horizonte de planejamento unico (iria extender de uma maquina para outra)
-			
-			inicioJob += DAY - (inicioJob % DAY);
-			fimJob = inicioJob + originalJobs[e].processingTime;
-		}
-		
-		if(fimJob > extendedPlaningHorizon) break;
-		
-		inicioJob = fimJob;
-		
 		// ---------------------------------------------------------------------------
 		// METODO
 		// ---------------------------------------------------------------------------
-		
+
 		M.push_back(originalJobs[s[e]].toolSetNormalized.tools);
 				
 		for (auto t = originalJobs[s[e]].toolSetNormalized.tools.begin(); t != originalJobs[s[e]].toolSetNormalized.tools.end(); ++t){
-			
 			if(last_full <= last_seen[*t]){
 				++pipes_count;
-				toolChange = true;
+				currantSwitchs += 1;
 				for(unsigned int i = (last_seen[*t]+1); i < e; ++i){
+					toolChange = true;
 					M[i].push_back(*t);					
 					if(M[i].size() == capacityMagazine) last_full = i;
 				}
@@ -91,16 +78,53 @@ double SSP::evaluate(solSSP solution){
 		
 		if(M[e].size() == capacityMagazine) last_full = e;
 
+		// ---------------------------------------------------------------------------
+		// TIME VERIFICATIONS
+		// ---------------------------------------------------------------------------
+
+		fimJob = inicioJob + originalJobs[s[e]].processingTime;
+		
+		if( ((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) || 								        //verificar se estou em um periodo sem supervisao e houve troca de ferramenta
+		    (inicioJob % (planingHorizon*DAY) + (originalJobs[s[e]].processingTime) > (planingHorizon*DAY)) ){ //verificar se o job excede o horizonte de planejamento unico (iria extender de uma maquina para outra)
+			
+			inicioJob += DAY - (inicioJob % DAY);
+			fimJob = inicioJob + originalJobs[s[e]].processingTime;
+
+		}
+
+		if ((inicioJob % (planingHorizon*DAY) == 0)) {
+			isFirstJobOfMachine = 1;
+		}
+		else isFirstJobOfMachine = 0;
+
+		if(fimJob > extendedPlaningHorizon) break;
+		
+		inicioJob = fimJob;
+
+		// ---------------------------------------------------------------------------
+		// COSTS
+		// ---------------------------------------------------------------------------
+
 		fineshedJobsCount += 1;
 		if (toolChange) ++switchsInstances;
+		toolSwitches += currantSwitchs;
+		
+		std::vector<int> diff;
+		std::sort(M[e].begin(), M[e].end());
+		std::sort(M[e-1].begin(), M[e-1].end());
+		std::set_difference(M[e].begin(), M[e].end(), M[e-1].begin(), M[e-1].end(), std::inserter(diff, diff.begin()));
+
+		if (!isFirstJobOfMachine) toolSwitches += diff.size();
+		if (diff.size() > 0 && !isFirstJobOfMachine) ++switchsInstances;
+
 	}
 
-	// Contar quantar tarefas prioritarias faltaram
 	for(int v = fineshedJobsCount; v < numberJobs; ++v){
 		unfineshedPriorityCount += originalJobs[s[v]].priority;
 	}
 
-	int cost = (PROFITYFINISHED * fineshedJobsCount) - (COSTSWITCH * pipes_count-capacityMagazine) - (COSTSWITCHINSTANCE * switchsInstances) - (COSTPRIORITY * unfineshedPriorityCount);
+	int cost = (PROFITYFINISHED * fineshedJobsCount) - (COSTSWITCH * (toolSwitches)) - (COSTSWITCHINSTANCE * switchsInstances) - (COSTPRIORITY * unfineshedPriorityCount);
+	
 	return -cost;
 }
 
@@ -129,14 +153,14 @@ double SSP::evaluateReportGPCA(solSSP solution, string filenameJobs, string file
 	vector<vector<int>> M;
 	
 	int switchsInstances = 0;
-	int currantSwitchs = 0;
+	int toolSwitches = 0;
 	int fineshedJobsCount = 0;
 	int unfineshedPriorityCount = 0;
 
 	int inicioJob = 0;
-	int fimJob = 0;
-	int extendedPlaningHorizon = ((planingHorizon * numberMachines)*DAY)-originalJobs[s[0]].processingTime;
-	int isFirstJobOfMachine = 1;
+	int fimJob = originalJobs[s[0]].processingTime;
+	int extendedPlaningHorizon = ((planingHorizon * numberMachines)*DAY);
+	int isFirstJobOfMachine = 0;
 
 	int logicalMachine = 0;	
 	solutionReportFile << filenameJobs << ";" << filenameTools << endl;
@@ -149,9 +173,41 @@ double SSP::evaluateReportGPCA(solSSP solution, string filenameJobs, string file
 	}
 	M.push_back(originalJobs[s[0]].toolSetNormalized.tools);
 	fineshedJobsCount += 1;
+
+	fineshedIndex[logicalMachine].push_back(s[0]);
+	fineshedInicio[logicalMachine].push_back(0);
+	fineshedFim[logicalMachine].push_back(fimJob);
+
+	inicioJob = fimJob;
+	machines.push_back(logicalMachine);
+	logicalMachine = logicalMachine + 1;
 	
 	for(unsigned int e = 1; e < numberJobs; ++e){
 		int toolChange = false;
+		int currantSwitchs = 0;
+
+		// ---------------------------------------------------------------------------
+		// METODO
+		// ---------------------------------------------------------------------------
+
+		M.push_back(originalJobs[s[e]].toolSetNormalized.tools);
+				
+		for (auto t = originalJobs[s[e]].toolSetNormalized.tools.begin(); t != originalJobs[s[e]].toolSetNormalized.tools.end(); ++t){
+			if(last_full <= last_seen[*t]){
+				int tool = reverseSearchMap(*t, ferramentas);
+				cout << "tool: " << tool << endl;
+				++pipes_count;
+				toolChange = true;
+				currantSwitchs += 1;
+				for(unsigned int i = (last_seen[*t]+1); i < e; ++i){
+					M[i].push_back(*t);					
+					if(M[i].size() == capacityMagazine) last_full = i;
+				}
+			}
+			last_seen[*t] = e; 	
+		}
+		
+		if(M[e].size() == capacityMagazine) last_full = e;
 
 		// ---------------------------------------------------------------------------
 		// TIME VERIFICATIONS
@@ -167,39 +223,32 @@ double SSP::evaluateReportGPCA(solSSP solution, string filenameJobs, string file
 
 		}
 
-		if ((inicioJob % (planingHorizon*DAY) == 0)) isFirstJobOfMachine = 1;
+		if ((inicioJob % (planingHorizon*DAY) == 0)) {
+			isFirstJobOfMachine = 1;
+		}
 		else isFirstJobOfMachine = 0;
-		
+
 		if(fimJob > extendedPlaningHorizon) break;
 		
 		inicioJob = fimJob;
-
-		// ---------------------------------------------------------------------------
-		// METODO
-		// ---------------------------------------------------------------------------
-
-		M.push_back(originalJobs[s[e]].toolSetNormalized.tools);
-				
-		for (auto t = originalJobs[s[e]].toolSetNormalized.tools.begin(); t != originalJobs[s[e]].toolSetNormalized.tools.end(); ++t){
-			if(last_full <= last_seen[*t]){
-				++pipes_count;
-				toolChange = true;
-				for(unsigned int i = (last_seen[*t]+1); i < e; ++i){
-					M[i].push_back(*t);					
-					if(M[i].size() == capacityMagazine) last_full = i;
-				}
-			}
-			last_seen[*t] = e; 	
-		}
-		
-		if(M[e].size() == capacityMagazine) last_full = e;
 
 		// ---------------------------------------------------------------------------
 		// COSTS
 		// ---------------------------------------------------------------------------
 
 		fineshedJobsCount += 1;
-		if (toolChange) ++switchsInstances;
+
+		// if (toolChange) ++switchsInstances;
+		// toolSwitches += currantSwitchs;
+		cout << "e: " << e << " currantSwitchs: " << currantSwitchs << endl;
+		
+		std::vector<int> diff;
+		std::sort(M[e].begin(), M[e].end());
+		std::sort(M[e-1].begin(), M[e-1].end());
+		std::set_difference(M[e].begin(), M[e].end(), M[e-1].begin(), M[e-1].end(), std::inserter(diff, diff.begin()));
+
+		if (!isFirstJobOfMachine) toolSwitches += diff.size();
+		if (diff.size() > 0 && !isFirstJobOfMachine) ++switchsInstances;
 
 		// ---------------------------------------------------------------------------
 		// PRINTS
@@ -217,44 +266,44 @@ double SSP::evaluateReportGPCA(solSSP solution, string filenameJobs, string file
 		fineshedFim[logicalMachine-1].push_back(fimTMP);
 	}
 	
-	vector<bool> usedG(numberTools, false);
+	// vector<bool> usedG(numberTools, false);
 	
-	unsigned int i,j;
-	for(j=1; j < numberJobs ; ++j){
-		i = j - 1;
+	// unsigned int i,j;
+	// for(j=1; j < numberJobs ; ++j){
+	// 	i = j - 1;
 		
-		for (auto t = M[j].begin(); t != M[j].end(); ++t){
-			usedG[*t] = true;
-		}
+	// 	for (auto t = M[j].begin(); t != M[j].end(); ++t){
+	// 		usedG[*t] = true;
+	// 	}
 		
-		for (auto t = M[i].begin(); t != M[i].end(); ++t){
-			if((!usedG[*t]) && (M[j].size() < capacityMagazine)){
-				M[j].push_back(*t);
-			}
-		}
+	// 	for (auto t = M[i].begin(); t != M[i].end(); ++t){
+	// 		if((!usedG[*t]) && (M[j].size() < capacityMagazine)){
+	// 			M[j].push_back(*t);
+	// 		}
+	// 	}
 		
-		for (auto t = M[j].begin(); t != M[j].end(); ++t){
-			usedG[*t] = false;
-		}		 
-	}
+	// 	for (auto t = M[j].begin(); t != M[j].end(); ++t){
+	// 		usedG[*t] = false;
+	// 	}		 
+	// }
 	
-	for(i=(numberJobs-1); i > 0; --i){
-		j = i - 1;
+	// for(i=(numberJobs-1); i > 0; --i){
+	// 	j = i - 1;
 		
-		for (auto t = M[j].begin(); t != M[j].end(); ++t){
-			usedG[*t] = true;
-		}
+	// 	for (auto t = M[j].begin(); t != M[j].end(); ++t){
+	// 		usedG[*t] = true;
+	// 	}
 		
-		for (auto t = M[i].begin(); t != M[i].end(); ++t){
-			if((!usedG[*t]) && (M[j].size() < capacityMagazine)){
-				M[j].push_back(*t);
-			}
-		}
+	// 	for (auto t = M[i].begin(); t != M[i].end(); ++t){
+	// 		if((!usedG[*t]) && (M[j].size() < capacityMagazine)){
+	// 			M[j].push_back(*t);
+	// 		}
+	// 	}
 		
-		for (auto t = M[j].begin(); t != M[j].end(); ++t){
-			usedG[*t] = false;
-		}		 
-	}
+	// 	for (auto t = M[j].begin(); t != M[j].end(); ++t){
+	// 		usedG[*t] = false;
+	// 	}		 
+	// }
 
 	// iterate of the machines and print the results
 	int countTmp = 0;
@@ -285,11 +334,11 @@ double SSP::evaluateReportGPCA(solSSP solution, string filenameJobs, string file
 		unfineshedPriorityCount += originalJobs[s[v]].priority;
 	}
 
-	int cost = (PROFITYFINISHED * fineshedJobsCount) - (COSTSWITCH * (pipes_count-capacityMagazine)) - (COSTSWITCHINSTANCE * switchsInstances) - (COSTPRIORITY * unfineshedPriorityCount);
+	int cost = (PROFITYFINISHED * fineshedJobsCount) - (COSTSWITCH * (toolSwitches)) - (COSTSWITCHINSTANCE * switchsInstances) - (COSTPRIORITY * unfineshedPriorityCount);
 	
 	solutionReportFile << "END;";
 	solutionReportFile << fineshedJobsCount << ";";
-	solutionReportFile << pipes_count-capacityMagazine << ";";
+	solutionReportFile << toolSwitches << ";";
 	solutionReportFile << switchsInstances << ";";
 	solutionReportFile << unfineshedPriorityCount << ";";
 	solutionReportFile << cost << "\n";

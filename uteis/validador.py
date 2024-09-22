@@ -27,7 +27,7 @@ def checkMagazine (machines, toolSets, jobs):
                 error = True
             
             if not set(toolSets[realJob['ToolSet']]).issubset(set(operation['magazine'])):
-                print(f"Error = Job {operation['job']} Operation {operation['operation']} ToolSet {realJob['ToolSet']} not found in magazine")
+                print(f"Error = Job {operation['job']} Operation {operation['operation']} ToolSet {realJob['ToolSet']} not found in magazine = {set(toolSets[realJob['ToolSet']])-(set(operation['magazine']))}")
                 error = True
 
         if error:
@@ -81,7 +81,6 @@ def checkSwitchs(machines, endInfo, toolSets, jobs):
                 toolSwitchs += 0
             else:
                 numberOfSwitchs = len(set(operation['magazine']) - set(machine[j-1]['magazine']))
-                # print(set(operation['magazine']) - set(machine[j-1]['magazine']))
                 toolSwitchs += numberOfSwitchs
                 if numberOfSwitchs > 0: switchInstance += 1
         
