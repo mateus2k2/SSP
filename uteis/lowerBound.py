@@ -2,7 +2,7 @@ import loadData as ld
 import os
 from natsort import natsorted
 
-folder_path = './input/MyInstancesSameToolSets'
+folder_path = './input/MyInstancesDiferentToolSets'
 files = os.listdir(folder_path)
 files = natsorted(files)  # Natural sorting
 
@@ -19,4 +19,4 @@ for file in fileWithPath:
     for item in data:
         timeAcc += item["Processing Time"]
     
-    print(f"File: {file} = {timeAcc} minutes | {timeAcc/60} hours | {timeAcc/1440} days")
+    print(f"File: {file} = {timeAcc} minutes | {timeAcc/60} hours | {timeAcc/1440} days | dividido por 2 = {(timeAcc/1440)/2} | dividido por 6 = {(timeAcc/1440)/6}")
