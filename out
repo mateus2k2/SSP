@@ -1,33 +1,70 @@
-3.40
-2.90
-3.44
-14.74
-13.80
-14.84
-16.40
-16.92
-16.21
-27.60
-27.30
-27.14
-62.50
-63.60
-64.02
-74.63
-76.98
-83.68
-91.88
-85.74
-86.45
-100.84
-98.13
-101.37
-107.22
-108.97
-109.76
-114.92
-119.63
-122.16
-136.15
-137.12
-140.79
+SameToolSets
+n=75,p=0.24,r=0.5.csv = 4.81 days    | dividido por 2 = 2.40  | avrg = 92.28 | max = 180.00
+n=75,p=0.51,r=0.5.csv = 5.09 days    | dividido por 2 = 2.54  | avrg = 97.67 | max = 179.00
+n=75,p=0.75,r=0.5.csv = 4.37 days    | dividido por 2 = 2.19  | avrg = 83.92 | max = 176.00
+n=212,p=0.25,r=0.4.csv = 13.90 days  | dividido por 2 = 6.95  | avrg = 94.41 | max = 180.00
+n=212,p=0.50,r=0.4.csv = 13.28 days  | dividido por 2 = 6.64  | avrg = 90.19 | max = 180.00
+n=212,p=0.75,r=0.4.csv = 13.59 days  | dividido por 2 = 6.80  | avrg = 92.33 | max = 180.00
+n=228,p=0.25,r=0.6.csv = 13.91 days  | dividido por 2 = 6.96  | avrg = 87.86 | max = 175.00
+n=228,p=0.50,r=0.6.csv = 13.73 days  | dividido por 2 = 6.86  | avrg = 86.71 | max = 179.00
+n=228,p=0.75,r=0.6.csv = 14.66 days  | dividido por 2 = 7.33  | avrg = 92.57 | max = 179.00
+n=399,p=0.25,r=0.5.csv = 24.98 days  | dividido por 2 = 12.49 | avrg = 90.16 | max = 179.00
+n=399,p=0.50,r=0.5.csv = 24.81 days  | dividido por 2 = 12.40 | avrg = 89.53 | max = 180.00
+n=399,p=0.75,r=0.5.csv = 24.47 days  | dividido por 2 = 12.23 | avrg = 88.31 | max = 180.00
+n=499,p=0.25,r=0.5.csv = 31.45 days  | dividido por 6 = 5.24  | avrg = 90.77 | max = 180.00
+n=499,p=0.50,r=0.5.csv = 31.98 days  | dividido por 6 = 5.33  | avrg = 92.29 | max = 180.00
+n=499,p=0.75,r=0.5.csv = 31.63 days  | dividido por 6 = 5.27  | avrg = 91.28 | max = 180.00
+n=600,p=0.25,r=0.5.csv = 38.41 days  | dividido por 6 = 6.40  | avrg = 92.19 | max = 180.00
+n=600,p=0.50,r=0.5.csv = 38.06 days  | dividido por 6 = 6.34  | avrg = 91.33 | max = 180.00
+n=600,p=0.75,r=0.5.csv = 38.27 days  | dividido por 6 = 6.38  | avrg = 91.84 | max = 180.00
+n=699,p=0.25,r=0.5.csv = 43.56 days  | dividido por 6 = 7.26  | avrg = 89.75 | max = 180.00
+n=699,p=0.50,r=0.5.csv = 44.40 days  | dividido por 6 = 7.40  | avrg = 91.46 | max = 180.00
+n=699,p=0.75,r=0.5.csv = 44.16 days  | dividido por 6 = 7.36  | avrg = 90.98 | max = 180.00
+n=800,p=0.25,r=0.6.csv = 49.43 days  | dividido por 6 = 8.24  | avrg = 88.98 | max = 180.00
+n=800,p=0.50,r=0.6.csv = 50.45 days  | dividido por 6 = 8.41  | avrg = 90.81 | max = 180.00
+n=800,p=0.75,r=0.6.csv = 51.17 days  | dividido por 6 = 8.53  | avrg = 92.11 | max = 180.00
+n=899,p=0.25,r=0.6.csv = 55.04 days  | dividido por 6 = 9.17  | avrg = 88.15 | max = 180.00
+n=899,p=0.50,r=0.6.csv = 55.68 days  | dividido por 6 = 9.28  | avrg = 89.18 | max = 180.00
+n=899,p=0.75,r=0.6.csv = 57.13 days  | dividido por 6 = 9.52  | avrg = 91.51 | max = 180.00
+n=1000,p=0.25,r=0.6.csv = 62.22 days | dividido por 6 = 10.37 | avrg = 89.59 | max = 180.00
+n=1000,p=0.50,r=0.6.csv = 62.10 days | dividido por 6 = 10.35 | avrg = 89.43 | max = 179.00
+n=1000,p=0.75,r=0.6.csv = 65.42 days | dividido por 6 = 10.90 | avrg = 94.21 | max = 180.00
+n=1236,p=0.25,r=0.6.csv = 78.25 days | dividido por 6 = 13.04 | avrg = 91.16 | max = 180.00
+n=1236,p=0.50,r=0.6.csv = 80.04 days | dividido por 6 = 13.34 | avrg = 93.25 | max = 180.00
+n=1236,p=0.75,r=0.6.csv = 79.34 days | dividido por 6 = 13.22 | avrg = 92.43 | max = 180.00
+
+
+DiferentToolSets
+n=75,p=0.24,r=0.5.csv = 4.64 days    | dividido por 2 = 2.32  | avrg = 89.09 | max = 180.00
+n=75,p=0.51,r=0.5.csv = 4.45 days    | dividido por 2 = 2.23  | avrg = 85.47 | max = 179.00
+n=75,p=0.75,r=0.5.csv = 4.71 days    | dividido por 2 = 2.36  | avrg = 90.47 | max = 178.00
+n=212,p=0.25,r=0.4.csv = 13.67 days  | dividido por 2 = 6.84  | avrg = 92.85 | max = 179.00
+n=212,p=0.50,r=0.4.csv = 14.46 days  | dividido por 2 = 7.23  | avrg = 98.22 | max = 180.00
+n=212,p=0.75,r=0.4.csv = 14.13 days  | dividido por 2 = 7.07  | avrg = 95.98 | max = 180.00
+n=228,p=0.25,r=0.6.csv = 13.86 days  | dividido por 2 = 6.93  | avrg = 87.54 | max = 180.00
+n=228,p=0.50,r=0.6.csv = 14.08 days  | dividido por 2 = 7.04  | avrg = 88.93 | max = 179.00
+n=228,p=0.75,r=0.6.csv = 13.02 days  | dividido por 2 = 6.51  | avrg = 82.26 | max = 180.00
+n=399,p=0.25,r=0.5.csv = 24.75 days  | dividido por 2 = 12.38 | avrg = 89.33 | max = 180.00
+n=399,p=0.50,r=0.5.csv = 25.97 days  | dividido por 2 = 12.99 | avrg = 93.73 | max = 180.00
+n=399,p=0.75,r=0.5.csv = 26.60 days  | dividido por 2 = 13.30 | avrg = 96.01 | max = 180.00
+n=499,p=0.25,r=0.5.csv = 31.96 days  | dividido por 6 = 5.33  | avrg = 92.23 | max = 180.00
+n=499,p=0.50,r=0.5.csv = 30.72 days  | dividido por 6 = 5.12  | avrg = 88.66 | max = 180.00
+n=499,p=0.75,r=0.5.csv = 31.44 days  | dividido por 6 = 5.24  | avrg = 90.73 | max = 180.00
+n=600,p=0.25,r=0.5.csv = 39.01 days  | dividido por 6 = 6.50  | avrg = 93.61 | max = 180.00
+n=600,p=0.50,r=0.5.csv = 38.20 days  | dividido por 6 = 6.37  | avrg = 91.67 | max = 180.00
+n=600,p=0.75,r=0.5.csv = 36.74 days  | dividido por 6 = 6.12  | avrg = 88.17 | max = 180.00
+n=699,p=0.25,r=0.5.csv = 43.25 days  | dividido por 6 = 7.21  | avrg = 89.10 | max = 180.00
+n=699,p=0.50,r=0.5.csv = 45.27 days  | dividido por 6 = 7.54  | avrg = 93.26 | max = 180.00
+n=699,p=0.75,r=0.5.csv = 44.67 days  | dividido por 6 = 7.45  | avrg = 92.03 | max = 180.00
+n=800,p=0.25,r=0.6.csv = 49.61 days  | dividido por 6 = 8.27  | avrg = 89.30 | max = 180.00
+n=800,p=0.50,r=0.6.csv = 50.17 days  | dividido por 6 = 8.36  | avrg = 90.31 | max = 180.00
+n=800,p=0.75,r=0.6.csv = 49.90 days  | dividido por 6 = 8.32  | avrg = 89.81 | max = 180.00
+n=899,p=0.25,r=0.6.csv = 57.10 days  | dividido por 6 = 9.52  | avrg = 91.47 | max = 180.00
+n=899,p=0.50,r=0.6.csv = 59.10 days  | dividido por 6 = 9.85  | avrg = 94.66 | max = 180.00
+n=899,p=0.75,r=0.6.csv = 56.07 days  | dividido por 6 = 9.35  | avrg = 89.81 | max = 180.00
+n=1000,p=0.25,r=0.6.csv = 64.01 days | dividido por 6 = 10.67 | avrg = 92.18 | max = 180.00
+n=1000,p=0.50,r=0.6.csv = 63.08 days | dividido por 6 = 10.51 | avrg = 90.84 | max = 180.00
+n=1000,p=0.75,r=0.6.csv = 63.62 days | dividido por 6 = 10.60 | avrg = 91.61 | max = 180.00
+n=1236,p=0.25,r=0.6.csv = 78.05 days | dividido por 6 = 13.01 | avrg = 90.94 | max = 180.00
+n=1236,p=0.50,r=0.6.csv = 79.79 days | dividido por 6 = 13.30 | avrg = 92.96 | max = 180.00
+n=1236,p=0.75,r=0.6.csv = 78.03 days | dividido por 6 = 13.01 | avrg = 90.91 | max = 180.00
