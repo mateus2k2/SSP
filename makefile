@@ -53,7 +53,7 @@ gantt:
 	clear && echo "\n" && python uteis/gantt.py 
 
 validador: 
-	clear && echo "\n" && python uteis/validador.py single ./output/output1.txt
+	clear && echo "\n" && python uteis/validador.py single ./output/exemploArtigo.txt
 
 uteis:
 	clear && echo "\n" && python uteis/uteis.py 
