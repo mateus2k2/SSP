@@ -1,0 +1,128 @@
+#include <vector>
+#include <iostream>
+#include <atomic>
+#include <thread>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <algorithm> 
+#include <cstdlib>
+
+using namespace std;
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
+// GPCA MINIMAL EXEMPLE
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+int capacityMagazine = 8;
+int numberTools = 21;
+int numberJobs = 11;
+vector<vector<bool>>  toolJob;
+vector<vector<int>>  JobTools; 
+
+unsigned int GPCA(vector<int> s){	
+	
+	int pipes_count = 0;
+	int last_full = 0;
+	vector<int> last_seen(numberTools);
+	vector<vector<int>> M;
+
+	//Completa o last_seen
+	for(unsigned int i = 0; i < numberTools; ++i){
+		if(toolJob[i][s[0]]) last_seen[i] = 0;
+		else last_seen[i] = -1;
+	}
+	M.push_back(JobTools[s[0]]);
+	
+	for(unsigned int e = 1; e < numberJobs; ++e){
+
+		int currantSwitch = 0;
+		M.push_back(JobTools[s[e]]);
+				
+		for (auto t = JobTools[s[e]].begin(); t != JobTools[s[e]].end(); ++t){
+			if(last_full <= last_seen[*t]){
+				++currantSwitch;
+				++pipes_count;
+				//	cout<<"PIPE last_see:"<< last_seen[*t] <<" Atual:"<< e <<" last_full:"<<last_full<<"\n";
+				
+				for(unsigned int i = (last_seen[*t]+1); i < e; ++i){
+					M[i].push_back(*t);					
+					if(M[i].size() == capacityMagazine) last_full = i;
+				}
+
+			}
+			last_seen[*t] = e; 	
+		}
+		
+		cout << "e: " << e << " Switches count: " << currantSwitch << endl;
+		if(M[e].size() == capacityMagazine) last_full = e;
+	}
+
+	for (auto m : M) {
+		cout << "M: ";
+		for (auto i : m) {
+			cout << i << " ";
+		}
+		cout << endl;
+	}
+
+ cout << "Pipes count: " << pipes_count << endl;
+ return (capacityMagazine - pipes_count);
+}
+
+int main(){
+	toolJob.resize(numberTools);
+	JobTools.resize(numberJobs);
+
+    vector<vector<int>> jobToToolMappings = {
+        {1,2,3,4,5}, 
+        {1,2,3,4,5}, 
+        {12,13,14,15,16,17,18}, 
+        {12,13,14,15,16,17,18}, 
+        {4,5,8,9,10,11,12,13}, 
+        {4,5,8,9,10,11,12,13}, 
+        {4,5,8,9,10,11,12,13}, 
+        {12,13,14,15,16,17,18}, 
+        {12,13,14,15,16,17,18}, 
+        {5,6,7}, 
+        {15,16,17,18,19,20}, 
+    };
+
+	for (int i = 0; i < numberTools; i++) {
+		vector<bool> tmpVector(numberJobs, false);
+		toolJob[i] = tmpVector;
+	}
+
+    for (int job = 0; job < numberJobs; job++) {
+        for (int tool : jobToToolMappings[job]) {
+			toolJob[tool-1][job] = true;
+			JobTools[job].push_back(tool);
+        }
+    }
+
+	cout << "---------------------------------------------------------------------------" << endl;
+	int toolIndex = 0;
+	for (auto i : toolJob) {
+		cout << "Ferramenta: " << toolIndex << " é usada nas tarefas: ";
+		toolIndex++;
+		for (auto j : i) {
+			cout << j << " ";
+		}
+		cout << endl;
+	}
+
+	cout << "---------------------------------------------------------------------------" << endl;
+	int jobIndex = 0;
+	for (auto i : JobTools) {
+		cout << "Tarefa: " << jobIndex << " é requer as ferramentas: ";
+		jobIndex++;
+		for (auto j : i) {
+			cout << j << " ";
+		}
+		cout << endl;
+	}
+	cout << "---------------------------------------------------------------------------" << endl;
+
+	int valor = GPCA({0,1,2,3,4,5,6,7,8,9,10});
+	cout << "GPAC: " << valor << endl;
+}

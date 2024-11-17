@@ -1,3 +1,0 @@
-git rm -r /home/mateus/WSL/IC/SSP/input/raw/KTNS
-git rm -r --cached /home/mateus/WSL/IC/SSP/input/raw/KTNS/SolList/Files/*
-git lfs track "/input/raw/KTNS/*"

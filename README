@@ -1,1 +1,5 @@
 // /home/mateus/R/x86_64-pc-linux-gnu-library/4.1/irace/bin/irace > out
+
+git rm -r /home/mateus/WSL/IC/SSP/input/raw/KTNS
+git rm -r --cached /home/mateus/WSL/IC/SSP/input/raw/KTNS/SolList/Files/*
+git lfs track "/input/raw/KTNS/*"

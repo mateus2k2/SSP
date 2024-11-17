@@ -4,59 +4,34 @@
 
 # -march=native -lfmt -lstdc++  
 
-mainCpp:
+CompilePT:
 	clear
 	g++ ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lstdc++ 
 	echo "\n" 
 
-# https://stackoverflow.com/questions/2876357/determine-the-line-of-code-that-causes-a-segmentation-fault
-goMainCppDebug:
+DebugGo:
 	clear 
 	g++ src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCppDebug -Wno-unused-result -lpthread -O3 -g -march=native -lstdc++ 
 	echo "\n" 
 	clear
 
-runMainCppPTTest:
-	echo "\n" 
-	clear 
-	src/out/mainCpp ./input/ExemploArtigo/Jobs.csv ./input/ExemploArtigo/ToolSets.csv ./output/exemploArtigo.txt --TEMP_INIT 0.2 --TEMP_FIM 1 --N_REPLICAS 16 --MCL 400 --PTL 1000 --TEMP_DIST 1 --TYPE_UPDATE 2 --TEMP_UPDATE 35000 --CAPACITY 80 --MACHINES 2 --DAYS 2 --UNSUPERVISED_MINUTS 720
-
-goMainCppPTTest:
+TestPTGo:
 	clear
 	g++ ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lstdc++
 	echo "\n"
-	src/out/mainCpp ./input/ExemploArtigo/Jobs.csv ./input/ExemploArtigo/ToolSets.csv ./output/exemploArtigo.txt --TEMP_INIT 0.2 --TEMP_FIM 1 --N_REPLICAS 16 --MCL 400 --PTL 1000 --TEMP_DIST 1 --TYPE_UPDATE 2 --TEMP_UPDATE 35000 --CAPACITY 8 --MACHINES 2 --DAYS 2 --UNSUPERVISED_MINUTS 720 --RESULT_REPORT 1
+	src/out/mainCpp ./input/Exemplo/Jobs.csv ./input/Exemplo/ToolSets.csv ./output/exemplo.txt --TEMP_INIT 0.2 --TEMP_FIM 1 --N_REPLICAS 16 --MCL 400 --PTL 1000 --TEMP_DIST 1 --TYPE_UPDATE 2 --TEMP_UPDATE 35000 --CAPACITY 8 --MACHINES 2 --DAYS 2 --UNSUPERVISED_MINUTS 720 --RESULT_REPORT 1
 
-goMainCppPTReal:
+RealPTGo:
 	clear 
 	g++ ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lstdc++ 
 	echo "\n" 
-	src/out/mainCpp ./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv ./input/ToolSetInt.csv ./output/output1.txt --TEMP_INIT 0.2 --TEMP_FIM 1 --N_REPLICAS 16 --MCL 400 --PTL 1000 --TEMP_DIST 1 --TYPE_UPDATE 2 --TEMP_UPDATE 35000 --CAPACITY 80 --MACHINES 2 --DAYS 7 --UNSUPERVISED_MINUTS 720 --RESULT_REPORT 1 --INSTANCE_REPORT 1
+	src/out/mainCpp ./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv ./input/Processed/ToolSetInt.csv ./output/output1.txt --TEMP_INIT 0.2 --TEMP_FIM 1 --N_REPLICAS 16 --MCL 400 --PTL 1000 --TEMP_DIST 1 --TYPE_UPDATE 2 --TEMP_UPDATE 35000 --CAPACITY 80 --MACHINES 2 --DAYS 7 --UNSUPERVISED_MINUTS 720 --RESULT_REPORT 1 --INSTANCE_REPORT 1
 
 # --------------------------------------------------------
 # Meus python
 # --------------------------------------------------------
 
-lowerBound:
-	clear && echo "\n" && python uteis/lowerBound.py 
-
-filterToolSets:
-	clear && echo "\n" && python uteis/filterToolSets.py 
-
-filterJobs:
-	clear && echo "\n" && python uteis/filterJobs.py 
-
-myInstanceGenerator:
-	clear && echo "\n" && python uteis/myInstanceGenerator.py 
-
-gantt:
-	clear && echo "\n" && python uteis/gantt.py 
-
-validador: 
-	clear && echo "\n" && python uteis/validador.py single ./output/exemploArtigo.txt
-
-uteis:
-	clear && echo "\n" && python uteis/uteis.py 
+# TODO
 
 # --------------------------------------------------------
 # Codigos Andre 

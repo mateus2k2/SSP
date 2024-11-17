@@ -25,108 +25,108 @@ double reverseSearchMap(int value, map<int, int> ferramentas){
 	return -1;
 }
 
-double SSP::evaluate(solSSP solution){	
-	vector<int> s = solution.sol;
+// double SSP::evaluate(solSSP solution){	
+// 	vector<int> s = solution.sol;
 	
-	int pipes_count = 0;
-	int last_full = 0;
-	vector<int> last_seen(numberTools);
-	vector<vector<int>> M;
+// 	int pipes_count = 0;
+// 	int last_full = 0;
+// 	vector<int> last_seen(numberTools);
+// 	vector<vector<int>> M;
 	
-	int switchsInstances = 0;
-	int toolSwitches = 0;
-	int fineshedJobsCount = 0;
-	int unfineshedPriorityCount = 0;
+// 	int switchsInstances = 0;
+// 	int toolSwitches = 0;
+// 	int fineshedJobsCount = 0;
+// 	int unfineshedPriorityCount = 0;
 
-	int inicioJob = 0;
-	int fimJob = originalJobs[s[0]].processingTime;
-	int extendedPlaningHorizon = ((planingHorizon * numberMachines)*DAY);
-	int isFirstJobOfMachine = 0;
+// 	int inicioJob = 0;
+// 	int fimJob = originalJobs[s[0]].processingTime;
+// 	int extendedPlaningHorizon = ((planingHorizon * numberMachines)*DAY);
+// 	int isFirstJobOfMachine = 0;
 
-	//Completa o last_seen
-	for(unsigned int i = 0; i < numberTools; ++i){
-		if(toolJob[i][s[0]]) last_seen[i] = 0;
-		else last_seen[i] = -1;
-	}
-	M.push_back(originalJobs[s[0]].toolSetNormalized.tools);
-	fineshedJobsCount += 1;
+// 	//Completa o last_seen
+// 	for(unsigned int i = 0; i < numberTools; ++i){
+// 		if(toolJob[i][s[0]]) last_seen[i] = 0;
+// 		else last_seen[i] = -1;
+// 	}
+// 	M.push_back(originalJobs[s[0]].toolSetNormalized.tools);
+// 	fineshedJobsCount += 1;
 
-	inicioJob = fimJob;
+// 	inicioJob = fimJob;
 	
-	for(unsigned int e = 1; e < numberJobs; ++e){
-		int toolChange = false;
-		int currantSwitchs = 0;
+// 	for(unsigned int e = 1; e < numberJobs; ++e){
+// 		int toolChange = false;
+// 		int currantSwitchs = 0;
 
-		// ---------------------------------------------------------------------------
-		// METODO
-		// ---------------------------------------------------------------------------
+// 		// ---------------------------------------------------------------------------
+// 		// METODO
+// 		// ---------------------------------------------------------------------------
 
-		M.push_back(originalJobs[s[e]].toolSetNormalized.tools);
+// 		M.push_back(originalJobs[s[e]].toolSetNormalized.tools);
 				
-		for (auto t = originalJobs[s[e]].toolSetNormalized.tools.begin(); t != originalJobs[s[e]].toolSetNormalized.tools.end(); ++t){
-			if(last_full <= last_seen[*t]){
-				++pipes_count;
-				currantSwitchs += 1;
-				for(unsigned int i = (last_seen[*t]+1); i < e; ++i){
-					toolChange = true;
-					M[i].push_back(*t);					
-					if(M[i].size() == capacityMagazine) last_full = i;
-				}
-			}
-			last_seen[*t] = e; 	
-		}
+// 		for (auto t = originalJobs[s[e]].toolSetNormalized.tools.begin(); t != originalJobs[s[e]].toolSetNormalized.tools.end(); ++t){
+// 			if(last_full <= last_seen[*t]){
+// 				++pipes_count;
+// 				currantSwitchs += 1;
+// 				for(unsigned int i = (last_seen[*t]+1); i < e; ++i){
+// 					toolChange = true;
+// 					M[i].push_back(*t);					
+// 					if(M[i].size() == capacityMagazine) last_full = i;
+// 				}
+// 			}
+// 			last_seen[*t] = e; 	
+// 		}
 		
-		if(M[e].size() == capacityMagazine) last_full = e;
+// 		if(M[e].size() == capacityMagazine) last_full = e;
 
-		// ---------------------------------------------------------------------------
-		// TIME VERIFICATIONS
-		// ---------------------------------------------------------------------------
+// 		// ---------------------------------------------------------------------------
+// 		// TIME VERIFICATIONS
+// 		// ---------------------------------------------------------------------------
 
-		fimJob = inicioJob + originalJobs[s[e]].processingTime;
+// 		fimJob = inicioJob + originalJobs[s[e]].processingTime;
 		
-		if( ((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) || 								        //verificar se estou em um periodo sem supervisao e houve troca de ferramenta
-		    (inicioJob % (planingHorizon*DAY) + (originalJobs[s[e]].processingTime) > (planingHorizon*DAY)) ){ //verificar se o job excede o horizonte de planejamento unico (iria extender de uma maquina para outra)
+// 		if( ((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) || 								        //verificar se estou em um periodo sem supervisao e houve troca de ferramenta
+// 		    (inicioJob % (planingHorizon*DAY) + (originalJobs[s[e]].processingTime) > (planingHorizon*DAY)) ){ //verificar se o job excede o horizonte de planejamento unico (iria extender de uma maquina para outra)
 			
-			inicioJob += DAY - (inicioJob % DAY);
-			fimJob = inicioJob + originalJobs[s[e]].processingTime;
+// 			inicioJob += DAY - (inicioJob % DAY);
+// 			fimJob = inicioJob + originalJobs[s[e]].processingTime;
 
-		}
+// 		}
 
-		if ((inicioJob % (planingHorizon*DAY) == 0)) {
-			isFirstJobOfMachine = 1;
-		}
-		else isFirstJobOfMachine = 0;
+// 		if ((inicioJob % (planingHorizon*DAY) == 0)) {
+// 			isFirstJobOfMachine = 1;
+// 		}
+// 		else isFirstJobOfMachine = 0;
 
-		if(fimJob > extendedPlaningHorizon) break;
+// 		if(fimJob > extendedPlaningHorizon) break;
 		
-		inicioJob = fimJob;
+// 		inicioJob = fimJob;
 
-		// ---------------------------------------------------------------------------
-		// COSTS
-		// ---------------------------------------------------------------------------
+// 		// ---------------------------------------------------------------------------
+// 		// COSTS
+// 		// ---------------------------------------------------------------------------
 
-		fineshedJobsCount += 1;
-		if (toolChange) ++switchsInstances;
-		toolSwitches += currantSwitchs;
+// 		fineshedJobsCount += 1;
+// 		if (toolChange) ++switchsInstances;
+// 		toolSwitches += currantSwitchs;
 		
-		std::vector<int> diff;
-		std::sort(M[e].begin(), M[e].end());
-		std::sort(M[e-1].begin(), M[e-1].end());
-		std::set_difference(M[e].begin(), M[e].end(), M[e-1].begin(), M[e-1].end(), std::inserter(diff, diff.begin()));
+// 		std::vector<int> diff;
+// 		std::sort(M[e].begin(), M[e].end());
+// 		std::sort(M[e-1].begin(), M[e-1].end());
+// 		std::set_difference(M[e].begin(), M[e].end(), M[e-1].begin(), M[e-1].end(), std::inserter(diff, diff.begin()));
 
-		if (!isFirstJobOfMachine) toolSwitches += diff.size();
-		if (diff.size() > 0 && !isFirstJobOfMachine) ++switchsInstances;
+// 		if (!isFirstJobOfMachine) toolSwitches += diff.size();
+// 		if (diff.size() > 0 && !isFirstJobOfMachine) ++switchsInstances;
 
-	}
+// 	}
 
-	for(int v = fineshedJobsCount; v < numberJobs; ++v){
-		unfineshedPriorityCount += originalJobs[s[v]].priority;
-	}
+// 	for(int v = fineshedJobsCount; v < numberJobs; ++v){
+// 		unfineshedPriorityCount += originalJobs[s[v]].priority;
+// 	}
 
-	int cost = (PROFITYFINISHED * fineshedJobsCount) - (COSTSWITCH * (toolSwitches)) - (COSTSWITCHINSTANCE * switchsInstances) - (COSTPRIORITY * unfineshedPriorityCount);
+// 	int cost = (PROFITYFINISHED * fineshedJobsCount) - (COSTSWITCH * (toolSwitches)) - (COSTSWITCHINSTANCE * switchsInstances) - (COSTPRIORITY * unfineshedPriorityCount);
 	
-	return -cost;
-}
+// 	return -cost;
+// }
 
 double SSP::evaluateReportGPCA(solSSP solution, string filenameJobs, string filenameTools, string solutionReportFileName, int time){
 	vector<vector<int>> fineshedIndex;
