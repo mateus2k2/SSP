@@ -31,32 +31,12 @@ double SSP::evaluate(solSSP solution){
 	int fineshedJobsCount = 0;
 	int unfineshedPriorityCount = 0;
 
-	int inicioJob = 0; 				
-	int fimJob = 0; 				
+	int inicioJob = 0;
+	int fimJob = 0;
 	int extendedPlaningHorizon = (planingHorizon * numberMachines)*DAY;
 	int isFirstJobOfMachine = 1;
 
 	for(jL= 0; jL < numberJobsSol; ++jL){
-		// ---------------------------------------------------------------------------
-		// TIME VERIFICATIONS
-		// ---------------------------------------------------------------------------
-
-		fimJob = inicioJob + originalJobs[s[jL]].processingTime;
-		
-		if( ((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) || 								        //verificar se estou em um periodo sem supervisao e houve troca de ferramenta
-		    (inicioJob % (planingHorizon*DAY) + (originalJobs[s[jL]].processingTime) > (planingHorizon*DAY)) ){ //verificar se o job excede o horizonte de planejamento unico (iria extender de uma maquina para outra)
-			
-			inicioJob += DAY - (inicioJob % DAY);
-			fimJob = inicioJob + originalJobs[s[jL]].processingTime;
-		}
-		
-		if(fimJob > extendedPlaningHorizon) break;
-		
-		if ((inicioJob % (planingHorizon*DAY) == 0)) isFirstJobOfMachine = 1;
-		else isFirstJobOfMachine = 0;
-		
-		inicioJob = fimJob;
-
 		// ---------------------------------------------------------------------------
 		// switchs
 		// ---------------------------------------------------------------------------
@@ -89,7 +69,26 @@ double SSP::evaluate(solSSP solution){
 		}
 		magazineL = magazineCL;
 
+		// ---------------------------------------------------------------------------
+		// TIME VERIFICATIONS
+		// ---------------------------------------------------------------------------
+
+		fimJob = inicioJob + originalJobs[s[jL]].processingTime;
 		
+		if( ((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) || 								        //verificar se estou em um periodo sem supervisao e houve troca de ferramenta
+		    (inicioJob % (planingHorizon*DAY) + (originalJobs[s[jL]].processingTime) > (planingHorizon*DAY)) ){ //verificar se o job excede o horizonte de planejamento unico (iria extender de uma maquina para outra)
+			
+			inicioJob += DAY - (inicioJob % DAY);
+			fimJob = inicioJob + originalJobs[s[jL]].processingTime;
+		}
+		
+		if(fimJob > extendedPlaningHorizon) break;
+		
+		if ((inicioJob % (planingHorizon*DAY) == 0)) isFirstJobOfMachine = 1;
+		else isFirstJobOfMachine = 0;
+		
+		inicioJob = fimJob;
+
 		// ---------------------------------------------------------------------------
 		// COSTS
 		// ---------------------------------------------------------------------------
@@ -138,27 +137,6 @@ double SSP::evaluateReportKTNS(solSSP solution, string filenameJobs, string file
 
 	for(jL= 0; jL < numberJobsSol; ++jL){
 		// ---------------------------------------------------------------------------
-		// TIME VERIFICATIONS
-		// ---------------------------------------------------------------------------
-
-		fimJob = inicioJob + originalJobs[s[jL]].processingTime;
-		
-		if( ((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) || 								        //verificar se estou em um periodo sem supervisao e houve troca de ferramenta
-		    (inicioJob % (planingHorizon*DAY) + (originalJobs[s[jL]].processingTime) > (planingHorizon*DAY)) ){ //verificar se o job excede o horizonte de planejamento unico (iria extender de uma maquina para outra)
-			
-			inicioJob += DAY - (inicioJob % DAY);
-			fimJob = inicioJob + originalJobs[s[jL]].processingTime;
-
-		}
-
-		if ((inicioJob % (planingHorizon*DAY) == 0)) isFirstJobOfMachine = 1;
-		else isFirstJobOfMachine = 0;
-		
-		if(fimJob > extendedPlaningHorizon) break;
-		
-		inicioJob = fimJob;
-
-		// ---------------------------------------------------------------------------
 		// switchs
 		// ---------------------------------------------------------------------------
 
@@ -190,6 +168,27 @@ double SSP::evaluateReportKTNS(solSSP solution, string filenameJobs, string file
 		}
 		magazineL = magazineCL;
 		
+		// ---------------------------------------------------------------------------
+		// TIME VERIFICATIONS
+		// ---------------------------------------------------------------------------
+
+		fimJob = inicioJob + originalJobs[s[jL]].processingTime;
+		
+		if( ((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) || 								        //verificar se estou em um periodo sem supervisao e houve troca de ferramenta
+		    (inicioJob % (planingHorizon*DAY) + (originalJobs[s[jL]].processingTime) > (planingHorizon*DAY)) ){ //verificar se o job excede o horizonte de planejamento unico (iria extender de uma maquina para outra)
+			
+			inicioJob += DAY - (inicioJob % DAY);
+			fimJob = inicioJob + originalJobs[s[jL]].processingTime;
+
+		}
+
+		if ((inicioJob % (planingHorizon*DAY) == 0)) isFirstJobOfMachine = 1;
+		else isFirstJobOfMachine = 0;
+		
+		if(fimJob > extendedPlaningHorizon) break;
+		
+		inicioJob = fimJob;
+
 		// ---------------------------------------------------------------------------
 		// COSTS
 		// ---------------------------------------------------------------------------

@@ -332,3 +332,8 @@ refactory()
 # toolUnusedMap = ld.loadToolSet("./input/UnusedToolSetsClean.csv")
 # toolSetIndex = list(toolUnusedMap.keys())
 # print(toolSetIndex)
+
+
+class DatasetCreator:
+    def __init__(self, dataset):
+        self.dataset = dataset

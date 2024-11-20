@@ -1,6 +1,4 @@
-import loadData as ld
-import sys
-import reportParser as rp
+
 
 # ---------------------------------------------------------------------------------------------------
 # VALIDADOR
@@ -126,35 +124,20 @@ def checkUnfinishedJobs(machines, jobs):
 def checkProfit(machines, endInfo, jobs, planejamento):
     print("Checking Profit")
 
-    acumulatorFound = 0
+    error = False
 
-    for i, machine in enumerate(machines):
-        print(f"Machine {i+1}/{len(machines)}")
+    cost = endInfo['cost']
+    conta = (30 * endInfo['fineshedPriorityCount']) - (1 * endInfo['switchs']) - (10 * endInfo['switchsInstances']) - (30 * endInfo['unfinesedPriorityCount'])
 
-        error = False
+    if (cost != conta):
+        print(f"Error = Found cost {cost}, expected {conta}")
+        error = True
 
-        cost = endInfo['cost']
-        conta = (30 * endInfo['fineshedPriorityCount']) - (1 * endInfo['switchs']) - (10 * endInfo['switchsInstances']) - (30 * endInfo['unfinesedPriorityCount'])
-        
-        acumulatorFound += conta
-
-        if (cost != conta):
-            print(f"Error = Found cost {cost}, expected {conta}")
-            error = True
-
-        if error:
-            print("ERROR")
-        else:
-            print("OK")
-
-    print()
-    print(f"Checking Total Cost")
-
-
-    if (acumulatorFound != endInfo['cost']):
-        print(f"Error = Found total cost {acumulatorFound}, expected {endInfo['cost']}")
+    if error:
+        print("ERROR")
     else:
         print("OK")
+
 
 def checkOperations(machines, jobs):
     print("Checking Operations Done Once")
@@ -338,72 +321,3 @@ def newKTNS(machines, toolSets, jobs, planejamento):
     #     print("OK")
 
     # return totalCost
-
-# ---------------------------------------------------------------------------------------------------
-# MAIN
-# ---------------------------------------------------------------------------------------------------
-
-def main():
-    option = sys.argv[1]
-
-    if option == 'single':
-        report = sys.argv[2]
-
-        print(f"---Validating {report}---")
-
-        planejamento, machines, endInfo = rp.parseReport(report)
-        toolSets = ld.loadToolSet(planejamento['toolSetFileName'])
-        jobs = ld.loadJobs(planejamento['jobsFileName'])
-
-        checkMagazine(machines, toolSets, jobs)
-        print()
-        # checkUnsupervisedSwitchs(machines, toolSets, jobs, planejamento)
-        # print()
-        checkSwitchs(machines, endInfo, toolSets, jobs)
-        print()
-        # checkUnfinishedJobs(machines, jobs)
-        # print()
-        # checkOperations(machines, jobs)
-        # print()
-        # checkOrder(machines)
-        # print()
-        # checkProfit(machines, endInfo, jobs, planejamento)
-        # print()
-        # newKTNS(machines, toolSets, jobs, planejamento)
-        # print()
-    
-    if option == 'multiple':
-        batchFile = sys.argv[2]
-        file = open(batchFile, 'r')
-
-        for i, line in enumerate(file):
-            report = line.strip()
-
-            print(f"---Validating {report}---")
-        
-            planejamento, machines, endInfo = rp.parseReport(report)
-            toolSets = ld.loadToolSet(planejamento['toolSetFileName'])
-            jobs = ld.loadJobs(planejamento['jobsFileName'])
-
-            # checkMagazine(machines, toolSets, jobs)
-            # print()
-            # checkUnsupervisedSwitchs(machines, toolSets, jobs, planejamento)
-            # print()
-            # checkSwitchs(machines, endInfo, toolSets, jobs)
-            # print()
-            # checkUnfinishedJobs(machines, jobs)
-            # print()
-            # checkOperations(machines, jobs)
-            # print()
-            # checkOrder(machines)
-            # print()
-            # checkProfit(machines, endInfo, jobs, planejamento)
-            # print()
-            # newKTNS(machines, toolSets, jobs, planejamento)
-            # print()
-
-main()	
-
-
-# obj = rp.parseReport("/home/mateus/WSL/IC/SSP/output/exemploArtigo.txt")
-# print(obj)

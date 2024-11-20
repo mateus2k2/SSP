@@ -1,64 +1,224 @@
-clear
-[H[2J[3Jg++ ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lstdc++
-echo "\n"
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+DATA REPORT
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Number of Machines: 2
+Capacity of Magazine: 8
+Planing Horizon: 2
+Unsupervised: 720
+
+Number of Tools: 21
+
+Number of Original Jobs: 11
 
 
-src/out/mainCpp ./input/ExemploArtigo/Jobs.csv ./input/ExemploArtigo/ToolSets.csv ./output/exemploArtigo.txt --TEMP_INIT 0.2 --TEMP_FIM 1 --N_REPLICAS 16 --MCL 400 --PTL 1000 --TEMP_DIST 1 --TYPE_UPDATE 2 --TEMP_UPDATE 35000 --CAPACITY 8 --MACHINES 2 --DAYS 2 --UNSUPERVISED_MINUTS 720 --RESULT_REPORT 1
----------------
-1 1 0 0 0 0 0 0 0 0 0 
-1 1 0 0 0 0 0 0 0 0 0 
-1 1 0 0 0 0 0 0 0 0 0 
-1 1 0 0 1 1 1 0 0 0 0 
-1 1 0 0 1 1 1 0 0 1 0 
-0 0 0 0 0 0 0 0 0 1 0 
-0 0 0 0 0 0 0 0 0 1 0 
-0 0 0 0 1 1 1 0 0 0 0 
-0 0 0 0 1 1 1 0 0 0 0 
-0 0 0 0 1 1 1 0 0 0 0 
-0 0 0 0 1 1 1 0 0 0 0 
-0 0 1 1 1 1 1 1 1 0 0 
-0 0 1 1 1 1 1 1 1 0 0 
-0 0 1 1 0 0 0 1 1 0 0 
-0 0 1 1 0 0 0 1 1 0 1 
-0 0 1 1 0 0 0 1 1 0 1 
-0 0 1 1 0 0 0 1 1 0 1 
-0 0 1 1 0 0 0 1 1 0 1 
-0 0 0 0 0 0 0 0 0 0 1 
-0 0 0 0 0 0 0 0 0 0 1 
-0 0 0 0 0 0 0 0 0 0 0 
----------------
-1 2 3 4 5 
-1 2 3 4 5 
-12 13 14 15 16 17 18 
-12 13 14 15 16 17 18 
-4 5 8 9 10 11 12 13 
-4 5 8 9 10 11 12 13 
-4 5 8 9 10 11 12 13 
-12 13 14 15 16 17 18 
-12 13 14 15 16 17 18 
-5 6 7 
-15 16 17 18 19 20 
----------------
-e: 1 Switches count: 4
-e: 2 Switches count: 0
-e: 3 Switches count: 7
-e: 4 Switches count: 3
-e: 5 Switches count: 8
-e: 6 Switches count: 8
-e: 7 Switches count: 2
-e: 8 Switches count: 7
-e: 9 Switches count: 1
-e: 10 Switches count: 4
-M: 1 2 3 4 5 
-M: 1 2 3 4 5 
-M: 12 13 14 15 16 17 18 4 
-M: 12 13 14 15 16 17 18 4 
-M: 4 5 8 9 10 11 12 13 
-M: 4 5 8 9 10 11 12 13 
-M: 4 5 8 9 10 11 12 13 
-M: 12 13 14 15 16 17 18 5 
-M: 12 13 14 15 16 17 18 5 
-M: 5 6 7 15 16 17 18 
-M: 15 16 17 18 19 20 
-Pipes count: 44
-GPAC: -36
+------------------------------------------------------------------------------------------
+JOBS DATA
+------------------------------------------------------------------------------------------
+
+Job: 1
+Operation: 1
+ProcessingTime: 180
+Priority: true
+toolSet Tools: 1 2 3 4 5
+thisJob.indexToolSet: 1
+thisJob.toolSet.indexToolSet: 1
+Normalized toolSet Tools: 0 1 2 3 4
+
+Job: 1
+Operation: 2
+ProcessingTime: 300
+Priority: true
+toolSet Tools: 1 2 3 4 5
+thisJob.indexToolSet: 1
+thisJob.toolSet.indexToolSet: 1
+Normalized toolSet Tools: 0 1 2 3 4
+
+Job: 2
+Operation: 1
+ProcessingTime: 420
+Priority: false
+toolSet Tools: 12 13 14 15 16 17 18
+thisJob.indexToolSet: 2
+thisJob.toolSet.indexToolSet: 2
+Normalized toolSet Tools: 5 6 7 8 9 10 11
+
+Job: 2
+Operation: 2
+ProcessingTime: 550
+Priority: true
+toolSet Tools: 12 13 14 15 16 17 18
+thisJob.indexToolSet: 2
+thisJob.toolSet.indexToolSet: 2
+Normalized toolSet Tools: 5 6 7 8 9 10 11
+
+Job: 3
+Operation: 1
+ProcessingTime: 360
+Priority: false
+toolSet Tools: 4 5 8 9 10 11 12 13
+thisJob.indexToolSet: 3
+thisJob.toolSet.indexToolSet: 3
+Normalized toolSet Tools: 3 4 12 13 14 15 5 6
+
+Job: 3
+Operation: 2
+ProcessingTime: 480
+Priority: true
+toolSet Tools: 4 5 8 9 10 11 12 13
+thisJob.indexToolSet: 3
+thisJob.toolSet.indexToolSet: 3
+Normalized toolSet Tools: 3 4 12 13 14 15 5 6
+
+Job: 3
+Operation: 3
+ProcessingTime: 600
+Priority: true
+toolSet Tools: 4 5 8 9 10 11 12 13
+thisJob.indexToolSet: 3
+thisJob.toolSet.indexToolSet: 3
+Normalized toolSet Tools: 3 4 12 13 14 15 5 6
+
+Job: 4
+Operation: 1
+ProcessingTime: 240
+Priority: false
+toolSet Tools: 12 13 14 15 16 17 18
+thisJob.indexToolSet: 2
+thisJob.toolSet.indexToolSet: 2
+Normalized toolSet Tools: 5 6 7 8 9 10 11
+
+Job: 4
+Operation: 2
+ProcessingTime: 540
+Priority: true
+toolSet Tools: 12 13 14 15 16 17 18
+thisJob.indexToolSet: 2
+thisJob.toolSet.indexToolSet: 2
+Normalized toolSet Tools: 5 6 7 8 9 10 11
+
+Job: 5
+Operation: 1
+ProcessingTime: 360
+Priority: false
+toolSet Tools: 5 6 7
+thisJob.indexToolSet: 4
+thisJob.toolSet.indexToolSet: 4
+Normalized toolSet Tools: 4 16 17
+
+Job: 6
+Operation: 1
+ProcessingTime: 600
+Priority: true
+toolSet Tools: 15 16 17 18 19 20
+thisJob.indexToolSet: 5
+thisJob.toolSet.indexToolSet: 5
+Normalized toolSet Tools: 8 9 10 11 18 19
+
+------------------------------------------------------------------------------------------
+TOOL SET
+------------------------------------------------------------------------------------------
+
+ToolSet: 1
+Tools: 1 2 3 4 5
+
+ToolSet: 2
+Tools: 12 13 14 15 16 17 18
+
+ToolSet: 3
+Tools: 4 5 8 9 10 11 12 13
+
+ToolSet: 4
+Tools: 5 6 7
+
+ToolSet: 5
+Tools: 15 16 17 18 19 20
+
+------------------------------------------------------------------------------------------
+TOOL NORMALIZED
+------------------------------------------------------------------------------------------
+
+ToolSet: 1
+Tools: 0 1 2 3 4
+
+ToolSet: 2
+Tools: 5 6 7 8 9 10 11
+
+ToolSet: 3
+Tools: 3 4 12 13 14 15 5 6
+
+ToolSet: 4
+Tools: 4 16 17
+
+ToolSet: 5
+Tools: 8 9 10 11 18 19
+
+------------------------------------------------------------------------------------------
+TOOL JOB
+------------------------------------------------------------------------------------------
+
+Tool: 0
+Jobs: false true false false false false false false false false false
+
+Tool: 1
+Jobs: false true false false false false false false false false false
+
+Tool: 2
+Jobs: false true false false false false false false false false false
+
+Tool: 3
+Jobs: false true false true false false false false false false false
+
+Tool: 4
+Jobs: false true false true false true false false false false false
+
+Tool: 5
+Jobs: false false true true true false false false false false false
+
+Tool: 6
+Jobs: false false true true true false false false false false false
+
+Tool: 7
+Jobs: false false true false true false false false false false false
+
+Tool: 8
+Jobs: false false true false true false true false false false false
+
+Tool: 9
+Jobs: false false true false true false true false false false false
+
+Tool: 10
+Jobs: false false true false true false true false false false false
+
+Tool: 11
+Jobs: false false true false true false true false false false false
+
+Tool: 12
+Jobs: false false false true false false false false false false false
+
+Tool: 13
+Jobs: false false false true false false false false false false false
+
+Tool: 14
+Jobs: false false false true false false false false false false false
+
+Tool: 15
+Jobs: false false false true false false false false false false false
+
+Tool: 16
+Jobs: false false false false false true false false false false false
+
+Tool: 17
+Jobs: false false false false false true false false false false false
+
+Tool: 18
+Jobs: false false false false false false true false false false false
+
+Tool: 19
+Jobs: false false false false false false true false false false false
+
+Tool: 20
+Jobs: false false false false false false false false false false false
+
+304
+5253

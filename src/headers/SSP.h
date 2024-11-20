@@ -62,7 +62,7 @@ class SSP: public Problem<solSSP>{
 		solSSP neighbor(solSSP sol);
 		double evaluate(solSSP sol);
 		double evaluateReportKTNS(solSSP sol, string filenameJobs, string filenameTools, string solutionReportFileName, int time);
-		double evaluateReportGPCA(solSSP sol, string filenameJobs, string filenameTools, string solutionReportFileName, int time);
+		// double evaluateReportGPCA(solSSP sol, string filenameJobs, string filenameTools, string solutionReportFileName, int time);
 		int lowerBound();	
 		void destroyToolSets();
 };

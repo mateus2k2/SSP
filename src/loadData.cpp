@@ -87,7 +87,7 @@ int SSP::laodInstance(string filename){
 
     numberJobs = originalJobs.size();    
     capacityMagazine = 80;
-    numberTools = ferramentaIndex;
+    numberTools = ferramentaIndex + 1;
     numberToolsReal = 0;
     for (const auto& [key, value] : originalToolSets) {
         for (const auto& tool : value.tools) {

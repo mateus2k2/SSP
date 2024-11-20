@@ -53,7 +53,7 @@ int main(int argc, char* argv[]){
     //problem varibles
 	int capacityMagazine = 8;
     int numberMachines   = 2;
-    int planingHorizon   = 2;   
+    int planingHorizon   = 2;
     int unsupervised     = 0.5*DAY;
 	int result_report    = 0;
 	int instance_report  = 0;
@@ -66,7 +66,6 @@ int main(int argc, char* argv[]){
 	// Read arguments
 	for(unsigned int i=3; i<arguments.size(); i+=2)
 	{
-		            
         if(arguments[i]== "--TEMP_FIM")
             tempfim = stof(arguments[i+1]);
         else if(arguments[i]== "--TEMP_INIT")
@@ -131,12 +130,13 @@ int main(int argc, char* argv[]){
 	// REAL
 	// ------------------------------------------------------------------------------
 
-	if (instance_report)	prob->printDataReport();
+	if (instance_report) prob->printDataReport();
 	PT<solSSP> algo(tempIni,tempfim,tempN,MCL,PTL,tempD,uType,tempUp);
 	ExecTime et;
 	solSSP sol = algo.start(thN, prob);
 	if (result_report)	prob->evaluateReportKTNS(sol, filenameJobs, filenameTools, filenameoutput, et.getTimeMs());
 	auto end = chrono::high_resolution_clock::now();
+
 	cout << (-1) * sol.evalSol << endl;
 	cout << et.getTimeMs() << endl;
 

@@ -40,6 +40,6 @@ typedef struct{
 #define DAY                1440
 
 #define PRINTS
-#define IGNORE_FMT
+// #define IGNORE_FMT
 
 #endif
