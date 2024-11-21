@@ -3,9 +3,7 @@
 # --------------------------------------------------------
 
 USE_FTM = -lfmt
-
-# make rule USE_FTM = 
-# make rule USE_FTM = -lfmt
+# USE_FTM =
 
 CompilePT:
 	clear
