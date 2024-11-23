@@ -38,15 +38,28 @@ def validarPasta(files):
 
 def verificarPrecedencia(files):
     for report in files:
-        pass
+        print(f"\n---Validating {report}---")
+
+        planejamento, machines, endInfo = rp.parseReport(report)
+        jobs = ld.loadJobs(planejamento['jobsFileName'])
+        precedencia = [[] for _ in range(len(jobs))]
+
+        for machine in machines:
+            for estado in machine:
+                job = estado['job']
+                if estado['operation'] == 0: precedencia[job].append(0)
+                if estado['operation'] == 1: 
+                    if not precedencia[job]: print(f'Precedencia quebrada job {job}')
+                    else : precedencia[job].pop()
 
 def analisarTempoNãoSupervisionadoUsado(files):
     for report in files:
         pass
 
 def analisarValores(files):
-    for report in files:
-        pass
+    for index, report in enumerate(files):
+        planejamento, machines, endInfo = rp.parseReport(report)
+        print(f'{index + 1} {endInfo["fineshedPriorityCount"]} {endInfo["unfinesedPriorityCount"]} {endInfo["switchsInstances"]} {endInfo["switchs"]} {endInfo["cost"]} {endInfo["timeSpent"]}')
 
 # ---------------------------------------------------------------------------------------------------
 # MAIN
@@ -58,10 +71,10 @@ def main():
     files = natsorted(files) 
     fileWithPath = [f"{folderName}/{file}" for file in files]
 
-    validarPasta(fileWithPath)
-    verificarPrecedencia(fileWithPath)
-    analisarValores(fileWithPath)
-    analisarTempoNãoSupervisionadoUsado(fileWithPath)
+    validarPasta(fileWithPath)  
+    # verificarPrecedencia(fileWithPath)
+    # analisarTempoNãoSupervisionadoUsado(fileWithPath)
+    # analisarValores(fileWithPath)
 
 if __name__ == "__main__":
     main()

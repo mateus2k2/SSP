@@ -1,224 +1,1546 @@
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-DATA REPORT
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---Validating ./output/MyInstancesDiferentToolSets/n=75,p=0.24,r=0.5,t=112,v0.csv---
+Checking Magazine
+Machine 1/2
+OK
+Machine 2/2
+OK
 
-Number of Machines: 2
-Capacity of Magazine: 8
-Planing Horizon: 2
-Unsupervised: 720
+Checking Unsupervised Switchs
+Machine 1/2
+OK
+Machine 2/2
+OK
 
-Number of Tools: 21
+Checking Switchs
+OK
 
-Number of Original Jobs: 11
+Checking Unfinished Jobs
+TODO
 
+Checking Operations Done Once
+Machine 1/2
+OK
+Machine 2/2
+OK
 
-------------------------------------------------------------------------------------------
-JOBS DATA
-------------------------------------------------------------------------------------------
+Checking Order
+TODO
 
-Job: 1
-Operation: 1
-ProcessingTime: 180
-Priority: true
-toolSet Tools: 1 2 3 4 5
-thisJob.indexToolSet: 1
-thisJob.toolSet.indexToolSet: 1
-Normalized toolSet Tools: 0 1 2 3 4
+Checking Profit
+OK
 
-Job: 1
-Operation: 2
-ProcessingTime: 300
-Priority: true
-toolSet Tools: 1 2 3 4 5
-thisJob.indexToolSet: 1
-thisJob.toolSet.indexToolSet: 1
-Normalized toolSet Tools: 0 1 2 3 4
+---Validating ./output/MyInstancesDiferentToolSets/n=75,p=0.51,r=0.5,t=112,v0.csv---
+Checking Magazine
+Machine 1/2
+OK
+Machine 2/2
+OK
 
-Job: 2
-Operation: 1
-ProcessingTime: 420
-Priority: false
-toolSet Tools: 12 13 14 15 16 17 18
-thisJob.indexToolSet: 2
-thisJob.toolSet.indexToolSet: 2
-Normalized toolSet Tools: 5 6 7 8 9 10 11
+Checking Unsupervised Switchs
+Machine 1/2
+OK
+Machine 2/2
+OK
 
-Job: 2
-Operation: 2
-ProcessingTime: 550
-Priority: true
-toolSet Tools: 12 13 14 15 16 17 18
-thisJob.indexToolSet: 2
-thisJob.toolSet.indexToolSet: 2
-Normalized toolSet Tools: 5 6 7 8 9 10 11
+Checking Switchs
+OK
 
-Job: 3
-Operation: 1
-ProcessingTime: 360
-Priority: false
-toolSet Tools: 4 5 8 9 10 11 12 13
-thisJob.indexToolSet: 3
-thisJob.toolSet.indexToolSet: 3
-Normalized toolSet Tools: 3 4 12 13 14 15 5 6
+Checking Unfinished Jobs
+TODO
 
-Job: 3
-Operation: 2
-ProcessingTime: 480
-Priority: true
-toolSet Tools: 4 5 8 9 10 11 12 13
-thisJob.indexToolSet: 3
-thisJob.toolSet.indexToolSet: 3
-Normalized toolSet Tools: 3 4 12 13 14 15 5 6
+Checking Operations Done Once
+Machine 1/2
+OK
+Machine 2/2
+OK
 
-Job: 3
-Operation: 3
-ProcessingTime: 600
-Priority: true
-toolSet Tools: 4 5 8 9 10 11 12 13
-thisJob.indexToolSet: 3
-thisJob.toolSet.indexToolSet: 3
-Normalized toolSet Tools: 3 4 12 13 14 15 5 6
+Checking Order
+TODO
 
-Job: 4
-Operation: 1
-ProcessingTime: 240
-Priority: false
-toolSet Tools: 12 13 14 15 16 17 18
-thisJob.indexToolSet: 2
-thisJob.toolSet.indexToolSet: 2
-Normalized toolSet Tools: 5 6 7 8 9 10 11
+Checking Profit
+OK
 
-Job: 4
-Operation: 2
-ProcessingTime: 540
-Priority: true
-toolSet Tools: 12 13 14 15 16 17 18
-thisJob.indexToolSet: 2
-thisJob.toolSet.indexToolSet: 2
-Normalized toolSet Tools: 5 6 7 8 9 10 11
+---Validating ./output/MyInstancesDiferentToolSets/n=75,p=0.75,r=0.5,t=112,v0.csv---
+Checking Magazine
+Machine 1/2
+OK
+Machine 2/2
+OK
 
-Job: 5
-Operation: 1
-ProcessingTime: 360
-Priority: false
-toolSet Tools: 5 6 7
-thisJob.indexToolSet: 4
-thisJob.toolSet.indexToolSet: 4
-Normalized toolSet Tools: 4 16 17
+Checking Unsupervised Switchs
+Machine 1/2
+OK
+Machine 2/2
+OK
 
-Job: 6
-Operation: 1
-ProcessingTime: 600
-Priority: true
-toolSet Tools: 15 16 17 18 19 20
-thisJob.indexToolSet: 5
-thisJob.toolSet.indexToolSet: 5
-Normalized toolSet Tools: 8 9 10 11 18 19
+Checking Switchs
+OK
 
-------------------------------------------------------------------------------------------
-TOOL SET
-------------------------------------------------------------------------------------------
+Checking Unfinished Jobs
+TODO
 
-ToolSet: 1
-Tools: 1 2 3 4 5
+Checking Operations Done Once
+Machine 1/2
+OK
+Machine 2/2
+OK
 
-ToolSet: 2
-Tools: 12 13 14 15 16 17 18
+Checking Order
+TODO
 
-ToolSet: 3
-Tools: 4 5 8 9 10 11 12 13
+Checking Profit
+OK
 
-ToolSet: 4
-Tools: 5 6 7
+---Validating ./output/MyInstancesDiferentToolSets/n=212,p=0.25,r=0.4,t=296,v0.csv---
+Checking Magazine
+Machine 1/2
+OK
+Machine 2/2
+OK
 
-ToolSet: 5
-Tools: 15 16 17 18 19 20
+Checking Unsupervised Switchs
+Machine 1/2
+OK
+Machine 2/2
+OK
 
-------------------------------------------------------------------------------------------
-TOOL NORMALIZED
-------------------------------------------------------------------------------------------
+Checking Switchs
+OK
 
-ToolSet: 1
-Tools: 0 1 2 3 4
+Checking Unfinished Jobs
+TODO
 
-ToolSet: 2
-Tools: 5 6 7 8 9 10 11
+Checking Operations Done Once
+Machine 1/2
+OK
+Machine 2/2
+OK
 
-ToolSet: 3
-Tools: 3 4 12 13 14 15 5 6
+Checking Order
+TODO
 
-ToolSet: 4
-Tools: 4 16 17
+Checking Profit
+OK
 
-ToolSet: 5
-Tools: 8 9 10 11 18 19
+---Validating ./output/MyInstancesDiferentToolSets/n=212,p=0.50,r=0.4,t=296,v0.csv---
+Checking Magazine
+Machine 1/2
+OK
+Machine 2/2
+OK
 
-------------------------------------------------------------------------------------------
-TOOL JOB
-------------------------------------------------------------------------------------------
+Checking Unsupervised Switchs
+Machine 1/2
+OK
+Machine 2/2
+OK
 
-Tool: 0
-Jobs: false true false false false false false false false false false
+Checking Switchs
+OK
 
-Tool: 1
-Jobs: false true false false false false false false false false false
+Checking Unfinished Jobs
+TODO
 
-Tool: 2
-Jobs: false true false false false false false false false false false
+Checking Operations Done Once
+Machine 1/2
+OK
+Machine 2/2
+OK
 
-Tool: 3
-Jobs: false true false true false false false false false false false
+Checking Order
+TODO
 
-Tool: 4
-Jobs: false true false true false true false false false false false
+Checking Profit
+OK
 
-Tool: 5
-Jobs: false false true true true false false false false false false
+---Validating ./output/MyInstancesDiferentToolSets/n=212,p=0.75,r=0.4,t=296,v0.csv---
+Checking Magazine
+Machine 1/2
+OK
+Machine 2/2
+OK
 
-Tool: 6
-Jobs: false false true true true false false false false false false
+Checking Unsupervised Switchs
+Machine 1/2
+OK
+Machine 2/2
+OK
 
-Tool: 7
-Jobs: false false true false true false false false false false false
+Checking Switchs
+OK
 
-Tool: 8
-Jobs: false false true false true false true false false false false
+Checking Unfinished Jobs
+TODO
 
-Tool: 9
-Jobs: false false true false true false true false false false false
+Checking Operations Done Once
+Machine 1/2
+OK
+Machine 2/2
+OK
 
-Tool: 10
-Jobs: false false true false true false true false false false false
+Checking Order
+TODO
 
-Tool: 11
-Jobs: false false true false true false true false false false false
+Checking Profit
+OK
 
-Tool: 12
-Jobs: false false false true false false false false false false false
+---Validating ./output/MyInstancesDiferentToolSets/n=228,p=0.25,r=0.6,t=364,v0.csv---
+Checking Magazine
+Machine 1/2
+OK
+Machine 2/2
+OK
 
-Tool: 13
-Jobs: false false false true false false false false false false false
+Checking Unsupervised Switchs
+Machine 1/2
+OK
+Machine 2/2
+OK
 
-Tool: 14
-Jobs: false false false true false false false false false false false
+Checking Switchs
+OK
 
-Tool: 15
-Jobs: false false false true false false false false false false false
+Checking Unfinished Jobs
+TODO
 
-Tool: 16
-Jobs: false false false false false true false false false false false
+Checking Operations Done Once
+Machine 1/2
+OK
+Machine 2/2
+OK
 
-Tool: 17
-Jobs: false false false false false true false false false false false
+Checking Order
+TODO
 
-Tool: 18
-Jobs: false false false false false false true false false false false
+Checking Profit
+OK
 
-Tool: 19
-Jobs: false false false false false false true false false false false
+---Validating ./output/MyInstancesDiferentToolSets/n=228,p=0.50,r=0.6,t=364,v0.csv---
+Checking Magazine
+Machine 1/2
+OK
+Machine 2/2
+OK
 
-Tool: 20
-Jobs: false false false false false false false false false false false
+Checking Unsupervised Switchs
+Machine 1/2
+OK
+Machine 2/2
+OK
 
-304
-5253
+Checking Switchs
+OK
+
+Checking Unfinished Jobs
+TODO
+
+Checking Operations Done Once
+Machine 1/2
+OK
+Machine 2/2
+OK
+
+Checking Order
+TODO
+
+Checking Profit
+OK
+
+---Validating ./output/MyInstancesDiferentToolSets/n=228,p=0.75,r=0.6,t=364,v0.csv---
+Checking Magazine
+Machine 1/2
+OK
+Machine 2/2
+OK
+
+Checking Unsupervised Switchs
+Machine 1/2
+OK
+Machine 2/2
+OK
+
+Checking Switchs
+OK
+
+Checking Unfinished Jobs
+TODO
+
+Checking Operations Done Once
+Machine 1/2
+OK
+Machine 2/2
+OK
+
+Checking Order
+TODO
+
+Checking Profit
+OK
+
+---Validating ./output/MyInstancesDiferentToolSets/n=399,p=0.25,r=0.5,t=598,v0.csv---
+Checking Magazine
+Machine 1/2
+OK
+Machine 2/2
+OK
+
+Checking Unsupervised Switchs
+Machine 1/2
+OK
+Machine 2/2
+OK
+
+Checking Switchs
+OK
+
+Checking Unfinished Jobs
+TODO
+
+Checking Operations Done Once
+Machine 1/2
+OK
+Machine 2/2
+OK
+
+Checking Order
+TODO
+
+Checking Profit
+OK
+
+---Validating ./output/MyInstancesDiferentToolSets/n=399,p=0.50,r=0.5,t=598,v0.csv---
+Checking Magazine
+Machine 1/2
+OK
+Machine 2/2
+OK
+
+Checking Unsupervised Switchs
+Machine 1/2
+OK
+Machine 2/2
+OK
+
+Checking Switchs
+OK
+
+Checking Unfinished Jobs
+TODO
+
+Checking Operations Done Once
+Machine 1/2
+OK
+Machine 2/2
+OK
+
+Checking Order
+TODO
+
+Checking Profit
+OK
+
+---Validating ./output/MyInstancesDiferentToolSets/n=399,p=0.75,r=0.5,t=598,v0.csv---
+Checking Magazine
+Machine 1/2
+OK
+Machine 2/2
+OK
+
+Checking Unsupervised Switchs
+Machine 1/2
+OK
+Machine 2/2
+OK
+
+Checking Switchs
+OK
+
+Checking Unfinished Jobs
+TODO
+
+Checking Operations Done Once
+Machine 1/2
+OK
+Machine 2/2
+OK
+
+Checking Order
+TODO
+
+Checking Profit
+OK
+
+---Validating ./output/MyInstancesDiferentToolSets/n=499,p=0.25,r=0.5,t=748,v0.csv---
+Checking Magazine
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Unsupervised Switchs
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Switchs
+OK
+
+Checking Unfinished Jobs
+TODO
+
+Checking Operations Done Once
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Order
+TODO
+
+Checking Profit
+OK
+
+---Validating ./output/MyInstancesDiferentToolSets/n=499,p=0.50,r=0.5,t=748,v0.csv---
+Checking Magazine
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Unsupervised Switchs
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Switchs
+OK
+
+Checking Unfinished Jobs
+TODO
+
+Checking Operations Done Once
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Order
+TODO
+
+Checking Profit
+OK
+
+---Validating ./output/MyInstancesDiferentToolSets/n=499,p=0.75,r=0.5,t=748,v0.csv---
+Checking Magazine
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Unsupervised Switchs
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Switchs
+OK
+
+Checking Unfinished Jobs
+TODO
+
+Checking Operations Done Once
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Order
+TODO
+
+Checking Profit
+OK
+
+---Validating ./output/MyInstancesDiferentToolSets/n=600,p=0.25,r=0.5,t=900,v0.csv---
+Checking Magazine
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Unsupervised Switchs
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Switchs
+OK
+
+Checking Unfinished Jobs
+TODO
+
+Checking Operations Done Once
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Order
+TODO
+
+Checking Profit
+OK
+
+---Validating ./output/MyInstancesDiferentToolSets/n=600,p=0.50,r=0.5,t=900,v0.csv---
+Checking Magazine
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+Error = Job 521 Operation 0 ToolSet 3463 not found in magazine = {9277}
+ERROR
+
+Checking Unsupervised Switchs
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Switchs
+OK
+
+Checking Unfinished Jobs
+TODO
+
+Checking Operations Done Once
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Order
+TODO
+
+Checking Profit
+OK
+
+---Validating ./output/MyInstancesDiferentToolSets/n=600,p=0.75,r=0.5,t=900,v0.csv---
+Checking Magazine
+Machine 1/6
+OK
+Machine 2/6
+Error = Job 21 Operation 0 ToolSet 3463 not found in magazine = {9277}
+ERROR
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Unsupervised Switchs
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Switchs
+OK
+
+Checking Unfinished Jobs
+TODO
+
+Checking Operations Done Once
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Order
+TODO
+
+Checking Profit
+OK
+
+---Validating ./output/MyInstancesDiferentToolSets/n=699,p=0.25,r=0.5,t=1048,v0.csv---
+Checking Magazine
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Unsupervised Switchs
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Switchs
+OK
+
+Checking Unfinished Jobs
+TODO
+
+Checking Operations Done Once
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Order
+TODO
+
+Checking Profit
+OK
+
+---Validating ./output/MyInstancesDiferentToolSets/n=699,p=0.50,r=0.5,t=1048,v0.csv---
+Checking Magazine
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Unsupervised Switchs
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+Error = Unsupervised Switch in Machine 5/6 | Job 24 Operation 1
+ERROR
+Machine 6/6
+OK
+
+Checking Switchs
+OK
+
+Checking Unfinished Jobs
+TODO
+
+Checking Operations Done Once
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Order
+TODO
+
+Checking Profit
+OK
+
+---Validating ./output/MyInstancesDiferentToolSets/n=699,p=0.75,r=0.5,t=1048,v0.csv---
+Checking Magazine
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Unsupervised Switchs
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Switchs
+OK
+
+Checking Unfinished Jobs
+TODO
+
+Checking Operations Done Once
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Order
+TODO
+
+Checking Profit
+OK
+
+---Validating ./output/MyInstancesDiferentToolSets/n=800,p=0.25,r=0.6,t=1265,v0.csv---
+Checking Magazine
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+Error = Job 167 Operation 0 ToolSet 3463 not found in magazine = {9277}
+ERROR
+
+Checking Unsupervised Switchs
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Switchs
+OK
+
+Checking Unfinished Jobs
+TODO
+
+Checking Operations Done Once
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Order
+TODO
+
+Checking Profit
+OK
+
+---Validating ./output/MyInstancesDiferentToolSets/n=800,p=0.50,r=0.6,t=1265,v0.csv---
+Checking Magazine
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Unsupervised Switchs
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Switchs
+OK
+
+Checking Unfinished Jobs
+TODO
+
+Checking Operations Done Once
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Order
+TODO
+
+Checking Profit
+OK
+
+---Validating ./output/MyInstancesDiferentToolSets/n=800,p=0.75,r=0.6,t=1265,v0.csv---
+Checking Magazine
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Unsupervised Switchs
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Switchs
+OK
+
+Checking Unfinished Jobs
+TODO
+
+Checking Operations Done Once
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Order
+TODO
+
+Checking Profit
+OK
+
+---Validating ./output/MyInstancesDiferentToolSets/n=899,p=0.25,r=0.6,t=1265,v0.csv---
+Checking Magazine
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Unsupervised Switchs
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+Error = Unsupervised Switch in Machine 3/6 | Job 5 Operation 1
+ERROR
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Switchs
+OK
+
+Checking Unfinished Jobs
+TODO
+
+Checking Operations Done Once
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Order
+TODO
+
+Checking Profit
+OK
+
+---Validating ./output/MyInstancesDiferentToolSets/n=899,p=0.50,r=0.6,t=1265,v0.csv---
+Checking Magazine
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Unsupervised Switchs
+Machine 1/6
+OK
+Machine 2/6
+Error = Unsupervised Switch in Machine 2/6 | Job 725 Operation 0
+ERROR
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+Error = Unsupervised Switch in Machine 6/6 | Job 187 Operation 1
+ERROR
+
+Checking Switchs
+OK
+
+Checking Unfinished Jobs
+TODO
+
+Checking Operations Done Once
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Order
+TODO
+
+Checking Profit
+OK
+
+---Validating ./output/MyInstancesDiferentToolSets/n=899,p=0.75,r=0.6,t=1265,v0.csv---
+Checking Magazine
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Unsupervised Switchs
+Machine 1/6
+OK
+Machine 2/6
+Error = Unsupervised Switch in Machine 2/6 | Job 202 Operation 0
+Error = Unsupervised Switch in Machine 2/6 | Job 791 Operation 0
+ERROR
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Switchs
+OK
+
+Checking Unfinished Jobs
+TODO
+
+Checking Operations Done Once
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Order
+TODO
+
+Checking Profit
+OK
+
+---Validating ./output/MyInstancesDiferentToolSets/n=1000,p=0.25,r=0.6,t=1265,v0.csv---
+Checking Magazine
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+Error = Job 295 Operation 0 ToolSet 3463 not found in magazine = {9277}
+ERROR
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Unsupervised Switchs
+Machine 1/6
+Error = Unsupervised Switch in Machine 1/6 | Job 311 Operation 0
+ERROR
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Switchs
+OK
+
+Checking Unfinished Jobs
+TODO
+
+Checking Operations Done Once
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Order
+TODO
+
+Checking Profit
+OK
+
+---Validating ./output/MyInstancesDiferentToolSets/n=1000,p=0.50,r=0.6,t=1265,v0.csv---
+Checking Magazine
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Unsupervised Switchs
+Machine 1/6
+Error = Unsupervised Switch in Machine 1/6 | Job 11 Operation 0
+ERROR
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+Error = Unsupervised Switch in Machine 4/6 | Job 22 Operation 0
+ERROR
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Switchs
+OK
+
+Checking Unfinished Jobs
+TODO
+
+Checking Operations Done Once
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Order
+TODO
+
+Checking Profit
+OK
+
+---Validating ./output/MyInstancesDiferentToolSets/n=1000,p=0.75,r=0.6,t=1265,v0.csv---
+Checking Magazine
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Unsupervised Switchs
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+Error = Unsupervised Switch in Machine 4/6 | Job 702 Operation 0
+ERROR
+Machine 5/6
+OK
+Machine 6/6
+Error = Unsupervised Switch in Machine 6/6 | Job 801 Operation 0
+ERROR
+
+Checking Switchs
+OK
+
+Checking Unfinished Jobs
+TODO
+
+Checking Operations Done Once
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Order
+TODO
+
+Checking Profit
+OK
+
+---Validating ./output/MyInstancesDiferentToolSets/n=1236,p=0.25,r=0.6,t=1265,v0.csv---
+Checking Magazine
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Unsupervised Switchs
+Machine 1/6
+Error = Unsupervised Switch in Machine 1/6 | Job 317 Operation 0
+ERROR
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Switchs
+OK
+
+Checking Unfinished Jobs
+TODO
+
+Checking Operations Done Once
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Order
+TODO
+
+Checking Profit
+OK
+
+---Validating ./output/MyInstancesDiferentToolSets/n=1236,p=0.50,r=0.6,t=1265,v0.csv---
+Checking Magazine
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Unsupervised Switchs
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+Error = Unsupervised Switch in Machine 6/6 | Job 922 Operation 0
+ERROR
+
+Checking Switchs
+OK
+
+Checking Unfinished Jobs
+TODO
+
+Checking Operations Done Once
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Order
+TODO
+
+Checking Profit
+OK
+
+---Validating ./output/MyInstancesDiferentToolSets/n=1236,p=0.75,r=0.6,t=1265,v0.csv---
+Checking Magazine
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+Error = Job 1012 Operation 0 ToolSet 3463 not found in magazine = {9277}
+ERROR
+Machine 6/6
+OK
+
+Checking Unsupervised Switchs
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+Error = Unsupervised Switch in Machine 4/6 | Job 903 Operation 0
+ERROR
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Switchs
+OK
+
+Checking Unfinished Jobs
+TODO
+
+Checking Operations Done Once
+Machine 1/6
+OK
+Machine 2/6
+OK
+Machine 3/6
+OK
+Machine 4/6
+OK
+Machine 5/6
+OK
+Machine 6/6
+OK
+
+Checking Order
+TODO
+
+Checking Profit
+OK
+
