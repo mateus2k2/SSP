@@ -71,8 +71,8 @@ def main():
     files = natsorted(files) 
     fileWithPath = [f"{folderName}/{file}" for file in files]
 
-    validarPasta(fileWithPath)  
-    # verificarPrecedencia(fileWithPath)
+    # validarPasta(fileWithPath)  
+    verificarPrecedencia(fileWithPath)
     # analisarTempoNãoSupervisionadoUsado(fileWithPath)
     # analisarValores(fileWithPath)
 
