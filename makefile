@@ -38,7 +38,7 @@ RealPTGo:
 # TODO
 analisyFolder:
 	clear
-	python3 ./scripts/4-reportAnalises.py ./output/PTL100/MyInstancesDiferentToolSets
+	python3 ./scripts/4-reportAnalises.py ./output/PTL1000/MyInstancesDiferentToolSets
 	echo "\n"
 
 # --------------------------------------------------------

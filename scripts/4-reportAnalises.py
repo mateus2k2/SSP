@@ -72,9 +72,9 @@ def main():
     fileWithPath = [f"{folderName}/{file}" for file in files]
 
     # validarPasta(fileWithPath)  
-    verificarPrecedencia(fileWithPath)
+    # verificarPrecedencia(fileWithPath)
     # analisarTempoNãoSupervisionadoUsado(fileWithPath)
-    # analisarValores(fileWithPath)
+    analisarValores(fileWithPath)
 
 if __name__ == "__main__":
     main()
