@@ -53,6 +53,7 @@ int SSP::laodInstance(string filename){
         tmpJob.priority = stoi(value);
 
         tmpJob.toolSet = originalToolSets[tmpJob.indexToolSet];
+        tmpJob.isGrouped = false;
 
         originalJobs.push_back(tmpJob);
     }
@@ -160,6 +161,39 @@ int SSP::laodToolSet(string filename) {
 }
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
+// GRUPING 
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+void SSP::groupJobs() {
+    cout << "Grouping Jobs" << endl;
+    std::vector<int> indicesToDelete;
+
+    for (size_t i = 0; i < originalJobs.size(); ++i) {
+        auto& thisJob = originalJobs[i];
+        if (thisJob.indexOperation == 1) {
+            for (size_t j = 0; j < originalJobs.size(); ++j) {
+                auto& otherJob = originalJobs[j];
+                if (otherJob.indexOperation == 2 && otherJob.indexJob == thisJob.indexJob) {
+                    thisJob.isGrouped = true;
+                    thisJob.processingTimes.push_back(otherJob.processingTime);
+                    thisJob.processingTimes.push_back(thisJob.processingTime);
+                    thisJob.processingTime = otherJob.processingTime + thisJob.processingTime;
+                    
+                    indicesToDelete.push_back(j);
+                }
+            }
+        }
+    }
+
+    std::sort(indicesToDelete.rbegin(), indicesToDelete.rend());
+    for (int index : indicesToDelete) {
+        originalJobs.erase(originalJobs.begin() + index);
+    }
+
+    numberJobs = originalJobs.size(); 
+}
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
 // LOAD PRINTS
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -181,16 +215,22 @@ void SSP::printDataReport() {
     fmt::print("JOBS DATA\n");
     fmt::print("------------------------------------------------------------------------------------------\n\n");
 
+    size_t index = 0;
     for (const auto& thisJob : originalJobs) {
+        fmt::print("Index: {}\n", index);
         fmt::print("Job: {}\n", thisJob.indexJob);
         fmt::print("Operation: {}\n", thisJob.indexOperation);
         fmt::print("ProcessingTime: {}\n", thisJob.processingTime);
         fmt::print("Priority: {}\n", thisJob.priority);
-        fmt::print("toolSet Tools: {}\n", fmt::join(thisJob.toolSet.tools, " "));
+        fmt::print("ToolSet Tools: {}\n", fmt::join(thisJob.toolSet.tools, " "));
         fmt::print("thisJob.indexToolSet: {}\n", thisJob.indexToolSet);
         fmt::print("thisJob.toolSet.indexToolSet: {}\n", thisJob.toolSet.indexToolSet);
-        fmt::print("Normalized toolSet Tools: {}\n\n", fmt::join(normalizedToolSets[thisJob.indexToolSet].tools, " "));
+        fmt::print("Normalized ToolSet Tools: {}\n", fmt::join(normalizedToolSets[thisJob.indexToolSet].tools, " "));
+        fmt::print("isGrouped: {}\n", thisJob.isGrouped);
+        fmt::print("ProcessingTimes: {}\n\n", fmt::join(thisJob.processingTimes, " "));
+        ++index;
     }
+
 
     fmt::print("------------------------------------------------------------------------------------------\n");
     fmt::print("TOOL SET\n");

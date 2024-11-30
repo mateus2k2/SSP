@@ -26,6 +26,9 @@ typedef struct{
     bool priority;
     ToolSet toolSet;
     ToolSet toolSetNormalized;
+
+    bool isGrouped;
+    vector<int> processingTimes;
 }Job;
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------

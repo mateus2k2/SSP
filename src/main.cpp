@@ -57,6 +57,7 @@ int main(int argc, char* argv[]){
     int unsupervised     = 0.5*DAY;
 	int result_report    = 0;
 	int instance_report  = 0;
+	int instance_mode	 = 0;
 	
 	// Instance file name
 	string filenameJobs = arguments[0];
@@ -98,10 +99,23 @@ int main(int argc, char* argv[]){
 			result_report = stoi(arguments[i+1]);
 		else if(arguments[i]== "--INSTANCE_REPORT")
 			instance_report = stoi(arguments[i+1]);
+		else if(arguments[i]== "--INSTANCE_MODE")
+			instance_mode = stoi(arguments[i+1]);	
     }
 	
 	SSP* prob = new SSP(filenameJobs,filenameTools);
 	prob->setParans(capacityMagazine, numberMachines, planingHorizon, unsupervised);
+
+	// ------------------------------------------------------------------------------
+	// TEST 2
+	// ------------------------------------------------------------------------------
+
+	// prob->groupJobs();
+	// prob->printDataReport();
+	// solSSP sol = prob->construction();
+	// for(int i=0; i<sol.sol.size(); i++) cout << sol.sol[i] << " ";
+	// cout << endl;
+
 
 	// ------------------------------------------------------------------------------
 	// TEST
@@ -109,7 +123,7 @@ int main(int argc, char* argv[]){
 
 	// prob->printDataReport();
 
-	// // solSSP sol = prob->construction();
+	// solSSP sol = prob->construction();
 	// solSSP sol = makeTestSol(11);
 	
 	// auto start = chrono::high_resolution_clock::now();
@@ -130,6 +144,8 @@ int main(int argc, char* argv[]){
 	// REAL
 	// ------------------------------------------------------------------------------
 
+	
+	if (instance_mode == 1) prob->groupJobs();
 	if (instance_report) prob->printDataReport();
 	PT<solSSP> algo(tempIni,tempfim,tempN,MCL,PTL,tempD,uType,tempUp);
 	ExecTime et;

@@ -45,6 +45,7 @@ class SSP: public Problem<solSSP>{
 
     	map<int, int> ferramentas;
 		vector<vector<bool>> toolJob;
+		
 		vector<Job> originalJobs;
 		map<int, ToolSet> originalToolSets;
 		map<int, ToolSet> normalizedToolSets;
@@ -57,13 +58,16 @@ class SSP: public Problem<solSSP>{
 		int laodToolSet(string filename);
 		void printDataReport();
 		void setParans(int capacityMagazine, int numberMachines, int planingHorizon, int unsupervised);
+		int lowerBound();	
+		void groupJobs();
 
 		solSSP construction();
 		solSSP neighbor(solSSP sol);
+		
 		double evaluate(solSSP sol);
 		double evaluateReportKTNS(solSSP sol, string filenameJobs, string filenameTools, string solutionReportFileName, int time);
 		// double evaluateReportGPCA(solSSP sol, string filenameJobs, string filenameTools, string solutionReportFileName, int time);
-		int lowerBound();	
+		
 		void destroyToolSets();
 };
 

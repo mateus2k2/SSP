@@ -12,7 +12,7 @@ function Timeline(data) {
     const chartHeight = (yPosMax - yPosMin) * barHeight * 2;
 
     // const width = 1100;
-    const width = 1500; // Increase width for more horizontal space
+    const width = 1200; // Increase width for more horizontal space
     const height = chartHeight + margin.top + margin.bottom;
     // const height = chartHeight + margin.top + margin.bottom + 100; // Increase height to accommodate more vertical space
 
@@ -29,7 +29,8 @@ function Timeline(data) {
 
     const realThing = d3.select(document.createElementNS("http://www.w3.org/2000/svg", "svg"))
         .attr("width", width)
-        .attr("height", height);
+        .attr("height", height)
+        .attr("class", "chart-svg")
 
     const clip = realThing.append("defs").append("clipPath")
         .attr("id", "clip")

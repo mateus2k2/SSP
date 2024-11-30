@@ -37,9 +37,9 @@ def validarPasta(files):
         # print()
 
 def verificarPrecedencia(files):
-    for report in files:
-        print(f"\n---Validating {report}---")
+    quantidadePrecedenciaQuebradaPorInstancia = [0 for _ in range(len(files))]
 
+    for index, report in enumerate(files):
         planejamento, machines, endInfo = rp.parseReport(report)
         jobs = ld.loadJobs(planejamento['jobsFileName'])
         precedencia = [[] for _ in range(len(jobs))]
@@ -49,17 +49,21 @@ def verificarPrecedencia(files):
                 job = estado['job']
                 if estado['operation'] == 0: precedencia[job].append(0)
                 if estado['operation'] == 1: 
-                    if not precedencia[job]: print(f'Precedencia quebrada job {job}')
+                    if not precedencia[job]: quantidadePrecedenciaQuebradaPorInstancia[index] += 1
                     else : precedencia[job].pop()
+    
+    return quantidadePrecedenciaQuebradaPorInstancia
 
 def analisarTempoNãoSupervisionadoUsado(files):
     for report in files:
         pass
 
 def analisarValores(files):
+    precedenciasViloladas =  verificarPrecedencia(files)
     for index, report in enumerate(files):
         planejamento, machines, endInfo = rp.parseReport(report)
-        print(f'{index + 1} {endInfo["fineshedPriorityCount"]} {endInfo["unfinesedPriorityCount"]} {endInfo["switchsInstances"]} {endInfo["switchs"]} {endInfo["cost"]} {endInfo["timeSpent"]}')
+        # print(f'{index + 1} {endInfo["fineshedPriorityCount"]} {endInfo["unfinesedPriorityCount"]} {endInfo["switchsInstances"]} {endInfo["switchs"]} {endInfo["cost"]} {endInfo["timeSpent"]/1000} {precedenciasViloladas[index]}')
+        print(f'{precedenciasViloladas[index]}')
 
 # ---------------------------------------------------------------------------------------------------
 # MAIN
@@ -72,7 +76,6 @@ def main():
     fileWithPath = [f"{folderName}/{file}" for file in files]
 
     # validarPasta(fileWithPath)  
-    # verificarPrecedencia(fileWithPath)
     # analisarTempoNãoSupervisionadoUsado(fileWithPath)
     analisarValores(fileWithPath)
 
