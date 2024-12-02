@@ -62,8 +62,7 @@ def analisarValores(files):
     precedenciasViloladas =  verificarPrecedencia(files)
     for index, report in enumerate(files):
         planejamento, machines, endInfo = rp.parseReport(report)
-        # print(f'{index + 1} {endInfo["fineshedPriorityCount"]} {endInfo["unfinesedPriorityCount"]} {endInfo["switchsInstances"]} {endInfo["switchs"]} {endInfo["cost"]} {endInfo["timeSpent"]/1000} {precedenciasViloladas[index]}')
-        print(f'{precedenciasViloladas[index]}')
+        print(f'{index + 1} {endInfo["fineshedPriorityCount"]} {endInfo["unfinesedPriorityCount"]} {endInfo["switchsInstances"]} {endInfo["switchs"]} {endInfo["cost"]} {endInfo["timeSpent"]/1000:.2f}'.replace('.', ',') + f' {precedenciasViloladas[index]}')
 
 # ---------------------------------------------------------------------------------------------------
 # MAIN

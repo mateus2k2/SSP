@@ -18,7 +18,8 @@
 
 using namespace std;
 
-double SSP::evaluate(solSSP solution){
+double SSP::evaluate(solSSP solution)
+{
 	vector<int> s = solution.sol;
 
 	vector<bool> magazineL(numberTools, true);
@@ -111,12 +112,12 @@ double SSP::evaluate(solSSP solution){
 		if (currantSwitchs > 0)
 			++switchsInstances;
 		fineshedJobsCount += originalJobs[s[jL]].isGrouped ? 2 : 1;
-
 	}
 
 	// Contar quantar tarefas prioritarias faltaram
-	for (int v = jL; v < numberJobsSol; ++v){
-		unfineshedPriorityCount += originalJobs[s[v]].isGrouped ? 2 : 1;
+	for (int v = jL; v < numberJobsSol; ++v)
+	{
+		unfineshedPriorityCount += originalJobs[s[v]].isGrouped ? originalJobs[s[v]].priority * 2 : originalJobs[s[v]].priority;
 	}
 
 	int cost = (PROFITYFINISHED * fineshedJobsCount) - (COSTSWITCH * switchs) - (COSTSWITCHINSTANCE * switchsInstances) - (COSTPRIORITY * unfineshedPriorityCount);
@@ -233,7 +234,8 @@ double SSP::evaluateReportKTNS(solSSP solution, string filenameJobs, string file
 		int startTMP = (fimJob - originalJobs[s[jL]].processingTime) % (planingHorizon * DAY);
 		int endTMP = ((fimJob - 1) % (planingHorizon * DAY)) + 1;
 
-		if (startTMP % (planingHorizon * DAY) == 0){
+		if (startTMP % (planingHorizon * DAY) == 0)
+		{
 			solutionReportFile << "Machine: " << logicalMachine << std::endl;
 			++logicalMachine;
 		}
@@ -242,32 +244,40 @@ double SSP::evaluateReportKTNS(solSSP solution, string filenameJobs, string file
 		bool isGrouped = job.isGrouped;
 		int loops = isGrouped ? 2 : 1;
 
-		auto writeJobDetails = [&](int start, int end, int operation){
+		auto writeJobDetails = [&](int start, int end, int operation)
+		{
 			solutionReportFile << job.indexJob << ";" << operation << ";" << start << ";" << end << ";" << job.priority << ";";
-			for (size_t t = 0; t < magazineCL.size(); ++t){
-				if (magazineCL[t]){
+			for (size_t t = 0; t < magazineCL.size(); ++t)
+			{
+				if (magazineCL[t])
+				{
 					solutionReportFile << t << ",";
 				}
 			}
 			solutionReportFile << "\n";
 		};
 
-		for (int i = 0; i < loops; ++i){
-			if (isGrouped && i == 0){
+		for (int i = 0; i < loops; ++i)
+		{
+			if (isGrouped && i == 0)
+			{
 				writeJobDetails(startTMP, startTMP + job.processingTimes[0], 1);
 			}
-			else if (isGrouped && i == 1){
+			else if (isGrouped && i == 1)
+			{
 				writeJobDetails(startTMP + job.processingTimes[0], endTMP, 2);
 			}
-			else{
+			else
+			{
 				writeJobDetails(startTMP, endTMP, job.indexOperation);
 			}
 		}
 	}
 
 	// Contar quantar tarefas prioritarias faltaram
-	for (int v = jL; v < numberJobsSol; ++v){
-		unfineshedPriorityCount += originalJobs[s[v]].isGrouped ? 2 : 1;
+	for (int v = jL; v < numberJobsSol; ++v)
+	{
+		unfineshedPriorityCount += originalJobs[s[v]].isGrouped ? originalJobs[s[v]].priority * 2 : originalJobs[s[v]].priority;
 	}
 
 	int cost = (PROFITYFINISHED * fineshedJobsCount) - (COSTSWITCH * switchs) - (COSTSWITCHINSTANCE * switchsInstances) - (COSTPRIORITY * unfineshedPriorityCount);

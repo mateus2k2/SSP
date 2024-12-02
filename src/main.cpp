@@ -145,7 +145,7 @@ int main(int argc, char* argv[]){
 	// ------------------------------------------------------------------------------
 
 	
-	if (instance_mode == 1) prob->groupJobs();
+	// if (instance_mode == 1) prob->groupJobs();
 	if (instance_report) prob->printDataReport();
 	PT<solSSP> algo(tempIni,tempfim,tempN,MCL,PTL,tempD,uType,tempUp);
 	ExecTime et;
@@ -155,6 +155,7 @@ int main(int argc, char* argv[]){
 
 	cout << (-1) * sol.evalSol << endl;
 	cout << et.getTimeMs() << endl;
+	// cout << algo.getIterationsToBestSol() << endl;
 
 	return 0;
 }
