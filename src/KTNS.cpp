@@ -22,7 +22,6 @@ double SSP::evaluate(solSSP s)
 {
 	vector<bool> magazineL(numberTools, true);
 	unsigned int switchs = 0;
-	// int numberJobsSol = s.sol.size();
 	int jL;
 
 	int switchsInstances = 0;
