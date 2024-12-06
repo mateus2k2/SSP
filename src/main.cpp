@@ -102,7 +102,7 @@ int main(int argc, char* argv[]){
 		else if(arguments[i]== "--INSTANCE_MODE")
 			instance_mode = stoi(arguments[i+1]);	
     }
-	
+	tempUp = PTL/5;
 	SSP* prob = new SSP(filenameJobs,filenameTools);
 	prob->setParans(capacityMagazine, numberMachines, planingHorizon, unsupervised);
 
@@ -145,7 +145,7 @@ int main(int argc, char* argv[]){
 	// ------------------------------------------------------------------------------
 
 	
-	// if (instance_mode == 1) prob->groupJobs();
+	if (instance_mode == 1) prob->groupJobs();
 	if (instance_report) prob->printDataReport();
 	PT<solSSP> algo(tempIni,tempfim,tempN,MCL,PTL,tempD,uType,tempUp);
 	ExecTime et;

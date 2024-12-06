@@ -58,12 +58,19 @@ def analisarTempoNãoSupervisionadoUsado(files):
     for report in files:
         pass
 
+def totalUnfinishedJobs(machines, planejamento):
+    jobs = ld.loadJobs(planejamento['jobsFileName'])
+    total = len(jobs)
+    for machine in machines:
+        total -= len(machine)
+    return total
+
 def analisarValores(files):
     precedenciasViloladas =  verificarPrecedencia(files)
     for index, report in enumerate(files):
         planejamento, machines, endInfo = rp.parseReport(report)
-        print(f'{index + 1} {endInfo["fineshedPriorityCount"]} {endInfo["unfinesedPriorityCount"]} {endInfo["switchsInstances"]} {endInfo["switchs"]} {endInfo["cost"]} {endInfo["timeSpent"]/1000:.2f}'.replace('.', ',') + f' {precedenciasViloladas[index]}')
-
+        totalUnfinishedJobsCount = totalUnfinishedJobs(machines, planejamento)
+        print(f'{index + 1} {endInfo["fineshedPriorityCount"]} {endInfo["unfinesedPriorityCount"]} {totalUnfinishedJobsCount} {endInfo["switchsInstances"]} {endInfo["switchs"]} {endInfo["cost"]} {endInfo["timeSpent"]/1000:.2f}'.replace('.', ',') + f' {precedenciasViloladas[index]}')
 # ---------------------------------------------------------------------------------------------------
 # MAIN
 # ---------------------------------------------------------------------------------------------------

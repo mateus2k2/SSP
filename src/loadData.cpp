@@ -51,6 +51,7 @@ int SSP::laodInstance(string filename){
 
         getline(ss, value, '\n');
         tmpJob.priority = stoi(value);
+        numberOfPriorityJobs += tmpJob.priority;
 
         tmpJob.toolSet = originalToolSets[tmpJob.indexToolSet];
         tmpJob.isGrouped = false;
@@ -165,14 +166,15 @@ int SSP::laodToolSet(string filename) {
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 void SSP::groupJobs() {
+    cout << "Grouping Jobs" << endl;
     std::vector<int> indicesToDelete;
 
     for (size_t i = 0; i < originalJobs.size(); ++i) {
         auto& thisJob = originalJobs[i];
-        if (thisJob.indexOperation == 1) {
+        if (thisJob.indexOperation == 0) {
             for (size_t j = 0; j < originalJobs.size(); ++j) {
                 auto& otherJob = originalJobs[j];
-                if (otherJob.indexOperation == 2 && otherJob.indexJob == thisJob.indexJob) {
+                if (otherJob.indexOperation == 1 && otherJob.indexJob == thisJob.indexJob) {
                     thisJob.isGrouped = true;
                     thisJob.processingTimes.push_back(otherJob.processingTime);
                     thisJob.processingTimes.push_back(thisJob.processingTime);

@@ -30,7 +30,7 @@ double SSP::evaluate(solSSP solution)
 	int switchsInstances = 0;
 	int currantSwitchs = 0;
 	int fineshedJobsCount = 0;
-	int unfineshedPriorityCount = 0;
+	int unfineshedPriorityCount = numberOfPriorityJobs;
 
 	int inicioJob = 0;
 	int fimJob = 0;
@@ -112,6 +112,7 @@ double SSP::evaluate(solSSP solution)
 		if (currantSwitchs > 0)
 			++switchsInstances;
 		fineshedJobsCount += originalJobs[s[jL]].isGrouped ? 2 : 1;
+		if (originalJobs[s[jL]].priority) unfineshedPriorityCount -= originalJobs[s[jL]].isGrouped ? 2 : 1;
 	}
 
 	// Contar quantar tarefas prioritarias faltaram
@@ -140,7 +141,7 @@ double SSP::evaluateReportKTNS(solSSP solution, string filenameJobs, string file
 	int switchsInstances = 0;
 	int currantSwitchs = 0;
 	int fineshedJobsCount = 0;
-	int unfineshedPriorityCount = 0;
+	int unfineshedPriorityCount = numberOfPriorityJobs;
 
 	int inicioJob = 0;
 	int fimJob = 0;
@@ -226,6 +227,7 @@ double SSP::evaluateReportKTNS(solSSP solution, string filenameJobs, string file
 			++switchsInstances;
 
 		fineshedJobsCount += originalJobs[s[jL]].isGrouped ? 2 : 1;
+		if (originalJobs[s[jL]].priority) unfineshedPriorityCount -= originalJobs[s[jL]].isGrouped ? 2 : 1;
 
 		// ---------------------------------------------------------------------------
 		// PRINTS
@@ -261,23 +263,17 @@ double SSP::evaluateReportKTNS(solSSP solution, string filenameJobs, string file
 		{
 			if (isGrouped && i == 0)
 			{
-				writeJobDetails(startTMP, startTMP + job.processingTimes[0], 1);
+				writeJobDetails(startTMP, startTMP + job.processingTimes[0], 0);
 			}
 			else if (isGrouped && i == 1)
 			{
-				writeJobDetails(startTMP + job.processingTimes[0], endTMP, 2);
+				writeJobDetails(startTMP + job.processingTimes[0], endTMP, 1);
 			}
 			else
 			{
 				writeJobDetails(startTMP, endTMP, job.indexOperation);
 			}
 		}
-	}
-
-	// Contar quantar tarefas prioritarias faltaram
-	for (int v = jL; v < numberJobsSol; ++v)
-	{
-		unfineshedPriorityCount += originalJobs[s[v]].isGrouped ? originalJobs[s[v]].priority * 2 : originalJobs[s[v]].priority;
 	}
 
 	int cost = (PROFITYFINISHED * fineshedJobsCount) - (COSTSWITCH * switchs) - (COSTSWITCHINSTANCE * switchsInstances) - (COSTPRIORITY * unfineshedPriorityCount);

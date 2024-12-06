@@ -41,6 +41,7 @@ class SSP: public Problem<solSSP>{
 		int numberTools;
 		int numberToolsReal;
 		int numberJobs;
+		int numberOfPriorityJobs;
 		int capacityMagazine;
 
     	map<int, int> ferramentas;

@@ -29,7 +29,7 @@ RealPTGo:
 	clear 
 	g++ ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lstdc++ $(USE_FTM)
 	echo "\n" 
-	src/out/mainCpp ./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv ./input/Processed/ToolSetInt.csv ./output/Exemplo/output1.txt --TEMP_INIT 0.2 --TEMP_FIM 1 --N_REPLICAS 16 --MCL 400 --PTL 1000 --TEMP_DIST 1 --TYPE_UPDATE 2 --TEMP_UPDATE 35000 --CAPACITY 80 --MACHINES 2 --DAYS 2 --UNSUPERVISED_MINUTS 720 --RESULT_REPORT 1 --INSTANCE_MODE 1
+	src/out/mainCpp ./input/MyInstancesSameToolSets/n=1236,p=0.75,r=0.6,t=4431,v23.csv ./input/Processed/ToolSetInt.csv ./output/Exemplo/output1.txt --TEMP_INIT 0.1 --TEMP_FIM 0.5 --N_REPLICAS 11 --MCL 400 --PTL 100 --TEMP_DIST 1 --TYPE_UPDATE 2 --TEMP_UPDATE 20000 --CAPACITY 80 --MACHINES 2 --DAYS 2 --UNSUPERVISED_MINUTS 720 --RESULT_REPORT 1 --INSTANCE_REPORT 1 --INSTANCE_MODE 1
 
 # --------------------------------------------------------
 # Meus python
@@ -38,7 +38,7 @@ RealPTGo:
 # TODO
 analisyFolder:
 	clear
-	python3 ./scripts/4-reportAnalises.py ./output/Ajuste1-PTL100/MyInstancesSameToolSets
+	python3 ./scripts/4-reportAnalises.py ./output/Ajuste1-PTL100/MyInstancesDiferentToolSets
 	echo "\n"
 
 # --------------------------------------------------------
