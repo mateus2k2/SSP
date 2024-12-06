@@ -82,9 +82,9 @@ def main():
     files = natsorted(files) 
     fileWithPath = [f"{folderName}/{file}" for file in files]
 
-    # validarPasta(fileWithPath)  
+    validarPasta(fileWithPath)  
     # analisarTempoNãoSupervisionadoUsado(fileWithPath)
-    analisarValores(fileWithPath)
+    # analisarValores(fileWithPath)
 
 if __name__ == "__main__":
     main()
