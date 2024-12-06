@@ -18,13 +18,11 @@
 
 using namespace std;
 
-double SSP::evaluate(solSSP solution)
+double SSP::evaluate(solSSP s)
 {
-	vector<int> s = solution.sol;
-
 	vector<bool> magazineL(numberTools, true);
 	unsigned int switchs = 0;
-	int numberJobsSol = s.size();
+	// int numberJobsSol = s.sol.size();
 	int jL;
 
 	int switchsInstances = 0;
@@ -34,10 +32,10 @@ double SSP::evaluate(solSSP solution)
 
 	int inicioJob = 0;
 	int fimJob = 0;
-	int extendedPlaningHorizon = (planingHorizon * numberMachines) * DAY;
 	int isFirstJobOfMachine = 1;
+	int extendedPlaningHorizon = (planingHorizon * numberMachines) * DAY;
 
-	for (jL = 0; jL < numberJobsSol; ++jL)
+	for (jL = 0; jL < numberJobs; ++jL)
 	{
 		// ---------------------------------------------------------------------------
 		// switchs
@@ -48,9 +46,9 @@ double SSP::evaluate(solSSP solution)
 		int left = jL;
 		int cmL = 0;
 
-		while ((cmL < capacityMagazine) && (left < numberJobsSol))
+		while ((cmL < capacityMagazine) && (left < numberJobs))
 		{
-			for (auto it = originalJobs[s[left]].toolSetNormalized.tools.begin(); ((it != originalJobs[s[left]].toolSetNormalized.tools.end()) && (cmL < capacityMagazine)); ++it)
+			for (auto it = originalJobs[s.sol[left]].toolSetNormalized.tools.begin(); ((it != originalJobs[s.sol[left]].toolSetNormalized.tools.end()) && (cmL < capacityMagazine)); ++it)
 			{
 
 				if ((magazineL[*it]) && (!magazineCL[*it]))
@@ -82,14 +80,14 @@ double SSP::evaluate(solSSP solution)
 		// TIME VERIFICATIONS
 		// ---------------------------------------------------------------------------
 
-		fimJob = inicioJob + originalJobs[s[jL]].processingTime;
+		fimJob = inicioJob + originalJobs[s.sol[jL]].processingTime;
 
 		if (((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) || // verificar se estou em um periodo sem supervisao e houve troca de ferramenta
-			(inicioJob % (planingHorizon * DAY) + (originalJobs[s[jL]].processingTime) > (planingHorizon * DAY)))
+			(inicioJob % (planingHorizon * DAY) + (originalJobs[s.sol[jL]].processingTime) > (planingHorizon * DAY)))
 		{ // verificar se o job excede o horizonte de planejamento unico (iria extender de uma maquina para outra)
 
 			inicioJob += DAY - (inicioJob % DAY);
-			fimJob = inicioJob + originalJobs[s[jL]].processingTime;
+			fimJob = inicioJob + originalJobs[s.sol[jL]].processingTime;
 		}
 
 		if (fimJob > extendedPlaningHorizon)
@@ -111,14 +109,8 @@ double SSP::evaluate(solSSP solution)
 		switchs += currantSwitchs;
 		if (currantSwitchs > 0)
 			++switchsInstances;
-		fineshedJobsCount += originalJobs[s[jL]].isGrouped ? 2 : 1;
-		if (originalJobs[s[jL]].priority) unfineshedPriorityCount -= originalJobs[s[jL]].isGrouped ? 2 : 1;
-	}
-
-	// Contar quantar tarefas prioritarias faltaram
-	for (int v = jL; v < numberJobsSol; ++v)
-	{
-		unfineshedPriorityCount += originalJobs[s[v]].isGrouped ? originalJobs[s[v]].priority * 2 : originalJobs[s[v]].priority;
+		fineshedJobsCount += originalJobs[s.sol[jL]].isGrouped ? 2 : 1;
+		if (originalJobs[s.sol[jL]].priority) unfineshedPriorityCount -= originalJobs[s.sol[jL]].isGrouped ? 2 : 1;
 	}
 
 	int cost = (PROFITYFINISHED * fineshedJobsCount) - (COSTSWITCH * switchs) - (COSTSWITCHINSTANCE * switchsInstances) - (COSTPRIORITY * unfineshedPriorityCount);

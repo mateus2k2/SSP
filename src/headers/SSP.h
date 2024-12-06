@@ -65,7 +65,7 @@ class SSP: public Problem<solSSP>{
 		solSSP construction();
 		solSSP neighbor(solSSP sol);
 		
-		double evaluate(solSSP sol);
+		double evaluate(solSSP s);
 		double evaluateReportKTNS(solSSP sol, string filenameJobs, string filenameTools, string solutionReportFileName, int time);
 		// double evaluateReportGPCA(solSSP sol, string filenameJobs, string filenameTools, string solutionReportFileName, int time);
 		

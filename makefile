@@ -29,7 +29,7 @@ RealPTGo:
 	clear 
 	g++ ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lstdc++ $(USE_FTM)
 	echo "\n" 
-	src/out/mainCpp ./input/MyInstancesSameToolSets/n=1236,p=0.75,r=0.6,t=4431,v23.csv ./input/Processed/ToolSetInt.csv ./output/Exemplo/output1.txt --TEMP_INIT 0.1 --TEMP_FIM 0.5 --N_REPLICAS 11 --MCL 400 --PTL 100 --TEMP_DIST 1 --TYPE_UPDATE 2 --TEMP_UPDATE 20000 --CAPACITY 80 --MACHINES 2 --DAYS 2 --UNSUPERVISED_MINUTS 720 --RESULT_REPORT 1 --INSTANCE_REPORT 1 --INSTANCE_MODE 1
+	src/out/mainCpp ./input/MyInstancesSameToolSets/n=1236,p=0.75,r=0.6,t=4431,v23.csv ./input/Processed/ToolSetInt.csv ./output/Exemplo/output1.txt --TEMP_INIT 0.1 --TEMP_FIM 0.5 --N_REPLICAS 11 --MCL 400 --PTL 100 --TEMP_DIST 1 --TYPE_UPDATE 2 --TEMP_UPDATE 20000 --CAPACITY 80 --MACHINES 6 --DAYS 11 --UNSUPERVISED_MINUTS 720 --RESULT_REPORT 1  --INSTANCE_MODE 1 --INSTANCE_REPORT 1
 
 # --------------------------------------------------------
 # Meus python

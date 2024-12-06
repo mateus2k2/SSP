@@ -71,6 +71,7 @@ def analisarValores(files):
         planejamento, machines, endInfo = rp.parseReport(report)
         totalUnfinishedJobsCount = totalUnfinishedJobs(machines, planejamento)
         print(f'{index + 1} {endInfo["fineshedPriorityCount"]} {endInfo["unfinesedPriorityCount"]} {totalUnfinishedJobsCount} {endInfo["switchsInstances"]} {endInfo["switchs"]} {endInfo["cost"]} {endInfo["timeSpent"]/1000:.2f}'.replace('.', ',') + f' {precedenciasViloladas[index]}')
+
 # ---------------------------------------------------------------------------------------------------
 # MAIN
 # ---------------------------------------------------------------------------------------------------
