@@ -3,7 +3,7 @@
 #include <sstream>
 #include <vector>
 #include <string>
-#include <algorithm> 
+#include <algorithm>
 #include <numeric>
 #include <unordered_set>
 
@@ -22,17 +22,20 @@ using namespace std;
 // LOAD FUNCTIONS
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-int SSP::laodInstance(string filename){
+int SSP::laodInstance(string filename)
+{
     ifstream file(filename);
 
-    if (!file.is_open()) {
+    if (!file.is_open())
+    {
         cerr << "Error opening file!" << endl;
         return 1;
     }
 
     string line;
-	getline(file, line);
-    while (getline(file, line)) {
+    getline(file, line);
+    while (getline(file, line))
+    {
         Job tmpJob;
         stringstream ss(line);
         string value;
@@ -40,7 +43,7 @@ int SSP::laodInstance(string filename){
         getline(ss, value, ';');
         tmpJob.indexJob = stoi(value);
 
-        getline(ss, value, ';');    
+        getline(ss, value, ';');
         tmpJob.indexOperation = stoi(value);
 
         getline(ss, value, ';');
@@ -61,22 +64,27 @@ int SSP::laodInstance(string filename){
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    //iterate over all the toolSets in the originalJobs 
+    // iterate over all the toolSets in the originalJobs
     int ferramentaIndex = 0;
-    for (auto& thisJob : originalJobs) {
-        for(auto& tool : thisJob.toolSet.tools){
-            if (ferramentas.find(tool) == ferramentas.end()) {
+    for (auto &thisJob : originalJobs)
+    {
+        for (auto &tool : thisJob.toolSet.tools)
+        {
+            if (ferramentas.find(tool) == ferramentas.end())
+            {
                 ferramentas[tool] = ferramentaIndex;
                 ferramentaIndex++;
             }
         }
     }
 
-    //iterate over all iriginalJobs toolsets and create the normalized toolsets
-    for (auto& thisJob : originalJobs) {
+    // iterate over all iriginalJobs toolsets and create the normalized toolsets
+    for (auto &thisJob : originalJobs)
+    {
         ToolSet tmpToolSet;
         tmpToolSet.indexToolSet = thisJob.indexToolSet;
-        for(auto& tool : thisJob.toolSet.tools){
+        for (auto &tool : thisJob.toolSet.tools)
+        {
             tmpToolSet.tools.push_back(ferramentas[tool]);
         }
         normalizedToolSets[thisJob.indexToolSet] = tmpToolSet;
@@ -87,13 +95,16 @@ int SSP::laodInstance(string filename){
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    numberJobs = originalJobs.size();    
+    numberJobs = originalJobs.size();
     capacityMagazine = 80;
     numberTools = ferramentaIndex + 1;
     numberToolsReal = 0;
-    for (const auto& [key, value] : originalToolSets) {
-        for (const auto& tool : value.tools) {
-            if (tool > numberToolsReal) {
+    for (const auto &[key, value] : originalToolSets)
+    {
+        for (const auto &tool : value.tools)
+        {
+            if (tool > numberToolsReal)
+            {
                 numberToolsReal = tool;
             }
         }
@@ -105,19 +116,22 @@ int SSP::laodInstance(string filename){
     // planingHorizon = 7   * (24*60); // 7 dias em minutos
     // unsupervised   = 0.5 * (24*60); // 0.5 dia em minutos
     planingHorizon = 7;
-    unsupervised   = 0.5;
-    
+    unsupervised = 0.5;
+
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
-    
+
     // make a for loop numberTools and push a vector of numberJobs with false
-    for (int i = 0; i < numberTools; i++) {
+    for (int i = 0; i < numberTools; i++)
+    {
         vector<bool> tmpVector(numberJobs, false);
         toolJob.push_back(tmpVector);
     }
 
-    //iterate of the originalJobs and create the toolJob matrix
-    for (auto& thisJob : originalJobs) {
-        for(auto& tool : thisJob.toolSetNormalized.tools){
+    // iterate of the originalJobs and create the toolJob matrix
+    for (auto &thisJob : originalJobs)
+    {
+        for (auto &tool : thisJob.toolSetNormalized.tools)
+        {
             toolJob[tool][thisJob.indexJob] = true;
         }
     }
@@ -125,31 +139,37 @@ int SSP::laodInstance(string filename){
     return 0;
 }
 
-int SSP::laodToolSet(string filename) {
+int SSP::laodToolSet(string filename)
+{
     ifstream file(filename);
     int tmpIndex;
 
-    if (!file.is_open()) {
+    if (!file.is_open())
+    {
         cerr << "Error opening file!" << endl;
         return 1;
     }
 
     string line;
-    while (getline(file, line)) {
+    while (getline(file, line))
+    {
         stringstream ss(line);
         string value;
         vector<int> lineData;
         ToolSet tmpToolSet;
 
-		getline(ss, value, ';');
+        getline(ss, value, ';');
         tmpIndex = stoi(value);
-        while (getline(ss, value, ';')) {
-			if (!value.empty()){
+        while (getline(ss, value, ';'))
+        {
+            if (!value.empty())
+            {
                 lineData.push_back(stoi(value));
-			}
-			else{
-				break;
-			}
+            }
+            else
+            {
+                break;
+            }
         }
 
         tmpToolSet.indexToolSet = tmpIndex;
@@ -162,24 +182,81 @@ int SSP::laodToolSet(string filename) {
     return 0;
 }
 
+int SSP::loadInstanceParans(string filename)
+{
+    string datFilename = filename.substr(0, filename.size() - 4) + ".dat";
+
+    std::ifstream file(filename);
+    if (!file.is_open())
+    {
+        std::cerr << "Error: Could not open file " << filename << std::endl;
+        return -1; // Return error code
+    }
+
+    std::string line;
+    while (std::getline(file, line))
+    {
+        std::istringstream iss(line);
+        std::string key;
+        int value;
+
+        if (iss >> key >> value)
+        {
+            if (key == "CAPACITY")
+            {
+                capacityMagazine = value;
+            }
+            else if (key == "MACHINES")
+            {
+                numberMachines = value;
+            }
+            else if (key == "DAYS")
+            {
+                planingHorizon = value;
+            }
+            else if (key == "UNSUPERVISED_MINUTS")
+            {
+                unsupervised = value;
+            }
+            else
+            {
+                std::cerr << "Warning: Unknown parameter " << key << std::endl;
+            }
+        }
+        else
+        {
+            std::cerr << "Error: Malformed line in file: " << line << std::endl;
+            return -1; 
+        }
+    }
+
+    file.close();
+    return 0; // Return success
+}
+
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
-// GRUPING 
+// GRUPING
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-void SSP::groupJobs() {
+void SSP::groupJobs()
+{
     std::vector<int> indicesToDelete;
 
-    for (size_t i = 0; i < originalJobs.size(); ++i) {
-        auto& thisJob = originalJobs[i];
-        if (thisJob.indexOperation == 0) {
-            for (size_t j = 0; j < originalJobs.size(); ++j) {
-                auto& otherJob = originalJobs[j];
-                if (otherJob.indexOperation == 1 && otherJob.indexJob == thisJob.indexJob) {
+    for (size_t i = 0; i < originalJobs.size(); ++i)
+    {
+        auto &thisJob = originalJobs[i];
+        if (thisJob.indexOperation == 0)
+        {
+            for (size_t j = 0; j < originalJobs.size(); ++j)
+            {
+                auto &otherJob = originalJobs[j];
+                if (otherJob.indexOperation == 1 && otherJob.indexJob == thisJob.indexJob)
+                {
                     thisJob.isGrouped = true;
                     thisJob.processingTimes.push_back(otherJob.processingTime);
                     thisJob.processingTimes.push_back(thisJob.processingTime);
                     thisJob.processingTime = otherJob.processingTime + thisJob.processingTime;
-                    
+
                     indicesToDelete.push_back(j);
                 }
             }
@@ -187,19 +264,21 @@ void SSP::groupJobs() {
     }
 
     std::sort(indicesToDelete.rbegin(), indicesToDelete.rend());
-    for (int index : indicesToDelete) {
+    for (int index : indicesToDelete)
+    {
         originalJobs.erase(originalJobs.begin() + index);
     }
 
-    numberJobs = originalJobs.size(); 
+    numberJobs = originalJobs.size();
 }
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // LOAD PRINTS
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-void SSP::printDataReport() {
-    #ifndef IGNORE_FMT
+void SSP::printDataReport()
+{
+#ifndef IGNORE_FMT
     fmt::print("\n------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
     fmt::print("DATA REPORT\n");
     fmt::print("------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n\n");
@@ -211,13 +290,13 @@ void SSP::printDataReport() {
     fmt::print("Number of Tools: {}\n\n", numberTools);
     fmt::print("Number of Original Jobs: {}\n\n", numberJobs);
 
-
     fmt::print("\n------------------------------------------------------------------------------------------\n");
     fmt::print("JOBS DATA\n");
     fmt::print("------------------------------------------------------------------------------------------\n\n");
 
     size_t index = 0;
-    for (const auto& thisJob : originalJobs) {
+    for (const auto &thisJob : originalJobs)
+    {
         fmt::print("Index: {}\n", index);
         fmt::print("Job: {}\n", thisJob.indexJob);
         fmt::print("Operation: {}\n", thisJob.indexOperation);
@@ -232,13 +311,13 @@ void SSP::printDataReport() {
         ++index;
     }
 
-
     fmt::print("------------------------------------------------------------------------------------------\n");
     fmt::print("TOOL SET\n");
     fmt::print("------------------------------------------------------------------------------------------\n\n");
 
-    //print the tool set map
-    for (const auto& [key, value] : originalToolSets) {
+    // print the tool set map
+    for (const auto &[key, value] : originalToolSets)
+    {
         fmt::print("ToolSet: {}\n", key);
         fmt::print("Tools: {}\n\n", fmt::join(value.tools, " "));
     }
@@ -247,8 +326,9 @@ void SSP::printDataReport() {
     fmt::print("TOOL NORMALIZED\n");
     fmt::print("------------------------------------------------------------------------------------------\n\n");
 
-    //print the tool set map
-    for (const auto& [key, value] : normalizedToolSets) {
+    // print the tool set map
+    for (const auto &[key, value] : normalizedToolSets)
+    {
         fmt::print("ToolSet: {}\n", key);
         fmt::print("Tools: {}\n\n", fmt::join(value.tools, " "));
     }
@@ -257,12 +337,12 @@ void SSP::printDataReport() {
     fmt::print("TOOL JOB\n");
     fmt::print("------------------------------------------------------------------------------------------\n\n");
 
-    //print the toolJob matrix
-    for (int i = 0; i < numberTools; i++) {
+    // print the toolJob matrix
+    for (int i = 0; i < numberTools; i++)
+    {
         fmt::print("Tool: {}\n", i);
         fmt::print("Jobs: {}\n\n", fmt::join(toolJob[i], " "));
     }
 
-    #endif
-
+#endif
 }

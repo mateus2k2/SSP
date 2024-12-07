@@ -22,6 +22,8 @@
 #include <iostream>
 #include <thread>
 #include <atomic>
+#include <functional> 
+
 
 #include "../../../PTAPI/include/Problem.h"
 #include "GlobalVars.h"
@@ -34,7 +36,6 @@ struct solSSP: public solution{
 
 class SSP: public Problem<solSSP>{
 	private:
-
 		int planingHorizon;
 		int unsupervised;
 		int numberMachines;
@@ -50,6 +51,9 @@ class SSP: public Problem<solSSP>{
 		vector<Job> originalJobs;
 		map<int, ToolSet> originalToolSets;
 		map<int, ToolSet> normalizedToolSets;
+
+		std::function<solSSP(solSSP)> neighborFunc;
+    	std::function<solSSP()> constructionFunc;
 		
 	public:
 		SSP(std::string filenameJobs, std::string filenameTools);
@@ -57,19 +61,26 @@ class SSP: public Problem<solSSP>{
 
 		int laodInstance(string filename);
 		int laodToolSet(string filename);
+		int loadInstanceParans(string filename);
 		void printDataReport();
-		void setParans(int capacityMagazine, int numberMachines, int planingHorizon, int unsupervised);
+		void setParans(int capacityMagazine, int numberMachines, int planingHorizon, int unsupervised, int movementType, int initSolType);
 		int lowerBound();	
+		void destroyToolSets();
+		
 		void groupJobs();
 
 		solSSP construction();
+		solSSP randPriority();
+		solSSP rand();
+
 		solSSP neighbor(solSSP sol);
+		solSSP two_opt(solSSP sol);
+		solSSP two_swap(solSSP sol);
+		solSSP insertion(solSSP sol);
 		
 		double evaluate(solSSP s);
 		double evaluateReportKTNS(solSSP sol, string filenameJobs, string filenameTools, string solutionReportFileName, int time);
-		// double evaluateReportGPCA(solSSP sol, string filenameJobs, string filenameTools, string solutionReportFileName, int time);
 		
-		void destroyToolSets();
 };
 
 #endif 

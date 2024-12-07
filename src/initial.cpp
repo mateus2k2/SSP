@@ -1,24 +1,29 @@
 #include "headers/SSP.h"
 
-// solSSP SSP::construction(){
-// 	solSSP ss;
-//     std::random_device rnd_device;
-//     std::mt19937 mersenne_engine {rnd_device()}; 
-    	
-// 	for(int i=0; i< numberJobs; i++){
-// 		ss.sol.push_back(i);
-// 	}
-
-// 	std::shuffle(begin(ss.sol), end(ss.sol), mersenne_engine);
-	
-// 	ss.evalSol = evaluate(ss);
-// 	ss.Nup = false;
-// 	ss.Ndown = false;
-	 
-// 	return ss;
-// }
-
 solSSP SSP::construction(){
+    return constructionFunc();
+}
+
+
+solSSP SSP::rand(){
+	solSSP ss;
+    std::random_device rnd_device;
+    std::mt19937 mersenne_engine {rnd_device()}; 
+    	
+	for(int i=0; i< numberJobs; i++){
+		ss.sol.push_back(i);
+	}
+
+	std::shuffle(begin(ss.sol), end(ss.sol), mersenne_engine);
+	
+	ss.evalSol = evaluate(ss);
+	ss.Nup = false;
+	ss.Ndown = false;
+	 
+	return ss;
+}
+
+solSSP SSP::randPriority(){
 	solSSP ss;
     std::random_device rnd_device;
     std::mt19937 mersenne_engine {rnd_device()}; 

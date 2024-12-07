@@ -44,7 +44,7 @@ RealPTGo:
 	clear 
 	g++ ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lstdc++ $(USE_FTM)
 	echo "\n" 
-	./src/out/mainCpp "./input/MyInstancesDiferentToolSets/n=1236,p=0.75,r=0.6,t=1265,v0.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" \
+	./src/out/mainCpp "./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" \
 		--TEMP_INIT 0.1  			\
 		--TEMP_FIM 0.5  			\
 		--N_REPLICAS 11  			\
@@ -53,12 +53,10 @@ RealPTGo:
 		--TEMP_DIST 1  				\
 		--TYPE_UPDATE 2  			\
 		--TEMP_UPDATE 20000  		\
-		--CAPACITY 80  				\
-		--MACHINES 6  				\
-		--DAYS 11  					\
-		--UNSUPERVISED_MINUTS 720  	\
+		--MOVEMENT_TYPE 1 			\
+		--INIT_SOL_TYPE 1			\
 		--RESULT_REPORT 1  			\
-		--INSTANCE_MODE 0  			\
+		--INSTANCE_MODE 1  			\
 
 # --------------------------------------------------------
 # Meus python
