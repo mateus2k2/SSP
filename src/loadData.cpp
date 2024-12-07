@@ -167,7 +167,6 @@ int SSP::laodToolSet(string filename) {
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 void SSP::groupJobs() {
-    cout << "Grouping Jobs" << endl;
     std::vector<int> indicesToDelete;
 
     for (size_t i = 0; i < originalJobs.size(); ++i) {
