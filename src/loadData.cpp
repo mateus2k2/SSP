@@ -186,47 +186,33 @@ int SSP::loadInstanceParans(string filename)
 {
     string datFilename = filename.substr(0, filename.size() - 4) + ".dat";
 
-    std::ifstream file(filename);
+    std::ifstream file(datFilename);
     if (!file.is_open())
     {
-        std::cerr << "Error: Could not open file " << filename << std::endl;
+        std::cerr << "Error: Could not open file " << datFilename << std::endl;
         return -1; // Return error code
     }
 
+    // Read the file line by line
     std::string line;
-    while (std::getline(file, line))
-    {
-        std::istringstream iss(line);
-        std::string key;
-        int value;
+    while (std::getline(file, line)) {
+        // Find the position of the space
+        size_t spacePos = line.find(' ');
+        if (spacePos != std::string::npos) {
+            // Extract the key and value
+            std::string key = line.substr(0, spacePos);
+            std::string value = line.substr(spacePos + 1);
 
-        if (iss >> key >> value)
-        {
-            if (key == "CAPACITY")
-            {
-                capacityMagazine = value;
+            // Parse and assign values to corresponding variables
+            if (key == "CAPACITY") {
+                capacityMagazine = std::stoi(value);
+            } else if (key == "MACHINES") {
+                numberMachines = std::stoi(value);
+            } else if (key == "DAYS") {
+                planingHorizon = std::stoi(value);
+            } else if (key == "UNSUPERVISED_MINUTS") {
+                unsupervised = std::stoi(value);
             }
-            else if (key == "MACHINES")
-            {
-                numberMachines = value;
-            }
-            else if (key == "DAYS")
-            {
-                planingHorizon = value;
-            }
-            else if (key == "UNSUPERVISED_MINUTS")
-            {
-                unsupervised = value;
-            }
-            else
-            {
-                std::cerr << "Warning: Unknown parameter " << key << std::endl;
-            }
-        }
-        else
-        {
-            std::cerr << "Error: Malformed line in file: " << line << std::endl;
-            return -1; 
         }
     }
 

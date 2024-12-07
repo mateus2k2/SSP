@@ -80,6 +80,8 @@ analisyFolder:
 	# python3 ./scripts/reportAnalises.py ./output/TCC1/MyInstancesDiferentToolSets > out9
 	# python3 ./scripts/reportAnalises.py ./output/TCC1/MyInstancesSameToolSets > out10
 
+	python3 ./scripts/reportAnalises.py ./output/Exemplo
+
 	echo "\n"
 
 # --------------------------------------------------------

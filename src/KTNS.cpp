@@ -292,9 +292,6 @@ double SSP::evaluateReportKTNS(solSSP solution, string filenameJobs, string file
 
 	solutionReportFile << "TIME;" << time << endl;
 
-	int lowerBoundValue = lowerBound();
-	solutionReportFile << "LOWERBOUND;" << lowerBoundValue << endl;
-
 	solutionReportFile.close();
 
 	return cost;

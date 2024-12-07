@@ -111,17 +111,6 @@ int main(int argc, char* argv[]){
 	prob->setParans(capacityMagazine, numberMachines, planingHorizon, unsupervised, movementType, initSolType);
 
 	// ------------------------------------------------------------------------------
-	// TEST 2
-	// ------------------------------------------------------------------------------
-
-	// prob->groupJobs();
-	// prob->printDataReport();
-	// solSSP sol = prob->construction();
-	// for(int i=0; i<sol.sol.size(); i++) cout << sol.sol[i] << " ";
-	// cout << endl;
-
-
-	// ------------------------------------------------------------------------------
 	// TEST
 	// ------------------------------------------------------------------------------
 
@@ -143,14 +132,14 @@ int main(int argc, char* argv[]){
 	prob->loadInstanceParans(filenameJobs);
 	if (instance_mode == 1) prob->groupJobs();
 	if (instance_report) prob->printDataReport();
+	
 	PT<solSSP> algo(tempIni,tempfim,tempN,MCL,PTL,tempD,uType,tempUp);
 	ExecTime et;
 	solSSP sol = algo.start(thN, prob);
+	
 	if (result_report)	prob->evaluateReportKTNS(sol, filenameJobs, filenameTools, filenameoutput, et.getTimeMs());
-
 	cout << (-1) * sol.evalSol << endl;
 	cout << et.getTimeMs() << endl;
-	// cout << algo.getIterationsToBestSol() << endl;
 
 	return 0;
 }

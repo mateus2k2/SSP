@@ -64,8 +64,6 @@ class SSP: public Problem<solSSP>{
 		int loadInstanceParans(string filename);
 		void printDataReport();
 		void setParans(int capacityMagazine, int numberMachines, int planingHorizon, int unsupervised, int movementType, int initSolType);
-		int lowerBound();	
-		void destroyToolSets();
 		
 		void groupJobs();
 
