@@ -119,6 +119,7 @@ double SSP::evaluate(solSSP s)
 
 double SSP::evaluateReportKTNS(solSSP solution, string filenameJobs, string filenameTools, string solutionReportFileName, int time)
 {
+	
 	vector<int> s = solution.sol;
 
 	fstream solutionReportFile;
@@ -187,12 +188,25 @@ double SSP::evaluateReportKTNS(solSSP solution, string filenameJobs, string file
 		// TIME VERIFICATIONS
 		// ---------------------------------------------------------------------------
 
+
+		if (originalJobs[s[jL]].indexJob == 1012 && originalJobs[s[jL]].indexOperation == 0) {
+			int countTrue = 0;
+			for (int i = 0; i < numberToolsReal; i++) {
+				if (magazineCL[i]) {
+					countTrue++;
+				}
+			}
+			cout << countTrue << endl;
+			cout << numberToolsReal << endl;
+		}
+		
 		fimJob = inicioJob + originalJobs[s[jL]].processingTime;
 
 		if (((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) || // verificar se estou em um periodo sem supervisao e houve troca de ferramenta
 			(inicioJob % (planingHorizon * DAY) + (originalJobs[s[jL]].processingTime) > (planingHorizon * DAY)))
 		{ // verificar se o job excede o horizonte de planejamento unico (iria extender de uma maquina para outra)
 
+	
 			inicioJob += DAY - (inicioJob % DAY);
 			fimJob = inicioJob + originalJobs[s[jL]].processingTime;
 		}

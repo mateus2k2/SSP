@@ -56,7 +56,7 @@ def checkUnsupervisedSwitchs(machines, toolSets, jobs, planejamento):
             curTime = operation['start']
 
             if curTime%timeScale >= unsupervisedStart:
-                if operation['magazine'] != machine[j-1]['magazine'] and len(set(curToolSet) - set(lastToolSet)) > 0:
+                if len(set(operation['magazine']) - set(machine[j-1]['magazine'])):
                     print(f"Error = Unsupervised Switch in Machine {i+1}/{len(machines)} | Job {operation['job']} Operation {operation['operation']} | {set(curToolSet) - set(lastToolSet)}")
                     error = True
             
@@ -138,7 +138,6 @@ def checkProfit(machines, endInfo, jobs, planejamento):
     else:
         print("OK")
 
-
 def checkOperations(machines, jobs):
     print("Checking Operations Done Once")
 
@@ -166,26 +165,6 @@ def checkOperations(machines, jobs):
             print("ERROR")
         else:
             print("OK")        
-
-def checkOrder(machines):
-    print("Checking Order")
-    print("TODO")
-    # for i, machine in enumerate(machines):
-    #     print(f"Machine {i+1}/{len(machines)}")
-    #     error = False
-
-    #     operations = machine['operations']
-    #     machine_info = machine['machine_info']
-
-    #     for j, operation in enumerate(operations):
-    #         if operation["job"] != machine_info[j]["job"] or operation["operation"] != machine_info[j]["operation"]:
-    #             print(f"Error = Job {operation['job']} Operation {operation['operation']} found in the wrong order")
-    #             error = True
-        
-    #     if error:
-    #         print("ERROR")
-    #     else:
-    #         print("OK")
 
 def newKTNS(machines, toolSets, jobs, planejamento):
     print("Running New KTNS")
@@ -321,3 +300,18 @@ def newKTNS(machines, toolSets, jobs, planejamento):
     #     print("OK")
 
     # return totalCost
+
+def checkMagazineSize(machines, toolSets, jobs):
+    print("Checking Magazine Size")
+
+    for i, machine in enumerate(machines):
+        print(f"Machine {i+1}/{len(machines)}")
+        error = False
+        for j, operation in enumerate(machine):
+            if len(operation['magazine']) != 80:
+                print(f"Error = Job {operation['job']} Operation {operation['operation']} | Magazine size = {len(operation['magazine'])}")
+                error = True
+        if error:
+            print("ERRORSIZE")
+        else: 
+            print("OK")

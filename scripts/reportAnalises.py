@@ -29,12 +29,12 @@ def validarPasta(files):
         print()
         vd.checkOperations(machines, jobs)
         print()
-        vd.checkOrder(machines)
-        print()
         vd.checkProfit(machines, endInfo, jobs, planejamento)
         print()
-        # vd.newKTNS(machines, toolSets, jobs, planejamento)
-        # print()
+        vd.newKTNS(machines, toolSets, jobs, planejamento)
+        print()
+        vd.checkMagazineSize(machines, toolSets, jobs)
+        print()
 
 def verificarPrecedencia(files):
     quantidadePrecedenciaQuebradaPorInstancia = [0 for _ in range(len(files))]
