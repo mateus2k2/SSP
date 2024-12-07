@@ -1,36 +1,6 @@
 #include "headers/SSP.h"
 
 // 2-opt
-solSSP SSP::neighbor(solSSP sol){
-	solSSP s;
-	s.sol = sol.sol;
-	int first = 0;
-	int last = 0;
-	std::random_device rnd_device;
-	std::mt19937 mersenne_engine {rnd_device()};
-	std::uniform_int_distribution<int> dist {0, (numberJobs-1)};
-	
-	do {		
-		first = dist(mersenne_engine);
-		last = dist(mersenne_engine);		
-	} while(first == last);
-	
-	if (first > last)std::swap(first,last);
-	
-	while (first < last) {
-		std::swap(s.sol[first], s.sol[last]);
-		first++;
-		last--;
-	}
-	
-	s.Nup = sol.Nup;
-	s.Ndown = sol.Ndown;
-
-			
-	return s;
-}
-
-// 2-swap
 // solSSP SSP::neighbor(solSSP sol){
 // 	solSSP s;
 // 	s.sol = sol.sol;
@@ -47,13 +17,42 @@ solSSP SSP::neighbor(solSSP sol){
 	
 // 	if (first > last)std::swap(first,last);
 	
-// 	std::swap(s.sol[first], s.sol[last]);
+// 	while (first < last) {
+// 		std::swap(s.sol[first], s.sol[last]);
+// 		first++;
+// 		last--;
+// 	}
 	
 // 	s.Nup = sol.Nup;
 // 	s.Ndown = sol.Ndown;
-
+			
 // 	return s;
 // }
+
+// 2-swap
+solSSP SSP::neighbor(solSSP sol){
+	solSSP s;
+	s.sol = sol.sol;
+	int first = 0;
+	int last = 0;
+	std::random_device rnd_device;
+	std::mt19937 mersenne_engine {rnd_device()};
+	std::uniform_int_distribution<int> dist {0, (numberJobs-1)};
+	
+	do {		
+		first = dist(mersenne_engine);
+		last = dist(mersenne_engine);		
+	} while(first == last);
+	
+	if (first > last)std::swap(first,last);
+	
+	std::swap(s.sol[first], s.sol[last]);
+	
+	s.Nup = sol.Nup;
+	s.Ndown = sol.Ndown;
+
+	return s;
+}
 
 // // Inserção
 // solSSP SSP::neighbor(solSSP sol) {

@@ -131,25 +131,25 @@ int main(int argc, char* argv[]){
 	// 	int valor = prob->evaluateReportKTNS(sol, filenameJobs, filenameTools, filenameoutputCur, 1);
 	// }
 
-	solSSP sol = makeTestSol(-1);
-	int valor = prob->evaluateReportKTNS(sol, filenameJobs, filenameTools, filenameoutput, 1);
+	// solSSP sol = makeTestSol(-1);
+	// int valor = prob->evaluateReportKTNS(sol, filenameJobs, filenameTools, filenameoutput, 1);
 
 	// ------------------------------------------------------------------------------
 	// REAL
 	// ------------------------------------------------------------------------------
 
 	
-	// if (instance_mode == 1) prob->groupJobs();
-	// if (instance_report) prob->printDataReport();
-	// PT<solSSP> algo(tempIni,tempfim,tempN,MCL,PTL,tempD,uType,tempUp);
-	// ExecTime et;
-	// solSSP sol = algo.start(thN, prob);
-	// if (result_report)	prob->evaluateReportKTNS(sol, filenameJobs, filenameTools, filenameoutput, et.getTimeMs());
-	// auto end = chrono::high_resolution_clock::now();
+	if (instance_mode == 1) prob->groupJobs();
+	if (instance_report) prob->printDataReport();
+	PT<solSSP> algo(tempIni,tempfim,tempN,MCL,PTL,tempD,uType,tempUp);
+	ExecTime et;
+	solSSP sol = algo.start(thN, prob);
+	if (result_report)	prob->evaluateReportKTNS(sol, filenameJobs, filenameTools, filenameoutput, et.getTimeMs());
+	auto end = chrono::high_resolution_clock::now();
 
-	// cout << (-1) * sol.evalSol << endl;
-	// cout << et.getTimeMs() << endl;
-	// // cout << algo.getIterationsToBestSol() << endl;
+	cout << (-1) * sol.evalSol << endl;
+	cout << et.getTimeMs() << endl;
+	// cout << algo.getIterationsToBestSol() << endl;
 
 	return 0;
 }
