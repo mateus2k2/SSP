@@ -29,10 +29,8 @@ double SSP::evaluate(solSSP s)
 	int fineshedJobsCount = 0;
 	int unfineshedPriorityCount = numberOfPriorityJobs;
 
-	int inicioJob = 0;
 	int fimJob = 0;
-	int isFirstJobOfMachine = 1;
-	int extendedPlaningHorizon = (planingHorizon * numberMachines) * DAY;
+	int extendedPlaningHorizon = ((planingHorizon * numberMachines)) * DAY;
 
 	for (jL = 0; jL < numberJobs; ++jL)
 	{
@@ -79,37 +77,41 @@ double SSP::evaluate(solSSP s)
 		// TIME VERIFICATIONS
 		// ---------------------------------------------------------------------------
 
-		fimJob = inicioJob + originalJobs[s.sol[jL]].processingTime;
+		// fimJob = inicioJob + originalJobs[s.sol[jL]].processingTime;
 
-		if (((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) || // verificar se estou em um periodo sem supervisao e houve troca de ferramenta
-			(inicioJob % (planingHorizon * DAY) + (originalJobs[s.sol[jL]].processingTime) > (planingHorizon * DAY)))
-		{ // verificar se o job excede o horizonte de planejamento unico (iria extender de uma maquina para outra)
+		// if (((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) || // verificar se estou em um periodo sem supervisao e houve troca de ferramenta
+		// 	(inicioJob % (planingHorizon * DAY) + (originalJobs[s.sol[jL]].processingTime) > (planingHorizon * DAY))){ // verificar se o job excede o horizonte de planejamento unico (iria extender de uma maquina para outra)
 
-			inicioJob += DAY - (inicioJob % DAY);
-			fimJob = inicioJob + originalJobs[s.sol[jL]].processingTime;
-		}
+		// 	inicioJob += DAY - (inicioJob % DAY);
+		// 	fimJob = inicioJob + originalJobs[s.sol[jL]].processingTime;
+		// }
 
-		if (fimJob > extendedPlaningHorizon)
-			break;
+		// if (fimJob > extendedPlaningHorizon)
+		// 	break;
 
-		if ((inicioJob % (planingHorizon * DAY) == 0))
-			isFirstJobOfMachine = 1;
-		else
-			isFirstJobOfMachine = 0;
+		// if ((inicioJob % (planingHorizon * DAY) == 0))
+		// 	isFirstJobOfMachine = 1;
+		// else
+		// 	isFirstJobOfMachine = 0;
 
-		inicioJob = fimJob;
+		// inicioJob = fimJob;
+
+		fimJob += originalJobs[s.sol[jL]].processingTime;
+		if(fimJob > extendedPlaningHorizon) break;
 
 		// ---------------------------------------------------------------------------
 		// COSTS
 		// ---------------------------------------------------------------------------
 
-		if (isFirstJobOfMachine)
-			currantSwitchs = 0;
+		// if (isFirstJobOfMachine)
+		// 	currantSwitchs = 0;
 		switchs += currantSwitchs;
 		if (currantSwitchs > 0)
 			++switchsInstances;
 		fineshedJobsCount += originalJobs[s.sol[jL]].isGrouped ? 2 : 1;
 		if (originalJobs[s.sol[jL]].priority) unfineshedPriorityCount -= originalJobs[s.sol[jL]].isGrouped ? 2 : 1;
+		if (originalJobs[s.sol[jL]].indexOperation == 0) releaseDates[s.sol[jL]] = fimJob;
+
 	}
 
 	int cost = (PROFITYFINISHED * fineshedJobsCount) - (COSTSWITCH * switchs) - (COSTSWITCHINSTANCE * switchsInstances) - (COSTPRIORITY * unfineshedPriorityCount);

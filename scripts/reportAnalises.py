@@ -78,11 +78,17 @@ def main():
     files = natsorted(files) 
     fileWithPath = [f"{folderName}/{file}" for file in files]
 
+<<<<<<< Updated upstream:scripts/reportAnalises.py
     # get the option from the user 
     option = sys.argv[2]
 
     if option == '1':  validarPasta(fileWithPath)  
     if option == '2': analisarValores(fileWithPath)
+=======
+    # validarPasta(fileWithPath)  
+    # analisarTempoNãoSupervisionadoUsado(fileWithPath)
+    analisarValores(fileWithPath)
+>>>>>>> Stashed changes:scripts/4-reportAnalises.py
 
 if __name__ == "__main__":
     main()
