@@ -65,7 +65,7 @@ realPTGo:
 # TODO
 analisyFolder:
 	clear
-	python3 ./scripts/reportAnalises.py ./output/Exemplo 2
+	python3 ./scripts/reportAnalises.py ./output/Ajuste2-PTL100/MyInstancesDiferentToolSets 2
 	echo "\n"
 
 # --------------------------------------------------------

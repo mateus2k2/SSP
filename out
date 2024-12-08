@@ -1,19 +1,38 @@
 clear
-[H[2J[3Jg++ -DIGNORE_FMT ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lstdc++ 
-echo "\n" 
+[H[2J[3Jpython3 ./scripts/reportAnalises.py ./output/Ajuste2-PTL100/MyInstancesDiferentToolSets 2
+1 51 0 24 28 327 923 12,86 9
+2 56 1 19 34 388 922 11,42 12
+3 53 8 22 35 450 550 12,38 8
+4 128 1 84 92 773 2117 64,51 36
+5 124 3 88 91 989 1731 58,55 24
+6 125 38 87 98 827 803 64,15 22
+7 136 0 92 99 759 2331 73,03 30
+8 131 5 97 101 994 1776 75,11 22
+9 153 28 75 117 1024 1556 72,94 18
+10 226 4 173 176 1239 3661 178,63 52
+11 216 10 183 181 1666 2704 163,66 46
+12 227 77 172 190 1464 1136 168,32 57
+13 241 2 258 183 1371 3969 240,34 49
+14 248 22 251 201 1864 2906 213,84 49
+15 260 116 239 207 1393 857 230,93 49
+16 300 7 300 248 1808 4502 321,25 71
+17 307 20 293 261 2364 3636 306,57 60
+18 326 125 274 271 1960 1360 320,24 78
+19 376 6 323 297 2321 5809 439,38 73
+20 349 39 350 304 2721 3539 347,10 69
+21 384 141 315 319 2134 1966 395,57 84
+22 409 9 391 331 2516 6174 523,09 96
+23 398 39 402 342 2934 4416 439,50 71
+24 440 163 360 381 2965 1535 493,23 98
+25 462 12 437 379 2710 7000 623,14 105
+26 440 43 459 383 3469 4611 555,18 85
+27 496 182 403 426 2925 2235 574,58 91
+28 533 7 467 444 3243 8097 778,93 117
+29 517 40 483 457 4318 5422 652,06 85
+30 543 215 457 474 3230 1870 681,55 103
+31 633 13 603 531 3807 9483 1027,95 133
+32 628 52 608 560 4795 6885 906,02 111
+33 643 285 593 566 3656 1424 910,83 134
+echo "\n"
 
 
-RODANDO INSTANCIAS DE ./input/MyInstancesSameToolSets
-./src/out/mainCpp ./input/MyInstancesSameToolSets/ ./input/Processed/ToolSetInt.csv ./output/Exemplo/MyInstancesSameToolSets/
-1171
-10566
-./src/out/mainCpp ./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv ./input/Processed/ToolSetInt.csv ./output/Exemplo/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv
-916
-5908
-./src/out/mainCpp ./input/MyInstancesSameToolSets/n=75,p=0.51,r=0.5,t=650,v1.csv ./input/Processed/ToolSetInt.csv ./output/Exemplo/MyInstancesSameToolSets/n=75,p=0.51,r=0.5,t=650,v1.csv
-1093
-6642
-./src/out/mainCpp ./input/MyInstancesSameToolSets/n=75,p=0.75,r=0.5,t=650,v2.csv ./input/Processed/ToolSetInt.csv ./output/Exemplo/MyInstancesSameToolSets/n=75,p=0.75,r=0.5,t=650,v2.csv
-2611
-44718
-./src/out/mainCpp ./input/MyInstancesSameToolSets/n=212,p=0.25,r=0.4,t=1390,v6.csv ./input/Processed/ToolSetInt.csv ./output/Exemplo/MyInstancesSameToolSets/n=212,p=0.25,r=0.4,t=1390,v6.csv

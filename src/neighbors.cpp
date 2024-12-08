@@ -4,7 +4,6 @@ solSSP SSP::neighbor(solSSP sol){
 	return neighborFunc(sol);
 }
 
-
 // 2-opt
 solSSP SSP::two_opt(solSSP sol){
 	solSSP s;

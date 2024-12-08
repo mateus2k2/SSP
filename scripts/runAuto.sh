@@ -16,7 +16,8 @@ run_instances() {
     for entry in $(ls -v "$instancesFolder"/*.csv)
     do
         filename=$(basename "$entry")
-        echo "$counter ./src/out/mainCpp $instancesFolder/$filename $toolSetsFile $outputFolder/$filename"
+        local timestamp=$(TZ="America/Sao_Paulo" date "+%Y-%m-%d %H:%M:%S.%3N")
+        echo "$timestamp - $counter ./src/out/mainCpp $instancesFolder/$filename $toolSetsFile $outputFolder/$filename"
         ./src/out/mainCpp "$instancesFolder/$filename" "$toolSetsFile" "$outputFolder/$filename" \
             --TEMP_INIT 0.2 \
             --TEMP_FIM 1 \

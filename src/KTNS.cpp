@@ -110,6 +110,8 @@ double SSP::evaluate(solSSP s)
 			++switchsInstances;
 		fineshedJobsCount += originalJobs[s.sol[jL]].isGrouped ? 2 : 1;
 		if (originalJobs[s.sol[jL]].priority) unfineshedPriorityCount -= originalJobs[s.sol[jL]].isGrouped ? 2 : 1;
+
+		if (originalJobs[s.sol[jL]].indexOperation == 0) relaseDates[s.sol[jL]] = inicioJob;
 	}
 
 	int cost = (PROFITYFINISHED * fineshedJobsCount) - (COSTSWITCH * switchs) - (COSTSWITCHINSTANCE * switchsInstances) - (COSTPRIORITY * unfineshedPriorityCount);

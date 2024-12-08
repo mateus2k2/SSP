@@ -45,6 +45,9 @@ class SSP: public Problem<solSSP>{
 		int numberOfPriorityJobs;
 		int capacityMagazine;
 
+		std::vector<std::tuple<int, int>> permutations;
+		vector<int> relaseDates;
+		
     	map<int, int> ferramentas;
 		vector<vector<bool>> toolJob;
 		
@@ -66,6 +69,7 @@ class SSP: public Problem<solSSP>{
 		void setParans(int capacityMagazine, int numberMachines, int planingHorizon, int unsupervised, int movementType, int initSolType);
 		
 		void groupJobs();
+		void setupRelaseDate();
 
 		solSSP construction();
 		solSSP randPriority();

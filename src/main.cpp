@@ -130,6 +130,9 @@ int main(int argc, char* argv[]){
 	// ------------------------------------------------------------------------------
 
 	prob->loadInstanceParans(filenameJobs);
+
+	prob->setupRelaseDate();
+
 	if (instance_mode == 1) prob->groupJobs();
 	if (instance_report) prob->printDataReport();
 	

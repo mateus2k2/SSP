@@ -32,3 +32,13 @@ void SSP::setParans(int capacityMagazine1, int numberMachines1, int planingHoriz
 	if (initSolType1 == 1) this->constructionFunc = std::bind(&SSP::randPriority, this);
 }
 
+void SSP::setupRelaseDate(){
+	for (int i = 1; i <= numberJobs; ++i) {
+		relaseDates.push_back(0);
+		for (int j = i + 1; j <= numberJobs; ++j) {
+			permutations.push_back(std::make_tuple(i, j));
+		}
+	}
+
+	cout << "Permutations: " << permutations.size() << endl;
+}
