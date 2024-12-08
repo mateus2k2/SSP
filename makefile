@@ -44,12 +44,12 @@ testPTGo:
 
 realPTGo:
 	make compilePT
-	./src/out/mainCpp "./input/MyInstancesSameToolSets/n=1236,p=0.75,r=0.6,t=4431,v23.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" \
+	./src/out/mainCpp "./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" \
 		--TEMP_INIT 0.1 \
 		--TEMP_FIM 0.5 \
 		--N_REPLICAS 11 \
 		--MCL 400 \
-		--PTL 10 \
+		--PTL 100 \
 		--TEMP_DIST 1 \
 		--TYPE_UPDATE 2 \
 		--TEMP_UPDATE 20000 \
