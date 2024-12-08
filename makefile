@@ -12,21 +12,19 @@ else
     DEBUG_MACRO =
 endif
 
-compilePT:
-	clear
-	g++ $(DEBUG_MACRO) ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lstdc++ $(USE_FTM)
-	echo "\n" 
-
 debugCompilePT:
 	clear 
 	g++ $(DEBUG_MACRO) src/*.cpp -std=c++2a -Wshadow -pg -Wall -o src/out/mainCppDebug -Wno-unused-result -lpthread -O3 -g -march=native -lstdc++ $(USE_FTM)
 	echo "\n" 
 	clear
 
-testPTGo:
+compilePT:
 	clear
 	g++ $(DEBUG_MACRO) ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lstdc++ $(USE_FTM)
-	echo "\n"
+	echo "\n" 
+
+testPTGo:
+	make compilePT
 	src/out/mainCpp ./input/Exemplo/Jobs.csv ./input/Exemplo/ToolSets.csv ./output/Exemplo/exemplo.txt  \
 		--TEMP_INIT 0.2 \
 		--TEMP_FIM 1 \
@@ -45,9 +43,7 @@ testPTGo:
 		--INSTANCE_MODE 0 \
 
 realPTGo:
-	clear 
-	g++ $(DEBUG_MACRO) ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lstdc++ $(USE_FTM)
-	echo "\n" 
+	make compilePT
 	./src/out/mainCpp "./input/MyInstancesSameToolSets/n=1236,p=0.75,r=0.6,t=4431,v23.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" \
 		--TEMP_INIT 0.1 \
 		--TEMP_FIM 0.5 \
@@ -76,7 +72,7 @@ analisyFolder:
 # Update Git
 # --------------------------------------------------------
 
-message ?= update
+m ?= update
 
 git:
-	clear && git add . && git commit -m "$(message)" && git push origin master
+	clear && git add . && git commit -m "$(m)" && git push origin master
