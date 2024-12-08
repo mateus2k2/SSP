@@ -39,10 +39,6 @@ typedef struct{
 #define COSTSWITCHINSTANCE 10
 #define COSTPRIORITY       30
 #define PROFITYFINISHED    30
-
 #define DAY                1440
-
-#define PRINTS
-// #define IGNORE_FMT
 
 #endif

@@ -1,49 +1,19 @@
 clear
-[H[2J[3J# python3 ./scripts/reportAnalises.py ./output/Ajuste1-PTL100/MyInstancesDiferentToolSets > out1
-# python3 ./scripts/reportAnalises.py ./output/Ajuste1-PTL100/MyInstancesSameToolSets > out2
-# python3 ./scripts/reportAnalises.py ./output/Ajuste2-PTL100/MyInstancesDiferentToolSets > out3
-# python3 ./scripts/reportAnalises.py ./output/Ajuste2-PTL100/MyInstancesSameToolSets > out4
-# python3 ./scripts/reportAnalises.py ./output/PTL100/MyInstancesDiferentToolSets > out5
-# python3 ./scripts/reportAnalises.py ./output/PTL100/MyInstancesSameToolSets > out6
-# python3 ./scripts/reportAnalises.py ./output/PTL1000/MyInstancesDiferentToolSets > out7
-# python3 ./scripts/reportAnalises.py ./output/PTL1000/MyInstancesSameToolSets > out8
-# python3 ./scripts/reportAnalises.py ./output/TCC1/MyInstancesDiferentToolSets > out9
-# python3 ./scripts/reportAnalises.py ./output/TCC1/MyInstancesSameToolSets > out10
-# python3 ./scripts/reportAnalises.py ./output/PTL100/MyInstancesDiferentToolSets
-python3 ./scripts/reportAnalises.py ./output/PTL100/MyInstancesSameToolSets
-1 54 0 21 21 276 1134 7,86 6
-2 52 4 23 22 284 936 7,87 12
-3 58 4 17 24 354 1026 9,36 12
-4 131 6 81 83 824 2096 50,63 27
-5 132 15 80 95 1175 1385 81,01 23
-6 134 52 78 98 998 482 78,11 23
-7 139 2 89 97 1177 1963 75,20 34
-8 143 22 85 95 1253 1427 78,62 39
-9 143 44 85 97 1208 792 75,18 32
-10 218 19 181 160 1560 2810 164,27 51
-11 221 61 178 169 1744 1366 164,67 49
-12 227 113 172 172 1966 -266 172,15 63
-13 247 43 252 192 1833 2367 230,11 56
-14 252 91 247 199 2045 795 218,05 64
-15 257 162 242 197 2185 -1305 227,93 58
-16 292 38 308 244 2642 2538 309,15 69
-17 315 111 285 266 2838 622 308,81 74
-18 314 197 286 256 2955 -2005 315,70 79
-19 349 52 350 287 2929 3111 403,29 84
-20 361 125 338 310 3501 479 386,36 92
-21 366 215 333 308 3616 -2166 392,80 86
-22 429 52 371 356 3826 3924 508,51 114
-23 429 148 371 371 4038 682 497,19 109
-24 430 266 370 363 3992 -2702 508,92 127
-25 487 52 412 427 4685 4095 602,07 140
-26 481 162 418 412 4791 659 598,25 115
-27 496 281 403 439 4970 -2910 607,93 141
-28 529 69 471 468 5077 4043 683,47 139
-29 547 170 453 495 5678 682 726,23 168
-30 531 320 469 462 5396 -3686 682,34 144
-31 655 105 581 582 6108 4572 969,63 174
-32 629 248 607 562 5968 -158 953,98 181
-33 640 409 596 582 6546 -5436 965,46 163
-echo "\n"
+[H[2J[3Jg++ -DIGNORE_FMT ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lstdc++ 
+echo "\n" 
 
 
+RODANDO INSTANCIAS DE ./input/MyInstancesSameToolSets
+./src/out/mainCpp ./input/MyInstancesSameToolSets/ ./input/Processed/ToolSetInt.csv ./output/Exemplo/MyInstancesSameToolSets/
+1171
+10566
+./src/out/mainCpp ./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv ./input/Processed/ToolSetInt.csv ./output/Exemplo/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv
+916
+5908
+./src/out/mainCpp ./input/MyInstancesSameToolSets/n=75,p=0.51,r=0.5,t=650,v1.csv ./input/Processed/ToolSetInt.csv ./output/Exemplo/MyInstancesSameToolSets/n=75,p=0.51,r=0.5,t=650,v1.csv
+1093
+6642
+./src/out/mainCpp ./input/MyInstancesSameToolSets/n=75,p=0.75,r=0.5,t=650,v2.csv ./input/Processed/ToolSetInt.csv ./output/Exemplo/MyInstancesSameToolSets/n=75,p=0.75,r=0.5,t=650,v2.csv
+2611
+44718
+./src/out/mainCpp ./input/MyInstancesSameToolSets/n=212,p=0.25,r=0.4,t=1390,v6.csv ./input/Processed/ToolSetInt.csv ./output/Exemplo/MyInstancesSameToolSets/n=212,p=0.25,r=0.4,t=1390,v6.csv

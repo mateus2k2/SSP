@@ -54,10 +54,6 @@ def verificarPrecedencia(files):
     
     return quantidadePrecedenciaQuebradaPorInstancia
 
-def analisarTempoNãoSupervisionadoUsado(files):
-    for report in files:
-        pass
-
 def totalUnfinishedJobs(machines, planejamento):
     jobs = ld.loadJobs(planejamento['jobsFileName'])
     total = len(jobs)
@@ -82,9 +78,11 @@ def main():
     files = natsorted(files) 
     fileWithPath = [f"{folderName}/{file}" for file in files]
 
-    validarPasta(fileWithPath)  
-    # analisarTempoNãoSupervisionadoUsado(fileWithPath)
-    # analisarValores(fileWithPath)
+    # get the option from the user 
+    option = sys.argv[2]
+
+    if option == '1':  validarPasta(fileWithPath)  
+    if option == '2': analisarValores(fileWithPath)
 
 if __name__ == "__main__":
     main()
