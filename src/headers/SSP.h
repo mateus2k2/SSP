@@ -30,7 +30,7 @@
 
 
 struct solSSP: public solution{ 
-  std::vector<int> sol; 
+	std::vector<int> sol; 
 };
 
 
@@ -46,6 +46,7 @@ class SSP: public Problem<solSSP>{
 		int capacityMagazine;
 
 		std::vector<int> releaseDates;
+		std::vector<tuple<int, int>> timeStamps;
 		std::vector<tuple<int, int>> switchPermutation;
 
     	map<int, int> ferramentas;

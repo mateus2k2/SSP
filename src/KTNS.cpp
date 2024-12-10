@@ -29,8 +29,10 @@ double SSP::evaluate(solSSP s)
 	int fineshedJobsCount = 0;
 	int unfineshedPriorityCount = numberOfPriorityJobs;
 
+	int inicioJob = 0;
 	int fimJob = 0;
-	int extendedPlaningHorizon = ((planingHorizon * numberMachines)) * DAY;
+	int isFirstJobOfMachine = 1;
+	int extendedPlaningHorizon = (planingHorizon * numberMachines) * DAY;
 
 	for (jL = 0; jL < numberJobs; ++jL)
 	{
@@ -77,20 +79,40 @@ double SSP::evaluate(solSSP s)
 		// TIME VERIFICATIONS
 		// ---------------------------------------------------------------------------
 
-		fimJob += originalJobs[s.sol[jL]].processingTime;
-		if(fimJob > extendedPlaningHorizon) break;
+		fimJob = inicioJob + originalJobs[s.sol[jL]].processingTime;
+
+		if (((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) || // verificar se estou em um periodo sem supervisao e houve troca de ferramenta
+			(inicioJob % (planingHorizon * DAY) + (originalJobs[s.sol[jL]].processingTime) > (planingHorizon * DAY)))
+		{ // verificar se o job excede o horizonte de planejamento unico (iria extender de uma maquina para outra)
+
+			inicioJob += DAY - (inicioJob % DAY);
+			fimJob = inicioJob + originalJobs[s.sol[jL]].processingTime;
+		}
+
+		if (fimJob > extendedPlaningHorizon)
+			break;
+
+		if ((inicioJob % (planingHorizon * DAY) == 0))
+			isFirstJobOfMachine = 1;
+		else
+			isFirstJobOfMachine = 0;
+
+		inicioJob = fimJob;
 
 		// ---------------------------------------------------------------------------
 		// COSTS
 		// ---------------------------------------------------------------------------
 
+		if (isFirstJobOfMachine)
+			currantSwitchs = 0;
 		switchs += currantSwitchs;
 		if (currantSwitchs > 0)
 			++switchsInstances;
 		fineshedJobsCount += originalJobs[s.sol[jL]].isGrouped ? 2 : 1;
 		if (originalJobs[s.sol[jL]].priority) unfineshedPriorityCount -= originalJobs[s.sol[jL]].isGrouped ? 2 : 1;
-		if (originalJobs[s.sol[jL]].indexOperation == 0) releaseDates[s.sol[jL]] = fimJob;
 
+		if (originalJobs[s.sol[jL]].indexOperation == 0) releaseDates[s.sol[jL]] = inicioJob;
+		timeStamps[s.sol[jL]] = std::make_tuple(inicioJob, fimJob);
 	}
 
 	int cost = (PROFITYFINISHED * fineshedJobsCount) - (COSTSWITCH * switchs) - (COSTSWITCHINSTANCE * switchsInstances) - (COSTPRIORITY * unfineshedPriorityCount);
