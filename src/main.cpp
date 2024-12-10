@@ -106,7 +106,6 @@ int main(int argc, char* argv[]){
 		else if(arguments[i]== "--INIT_SOL_TYPE")
 			initSolType = stoi(arguments[i+1]);
     }
-	tempUp = PTL/5;
 	SSP* prob = new SSP(filenameJobs,filenameTools);
 	prob->setParans(capacityMagazine, numberMachines, planingHorizon, unsupervised, movementType, initSolType);
 

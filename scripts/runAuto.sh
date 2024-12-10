@@ -19,14 +19,14 @@ run_instances() {
         local timestamp=$(TZ="America/Sao_Paulo" date "+%Y-%m-%d %H:%M:%S.%3N")
         echo "$timestamp - $counter ./src/out/mainCpp $instancesFolder/$filename $toolSetsFile $outputFolder/$filename"
         ./src/out/mainCpp "$instancesFolder/$filename" "$toolSetsFile" "$outputFolder/$filename" \
-            --TEMP_INIT 0.2 \
-            --TEMP_FIM 1 \
-            --N_REPLICAS 16 \
+            --TEMP_INIT 0.1 \
+            --TEMP_FIM 0.5 \
+            --N_REPLICAS 11 \
             --MCL 400 \
             --PTL 100 \
             --TEMP_DIST 1 \
             --TYPE_UPDATE 2 \
-            --TEMP_UPDATE 35000 \
+            --TEMP_UPDATE 20 \
             --INIT_SOL_TYPE 1 \
             --RESULT_REPORT 1 \
             --INSTANCE_MODE $instanceMode

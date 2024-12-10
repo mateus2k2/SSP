@@ -49,10 +49,10 @@ realPTGo:
 		--TEMP_FIM 0.5 \
 		--N_REPLICAS 11 \
 		--MCL 400 \
-		--PTL 100 \
+		--PTL 1000 \
 		--TEMP_DIST 1 \
 		--TYPE_UPDATE 2 \
-		--TEMP_UPDATE 20000 \
+		--TEMP_UPDATE 20 \
 		--MOVEMENT_TYPE 1 \
 		--INIT_SOL_TYPE 1 \
 		--RESULT_REPORT 1 \
