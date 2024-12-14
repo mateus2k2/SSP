@@ -11,7 +11,7 @@ solSSP SSP::rand(){
     	
 	for(int i=0; i< numberJobs; i++){
 		ss.sol.push_back(i);
-        timeStamps.push_back(std::make_tuple(0, 0));
+        timeStamps.push_back(0);
 	}
 
 	std::shuffle(begin(ss.sol), end(ss.sol), mersenne_engine);
@@ -33,7 +33,7 @@ solSSP SSP::randPriority(){
     std::vector<int> nonPriorityJobIndices;
 
     for (size_t i = 0; i < originalJobs.size(); ++i) {
-        timeStamps.push_back(std::make_tuple(0, 0));
+        timeStamps.push_back(0);
         if (originalJobs[i].priority) {
             priorityJobIndices.push_back(i);
         } else {

@@ -49,7 +49,7 @@ realPTGo:
 		--TEMP_FIM 0.5 \
 		--N_REPLICAS 11 \
 		--MCL 400 \
-		--PTL 100 \
+		--PTL 10000 \
 		--TEMP_DIST 1 \
 		--TYPE_UPDATE 2 \
 		--TEMP_UPDATE 20000 \
@@ -65,7 +65,7 @@ realPTGo:
 # TODO
 analisyFolder:
 	clear
-	python3 ./scripts/reportAnalises.py ./output/Exemplo 2
+	python3 ./scripts/reportAnalises.py ./output/Exemplo 3
 	echo "\n"
 
 # --------------------------------------------------------

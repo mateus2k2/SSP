@@ -1,5 +1,10 @@
 #include "headers/SSP.h"
 
+#ifdef DEBUG
+#include <fmt/core.h>
+#include <fmt/ranges.h>
+#endif
+
 solSSP SSP::neighbor(solSSP sol){
 	return neighborFunc(sol);
 }
@@ -35,31 +40,6 @@ solSSP SSP::two_opt(solSSP sol){
 }
 
 // 2-swap
-// solSSP SSP::two_swap(solSSP sol){
-// 	solSSP s;
-// 	s.sol = sol.sol;
-// 	int first = 0;
-// 	int last = 0;
-// 	std::random_device rnd_device;
-// 	std::mt19937 mersenne_engine {rnd_device()};
-// 	std::uniform_int_distribution<int> dist {0, (numberJobs-1)};
-	
-// 	do {		
-// 		first = dist(mersenne_engine);
-// 		last = dist(mersenne_engine);		
-// 	} while(first == last);
-	
-// 	if (first > last)std::swap(first,last);
-	
-// 	std::swap(s.sol[first], s.sol[last]);
-	
-// 	s.Nup = sol.Nup;
-// 	s.Ndown = sol.Ndown;
-
-// 	return s;
-// }
-
-// 2-swap
 solSSP SSP::two_swap(solSSP sol){
 	solSSP s;
 	s.sol = sol.sol;
@@ -71,16 +51,24 @@ solSSP SSP::two_swap(solSSP sol){
 
 	std::shuffle(begin(switchPermutation), end(switchPermutation), mersenne_engine);
 
+	// #ifdef DEBUG
+	// fmt::print("TimeStamps: {}\n", timeStamps);
+	// fmt::print("releaseDates: {}\n", releaseDates);
+	// #endif
+
 	do {		
 		first = std::get<0>(switchPermutation[0]);
 		last = std::get<1>(switchPermutation[0]);
 		if(originalJobs[s.sol[first]].indexOperation == 1){
-			int timeLast = std::get<1>(timeStamps[s.sol[last]]);
-			if(releaseDates[s.sol[first]] <= timeLast){
+			cout << "releaseDates[s.sol[first]] <= timeStamps[s.sol[last]]" << releaseDates[s.sol[first]] << " " << timeStamps[s.sol[last]];
+			cout << "s.sol[first] | s.sol[last]" << s.sol[first] << " " << s.sol[last];
+			if(releaseDates[s.sol[first]] <= timeStamps[s.sol[last]]){
 				validSwap = true;
 			}
 		}
-
+		else{
+			validSwap = true;
+		}
 	} while(validSwap == false);
 	
 	std::swap(s.sol[first], s.sol[last]);

@@ -112,7 +112,7 @@ double SSP::evaluate(solSSP s)
 		if (originalJobs[s.sol[jL]].priority) unfineshedPriorityCount -= originalJobs[s.sol[jL]].isGrouped ? 2 : 1;
 
 		if (originalJobs[s.sol[jL]].indexOperation == 0) releaseDates[s.sol[jL]] = inicioJob;
-		timeStamps[s.sol[jL]] = std::make_tuple(inicioJob, fimJob);
+		timeStamps[s.sol[jL]] = fimJob;
 	}
 
 	int cost = (PROFITYFINISHED * fineshedJobsCount) - (COSTSWITCH * switchs) - (COSTSWITCHINSTANCE * switchsInstances) - (COSTPRIORITY * unfineshedPriorityCount);

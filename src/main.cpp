@@ -121,9 +121,11 @@ int main(int argc, char* argv[]){
 	// 	cout << endl;
 	// 	int valor = prob->evaluateReportKTNS(sol, filenameJobs, filenameTools, filenameoutputCur, 1);
 	// }
-
-	// solSSP sol = makeTestSol(-1);
-	// int valor = prob->evaluateReportKTNS(sol, filenameJobs, filenameTools, filenameoutput, 1);
+	
+	// prob->setupReleaseDate();
+	// solSSP sol = prob->rand();
+	// int valor = prob->evaluate(sol);
+	// prob->neighbor(sol);
 
 	// ------------------------------------------------------------------------------
 	// REAL
