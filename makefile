@@ -3,6 +3,7 @@
 # --------------------------------------------------------
 
 DEBUG_MODE = 1
+GATILHO_MODE = 0
 
 ifeq ($(DEBUG_MODE), 1)
     USE_FTM = -lfmt
@@ -12,15 +13,22 @@ else
     DEBUG_MACRO =
 endif
 
+ifeq ($(GATILHO_MODE), 1)
+	GATILHO_MACRO = -DGATILHO
+else
+	GATILHO_MACRO =
+endif
+
+
 debugCompilePT:
 	clear 
-	g++ $(DEBUG_MACRO) src/*.cpp -std=c++2a -Wshadow -pg -Wall -o src/out/mainCppDebug -Wno-unused-result -lpthread -O3 -g -march=native -lstdc++ $(USE_FTM)
+	g++ $(DEBUG_MACRO) $(GATILHO_MACRO) src/*.cpp -std=c++2a -Wshadow -pg -Wall -o src/out/mainCppDebug -Wno-unused-result -lpthread -O3 -g -march=native -lstdc++ $(USE_FTM)
 	echo "\n" 
 	clear
 
 compilePT:
 	clear
-	g++ $(DEBUG_MACRO) ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lstdc++ $(USE_FTM)
+	g++ $(DEBUG_MACRO) $(GATILHO_MACRO) ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lstdc++ $(USE_FTM)
 	echo "\n" 
 
 testPTGo:
@@ -32,8 +40,9 @@ testPTGo:
 		--MCL 400 \
 		--PTL 1000 \
 		--TEMP_DIST 1 \
-		--TYPE_UPDATE 2 \
+		--TYPE_UPDATE 1 \
 		--TEMP_UPDATE 35000 \
+		--PTL_TEMP_UPDATE_PROPORTION 1 \
 		--CAPACITY 8 \
 		--MACHINES 2 \
 		--DAYS 2 \
@@ -44,17 +53,17 @@ testPTGo:
 
 realPTGo:
 	make compilePT
-	./src/out/mainCpp "./input/MyInstancesSameToolSets/n=1236,p=0.75,r=0.6,t=4431,v23.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" \
+	./src/out/mainCpp "./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" \
 		--TEMP_INIT 0.1 \
 		--TEMP_FIM 0.5 \
 		--N_REPLICAS 11 \
 		--MCL 400 \
 		--PTL 30000 \
 		--TEMP_DIST 1 \
-		--TYPE_UPDATE 2 \
-		--TEMP_UPDATE 20 \
-		--MOVEMENT_TYPE 1 \
+		--TYPE_UPDATE 1 \
 		--INIT_SOL_TYPE 1 \
+		--TEMP_UPDATE 20 \
+		--PTL_TEMP_UPDATE_PROPORTION 1 \
 		--RESULT_REPORT 1 \
 		--INSTANCE_MODE 1 \
 

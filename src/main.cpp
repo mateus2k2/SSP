@@ -46,8 +46,8 @@ int main(int argc, char* argv[]){
 	int tempD = 1;
 	int uType = 0;
 	int thN = thread::hardware_concurrency();
-	int movementType = 0;
-	int initSolType = 0;	
+	int initSolType = 0;
+	int ptlTempUpProportion = 1;
 	vector<string> arguments(argv + 1, argv + argc);	
 
     //problem varibles
@@ -101,13 +101,16 @@ int main(int argc, char* argv[]){
 			instance_report = stoi(arguments[i+1]);
 		else if(arguments[i]== "--INSTANCE_MODE")
 			instance_mode = stoi(arguments[i+1]);	
-		else if(arguments[i]== "--MOVEMENT_TYPE")
-			movementType = stoi(arguments[i+1]);
 		else if(arguments[i]== "--INIT_SOL_TYPE")
 			initSolType = stoi(arguments[i+1]);
+		else if(arguments[i]== "--PTL_TEMP_UPDATE_PROPORTION")
+			ptlTempUpProportion = stoi(arguments[i+1]);
+
     }
+	tempUp = PTL/ptlTempUpProportion;
+
 	SSP* prob = new SSP(filenameJobs,filenameTools);
-	prob->setParans(capacityMagazine, numberMachines, planingHorizon, unsupervised, movementType, initSolType);
+	prob->setParans(capacityMagazine, numberMachines, planingHorizon, unsupervised, uType, initSolType);
 
 	// ------------------------------------------------------------------------------
 	// TEST
@@ -141,7 +144,7 @@ int main(int argc, char* argv[]){
 	
 	if (result_report)	prob->evaluateReportKTNS(sol, filenameJobs, filenameTools, filenameoutput, et.getTimeMs());
 	cout << (-1) * sol.evalSol << endl;
-	cout << et.getTimeMs() << endl;
+	// cout << et.getTimeMs() << endl;
 
 	return 0;
 }

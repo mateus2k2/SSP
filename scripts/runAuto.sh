@@ -25,8 +25,8 @@ run_instances() {
             --MCL 400 \
             --PTL 100 \
             --TEMP_DIST 1 \
-            --TYPE_UPDATE 2 \
             --TEMP_UPDATE 20 \
+            --TYPE_UPDATE 1 \
             --INIT_SOL_TYPE 1 \
             --RESULT_REPORT 1 \
             --INSTANCE_MODE $instanceMode
