@@ -2,8 +2,8 @@
 # Meus Codigos cpp
 # --------------------------------------------------------
 
-DEBUG_MODE = 1
-GATILHO_MODE = 0
+DEBUG_MODE=1
+GATILHO_MODE=0
 
 ifeq ($(DEBUG_MODE), 1)
     USE_FTM = -lfmt
@@ -58,7 +58,7 @@ realPTGo:
 		--TEMP_FIM 0.5 \
 		--N_REPLICAS 11 \
 		--MCL 400 \
-		--PTL 30000 \
+		--PTL 15000 \
 		--TEMP_DIST 1 \
 		--TYPE_UPDATE 1 \
 		--INIT_SOL_TYPE 1 \

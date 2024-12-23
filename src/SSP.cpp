@@ -40,5 +40,5 @@ void SSP::setupRelaseDate(){
 		}
 	}
 
-	cout << "Permutations: " << permutations.size() << endl;
+	// cout << "Permutations: " << permutations.size() << endl;
 }
