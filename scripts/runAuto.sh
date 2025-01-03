@@ -29,7 +29,7 @@ run_instances() {
             --TYPE_UPDATE 1 \
             --INIT_SOL_TYPE 1 \
             --RESULT_REPORT 1 \
-            --INSTANCE_MODE $instanceMode
+            --DIFERENT_TOOLSETS_MODE $instanceMode
         counter=$((counter+1))
     done
 }
@@ -38,8 +38,8 @@ toolSetsFile=./input/Processed/ToolSetInt.csv
 
 # Run instances for "MyInstancesSameToolSets"
 instancesFolder=./input/MyInstancesSameToolSets
-run_instances "$instancesFolder" "$outputFolder/MyInstancesSameToolSets" 1
+run_instances "$instancesFolder" "$outputFolder/MyInstancesSameToolSets" 0
 
 # Run instances for "MyInstancesDiferentToolSets"
 instancesFolder=./input/MyInstancesDiferentToolSets
-run_instances "$instancesFolder" "$outputFolder/MyInstancesDiferentToolSets" 0
+run_instances "$instancesFolder" "$outputFolder/MyInstancesDiferentToolSets" 1

@@ -23,9 +23,9 @@ else
 endif
 
 ifeq ($(FAST_MODE), 1)
-	DIRETIVAS_MACRO = 
+	FAST_MACRO = 
 else
-	DIRETIVAS_MACRO = -O3
+	FAST_MACRO = -O3
 endif
 
 debugCompilePT:
@@ -36,7 +36,7 @@ debugCompilePT:
 
 compilePT:
 	clear
-	g++ $(DEBUG_MACRO) $(GATILHO_MACRO) ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lstdc++ $(USE_FTM)
+	g++ $(DEBUG_MACRO) $(GATILHO_MACRO) ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread $(FAST_MACRO) -march=native -lstdc++ $(USE_FTM)
 	echo "\n" 
 
 testPTGo:

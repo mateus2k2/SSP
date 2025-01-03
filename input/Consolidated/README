@@ -1,0 +1,7 @@
+info
+capacity
+machines
+days
+unsupervised_minuts
+
+job operation priority processingtime [1 if tool is required, 0 if not required]
