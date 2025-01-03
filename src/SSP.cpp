@@ -13,11 +13,12 @@ SSP::SSP(std::string filenameJobs, std::string filenameTools){
 SSP::~SSP(){	
 }
 
-void SSP::setParans(int capacityMagazine1, int numberMachines1, int planingHorizon1, int unsupervised1, int movementType1, int initSolType1){
+void SSP::setParans(int capacityMagazine1, int numberMachines1, int planingHorizon1, int unsupervised1, int movementType1, int initSolType1, int diferent_toolset_mode1){
 	this->capacityMagazine = capacityMagazine1;
 	this->numberMachines = numberMachines1;
 	this->planingHorizon = planingHorizon1;
 	this->unsupervised = unsupervised1;
+	this->diferent_toolset_mode = diferent_toolset_mode1;
 
 	// two_opt = 0
 	// two_swap = 1
@@ -32,13 +33,11 @@ void SSP::setParans(int capacityMagazine1, int numberMachines1, int planingHoriz
 	if (initSolType1 == 1) this->constructionFunc = std::bind(&SSP::randPriority, this);
 }
 
-void SSP::setupRelaseDate(){
-	for (int i = 1; i <= numberJobs; ++i) {
-		relaseDates.push_back(0);
-		for (int j = i + 1; j <= numberJobs; ++j) {
-			permutations.push_back(std::make_tuple(i, j));
-		}
-	}
-
-	// cout << "Permutations: " << permutations.size() << endl;
+void SSP::setupPermutations() {
+    for (int i = 0; i < numberJobs; i++) {
+        for (int j = i + 1; j < numberJobs; j++) {
+            switchPermutation.push_back(std::make_tuple(i, j));
+        }
+    }
+    numberOfPairs = switchPermutation.size();
 }

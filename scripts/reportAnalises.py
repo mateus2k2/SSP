@@ -42,6 +42,30 @@ def verificarPrecedencia(files):
     for index, report in enumerate(files):
         planejamento, machines, endInfo = rp.parseReport(report)
         jobs = ld.loadJobs(planejamento['jobsFileName'])
+        FimOperacao0 = {}
+
+        for machine in machines:
+            for estado in machine:
+                job = estado['job']
+                if estado['operation'] == 0: FimOperacao0[job] = estado['end']
+
+        # print(FimOperacao0)
+
+        for machine in machines:
+            for estado in machine:
+                job = estado['job']
+                if estado['operation'] == 1: 
+                    if not (job in FimOperacao0) or estado['start'] < FimOperacao0[job]: quantidadePrecedenciaQuebradaPorInstancia[index] += 1
+
+    print(quantidadePrecedenciaQuebradaPorInstancia)
+    return quantidadePrecedenciaQuebradaPorInstancia
+
+def verificarPrecedenciaAsSingleMachine(files):
+    quantidadePrecedenciaQuebradaPorInstancia = [0 for _ in range(len(files))]
+
+    for index, report in enumerate(files):
+        planejamento, machines, endInfo = rp.parseReport(report)
+        jobs = ld.loadJobs(planejamento['jobsFileName'])
         precedencia = [[] for _ in range(len(jobs))]
 
         for machine in machines:
@@ -49,9 +73,12 @@ def verificarPrecedencia(files):
                 job = estado['job']
                 if estado['operation'] == 0: precedencia[job].append(0)
                 if estado['operation'] == 1: 
-                    if not precedencia[job]: quantidadePrecedenciaQuebradaPorInstancia[index] += 1
+                    if not precedencia[job]: 
+                        print(f'Precedencia quebrada para a instancia {index + 1} no job {job}')
+                        quantidadePrecedenciaQuebradaPorInstancia[index] += 1
                     else : precedencia[job].pop()
     
+    print(quantidadePrecedenciaQuebradaPorInstancia)
     return quantidadePrecedenciaQuebradaPorInstancia
 
 def totalUnfinishedJobs(machines, planejamento):
@@ -83,6 +110,8 @@ def main():
 
     if option == '1':  validarPasta(fileWithPath)  
     if option == '2': analisarValores(fileWithPath)
+    if option == '3': verificarPrecedencia(fileWithPath)
+    if option == '4': verificarPrecedenciaAsSingleMachine(fileWithPath)
 
 if __name__ == "__main__":
     main()

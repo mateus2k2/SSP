@@ -2,8 +2,11 @@
 # Meus Codigos cpp
 # --------------------------------------------------------
 
+OUTPUT = src/out/mainCpp
+
 DEBUG_MODE=1
 GATILHO_MODE=0
+FAST_MODE=1
 
 ifeq ($(DEBUG_MODE), 1)
     USE_FTM = -lfmt
@@ -19,10 +22,15 @@ else
 	GATILHO_MACRO =
 endif
 
+ifeq ($(FAST_MODE), 1)
+	DIRETIVAS_MACRO = 
+else
+	DIRETIVAS_MACRO = -O3
+endif
 
 debugCompilePT:
 	clear 
-	g++ $(DEBUG_MACRO) $(GATILHO_MACRO) src/*.cpp -std=c++2a -Wshadow -pg -Wall -o src/out/mainCppDebug -Wno-unused-result -lpthread -O3 -g -march=native -lstdc++ $(USE_FTM)
+	g++ $(DEBUG_MACRO) $(GATILHO_MACRO) src/*.cpp -std=c++2a -Wshadow -pg -Wall -o src/out/mainCppDebug -Wno-unused-result -lpthread -g -march=native -lstdc++ $(USE_FTM)
 	echo "\n" 
 	clear
 
@@ -49,23 +57,23 @@ testPTGo:
 		--UNSUPERVISED_MINUTS 720 \
 		--RESULT_REPORT 1 \
 		--INSTANCE_REPORT 1 \
-		--INSTANCE_MODE 0 \
+		--DIFERENT_TOOLSETS_MODE 0 \
 
 realPTGo:
 	make compilePT
-	./src/out/mainCpp "./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" \
+	./src/out/mainCpp "./input/MyInstancesDiferentToolSets/n=75,p=0.24,r=0.5,t=112,v0.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" \
 		--TEMP_INIT 0.1 \
 		--TEMP_FIM 0.5 \
 		--N_REPLICAS 11 \
 		--MCL 400 \
-		--PTL 15000 \
+		--PTL 10 \
 		--TEMP_DIST 1 \
 		--TYPE_UPDATE 1 \
 		--INIT_SOL_TYPE 1 \
 		--TEMP_UPDATE 20 \
 		--PTL_TEMP_UPDATE_PROPORTION 1 \
 		--RESULT_REPORT 1 \
-		--INSTANCE_MODE 1 \
+		--DIFERENT_TOOLSETS_MODE 1 \
 
 # --------------------------------------------------------
 # Meus python
@@ -74,7 +82,7 @@ realPTGo:
 # TODO
 analisyFolder:
 	clear
-	python3 ./scripts/reportAnalises.py ./output/Ajuste2-PTL100/MyInstancesDiferentToolSets 2
+	python ./scripts/reportAnalises.py ./output/Exemplo 4
 	echo "\n"
 
 # --------------------------------------------------------

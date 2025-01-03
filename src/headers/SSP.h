@@ -30,7 +30,32 @@
 
 
 struct solSSP: public solution{ 
-  std::vector<int> sol; 
+	std::vector<int> sol; 
+	std::vector<int> releaseDates;
+	std::vector<int> dueDates;
+	long unsigned int currantPermutationIndex = 0;
+
+	void setReleaseDate(int index, int value){ 
+		releaseDates[index] = value;
+    }
+
+	void setDueDate(int index, int value){ 
+		dueDates[index] = value;
+	}
+
+	void clearReleaseDates(int numberJobs){ 
+		releaseDates.clear();
+		releaseDates.resize(numberJobs, 0);
+	}
+
+	void clearDueDates(int numberJobs){ 
+		dueDates.clear();
+		dueDates.resize(numberJobs, 0);
+	}
+
+	void setCurrantPermutationIndex(int value){
+		currantPermutationIndex = value;	
+	}
 };
 
 
@@ -44,9 +69,10 @@ class SSP: public Problem<solSSP>{
 		int numberJobs;
 		int numberOfPriorityJobs;
 		int capacityMagazine;
+		int diferent_toolset_mode;
 
-		std::vector<std::tuple<int, int>> permutations;
-		vector<int> relaseDates;
+		std::vector<tuple<int, int>> switchPermutation;
+		int numberOfPairs;
 		
     	map<int, int> ferramentas;
 		vector<vector<bool>> toolJob;
@@ -66,10 +92,10 @@ class SSP: public Problem<solSSP>{
 		int laodToolSet(string filename);
 		int loadInstanceParans(string filename);
 		void printDataReport();
-		void setParans(int capacityMagazine, int numberMachines, int planingHorizon, int unsupervised, int movementType, int initSolType);
+		void setParans(int capacityMagazine, int numberMachines, int planingHorizon, int unsupervised, int movementType, int initSolType, int diferent_toolset_mode);
 		
 		void groupJobs();
-		void setupRelaseDate();
+		void setupPermutations();
 
 		solSSP construction();
 		solSSP randPriority();
@@ -80,7 +106,7 @@ class SSP: public Problem<solSSP>{
 		solSSP two_swap(solSSP sol);
 		solSSP insertion(solSSP sol);
 		
-		double evaluate(solSSP s);
+		double evaluate(solSSP& s);
 		double evaluateReportKTNS(solSSP sol, string filenameJobs, string filenameTools, string solutionReportFileName, int time);
 		
 };

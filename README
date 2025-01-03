@@ -3,3 +3,14 @@
 git rm -r /home/mateus/WSL/IC/SSP/input/raw/KTNS
 git rm -r --cached /home/mateus/WSL/IC/SSP/input/raw/KTNS/SolList/Files/*
 git lfs track "/input/raw/KTNS/*"
+
+https://www.gdbgui.com/installation/
+https://stackoverflow.com/questions/2876357/determine-the-line-of-code-that-causes-a-segmentation-fault
+gdb src/out/mainCppDebug 
+run "./input/MyInstancesDiferentToolSets/n=75,p=0.24,r=0.5,t=112,v0.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" --TEMP_INIT 0.1  --TEMP_FIM 0.5  --N_REPLICAS 11  --MCL 400  --PTL 10  --TEMP_DIST 1  --TYPE_UPDATE 2  --TEMP_UPDATE 20  --MOVEMENT_TYPE 1  --INIT_SOL_TYPE 1  --RESULT_REPORT 1  --INSTANCE_MODE 0 
+
+first: 13 | last: 15 | i: 10 | 14
+first: 48 | last: 54 | i: 10 | 14
+first: 7 | last: 14  | i: 10 | 14
+
+32767

@@ -1,19 +1,19 @@
-#include <vector>
-#include <iostream>
+#include <algorithm>
 #include <atomic>
-#include <thread>
+#include <cstdlib>
 #include <fstream>
+#include <iostream>
 #include <sstream>
 #include <string>
-#include <algorithm> 
-#include <cstdlib>
+#include <thread>
+#include <vector>
 
 #include "headers/GlobalVars.h"
 #include "headers/SSP.h"
 
 #ifdef DEBUG
-#include <fmt/ranges.h>
 #include <fmt/core.h>
+#include <fmt/ranges.h>
 #endif
 
 #include "../../PTAPI/include/ExecTime.h"
@@ -21,21 +21,11 @@
 
 using namespace std;
 
-
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // MAIN
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-solSSP makeTestSol(int length){
-	solSSP sol;
-	return sol;
-}
-
-int main(int argc, char* argv[]){
-	// srand(time(0));
-	// cout << rand() % 10000 + 100;
-	// return 0;
-
+int main(int argc, char* argv[]) {
     //pt varibles
 	float tempIni = 0.01;
 	float tempfim = 2.0;
@@ -51,13 +41,13 @@ int main(int argc, char* argv[]){
 	vector<string> arguments(argv + 1, argv + argc);	
 
     //problem varibles
-	int capacityMagazine = 8;
-    int numberMachines   = 2;
-    int planingHorizon   = 2;
-    int unsupervised     = 0.5*DAY;
-	int result_report    = 0;
-	int instance_report  = 0;
-	int instance_mode	 = 0;
+	int capacityMagazine       = 8;
+    int numberMachines         = 2;
+    int planingHorizon         = 2;
+    int unsupervised           = 0.5*DAY;
+	int result_report          = 0;
+	int instance_report        = 0;
+	int diferent_toolset_mode  = 0;
 	
 	// Instance file name
 	string filenameJobs = arguments[0];
@@ -99,8 +89,8 @@ int main(int argc, char* argv[]){
 			result_report = stoi(arguments[i+1]);
 		else if(arguments[i]== "--INSTANCE_REPORT")
 			instance_report = stoi(arguments[i+1]);
-		else if(arguments[i]== "--INSTANCE_MODE")
-			instance_mode = stoi(arguments[i+1]);	
+		else if(arguments[i]== "--DIFERENT_TOOLSETS_MODE")
+			diferent_toolset_mode = stoi(arguments[i+1]);	
 		else if(arguments[i]== "--INIT_SOL_TYPE")
 			initSolType = stoi(arguments[i+1]);
 		else if(arguments[i]== "--PTL_TEMP_UPDATE_PROPORTION")
@@ -110,42 +100,36 @@ int main(int argc, char* argv[]){
 	tempUp = PTL/ptlTempUpProportion;
 
 	SSP* prob = new SSP(filenameJobs,filenameTools);
-	prob->setParans(capacityMagazine, numberMachines, planingHorizon, unsupervised, uType, initSolType);
+	prob->setParans(capacityMagazine, numberMachines, planingHorizon, unsupervised, uType, initSolType, diferent_toolset_mode);
 
-	// ------------------------------------------------------------------------------
-	// TEST
-	// ------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------
+    // TEST
+    // ------------------------------------------------------------------------------
 
-	// for (int i = 0; i < 10; i++){
-	// 	string filenameoutputCur = "./output/Exemplo/output" + to_string(i) + ".txt";
-	// 	solSSP sol = prob->construction();
-	// 	for(int i=0; i<sol.sol.size(); i++) cout << sol.sol[i] << " ";
-	// 	cout << endl;
-	// 	int valor = prob->evaluateReportKTNS(sol, filenameJobs, filenameTools, filenameoutputCur, 1);
-	// }
+    // prob->loadInstanceParans(filenameJobs);
+    // prob->setupPermutations();
+    // solSSP sol = prob->randPriority();
+    // int valor = prob->evaluate(sol);
+    // prob->neighbor(sol);
+    // cout << sol.currantPermutationIndex << endl;
+    // prob->evaluateReportKTNS(sol, filenameJobs, filenameTools, filenameoutput, 0);
 
-	// solSSP sol = makeTestSol(-1);
-	// int valor = prob->evaluateReportKTNS(sol, filenameJobs, filenameTools, filenameoutput, 1);
+    // ------------------------------------------------------------------------------
+    // REAL
+    // ------------------------------------------------------------------------------
 
-	// ------------------------------------------------------------------------------
-	// REAL
-	// ------------------------------------------------------------------------------
+    prob->loadInstanceParans(filenameJobs);
+    if (diferent_toolset_mode == 0) prob->groupJobs();
+    if (instance_report) prob->printDataReport();
+    if (diferent_toolset_mode == 0) prob->setupPermutations();
 
-	prob->loadInstanceParans(filenameJobs);
+    PT<solSSP> algo(tempIni, tempfim, tempN, MCL, PTL, tempD, uType, tempUp);
+    ExecTime et;
+    solSSP sol = algo.start(thN, prob);
 
-	prob->setupRelaseDate();
+    if (result_report) prob->evaluateReportKTNS(sol, filenameJobs, filenameTools, filenameoutput, et.getTimeMs());
+    cout << (-1) * sol.evalSol << endl;
+    cout << et.getTimeMs() << endl;
 
-	if (instance_mode == 1) prob->groupJobs();
-	if (instance_report) prob->printDataReport();
-	
-	PT<solSSP> algo(tempIni,tempfim,tempN,MCL,PTL,tempD,uType,tempUp);
-	ExecTime et;
-	solSSP sol = algo.start(thN, prob);
-	
-	if (result_report)	prob->evaluateReportKTNS(sol, filenameJobs, filenameTools, filenameoutput, et.getTimeMs());
-	cout << (-1) * sol.evalSol << endl;
-	// cout << et.getTimeMs() << endl;
-
-	return 0;
+    return 0;
 }
-

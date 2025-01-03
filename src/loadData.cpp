@@ -1,11 +1,11 @@
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <vector>
-#include <string>
 #include <algorithm>
+#include <fstream>
+#include <iostream>
 #include <numeric>
+#include <sstream>
+#include <string>
 #include <unordered_set>
+#include <vector>
 
 #include "headers/GlobalVars.h"
 
@@ -22,20 +22,17 @@ using namespace std;
 // LOAD FUNCTIONS
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-int SSP::laodInstance(string filename)
-{
+int SSP::laodInstance(string filename) {
     ifstream file(filename);
 
-    if (!file.is_open())
-    {
+    if (!file.is_open()) {
         cerr << "Error opening file!" << endl;
         return 1;
     }
 
     string line;
     getline(file, line);
-    while (getline(file, line))
-    {
+    while (getline(file, line)) {
         Job tmpJob;
         stringstream ss(line);
         string value;
@@ -66,12 +63,9 @@ int SSP::laodInstance(string filename)
 
     // iterate over all the toolSets in the originalJobs
     int ferramentaIndex = 0;
-    for (auto &thisJob : originalJobs)
-    {
-        for (auto &tool : thisJob.toolSet.tools)
-        {
-            if (ferramentas.find(tool) == ferramentas.end())
-            {
+    for (auto &thisJob : originalJobs) {
+        for (auto &tool : thisJob.toolSet.tools) {
+            if (ferramentas.find(tool) == ferramentas.end()) {
                 ferramentas[tool] = ferramentaIndex;
                 ferramentaIndex++;
             }
@@ -79,12 +73,10 @@ int SSP::laodInstance(string filename)
     }
 
     // iterate over all iriginalJobs toolsets and create the normalized toolsets
-    for (auto &thisJob : originalJobs)
-    {
+    for (auto &thisJob : originalJobs) {
         ToolSet tmpToolSet;
         tmpToolSet.indexToolSet = thisJob.indexToolSet;
-        for (auto &tool : thisJob.toolSet.tools)
-        {
+        for (auto &tool : thisJob.toolSet.tools) {
             tmpToolSet.tools.push_back(ferramentas[tool]);
         }
         normalizedToolSets[thisJob.indexToolSet] = tmpToolSet;
@@ -99,12 +91,9 @@ int SSP::laodInstance(string filename)
     capacityMagazine = 80;
     numberTools = ferramentaIndex + 1;
     numberToolsReal = 0;
-    for (const auto &[key, value] : originalToolSets)
-    {
-        for (const auto &tool : value.tools)
-        {
-            if (tool > numberToolsReal)
-            {
+    for (const auto &[key, value] : originalToolSets) {
+        for (const auto &tool : value.tools) {
+            if (tool > numberToolsReal) {
                 numberToolsReal = tool;
             }
         }
@@ -121,17 +110,14 @@ int SSP::laodInstance(string filename)
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     // make a for loop numberTools and push a vector of numberJobs with false
-    for (int i = 0; i < numberTools; i++)
-    {
+    for (int i = 0; i < numberTools; i++) {
         vector<bool> tmpVector(numberJobs, false);
         toolJob.push_back(tmpVector);
     }
 
     // iterate of the originalJobs and create the toolJob matrix
-    for (auto &thisJob : originalJobs)
-    {
-        for (auto &tool : thisJob.toolSetNormalized.tools)
-        {
+    for (auto &thisJob : originalJobs) {
+        for (auto &tool : thisJob.toolSetNormalized.tools) {
             toolJob[tool][thisJob.indexJob] = true;
         }
     }
@@ -139,20 +125,17 @@ int SSP::laodInstance(string filename)
     return 0;
 }
 
-int SSP::laodToolSet(string filename)
-{
+int SSP::laodToolSet(string filename) {
     ifstream file(filename);
     int tmpIndex;
 
-    if (!file.is_open())
-    {
+    if (!file.is_open()) {
         cerr << "Error opening file!" << endl;
         return 1;
     }
 
     string line;
-    while (getline(file, line))
-    {
+    while (getline(file, line)) {
         stringstream ss(line);
         string value;
         vector<int> lineData;
@@ -160,14 +143,10 @@ int SSP::laodToolSet(string filename)
 
         getline(ss, value, ';');
         tmpIndex = stoi(value);
-        while (getline(ss, value, ';'))
-        {
-            if (!value.empty())
-            {
+        while (getline(ss, value, ';')) {
+            if (!value.empty()) {
                 lineData.push_back(stoi(value));
-            }
-            else
-            {
+            } else {
                 break;
             }
         }
@@ -182,15 +161,13 @@ int SSP::laodToolSet(string filename)
     return 0;
 }
 
-int SSP::loadInstanceParans(string filename)
-{
+int SSP::loadInstanceParans(string filename) {
     string datFilename = filename.substr(0, filename.size() - 4) + ".dat";
 
     std::ifstream file(datFilename);
-    if (!file.is_open())
-    {
+    if (!file.is_open()) {
         std::cerr << "Error: Could not open file " << datFilename << std::endl;
-        return -1; // Return error code
+        return -1;  // Return error code
     }
 
     // Read the file line by line
@@ -217,27 +194,22 @@ int SSP::loadInstanceParans(string filename)
     }
 
     file.close();
-    return 0; // Return success
+    return 0;  // Return success
 }
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // GRUPING
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-void SSP::groupJobs()
-{
+void SSP::groupJobs() {
     std::vector<int> indicesToDelete;
 
-    for (size_t i = 0; i < originalJobs.size(); ++i)
-    {
+    for (size_t i = 0; i < originalJobs.size(); ++i) {
         auto &thisJob = originalJobs[i];
-        if (thisJob.indexOperation == 0)
-        {
-            for (size_t j = 0; j < originalJobs.size(); ++j)
-            {
+        if (thisJob.indexOperation == 0) {
+            for (size_t j = 0; j < originalJobs.size(); ++j) {
                 auto &otherJob = originalJobs[j];
-                if (otherJob.indexOperation == 1 && otherJob.indexJob == thisJob.indexJob)
-                {
+                if (otherJob.indexOperation == 1 && otherJob.indexJob == thisJob.indexJob) {
                     thisJob.isGrouped = true;
                     thisJob.processingTimes.push_back(otherJob.processingTime);
                     thisJob.processingTimes.push_back(thisJob.processingTime);
@@ -250,8 +222,7 @@ void SSP::groupJobs()
     }
 
     std::sort(indicesToDelete.rbegin(), indicesToDelete.rend());
-    for (int index : indicesToDelete)
-    {
+    for (int index : indicesToDelete) {
         originalJobs.erase(originalJobs.begin() + index);
     }
 
@@ -262,12 +233,17 @@ void SSP::groupJobs()
 // LOAD PRINTS
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-void SSP::printDataReport()
-{
+void SSP::printDataReport() {
 #ifdef DEBUG
-    fmt::print("\n------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+    fmt::print(
+        "\n--------------------------------------------------------------------"
+        "----------------------------------------------------------------------"
+        "------------------------------------------\n");
     fmt::print("DATA REPORT\n");
-    fmt::print("------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n\n");
+    fmt::print(
+        "----------------------------------------------------------------------"
+        "----------------------------------------------------------------------"
+        "----------------------------------------\n\n");
 
     fmt::print("Number of Machines: {}\n", numberMachines);
     fmt::print("Capacity of Magazine: {}\n", capacityMagazine);
@@ -276,13 +252,16 @@ void SSP::printDataReport()
     fmt::print("Number of Tools: {}\n\n", numberTools);
     fmt::print("Number of Original Jobs: {}\n\n", numberJobs);
 
-    fmt::print("\n------------------------------------------------------------------------------------------\n");
+    fmt::print(
+        "\n--------------------------------------------------------------------"
+        "----------------------\n");
     fmt::print("JOBS DATA\n");
-    fmt::print("------------------------------------------------------------------------------------------\n\n");
+    fmt::print(
+        "----------------------------------------------------------------------"
+        "--------------------\n\n");
 
     size_t index = 0;
-    for (const auto &thisJob : originalJobs)
-    {
+    for (const auto &thisJob : originalJobs) {
         fmt::print("Index: {}\n", index);
         fmt::print("Job: {}\n", thisJob.indexJob);
         fmt::print("Operation: {}\n", thisJob.indexOperation);
@@ -297,35 +276,44 @@ void SSP::printDataReport()
         ++index;
     }
 
-    fmt::print("------------------------------------------------------------------------------------------\n");
+    fmt::print(
+        "----------------------------------------------------------------------"
+        "--------------------\n");
     fmt::print("TOOL SET\n");
-    fmt::print("------------------------------------------------------------------------------------------\n\n");
+    fmt::print(
+        "----------------------------------------------------------------------"
+        "--------------------\n\n");
 
     // print the tool set map
-    for (const auto &[key, value] : originalToolSets)
-    {
+    for (const auto &[key, value] : originalToolSets) {
         fmt::print("ToolSet: {}\n", key);
         fmt::print("Tools: {}\n\n", fmt::join(value.tools, " "));
     }
 
-    fmt::print("------------------------------------------------------------------------------------------\n");
+    fmt::print(
+        "----------------------------------------------------------------------"
+        "--------------------\n");
     fmt::print("TOOL NORMALIZED\n");
-    fmt::print("------------------------------------------------------------------------------------------\n\n");
+    fmt::print(
+        "----------------------------------------------------------------------"
+        "--------------------\n\n");
 
     // print the tool set map
-    for (const auto &[key, value] : normalizedToolSets)
-    {
+    for (const auto &[key, value] : normalizedToolSets) {
         fmt::print("ToolSet: {}\n", key);
         fmt::print("Tools: {}\n\n", fmt::join(value.tools, " "));
     }
 
-    fmt::print("------------------------------------------------------------------------------------------\n");
+    fmt::print(
+        "----------------------------------------------------------------------"
+        "--------------------\n");
     fmt::print("TOOL JOB\n");
-    fmt::print("------------------------------------------------------------------------------------------\n\n");
+    fmt::print(
+        "----------------------------------------------------------------------"
+        "--------------------\n\n");
 
     // print the toolJob matrix
-    for (int i = 0; i < numberTools; i++)
-    {
+    for (int i = 0; i < numberTools; i++) {
         fmt::print("Tool: {}\n", i);
         fmt::print("Jobs: {}\n\n", fmt::join(toolJob[i], " "));
     }
