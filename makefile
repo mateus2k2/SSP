@@ -14,13 +14,13 @@ endif
 
 debugCompilePT:
 	clear 
-	g++ $(DEBUG_MACRO) src/*.cpp -std=c++2a -Wshadow -pg -Wall -o src/out/mainCppDebug -Wno-unused-result -lpthread -O3 -g -march=native -lstdc++ $(USE_FTM)
+	g++ $(DEBUG_MACRO) src/*.cpp -std=c++2a -Wshadow -pg -Wall -o src/out/mainCppDebug -Wno-unused-result -lpthread -g -march=native -lstdc++ $(USE_FTM)
 	echo "\n" 
 	clear
 
 compilePT:
 	clear
-	g++ $(DEBUG_MACRO) ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lstdc++ $(USE_FTM)
+	g++ $(DEBUG_MACRO) ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -march=native -lstdc++ $(USE_FTM)
 	echo "\n" 
 
 testPTGo:
@@ -44,19 +44,19 @@ testPTGo:
 
 realPTGo:
 	make compilePT
-	./src/out/mainCpp "./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" \
+	./src/out/mainCpp "./input/MyInstancesDiferentToolSets/n=75,p=0.24,r=0.5,t=112,v0.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" \
 		--TEMP_INIT 0.1 \
 		--TEMP_FIM 0.5 \
 		--N_REPLICAS 11 \
 		--MCL 400 \
-		--PTL 10000 \
+		--PTL 10 \
 		--TEMP_DIST 1 \
 		--TYPE_UPDATE 2 \
-		--TEMP_UPDATE 20000 \
+		--TEMP_UPDATE 20 \
 		--MOVEMENT_TYPE 1 \
 		--INIT_SOL_TYPE 1 \
 		--RESULT_REPORT 1 \
-		--INSTANCE_MODE 1 \
+		--INSTANCE_MODE 0 \
 
 # --------------------------------------------------------
 # Meus python
@@ -65,7 +65,7 @@ realPTGo:
 # TODO
 analisyFolder:
 	clear
-	python3 ./scripts/reportAnalises.py ./output/Exemplo 3
+	python ./scripts/reportAnalises.py ./output/Exemplo 3
 	echo "\n"
 
 # --------------------------------------------------------

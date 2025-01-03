@@ -32,11 +32,11 @@ void SSP::setParans(int capacityMagazine1, int numberMachines1, int planingHoriz
 	if (initSolType1 == 1) this->constructionFunc = std::bind(&SSP::randPriority, this);
 }
 
-void SSP::setupReleaseDate(){
-	for (int i = 0; i < numberJobs; i++){
-		releaseDates.push_back(0);
-		for (int j = i; j < numberJobs; j++){
-			switchPermutation.push_back(std::make_tuple(i, j));
-		}
-	}
+void SSP::setupPermutations() {
+    for (int i = 0; i < numberJobs; i++) {
+        for (int j = i + 1; j < numberJobs; j++) {
+            switchPermutation.push_back(std::make_tuple(i, j));
+        }
+    }
+    numberOfPairs = switchPermutation.size();
 }
