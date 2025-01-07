@@ -55,7 +55,6 @@ testPTGo:
 		--MACHINES 2 \
 		--DAYS 2 \
 		--UNSUPERVISED_MINUTS 720 \
-		--RESULT_REPORT 1 \
 		--INSTANCE_REPORT 1 \
 		--DIFERENT_TOOLSETS_MODE 0 \
 
@@ -82,7 +81,7 @@ realPTGo:
 # TODO
 analisyFolder:
 	clear
-	python ./scripts/reportAnalises.py ./output/Exemplo 4
+	python ./scripts/reportAnalises.py ./output/Exemplo 3
 	echo "\n"
 
 # --------------------------------------------------------

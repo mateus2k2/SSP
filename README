@@ -14,3 +14,7 @@ first: 48 | last: 54 | i: 10 | 14
 first: 7 | last: 14  | i: 10 | 14
 
 32767
+
+curl -X POST "https://api.telegram.org/bot8094164826:AAF_tYz1mWAB-site3dt1iFJUMPeAQxH148/sendMessage" \
+     -H "Content-Type: application/json" \
+     -d '{"chat_id": "336418081", "text": "Hello, this is a message from my bot!"}'

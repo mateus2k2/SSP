@@ -111,7 +111,7 @@ double SSP::evaluate(solSSP& s) {
     return (-1) * cost;
 }
 
-double SSP::evaluateReportKTNS(solSSP solution, string filenameJobs, string filenameTools, string solutionReportFileName, int time) {
+double SSP::evaluateReportKTNS(solSSP& solution, string filenameJobs, string filenameTools, string solutionReportFileName, int time) {
     vector<int> s = solution.sol;
 
     fstream solutionReportFile;

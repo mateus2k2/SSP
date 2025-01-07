@@ -45,7 +45,6 @@ int main(int argc, char* argv[]) {
     int numberMachines         = 2;
     int planingHorizon         = 2;
     int unsupervised           = 0.5*DAY;
-	int result_report          = 0;
 	int instance_report        = 0;
 	int diferent_toolset_mode  = 0;
 	
@@ -85,8 +84,6 @@ int main(int argc, char* argv[]) {
 			planingHorizon = stoi(arguments[i+1]);
 		else if(arguments[i]== "--UNSUPERVISED_MINUTS")
 			unsupervised = stoi(arguments[i+1]);
-		else if(arguments[i]== "--RESULT_REPORT")
-			result_report = stoi(arguments[i+1]);
 		else if(arguments[i]== "--INSTANCE_REPORT")
 			instance_report = stoi(arguments[i+1]);
 		else if(arguments[i]== "--DIFERENT_TOOLSETS_MODE")
@@ -119,15 +116,21 @@ int main(int argc, char* argv[]) {
     // ------------------------------------------------------------------------------
 
     prob->loadInstanceParans(filenameJobs);
-    if (diferent_toolset_mode == 0) prob->groupJobs();
     if (instance_report) prob->printDataReport();
-    if (diferent_toolset_mode == 0) prob->setupPermutations();
+    if (diferent_toolset_mode == 0) {
+        prob->groupJobs();
+        prob->setupPermutations();    
+    }
 
     PT<solSSP> algo(tempIni, tempfim, tempN, MCL, PTL, tempD, uType, tempUp);
     ExecTime et;
     solSSP sol = algo.start(thN, prob);
 
-    if (result_report) prob->evaluateReportKTNS(sol, filenameJobs, filenameTools, filenameoutput, et.getTimeMs());
+    solSSP finalSolution;
+    if (diferent_toolset_mode == 1) finalSolution = prob->ajustFinalSolution(sol);
+    else finalSolution = sol;
+    prob->evaluateReportKTNS(finalSolution, filenameJobs, filenameTools, filenameoutput, et.getTimeMs());
+
     cout << (-1) * sol.evalSol << endl;
     cout << et.getTimeMs() << endl;
 

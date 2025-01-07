@@ -1,10 +1,10 @@
-outputFolder=./output/Exemplo
+outputFolder=${1:-"./output/Exemplo"}
 
 [ ! -d "$outputFolder" ] && mkdir -p "$outputFolder"
 [ ! -d "$outputFolder/MyInstancesSameToolSets" ] && mkdir -p "$outputFolder/MyInstancesSameToolSets"
 [ ! -d "$outputFolder/MyInstancesDiferentToolSets" ] && mkdir -p "$outputFolder/MyInstancesDiferentToolSets"
 
-make compilePT DEBUG_MODE=0
+make compilePT DEBUG_MODE=0 GATILHO_MODE=0 FAST_MODE=0
 
 run_instances() {
     local instancesFolder=$1
@@ -25,10 +25,10 @@ run_instances() {
             --MCL 400 \
             --PTL 100 \
             --TEMP_DIST 1 \
-            --TEMP_UPDATE 20 \
             --TYPE_UPDATE 1 \
             --INIT_SOL_TYPE 1 \
-            --RESULT_REPORT 1 \
+            --TEMP_UPDATE 20 \
+            --PTL_TEMP_UPDATE_PROPORTION 1 \
             --DIFERENT_TOOLSETS_MODE $instanceMode
         counter=$((counter+1))
     done

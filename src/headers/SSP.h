@@ -96,6 +96,7 @@ class SSP: public Problem<solSSP>{
 		
 		void groupJobs();
 		void setupPermutations();
+		solSSP ajustFinalSolution(solSSP sol);
 
 		solSSP construction();
 		solSSP randPriority();
@@ -107,7 +108,7 @@ class SSP: public Problem<solSSP>{
 		solSSP insertion(solSSP sol);
 		
 		double evaluate(solSSP& s);
-		double evaluateReportKTNS(solSSP sol, string filenameJobs, string filenameTools, string solutionReportFileName, int time);
+		double evaluateReportKTNS(solSSP &sol, string filenameJobs, string filenameTools, string solutionReportFileName, int time);
 		
 };
 
