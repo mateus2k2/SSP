@@ -29,12 +29,12 @@ execDir = "./"
 ## Directory where training instances are located; either absolute path or
 ## relative to current directory. If no trainInstancesFiles is provided, all
 ## the files in trainInstancesDir will be listed as instances.
-trainInstancesDir = "./instances"
+trainInstancesDir = "./../input/MyInstancesSameToolSets"
 
 ## File that contains a list of training instances and optionally additional
 ## parameters for them. If trainInstancesDir is provided, irace will search
 ## for the files in this folder.
-# trainInstancesFile = ""
+trainInstancesFile = ""
 
 ## Randomly sample the training instances or use them in the order given.
 # sampleInstances = 1
