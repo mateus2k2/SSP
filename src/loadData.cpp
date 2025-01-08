@@ -26,7 +26,7 @@ int SSP::laodInstance(string filename) {
     ifstream file(filename);
 
     if (!file.is_open()) {
-        cerr << "Error opening file!" << endl;
+        cerr << "Error opening instance file!" << endl;
         return 1;
     }
 
@@ -130,7 +130,7 @@ int SSP::laodToolSet(string filename) {
     int tmpIndex;
 
     if (!file.is_open()) {
-        cerr << "Error opening file!" << endl;
+        cerr << "Error opening toolset file!" << endl;
         return 1;
     }
 
