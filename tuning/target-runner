@@ -57,12 +57,6 @@ STDERR=c${CONFIG_ID}-${INSTANCE_ID}-${SEED}.stderr
 # # If the command below fails, but you are not sure why, it may be useful to
 # # print it before executing using 'echo', as in:
 # echo "$EXE ${EXE_PARAMS} 1> ${STDOUT} 2> ${STDERR}"
-
-TIMEZONE="America/Sao_Paulo"
-export TZ=$TIMEZONE
-TIME=$(date "+%Y-%m-%d %H:%M:%S")
-echo "$TIME | $EXE ${EXE_PARAMS} 1> ${STDOUT} 2> ${STDERR}" >> runs.log
-
 $EXE ${EXE_PARAMS} 1> ${STDOUT} 2> ${STDERR}
 
 
@@ -85,3 +79,7 @@ echo "$COST"
 rm -f "${STDOUT}" "${STDERR}"
 exit 0
 
+TIMEZONE="America/Sao_Paulo"
+export TZ=$TIMEZONE
+TIME=$(date "+%Y-%m-%d %H:%M:%S")
+echo "$TIME | $COST | $EXE ${EXE_PARAMS} 1> ${STDOUT} 2> ${STDERR}" >> runs.log
