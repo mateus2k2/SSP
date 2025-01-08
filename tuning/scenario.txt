@@ -34,7 +34,7 @@ trainInstancesDir = "./../input/MyInstancesSameToolSets"
 ## File that contains a list of training instances and optionally additional
 ## parameters for them. If trainInstancesDir is provided, irace will search
 ## for the files in this folder.
-trainInstancesFile = ""
+trainInstancesFile = "./trainInstancesFile.txt"
 
 ## Randomly sample the training instances or use them in the order given.
 # sampleInstances = 1
