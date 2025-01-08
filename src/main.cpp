@@ -45,8 +45,10 @@ int main(int argc, char* argv[]) {
     int numberMachines         = 2;
     int planingHorizon         = 2;
     int unsupervised           = 0.5*DAY;
-	int instance_report        = 0;
 	int diferent_toolset_mode  = 0;
+	int instance_report        = 0;
+    int print_time             = 1;
+    int print_cost             = 1;
 	
 	// Instance file name
 	string filenameJobs = arguments[0];
@@ -76,6 +78,10 @@ int main(int argc, char* argv[]) {
             thN = stoi(arguments[i+1]);
 		else if(arguments[i]== "--THREAD_USED")
             thN = stoi(arguments[i+1]);
+		else if(arguments[i]== "--INIT_SOL_TYPE")
+			initSolType = stoi(arguments[i+1]);
+		else if(arguments[i]== "--PTL_TEMP_UPDATE_PROPORTION")
+			ptlTempUpProportion = stoi(arguments[i+1]);
 		else if(arguments[i]== "--CAPACITY")
 			capacityMagazine = stoi(arguments[i+1]);
 		else if(arguments[i]== "--MACHINES")
@@ -87,11 +93,11 @@ int main(int argc, char* argv[]) {
 		else if(arguments[i]== "--INSTANCE_REPORT")
 			instance_report = stoi(arguments[i+1]);
 		else if(arguments[i]== "--DIFERENT_TOOLSETS_MODE")
-			diferent_toolset_mode = stoi(arguments[i+1]);	
-		else if(arguments[i]== "--INIT_SOL_TYPE")
-			initSolType = stoi(arguments[i+1]);
-		else if(arguments[i]== "--PTL_TEMP_UPDATE_PROPORTION")
-			ptlTempUpProportion = stoi(arguments[i+1]);
+			diferent_toolset_mode = stoi(arguments[i+1]);
+        else if(arguments[i]== "--PRINT_TIME")
+            print_time = stoi(arguments[i+1]);
+        else if(arguments[i]== "--PRINT_COST")
+            print_cost = stoi(arguments[i+1]);
 
     }
 	tempUp = PTL/ptlTempUpProportion;
@@ -131,8 +137,8 @@ int main(int argc, char* argv[]) {
     else finalSolution = sol;
     prob->evaluateReportKTNS(finalSolution, filenameJobs, filenameTools, filenameoutput, et.getTimeMs());
 
-    cout << (-1) * sol.evalSol << endl;
-    cout << et.getTimeMs() << endl;
+    if(print_cost) cout << (-1) * sol.evalSol << endl;
+    if(print_time) cout << et.getTimeMs() << endl;
 
     return 0;
 }
