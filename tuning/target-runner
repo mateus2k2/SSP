@@ -81,6 +81,6 @@ rm -f "${STDOUT}" "${STDERR}"
 TIMEZONE="America/Sao_Paulo"
 export TZ=$TIMEZONE
 TIME=$(date "+%Y-%m-%d %H:%M:%S")
-echo "$TIME | $COST | $EXE ${EXE_PARAMS} 1> ${STDOUT} 2> ${STDERR}" >> runs.log
+echo "$TIME | $COST | $EXE ${EXE_PARAMS} >> runs.log
 
 exit 0
