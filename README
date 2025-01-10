@@ -24,3 +24,5 @@ TESTE
 make compilePT DEBUG_MODE=0 GATILHO_MODE=0 FAST_MODE=0
 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv ./input/Processed/ToolSetInt.csv ./../output/Exemplo/none.txt --N_REPLICAS 11 --PTL 100 --DIFERENT_TOOLSETS_MODE 0 --PRINT_TIME 0--TEMP_INIT 0.1 --TEMP_FIM 5 --MCL 300 --TEMP_DIST 1 --TYPE_UPDATE 0 --INIT_SOL_TYPE 0 --PTL_TEMP_UPDATE_PROPORTION 3
 ./src/out/mainCpp "./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" --TEMP_INIT 0.1 --TEMP_FIM 0.5 --N_REPLICAS 11 --MCL 400 --PTL 10 --TEMP_DIST 1 --TYPE_UPDATE 1 --INIT_SOL_TYPE 1 --TEMP_UPDATE 20 --PTL_TEMP_UPDATE_PROPORTION 1 --RESULT_REPORT 1 --DIFERENT_TOOLSETS_MODE 0
+
+"git.enabled": false
