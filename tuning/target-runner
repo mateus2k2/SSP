@@ -74,7 +74,7 @@ fi
 # objective value is the first number in the first column of the last line of
 # the output.
 COST=$(tail -n 1 ${STDOUT} | grep -e '^[[:space:]]*[+-]\?[0-9]' | cut -f1)
-echo "$COST"
+echo "-$COST"
 # Comment the following line if you wish to preserve temporary files
 rm -f "${STDOUT}" "${STDERR}"
 
