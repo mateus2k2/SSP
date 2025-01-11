@@ -74,13 +74,14 @@ fi
 # objective value is the first number in the first column of the last line of
 # the output.
 COST=$(tail -n 1 ${STDOUT} | grep -e '^[[:space:]]*[+-]\?[0-9]' | cut -f1)
-echo "-$COST"
+COST=$(( COST * -1 ))
+echo "$COST"
 # Comment the following line if you wish to preserve temporary files
 rm -f "${STDOUT}" "${STDERR}"
 
 TIMEZONE="America/Sao_Paulo"
 export TZ=$TIMEZONE
 TIME=$(date "+%Y-%m-%d %H:%M:%S")
-echo "$TIME | $COST | $EXE ${EXE_PARAMS} >> runs.log
+echo "$TIME | $COST | $EXE ${EXE_PARAMS}" >> runs.log
 
 exit 0
