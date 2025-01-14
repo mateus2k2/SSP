@@ -72,14 +72,13 @@ class SSP: public Problem<solSSP>{
 		int diferent_toolset_mode;
 
 		std::vector<tuple<int, int>> switchPermutation;
-		int numberOfPairs;
 		
     	map<int, int> ferramentas;
 		vector<vector<bool>> toolJob;
+		map<int, ToolSet> normalizedToolSets;
 		
 		vector<Job> originalJobs;
 		map<int, ToolSet> originalToolSets;
-		map<int, ToolSet> normalizedToolSets;
 
 		std::function<solSSP(solSSP)> neighborFunc;
     	std::function<solSSP()> constructionFunc;

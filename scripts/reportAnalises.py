@@ -81,6 +81,25 @@ def verificarPrecedenciaAsSingleMachine(files):
     print(quantidadePrecedenciaQuebradaPorInstancia)
     return quantidadePrecedenciaQuebradaPorInstancia
 
+    # for index, report in enumerate(files):
+    #     flatSolution = []
+    #     planejamento, machines, endInfo = rp.parseReport(report)
+    #     jobs = ld.loadJobs(planejamento['jobsFileName'])
+
+    #     for machine in machines:
+    #         for estado in machine:
+    #             print(estado['job'], estado['operation'])
+    #             flatSolution.append(estado)
+
+    #     for i in range(1, len(flatSolution)):
+    #         jobAtual = flatSolution[i]
+    #         if(jobAtual['operation'] == 1):
+    #             for j in range(i, len(flatSolution)):
+    #                 jobCheck = flatSolution[j]
+    #                 if jobAtual['job'] == jobCheck['job'] and jobCheck['operation'] == 0:
+    #                     print(f'Precedencia quebrada para a instancia {index + 1} no job {jobAtual["job"]}')
+    #                     break 
+
 def totalUnfinishedJobs(machines, planejamento):
     jobs = ld.loadJobs(planejamento['jobsFileName'])
     total = len(jobs)

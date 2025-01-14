@@ -28,7 +28,7 @@ solSSP SSP::rand() {
 solSSP SSP::randPriority() {
     solSSP ss;
     std::random_device rnd_device;
-    std::mt19937 mersenne_engine{rnd_device()}; // rnd_device()
+    std::mt19937 mersenne_engine{42}; // rnd_device()
 
     // put the priority jobs first
     std::vector<int> priorityJobIndices;
