@@ -32,11 +32,6 @@ double SSP::evaluate(solSSP& s) {
     int isFirstJobOfMachine = 1;
     int extendedPlaningHorizon = (planingHorizon * numberMachines) * DAY;
 
-    // if(diferent_toolset_mode == 1){
-    //     s.clearReleaseDates(numberJobs);
-    //     s.clearDueDates(numberJobs);
-    // }
-
     for (jL = 0; jL < numberJobs; ++jL) {
         // ---------------------------------------------------------------------------
         // switchs
@@ -99,11 +94,6 @@ double SSP::evaluate(solSSP& s) {
         if (currantSwitchs > 0) ++switchsInstances;
         fineshedJobsCount += originalJobs[s.sol[jL]].isGrouped ? 2 : 1;
         if (originalJobs[s.sol[jL]].priority) unfineshedPriorityCount -= originalJobs[s.sol[jL]].isGrouped ? 2 : 1;
-
-        // if(diferent_toolset_mode == 1){
-        //     if (originalJobs[s.sol[jL]].indexOperation == 0) s.setReleaseDate(originalJobs[s.sol[jL]].indexJob, jL);
-        //     else s.setDueDate(originalJobs[s.sol[jL]].indexJob, jL);
-        // }
     }
 
     int cost = (PROFITYFINISHED * fineshedJobsCount) - (COSTSWITCH * switchs) - (COSTSWITCHINSTANCE * switchsInstances) - (COSTPRIORITY * unfineshedPriorityCount);
@@ -261,14 +251,6 @@ double SSP::evaluateReportKTNS(solSSP& solution, string filenameJobs, string fil
     solutionReportFile << "TIME;" << time << endl;
 
     solutionReportFile.close();
-
-    // cout << "-----------INICIO-----------" << endl;
-    // for (size_t i = 0; i < solution.sol.size(); ++i) {
-    //     int index = solution.sol[i];
-    //     Job job = originalJobs[index];
-    //     cout << i << ": (" << job.indexJob << " " << job.indexOperation << ") = " << solution.releaseDates[originalJobs[solution.sol[i]].indexJob] << endl;
-    // }
-    // cout << "-----------FIM-----------" << endl;
 
     return cost;
 }
