@@ -71,30 +71,25 @@ solSSP SSP::two_swap(solSSP sol) {
 
             if (originalJobs[s.sol[first]].indexOperation == 0) {
                 if (s.dueDates[originalJobs[s.sol[first]].indexJob] > last) {
-                    // cout << "1 = " << " job: " << originalJobs[s.sol[first]].indexJob << " s.dueDates[originalJobs[s.sol[first]].indexJob]: " << s.dueDates[originalJobs[s.sol[first]].indexJob] << " first: " << first << " last: " << last << endl;
                     validSwap1 = true;
                 }
             }
             else if (originalJobs[s.sol[first]].indexOperation == 1) {
                 if (s.releaseDates[originalJobs[s.sol[first]].indexJob] < last) {
-                    // cout << "2 = " << " job: " << originalJobs[s.sol[first]].indexJob << " s.releaseDates[originalJobs[s.sol[first]].indexJob]: " << s.releaseDates[originalJobs[s.sol[first]].indexJob] << " first: " << first << " last: " << last << endl;
                     validSwap1 = true;
                 }
             }
             if (originalJobs[s.sol[last]].indexOperation == 0) {
                 if (s.dueDates[originalJobs[s.sol[last]].indexJob] > first) {
-                    // cout << "3 = " << " job: " << originalJobs[s.sol[last]].indexJob << " s.dueDates[originalJobs[s.sol[last]].indexJob]: " << s.dueDates[originalJobs[s.sol[last]].indexJob] << " first: " << first << " last: " << last << endl;
                     validSwap2 = true;
                 }
             }
             else if (originalJobs[s.sol[last]].indexOperation == 1) {
                 if (s.releaseDates[originalJobs[s.sol[last]].indexJob] < first) {
-                    // cout << "4 = " << " job: " << originalJobs[s.sol[last]].indexJob << " s.releaseDates[originalJobs[s.sol[last]].indexJob]: " << s.releaseDates[originalJobs[s.sol[last]].indexJob] << " first: " << first << " last: " << last << endl;
                     validSwap2 = true;
                 }
             }
             if (countErros > 10000) {
-                cout << "ERROR" << endl;
                 s.Nup = sol.Nup;
                 s.Ndown = sol.Ndown;
                 return s;
