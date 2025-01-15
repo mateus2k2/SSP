@@ -32,10 +32,10 @@ double SSP::evaluate(solSSP& s) {
     int isFirstJobOfMachine = 1;
     int extendedPlaningHorizon = (planingHorizon * numberMachines) * DAY;
 
-    if(diferent_toolset_mode == 1){
-        s.clearReleaseDates(numberJobs);
-        s.clearDueDates(numberJobs);
-    }
+    // if(diferent_toolset_mode == 1){
+    //     s.clearReleaseDates(numberJobs);
+    //     s.clearDueDates(numberJobs);
+    // }
 
     for (jL = 0; jL < numberJobs; ++jL) {
         // ---------------------------------------------------------------------------
@@ -100,10 +100,10 @@ double SSP::evaluate(solSSP& s) {
         fineshedJobsCount += originalJobs[s.sol[jL]].isGrouped ? 2 : 1;
         if (originalJobs[s.sol[jL]].priority) unfineshedPriorityCount -= originalJobs[s.sol[jL]].isGrouped ? 2 : 1;
 
-        if(diferent_toolset_mode == 1){
-            if (originalJobs[s.sol[jL]].indexOperation == 0) s.setReleaseDate(originalJobs[s.sol[jL]].indexJob, jL);
-            else s.setDueDate(originalJobs[s.sol[jL]].indexJob, jL);
-        }
+        // if(diferent_toolset_mode == 1){
+        //     if (originalJobs[s.sol[jL]].indexOperation == 0) s.setReleaseDate(originalJobs[s.sol[jL]].indexJob, jL);
+        //     else s.setDueDate(originalJobs[s.sol[jL]].indexJob, jL);
+        // }
     }
 
     int cost = (PROFITYFINISHED * fineshedJobsCount) - (COSTSWITCH * switchs) - (COSTSWITCHINSTANCE * switchsInstances) - (COSTPRIORITY * unfineshedPriorityCount);

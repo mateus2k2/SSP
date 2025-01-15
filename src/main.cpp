@@ -123,9 +123,7 @@ int main(int argc, char* argv[]) {
 
     prob->loadInstanceParans(filenameJobs);
     if (instance_report) prob->printDataReport();
-    
     if (diferent_toolset_mode == 0) prob->groupJobs();
-    else prob->setupPermutations();    
 
     PT<solSSP> algo(tempIni, tempfim, tempN, MCL, PTL, tempD, uType, tempUp);
     ExecTime et;

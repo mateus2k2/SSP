@@ -17,8 +17,8 @@ solSSP SSP::two_opt(solSSP sol) {
     std::mt19937 mersenne_engine{rnd_device()};
     std::uniform_int_distribution<int> dist{0, (numberJobs - 1)};
 
-    if (diferent_toolset_mode == 1){
-        
+    if(diferent_toolset_mode == 1){ 
+
     }
     else{
         do {
@@ -45,79 +45,76 @@ solSSP SSP::two_opt(solSSP sol) {
 solSSP SSP::two_swap(solSSP sol) {
     solSSP s;
     s.sol = sol.sol;
+    s.releaseDates = sol.releaseDates;
+    s.dueDates = sol.dueDates;
     int first = 0;
     int last = 0;
-    bool validSwap1 = false;
-    bool validSwap2 = false;
-
+    bool validSwap = false;
     std::random_device rnd_device;
-    std::mt19937 mersenne_engine{42}; // rnd_device()
+    std::mt19937 mersenne_engine{rnd_device()}; // rnd_device()
     std::uniform_int_distribution<int> dist {0, (numberJobs-1)};
 
     int countErros = 0;
+    int validSwap1 = false;
+    int validSwap2 = false;
 
     if(diferent_toolset_mode == 1) {    
-        std::shuffle(begin(switchPermutation), end(switchPermutation), mersenne_engine);
-        sol.currantPermutationIndex = 0;
-
-        // do {
-        //     if (sol.currantPermutationIndex == switchPermutation.size()) {
-        //         s.Nup = sol.Nup;
-        //         s.Ndown = sol.Ndown;
-        //         return s;
-        //     }
-        //     first = std::get<0>(switchPermutation[sol.currantPermutationIndex]);
-        //     last = std::get<1>(switchPermutation[sol.currantPermutationIndex]);
-        //     sol.currantPermutationIndex++;
-
-        //     if (sol.releaseDates[originalJobs[sol.sol[first]].indexJob] < last  && 
-        //         sol.dueDates[originalJobs[sol.sol[first]].indexJob]     > last  &&
-        //         sol.releaseDates[originalJobs[sol.sol[last]].indexJob]  < first &&
-        //         sol.dueDates[originalJobs[sol.sol[last]].indexJob]      > first) {
-        //         validSwap = true;
-        //     }
-            
-        // } while (validSwap == false);
-
         do {
             do {
                 first = dist(mersenne_engine);
                 last = dist(mersenne_engine);
             } while (first == last);
             if (first > last) std::swap(first, last);
+            
+            validSwap1 = false;
+            validSwap2 = false;
 
-            if (originalJobs[sol.sol[first]].indexOperation == 0) {
-                //nao pode deixar ela ir pra depois da operacao 1 = dueDate 
-                if (sol.dueDates[originalJobs[sol.sol[first]].indexJob] > last) {
+            if (originalJobs[s.sol[first]].indexOperation == 0) {
+                if (s.dueDates[originalJobs[s.sol[first]].indexJob] > last) {
+                    // cout << "1 = " << " job: " << originalJobs[s.sol[first]].indexJob << " s.dueDates[originalJobs[s.sol[first]].indexJob]: " << s.dueDates[originalJobs[s.sol[first]].indexJob] << " first: " << first << " last: " << last << endl;
                     validSwap1 = true;
                 }
             }
-            else if (originalJobs[sol.sol[first]].indexOperation == 1) {
-                //nao pode deixar ela ir pra antes da operacao 0 = releaseDate
-                if (sol.releaseDates[originalJobs[sol.sol[first]].indexJob] < last) {
+            else if (originalJobs[s.sol[first]].indexOperation == 1) {
+                if (s.releaseDates[originalJobs[s.sol[first]].indexJob] < last) {
+                    // cout << "2 = " << " job: " << originalJobs[s.sol[first]].indexJob << " s.releaseDates[originalJobs[s.sol[first]].indexJob]: " << s.releaseDates[originalJobs[s.sol[first]].indexJob] << " first: " << first << " last: " << last << endl;
                     validSwap1 = true;
                 }
             }
-            if (originalJobs[sol.sol[last]].indexOperation == 0) {
-                //nao pode deixar ela ir pra depois da operacao 1 = dueDate 
-                if (sol.dueDates[originalJobs[sol.sol[last]].indexJob] > first) {
+            if (originalJobs[s.sol[last]].indexOperation == 0) {
+                if (s.dueDates[originalJobs[s.sol[last]].indexJob] > first) {
+                    // cout << "3 = " << " job: " << originalJobs[s.sol[last]].indexJob << " s.dueDates[originalJobs[s.sol[last]].indexJob]: " << s.dueDates[originalJobs[s.sol[last]].indexJob] << " first: " << first << " last: " << last << endl;
                     validSwap2 = true;
                 }
             }
-            else if (originalJobs[sol.sol[last]].indexOperation == 1) {
-                //nao pode deixar ela ir pra antes da operacao 0 = releaseDate
-                if (sol.releaseDates[originalJobs[sol.sol[last]].indexJob] < first) {
+            else if (originalJobs[s.sol[last]].indexOperation == 1) {
+                if (s.releaseDates[originalJobs[s.sol[last]].indexJob] < first) {
+                    // cout << "4 = " << " job: " << originalJobs[s.sol[last]].indexJob << " s.releaseDates[originalJobs[s.sol[last]].indexJob]: " << s.releaseDates[originalJobs[s.sol[last]].indexJob] << " first: " << first << " last: " << last << endl;
                     validSwap2 = true;
                 }
             }
             if (countErros > 10000) {
+                cout << "ERROR" << endl;
                 s.Nup = sol.Nup;
                 s.Ndown = sol.Ndown;
                 return s;
             }
             countErros++;
 
-        } while (validSwap1 == false && validSwap2 == false);
+        } while (validSwap1 == false || validSwap2 == false);
+
+        if (originalJobs[s.sol[first]].indexOperation == 0) {
+            s.releaseDates[originalJobs[s.sol[first]].indexJob] = last;
+        }
+        else if (originalJobs[s.sol[first]].indexOperation == 1) {
+            s.dueDates[originalJobs[s.sol[first]].indexJob] = last;
+        }
+        if (originalJobs[s.sol[last]].indexOperation == 0) {
+            s.releaseDates[originalJobs[s.sol[last]].indexJob] = first;
+        }
+        else if (originalJobs[s.sol[last]].indexOperation == 1) {
+            s.dueDates[originalJobs[s.sol[last]].indexJob] = first;
+        }
     }
     else{
         do {
@@ -143,24 +140,28 @@ solSSP SSP::insertion(solSSP sol) {
     std::mt19937 mersenne_engine{rnd_device()};
     std::uniform_int_distribution<int> dist{0, (numberJobs - 1)};
 
-    if (diferent_toolset_mode == 1){
-
+    if(diferent_toolset_mode == 1){ 
+        
     }
     else{
+        // Seleciona duas posições distintas
         do {
             from = dist(mersenne_engine);
             to = dist(mersenne_engine);
         } while (from == to);
 
+        // Remove o elemento da posição `from`
         auto element = s.sol[from];
         s.sol.erase(s.sol.begin() + from);
 
+        // Insere o elemento na posição `to`
         if (to > from) {
-            to--;
+            to--;  // Ajusta a posição devido à remoção
         }
         s.sol.insert(s.sol.begin() + to, element);
     }
 
+    // Copia os dados auxiliares
     s.Nup = sol.Nup;
     s.Ndown = sol.Ndown;
 

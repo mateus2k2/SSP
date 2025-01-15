@@ -33,29 +33,6 @@ struct solSSP: public solution{
 	std::vector<int> sol; 
 	std::vector<int> releaseDates;
 	std::vector<int> dueDates;
-	long unsigned int currantPermutationIndex = 0;
-
-	void setReleaseDate(int index, int value){ 
-		releaseDates[index] = value;
-    }
-
-	void setDueDate(int index, int value){ 
-		dueDates[index] = value;
-	}
-
-	void clearReleaseDates(int numberJobs){ 
-		releaseDates.clear();
-		releaseDates.resize(numberJobs, 0);
-	}
-
-	void clearDueDates(int numberJobs){ 
-		dueDates.clear();
-		dueDates.resize(numberJobs, 0);
-	}
-
-	void setCurrantPermutationIndex(int value){
-		currantPermutationIndex = value;	
-	}
 };
 
 
@@ -71,14 +48,12 @@ class SSP: public Problem<solSSP>{
 		int capacityMagazine;
 		int diferent_toolset_mode;
 
-		std::vector<tuple<int, int>> switchPermutation;
-		
     	map<int, int> ferramentas;
 		vector<vector<bool>> toolJob;
-		map<int, ToolSet> normalizedToolSets;
 		
 		vector<Job> originalJobs;
 		map<int, ToolSet> originalToolSets;
+		map<int, ToolSet> normalizedToolSets;
 
 		std::function<solSSP(solSSP)> neighborFunc;
     	std::function<solSSP()> constructionFunc;

@@ -1,15 +1,6 @@
 #include "headers/SSP.h"
 
-void SSP::setupPermutations() {
-    for (int i = 0; i < numberJobs; i++) {
-        for (int j = i + 1; j < numberJobs; j++) {
-            switchPermutation.push_back(std::make_tuple(i, j));
-        }
-    }
-}
-
 solSSP SSP::ajustFinalSolution(solSSP sol) {
-    cout << "TESTE" << endl;
     return sol;
 
     vector<int> s = sol.sol;

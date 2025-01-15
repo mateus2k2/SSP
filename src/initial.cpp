@@ -28,7 +28,7 @@ solSSP SSP::rand() {
 solSSP SSP::randPriority() {
     solSSP ss;
     std::random_device rnd_device;
-    std::mt19937 mersenne_engine{42}; // rnd_device()
+    std::mt19937 mersenne_engine{rnd_device()}; // rnd_device()
 
     // put the priority jobs first
     std::vector<int> priorityJobIndices;
@@ -70,9 +70,20 @@ solSSP SSP::randPriority() {
         }
     }
 
-    ss.clearReleaseDates(numberJobs);
-    ss.clearDueDates(numberJobs);
-    ss.setCurrantPermutationIndex(0);
+    ss.releaseDates.resize(numberJobs, 0);
+    ss.dueDates.resize(numberJobs, 0);
+
+    // set the release and due dates
+    for (size_t i = 0; i < ss.sol.size(); ++i) {
+        int index = ss.sol[i];
+        Job job = originalJobs[index];
+        if(job.indexOperation == 0){
+            ss.releaseDates[job.indexJob] = i;
+        }
+        else{
+            ss.dueDates[job.indexJob] = i;
+        }
+    }
 
     ss.evalSol = evaluate(ss);
     ss.Nup = false;
