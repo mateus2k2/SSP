@@ -23,11 +23,11 @@ run_instances() {
             --TEMP_FIM 0.5 \
             --N_REPLICAS 11 \
             --MCL 400 \
-            --PTL 100 \
+            --PTL 10 \
             --TEMP_DIST 1 \
             --TYPE_UPDATE 1 \
             --INIT_SOL_TYPE 1 \
-            --TEMP_UPDATE 20 \
+            --TEMP_UPDATE 5 \
             --PTL_TEMP_UPDATE_PROPORTION 1 \
             --DIFERENT_TOOLSETS_MODE $instanceMode
         counter=$((counter+1))
