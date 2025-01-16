@@ -5,9 +5,6 @@ solSSP SSP::ajustFinalSolution(solSSP sol) {
 
     vector<int> s = sol.sol;
 
-    fstream solutionReportFile;
-    solutionReportFile.open("", ios::out);
-
     vector<bool> magazineL(numberToolsReal, true);
     unsigned int switchs = 0;
     int numberJobsSol = s.size();
@@ -26,6 +23,7 @@ solSSP SSP::ajustFinalSolution(solSSP sol) {
     int logicalMachine = 0;
 
     for (jL = 0; jL < numberJobsSol; ++jL) {
+
         // ---------------------------------------------------------------------------
         // switchs
         // ---------------------------------------------------------------------------
@@ -60,17 +58,6 @@ solSSP SSP::ajustFinalSolution(solSSP sol) {
         // ---------------------------------------------------------------------------
         // TIME VERIFICATIONS
         // ---------------------------------------------------------------------------
-
-        if (originalJobs[s[jL]].indexJob == 1012 && originalJobs[s[jL]].indexOperation == 0) {
-            int countTrue = 0;
-            for (int i = 0; i < numberToolsReal; i++) {
-                if (magazineCL[i]) {
-                    countTrue++;
-                }
-            }
-            cout << countTrue << endl;
-            cout << numberToolsReal << endl;
-        }
 
         fimJob = inicioJob + originalJobs[s[jL]].processingTime;
 
@@ -108,7 +95,7 @@ solSSP SSP::ajustFinalSolution(solSSP sol) {
         int endTMP = ((fimJob - 1) % (planingHorizon * DAY)) + 1;
 
         if (startTMP % (planingHorizon * DAY) == 0) {
-            solutionReportFile << "Machine: " << logicalMachine << std::endl;
+            //troca de maquina
             ++logicalMachine;
         }
 
@@ -117,13 +104,7 @@ solSSP SSP::ajustFinalSolution(solSSP sol) {
         int loops = isGrouped ? 2 : 1;
 
         auto writeJobDetails = [&](int start, int end, int operation) {
-            solutionReportFile << job.indexJob << ";" << operation << ";" << start << ";" << end << ";" << job.priority << ";";
-            for (size_t t = 0; t < magazineCL.size(); ++t) {
-                if (magazineCL[t]) {
-                    solutionReportFile << t << ",";
-                }
-            }
-            solutionReportFile << "\n";
+            
         };
 
         for (int i = 0; i < loops; ++i) {
@@ -136,27 +117,6 @@ solSSP SSP::ajustFinalSolution(solSSP sol) {
             }
         }
     }
-
-    int cost = (PROFITYFINISHED * fineshedJobsCount) - (COSTSWITCH * switchs) - (COSTSWITCHINSTANCE * switchsInstances) - (COSTPRIORITY * unfineshedPriorityCount);
-
-    solutionReportFile << "END;";
-    solutionReportFile << fineshedJobsCount << ";";
-    solutionReportFile << switchs << ";";
-    solutionReportFile << switchsInstances << ";";
-    solutionReportFile << unfineshedPriorityCount << ";";
-    solutionReportFile << cost << "\n";
-
-    solutionReportFile << "TIME;" << time << endl;
-
-    solutionReportFile.close();
-
-    // cout << "-----------INICIO-----------" << endl;
-    // for (size_t i = 0; i < solution.sol.size(); ++i) {
-    //     int index = solution.sol[i];
-    //     Job job = originalJobs[index];
-    //     cout << i << ": (" << job.indexJob << " " << job.indexOperation << ") = " << solution.releaseDates[originalJobs[solution.sol[i]].indexJob] << endl;
-    // }
-    // cout << "-----------FIM-----------" << endl;
 
     return sol;
 }

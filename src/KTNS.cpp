@@ -163,17 +163,6 @@ double SSP::evaluateReportKTNS(solSSP& solution, string filenameJobs, string fil
         // TIME VERIFICATIONS
         // ---------------------------------------------------------------------------
 
-        if (originalJobs[s[jL]].indexJob == 1012 && originalJobs[s[jL]].indexOperation == 0) {
-            int countTrue = 0;
-            for (int i = 0; i < numberToolsReal; i++) {
-                if (magazineCL[i]) {
-                    countTrue++;
-                }
-            }
-            cout << countTrue << endl;
-            cout << numberToolsReal << endl;
-        }
-
         fimJob = inicioJob + originalJobs[s[jL]].processingTime;
 
         if (((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) ||                                           // verificar se estou em um periodo sem supervisao e houve troca de ferramenta

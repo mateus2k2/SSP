@@ -118,6 +118,8 @@ solSSP SSP::two_swap(solSSP sol) {
         } while (first == last);
     }
 
+    // cout << countErros << endl;
+
     std::swap(s.sol[first], s.sol[last]);
     s.Nup = sol.Nup;
     s.Ndown = sol.Ndown;
