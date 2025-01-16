@@ -1,4 +1,5 @@
 outputFolder=${1:-"./output/Exemplo"}
+runMode=${2:"both"}
 
 [ ! -d "$outputFolder" ] && mkdir -p "$outputFolder"
 [ ! -d "$outputFolder/MyInstancesSameToolSets" ] && mkdir -p "$outputFolder/MyInstancesSameToolSets"
@@ -32,14 +33,33 @@ run_instances() {
             --DIFERENT_TOOLSETS_MODE $instanceMode
         counter=$((counter+1))
     done
+
+    stringToSend = "Terminou de rodar as instancias de $instancesFolder"
+
+    curl -X POST "https://api.telegram.org/bot8094164826:AAF_tYz1mWAB-site3dt1iFJUMPeAQxH148/sendMessage" \
+        -H "Content-Type: application/json" \
+        -d "{\"chat_id\": \"336418081\", \"text\": \"$stringToSend\"}"
 }
 
 toolSetsFile=./input/Processed/ToolSetInt.csv
 
-# Run instances for "MyInstancesSameToolSets"
-instancesFolder=./input/MyInstancesSameToolSets
-run_instances "$instancesFolder" "$outputFolder/MyInstancesSameToolSets" 0
+if [ "$runMode" == "both" ] ; then
+    instancesFolder=./input/MyInstancesSameToolSets
+    run_instances "$instancesFolder" "$outputFolder/MyInstancesSameToolSets" 0
 
-# Run instances for "MyInstancesDiferentToolSets"
-instancesFolder=./input/MyInstancesDiferentToolSets
-run_instances "$instancesFolder" "$outputFolder/MyInstancesDiferentToolSets" 1
+    instancesFolder=./input/MyInstancesDiferentToolSets
+    run_instances "$instancesFolder" "$outputFolder/MyInstancesDiferentToolSets" 1
+
+elif [ "$runMode" == "same" ]; then
+    instancesFolder=./input/MyInstancesSameToolSets
+    run_instances "$instancesFolder" "$outputFolder/MyInstancesSameToolSets" 0
+
+elif [ "$runMode" == "diferent" ]; then
+    instancesFolder=./input/MyInstancesDiferentToolSets
+    run_instances "$instancesFolder" "$outputFolder/MyInstancesDiferentToolSets" 1
+else
+    echo "Modo de execução inválido"
+    exit 1
+fi
+
+
