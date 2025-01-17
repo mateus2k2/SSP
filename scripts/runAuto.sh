@@ -35,9 +35,10 @@ run_instances() {
 
         stringToSend="$counter - Instância $instancesFolder/$filename finalizada"
 
-        curl -X POST "https://api.telegram.org/bot8094164826:AAF_tYz1mWAB-site3dt1iFJUMPeAQxH148/sendMessage" \
-            -H "Content-Type: application/json" \
-            -d "{\"chat_id\": \"336418081\", \"text\": \"$stringToSend\"}"
+        wget --header="Content-Type: application/json" \
+             --post-data='{"chat_id": "336418081", "text": "'"$stringToSend"'"}' \
+             "https://api.telegram.org/bot8094164826:AAF_tYz1mWAB-site3dt1iFJUMPeAQxH148/sendMessage" \
+             -O -
     done
 
 }
