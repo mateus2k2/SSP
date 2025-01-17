@@ -32,13 +32,14 @@ run_instances() {
             --PTL_TEMP_UPDATE_PROPORTION 1 \
             --DIFERENT_TOOLSETS_MODE $instanceMode
         counter=$((counter+1))
+
+        stringToSend="$counter - Instância $instancesFolder/$filename finalizada"
+
+        curl -X POST "https://api.telegram.org/bot8094164826:AAF_tYz1mWAB-site3dt1iFJUMPeAQxH148/sendMessage" \
+            -H "Content-Type: application/json" \
+            -d "{\"chat_id\": \"336418081\", \"text\": \"$stringToSend\"}"
     done
 
-    stringToSend = "Terminou de rodar as instancias de $instancesFolder"
-
-    curl -X POST "https://api.telegram.org/bot8094164826:AAF_tYz1mWAB-site3dt1iFJUMPeAQxH148/sendMessage" \
-        -H "Content-Type: application/json" \
-        -d "{\"chat_id\": \"336418081\", \"text\": \"$stringToSend\"}"
 }
 
 toolSetsFile=./input/Processed/ToolSetInt.csv
