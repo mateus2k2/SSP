@@ -15,3 +15,5 @@ curl -X POST "https://api.telegram.org/bot8094164826:AAF_tYz1mWAB-site3dt1iFJUMP
 
 make compilePT DEBUG_MODE=0 GATILHO_MODE=0 FAST_MODE=0
 "git.enabled": false
+
+./scripts/runAuto.sh ./output/PTL100Diferent diferent > out
