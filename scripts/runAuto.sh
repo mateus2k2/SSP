@@ -1,5 +1,5 @@
 outputFolder=${1:-"./output/Exemplo"}
-runMode=${2:"both"}
+runMode=${2:-"both"}
 
 [ ! -d "$outputFolder" ] && mkdir -p "$outputFolder"
 [ ! -d "$outputFolder/MyInstancesSameToolSets" ] && mkdir -p "$outputFolder/MyInstancesSameToolSets"
