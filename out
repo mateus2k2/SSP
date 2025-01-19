@@ -1,7 +1,38 @@
-Isaiah Berlin, quando discute as noções de liberdade negativa e liberdade positiva, não está apenas apresentando dois conceitos isolados, mas sim explorando tensões fundamentais dentro da ideia de liberdade. Liberdade negativa, para ele, é essencialmente a ausência de interferências externas. É a ideia de que você é livre na medida em que ninguém – seja o Estado, outras pessoas ou instituições – te impede de fazer o que deseja. Nesse sentido, a liberdade negativa está muito conectada à ideia de limites: quanto menos barreiras impostas por outros, mais livre você é. Porém, essa concepção de liberdade não necessariamente garante que você possa realizar seus desejos ou viver a vida que considera valiosa. Você pode ser livre para buscar algo, mas, se não tiver os meios para alcançá-lo, essa liberdade pode parecer vazia ou limitada.
+clear
+[H[2J[3Jpython ./scripts/reportAnalises.py ./output/PTL100Diferent/MyInstancesDiferentToolSets 2
+1 46 0 29 29 366 724 12,44 2
+2 51 0 24 35 430 750 9,67 3
+3 48 11 27 35 486 274 11,35 5
+4 116 0 96 94 898 1642 63,83 6
+5 111 4 101 86 981 1369 57,78 4
+6 122 41 90 106 974 396 68,93 8
+7 128 0 100 111 953 1777 95,27 10
+8 122 2 106 103 1166 1404 93,53 5
+9 140 34 88 117 1207 803 90,73 7
+10 198 1 201 174 1407 2763 214,12 13
+11 206 5 193 185 1918 2262 220,90 11
+12 214 88 185 191 1976 -106 223,05 14
+13 222 4 277 189 1553 3097 296,72 21
+14 244 18 255 210 2191 2489 278,72 24
+15 245 129 254 209 1903 -513 313,85 20
+16 276 1 324 240 2154 3696 400,81 24
+17 293 14 307 259 2653 3127 406,44 46
+18 311 139 289 272 2638 -198 438,62 26
+19 344 4 355 302 2643 4537 564,50 36
+20 323 36 376 289 2952 2768 455,19 32
+21 365 160 334 318 2627 343 531,76 43
+22 388 3 412 358 3438 4532 660,92 44
+23 392 24 408 342 3617 4003 629,99 50
+24 411 189 389 370 3568 -608 689,26 36
+25 462 4 437 415 4048 5542 802,00 45
+26 439 27 460 403 4436 3894 785,45 53
+27 482 195 417 436 4160 90 790,40 44
+28 493 3 507 439 3951 6359 966,85 47
+29 498 21 502 449 4978 4842 936,26 64
+30 523 229 477 467 4631 -481 966,03 60
+31 605 6 631 539 4753 7827 1312,92 56
+32 613 29 623 562 5654 6246 1207,49 71
+33 638 293 598 579 5317 -757 1317,19 63
+echo "\n"
 
-Por outro lado, a liberdade positiva está mais relacionada à ideia de autonomia, ao controle que você tem sobre sua própria vida e decisões. É sobre ser o autor do próprio destino, o que vai além de apenas estar livre de interferências externas. Para Berlin, o problema começa quando essa noção de liberdade positiva é interpretada de forma a justificar coerções externas. Por exemplo, alguém pode argumentar que uma pessoa só será verdadeiramente livre se viver de acordo com sua "verdadeira essência" ou se tomar decisões "racionais". Isso pode abrir espaço para que outros – o Estado, líderes políticos ou mesmo grupos sociais – decidam o que é melhor para você, sob a justificativa de te "libertar" de ilusões ou desejos "irracionais". E é aí que as coisas começam a ficar perigosas.
 
-Berlin alerta que, ao longo da história, essa visão de liberdade positiva muitas vezes foi usada como justificativa para autoritarismos. Governos que alegam saber o que é melhor para seus cidadãos podem restringir liberdades em nome de um "bem maior". Ele não está dizendo que a liberdade positiva é intrinsecamente ruim, mas que ela carrega um risco maior de se transformar em uma forma de dominação. Então, enquanto a liberdade negativa tende a ser mais sobre proteção contra abusos externos, a positiva, mesmo com boas intenções, pode acabar sendo um caminho para a imposição de uma visão única de "bom" ou "correto".
-
-No fundo, Berlin não quer que abandonemos a ideia de liberdade positiva, mas que estejamos atentos às suas armadilhas. Ele reconhece que essas duas formas de liberdade são, muitas vezes, complementares e até interdependentes, mas é fundamental entender que o equilíbrio entre elas é delicado. Ele nos força a encarar a pergunta: até que ponto queremos ser livres de interferências externas, e até que ponto aceitamos alguma orientação – ou até mesmo coerção – para alcançar uma vida considerada plena ou significativa?
