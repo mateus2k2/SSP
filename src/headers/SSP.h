@@ -28,7 +28,6 @@
 #include "../../../PTAPI/include/Problem.h"
 #include "GlobalVars.h"
 
-
 struct solSSP: public solution{ 
 	std::vector<int> sol; 
 	std::vector<int> releaseDates;
@@ -47,6 +46,8 @@ class SSP: public Problem<solSSP>{
 		int numberOfPriorityJobs;
 		int capacityMagazine;
 		int diferent_toolset_mode;
+
+		vector<JobTime> jobsTime;
 
     	map<int, int> ferramentas;
 		vector<vector<bool>> toolJob;
@@ -82,7 +83,7 @@ class SSP: public Problem<solSSP>{
 		solSSP insertion(solSSP sol);
 		
 		double evaluate(solSSP& s);
-		double evaluateReportKTNS(solSSP &sol, string filenameJobs, string filenameTools, string solutionReportFileName, int time);
+		double evaluateReportKTNS(solSSP &sol, string filenameJobs, string filenameTools, string solutionReportFileName, int time, bool writeToFile);
 		
 };
 

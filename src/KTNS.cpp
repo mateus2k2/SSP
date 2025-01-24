@@ -101,11 +101,18 @@ double SSP::evaluate(solSSP& s) {
     return (-1) * cost;
 }
 
-double SSP::evaluateReportKTNS(solSSP& solution, string filenameJobs, string filenameTools, string solutionReportFileName, int time) {
+double SSP::evaluateReportKTNS(solSSP& solution, string filenameJobs, string filenameTools, string solutionReportFileName, int time, bool writeToFile) {
     vector<int> s = solution.sol;
 
     fstream solutionReportFile;
     solutionReportFile.open(solutionReportFileName, ios::out);
+    if (writeToFile) {
+        solutionReportFile.open(solutionReportFileName, ios::out);
+        if (!solutionReportFile.is_open()) {
+            cerr << "Error: Could not open solution report file: " << solutionReportFileName << endl;
+            exit(1);
+        }
+    }
 
     vector<bool> magazineL(numberToolsReal, true);
     unsigned int switchs = 0;
@@ -215,6 +222,11 @@ double SSP::evaluateReportKTNS(solSSP& solution, string filenameJobs, string fil
                 }
             }
             solutionReportFile << "\n";
+            int releseTmp = 0;
+            int dueTmp = 0;
+            if(job.indexOperation == 0) releseTmp = start;
+            else dueTmp = start;
+            jobsTime.push_back({job, logicalMachine, start, end, releseTmp, dueTmp});
         };
 
         for (int i = 0; i < loops; ++i) {
@@ -239,7 +251,13 @@ double SSP::evaluateReportKTNS(solSSP& solution, string filenameJobs, string fil
 
     solutionReportFile << "TIME;" << time << endl;
 
-    solutionReportFile.close();
+    if (writeToFile) {
+        solutionReportFile.close();
+    }
 
     return cost;
+}
+
+void makeReport(){
+
 }

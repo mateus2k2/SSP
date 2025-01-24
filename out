@@ -1,38 +1,160 @@
+make compilePT
+make[1]: Entering directory '/home/mateus/WSL/IC/SSP'
 clear
-[H[2J[3Jpython ./scripts/reportAnalises.py ./output/PTL100Diferent/MyInstancesDiferentToolSets 2
-1 46 0 29 29 366 724 12,44 2
-2 51 0 24 35 430 750 9,67 3
-3 48 11 27 35 486 274 11,35 5
-4 116 0 96 94 898 1642 63,83 6
-5 111 4 101 86 981 1369 57,78 4
-6 122 41 90 106 974 396 68,93 8
-7 128 0 100 111 953 1777 95,27 10
-8 122 2 106 103 1166 1404 93,53 5
-9 140 34 88 117 1207 803 90,73 7
-10 198 1 201 174 1407 2763 214,12 13
-11 206 5 193 185 1918 2262 220,90 11
-12 214 88 185 191 1976 -106 223,05 14
-13 222 4 277 189 1553 3097 296,72 21
-14 244 18 255 210 2191 2489 278,72 24
-15 245 129 254 209 1903 -513 313,85 20
-16 276 1 324 240 2154 3696 400,81 24
-17 293 14 307 259 2653 3127 406,44 46
-18 311 139 289 272 2638 -198 438,62 26
-19 344 4 355 302 2643 4537 564,50 36
-20 323 36 376 289 2952 2768 455,19 32
-21 365 160 334 318 2627 343 531,76 43
-22 388 3 412 358 3438 4532 660,92 44
-23 392 24 408 342 3617 4003 629,99 50
-24 411 189 389 370 3568 -608 689,26 36
-25 462 4 437 415 4048 5542 802,00 45
-26 439 27 460 403 4436 3894 785,45 53
-27 482 195 417 436 4160 90 790,40 44
-28 493 3 507 439 3951 6359 966,85 47
-29 498 21 502 449 4978 4842 936,26 64
-30 523 229 477 467 4631 -481 966,03 60
-31 605 6 631 539 4753 7827 1312,92 56
-32 613 29 623 562 5654 6246 1207,49 71
-33 638 293 598 579 5317 -757 1317,19 63
-echo "\n"
+[H[2J[3Jg++ -DDEBUG  ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread  -march=native -lstdc++ -lfmt
+echo "\n" 
 
 
+make[1]: Leaving directory '/home/mateus/WSL/IC/SSP'
+./src/out/mainCpp "./input/MyInstancesDiferentToolSets/n=75,p=0.24,r=0.5,t=112,v0.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" \
+	--TEMP_INIT 0.1 \
+	--TEMP_FIM 0.5 \
+	--N_REPLICAS 11 \
+	--MCL 400 \
+	--PTL 10 \
+	--TEMP_DIST 1 \
+	--TYPE_UPDATE 1 \
+	--INIT_SOL_TYPE 1 \
+	--TEMP_UPDATE 20 \
+	--PTL_TEMP_UPDATE_PROPORTION 1 \
+	--RESULT_REPORT 1 \
+	--DIFERENT_TOOLSETS_MODE 1 \
+
+TESTE45
+Job: 15, Machine: 1, Start: 0, End: 94, Release: 0, Due: 0
+
+
+Job: 60, Machine: 1, Start: 94, End: 172, Release: 94, Due: 0
+
+
+Job: 23, Machine: 1, Start: 172, End: 238, Release: 172, Due: 0
+
+
+Job: 21, Machine: 1, Start: 238, End: 382, Release: 238, Due: 0
+
+
+Job: 3, Machine: 1, Start: 382, End: 521, Release: 382, Due: 0
+
+
+Job: 6, Machine: 1, Start: 521, End: 599, Release: 521, Due: 0
+
+
+Job: 23, Machine: 1, Start: 599, End: 650, Release: 0, Due: 599
+
+
+Job: 12, Machine: 1, Start: 650, End: 756, Release: 650, Due: 0
+
+
+Job: 15, Machine: 1, Start: 756, End: 914, Release: 0, Due: 756
+
+
+Job: 12, Machine: 1, Start: 914, End: 994, Release: 0, Due: 914
+
+
+Job: 74, Machine: 1, Start: 994, End: 1091, Release: 994, Due: 0
+
+
+Job: 1, Machine: 1, Start: 1091, End: 1220, Release: 1091, Due: 0
+
+
+Job: 20, Machine: 1, Start: 1220, End: 1354, Release: 1220, Due: 0
+
+
+Job: 6, Machine: 1, Start: 1354, End: 1473, Release: 0, Due: 1354
+
+
+Job: 5, Machine: 1, Start: 1473, End: 1622, Release: 1473, Due: 0
+
+
+Job: 24, Machine: 1, Start: 1622, End: 1742, Release: 1622, Due: 0
+
+
+Job: 17, Machine: 1, Start: 1742, End: 1853, Release: 1742, Due: 0
+
+
+Job: 4, Machine: 1, Start: 1853, End: 2003, Release: 1853, Due: 0
+
+
+Job: 8, Machine: 1, Start: 2003, End: 2108, Release: 2003, Due: 0
+
+
+Job: 8, Machine: 1, Start: 2108, End: 2217, Release: 0, Due: 2108
+
+
+Job: 13, Machine: 2, Start: 0, End: 151, Release: 0, Due: 0
+
+
+Job: 0, Machine: 2, Start: 151, End: 192, Release: 151, Due: 0
+
+
+Job: 69, Machine: 2, Start: 192, End: 231, Release: 192, Due: 0
+
+
+Job: 4, Machine: 2, Start: 231, End: 265, Release: 0, Due: 231
+
+
+Job: 5, Machine: 2, Start: 265, End: 435, Release: 0, Due: 265
+
+
+Job: 11, Machine: 2, Start: 435, End: 443, Release: 435, Due: 0
+
+
+Job: 13, Machine: 2, Start: 443, End: 477, Release: 0, Due: 443
+
+
+Job: 18, Machine: 2, Start: 477, End: 481, Release: 477, Due: 0
+
+
+Job: 55, Machine: 2, Start: 481, End: 659, Release: 481, Due: 0
+
+
+Job: 70, Machine: 2, Start: 659, End: 833, Release: 659, Due: 0
+
+
+Job: 18, Machine: 2, Start: 1440, End: 1492, Release: 0, Due: 1440
+
+
+Job: 19, Machine: 2, Start: 1492, End: 1589, Release: 1492, Due: 0
+
+
+Job: 7, Machine: 2, Start: 1589, End: 1607, Release: 1589, Due: 0
+
+
+Job: 19, Machine: 2, Start: 1607, End: 1663, Release: 0, Due: 1607
+
+
+Job: 10, Machine: 2, Start: 1663, End: 1677, Release: 1663, Due: 0
+
+
+Job: 22, Machine: 2, Start: 1677, End: 1681, Release: 1677, Due: 0
+
+
+Job: 11, Machine: 2, Start: 1681, End: 1769, Release: 0, Due: 1681
+
+
+Job: 22, Machine: 2, Start: 1769, End: 1808, Release: 0, Due: 1769
+
+
+Job: 1, Machine: 2, Start: 1808, End: 1845, Release: 0, Due: 1808
+
+
+Job: 68, Machine: 2, Start: 1845, End: 1867, Release: 1845, Due: 0
+
+
+Job: 51, Machine: 2, Start: 1867, End: 1901, Release: 1867, Due: 0
+
+
+Job: 52, Machine: 2, Start: 1901, End: 1987, Release: 1901, Due: 0
+
+
+Job: 64, Machine: 2, Start: 1987, End: 2047, Release: 1987, Due: 0
+
+
+Job: 57, Machine: 2, Start: 2047, End: 2083, Release: 2047, Due: 0
+
+
+Job: 17, Machine: 2, Start: 2083, End: 2253, Release: 0, Due: 2083
+
+
+725
+15173

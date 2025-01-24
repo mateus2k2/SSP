@@ -49,7 +49,6 @@ solSSP SSP::two_swap(solSSP sol) {
     s.dueDates = sol.dueDates;
     int first = 0;
     int last = 0;
-    bool validSwap = false;
     std::random_device rnd_device;
     std::mt19937 mersenne_engine{rnd_device()}; // rnd_device()
     std::uniform_int_distribution<int> dist {0, (numberJobs-1)};
