@@ -105,7 +105,6 @@ double SSP::evaluateReportKTNS(solSSP& solution, string filenameJobs, string fil
     vector<int> s = solution.sol;
 
     fstream solutionReportFile;
-    solutionReportFile.open(solutionReportFileName, ios::out);
     if (writeToFile) {
         solutionReportFile.open(solutionReportFileName, ios::out);
         if (!solutionReportFile.is_open()) {
@@ -133,6 +132,8 @@ double SSP::evaluateReportKTNS(solSSP& solution, string filenameJobs, string fil
     solutionReportFile << filenameJobs << ";" << filenameTools << endl;
     solutionReportFile << planingHorizon << ";" << unsupervised << ";" << DAY << endl;
 
+    solution.releaseDates = vector<int>(numberJobs, -INT_MAX);
+    solution.dueDates = vector<int>(numberJobs, INT_MAX);
 
     for (jL = 0; jL < numberJobsSol; ++jL) {
         // ---------------------------------------------------------------------------
@@ -222,11 +223,9 @@ double SSP::evaluateReportKTNS(solSSP& solution, string filenameJobs, string fil
                 }
             }
             solutionReportFile << "\n";
-            int releseTmp = 0;
-            int dueTmp = 0;
-            if(job.indexOperation == 0) releseTmp = start;
-            else dueTmp = start;
-            jobsTime.push_back({job, logicalMachine, start, end, releseTmp, dueTmp});
+            if(job.indexOperation == 0) solution.releaseDates[job.indexJob] = end;
+            else solution.dueDates[job.indexJob] = start;
+            solution.jobsTime.push_back({job, logicalMachine, start, end});
         };
 
         for (int i = 0; i < loops; ++i) {

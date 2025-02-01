@@ -7,6 +7,7 @@ OUTPUT = src/out/mainCpp
 DEBUG_MODE=1
 GATILHO_MODE=0
 FAST_MODE=1
+RAND_MODE=1
 
 ifeq ($(DEBUG_MODE), 1)
     USE_FTM = -lfmt
@@ -28,15 +29,21 @@ else
 	FAST_MACRO = -O3
 endif
 
+ifeq ($(RAND_MODE), 1)
+	RAND_MACRO = -DRANDSEED=rnd_device()
+else
+	RAND_MACRO = -DRANDSEED=42
+endif
+
 debugCompilePT:
 	clear 
-	g++ $(DEBUG_MACRO) $(GATILHO_MACRO) src/*.cpp -std=c++2a -Wshadow -pg -Wall -o src/out/mainCppDebug -Wno-unused-result -lpthread -g -march=native -lstdc++ $(USE_FTM)
+	g++ $(DEBUG_MACRO) $(GATILHO_MACRO) $(RAND_MACRO) src/*.cpp -std=c++2a -Wshadow -pg -Wall -o src/out/mainCppDebug -Wno-unused-result -lpthread -g -march=native -lstdc++ $(USE_FTM)
 	echo "\n" 
 	clear
 
 compilePT:
 	clear
-	g++ $(DEBUG_MACRO) $(GATILHO_MACRO) ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread $(FAST_MACRO) -march=native -lstdc++ $(USE_FTM)
+	g++ $(DEBUG_MACRO) $(GATILHO_MACRO) $(RAND_MACRO) ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread $(FAST_MACRO) -march=native -lstdc++ $(USE_FTM)
 	echo "\n" 
 
 testPTGo:
@@ -60,7 +67,7 @@ testPTGo:
 
 realPTGo:
 	make compilePT
-	./src/out/mainCpp "./input/MyInstancesDiferentToolSets/n=75,p=0.24,r=0.5,t=112,v0.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" \
+	./src/out/mainCpp "./input/MyInstancesDiferentToolSets/n=399,p=0.75,r=0.5,t=598,v0.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" \
 		--TEMP_INIT 0.1 \
 		--TEMP_FIM 0.5 \
 		--N_REPLICAS 11 \
@@ -81,7 +88,7 @@ realPTGo:
 # TODO
 analisyFolder:
 	clear
-	python ./scripts/reportAnalises.py ./output/PTL100Diferent/MyInstancesDiferentToolSets 2
+	python ./scripts/reportAnalises.py ./output/Exemplo 3
 	echo "\n"
 
 # --------------------------------------------------------

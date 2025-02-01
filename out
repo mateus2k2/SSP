@@ -6,7 +6,7 @@ echo "\n"
 
 
 make[1]: Leaving directory '/home/mateus/WSL/IC/SSP'
-./src/out/mainCpp "./input/MyInstancesDiferentToolSets/n=75,p=0.24,r=0.5,t=112,v0.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" \
+./src/out/mainCpp "./input/MyInstancesDiferentToolSets/n=399,p=0.75,r=0.5,t=598,v0.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" \
 	--TEMP_INIT 0.1 \
 	--TEMP_FIM 0.5 \
 	--N_REPLICAS 11 \
@@ -20,141 +20,702 @@ make[1]: Leaving directory '/home/mateus/WSL/IC/SSP'
 	--RESULT_REPORT 1 \
 	--DIFERENT_TOOLSETS_MODE 1 \
 
-TESTE45
-Job: 15, Machine: 1, Start: 0, End: 94, Release: 0, Due: 0
+Job: 332, Operation: 0, Machine: 1, Start: 0, End: 143, Release: 143, Due: 2147483647
 
 
-Job: 60, Machine: 1, Start: 94, End: 172, Release: 94, Due: 0
+Job: 130, Operation: 0, Machine: 1, Start: 143, End: 291, Release: 291, Due: 13506
 
 
-Job: 23, Machine: 1, Start: 172, End: 238, Release: 172, Due: 0
+Job: 132, Operation: 0, Machine: 1, Start: 291, End: 459, Release: 459, Due: 2147483647
 
 
-Job: 21, Machine: 1, Start: 238, End: 382, Release: 238, Due: 0
+Job: 117, Operation: 0, Machine: 1, Start: 459, End: 543, Release: 543, Due: 7712
 
 
-Job: 3, Machine: 1, Start: 382, End: 521, Release: 382, Due: 0
+Job: 108, Operation: 0, Machine: 1, Start: 543, End: 638, Release: 638, Due: 2147483647
 
 
-Job: 6, Machine: 1, Start: 521, End: 599, Release: 521, Due: 0
+Job: 24, Operation: 0, Machine: 1, Start: 638, End: 758, Release: 758, Due: 2147483647
 
 
-Job: 23, Machine: 1, Start: 599, End: 650, Release: 0, Due: 599
+Job: 67, Operation: 0, Machine: 1, Start: 758, End: 915, Release: 915, Due: 14776
 
 
-Job: 12, Machine: 1, Start: 650, End: 756, Release: 650, Due: 0
+Job: 76, Operation: 0, Machine: 1, Start: 915, End: 1051, Release: 1051, Due: 4899
 
 
-Job: 15, Machine: 1, Start: 756, End: 914, Release: 0, Due: 756
+Job: 49, Operation: 0, Machine: 1, Start: 1051, End: 1129, Release: 1129, Due: 2147483647
 
 
-Job: 12, Machine: 1, Start: 914, End: 994, Release: 0, Due: 914
+Job: 292, Operation: 0, Machine: 1, Start: 1129, End: 1213, Release: 1213, Due: 2147483647
 
 
-Job: 74, Machine: 1, Start: 994, End: 1091, Release: 994, Due: 0
+Job: 44, Operation: 0, Machine: 1, Start: 1213, End: 1261, Release: 1261, Due: 2147483647
 
 
-Job: 1, Machine: 1, Start: 1091, End: 1220, Release: 1091, Due: 0
+Job: 295, Operation: 0, Machine: 1, Start: 1440, End: 1595, Release: 1595, Due: 2147483647
 
 
-Job: 20, Machine: 1, Start: 1220, End: 1354, Release: 1220, Due: 0
+Job: 22, Operation: 0, Machine: 1, Start: 1595, End: 1744, Release: 1744, Due: 6385
 
 
-Job: 6, Machine: 1, Start: 1354, End: 1473, Release: 0, Due: 1354
+Job: 131, Operation: 0, Machine: 1, Start: 1744, End: 1793, Release: 1793, Due: 12195
 
 
-Job: 5, Machine: 1, Start: 1473, End: 1622, Release: 1473, Due: 0
+Job: 59, Operation: 0, Machine: 1, Start: 1793, End: 1804, Release: 1804, Due: 15036
 
 
-Job: 24, Machine: 1, Start: 1622, End: 1742, Release: 1622, Due: 0
+Job: 368, Operation: 0, Machine: 1, Start: 1804, End: 1983, Release: 1983, Due: 2147483647
 
 
-Job: 17, Machine: 1, Start: 1742, End: 1853, Release: 1742, Due: 0
+Job: 285, Operation: 0, Machine: 1, Start: 1983, End: 2027, Release: 2027, Due: 2147483647
 
 
-Job: 4, Machine: 1, Start: 1853, End: 2003, Release: 1853, Due: 0
+Job: 313, Operation: 0, Machine: 1, Start: 2027, End: 2043, Release: 2043, Due: 2147483647
 
 
-Job: 8, Machine: 1, Start: 2003, End: 2108, Release: 2003, Due: 0
+Job: 304, Operation: 0, Machine: 1, Start: 2043, End: 2098, Release: 2098, Due: 2147483647
 
 
-Job: 8, Machine: 1, Start: 2108, End: 2217, Release: 0, Due: 2108
+Job: 125, Operation: 0, Machine: 1, Start: 2098, End: 2152, Release: 2152, Due: 8806
 
 
-Job: 13, Machine: 2, Start: 0, End: 151, Release: 0, Due: 0
+Job: 380, Operation: 0, Machine: 1, Start: 2152, End: 2197, Release: 2197, Due: 2147483647
 
 
-Job: 0, Machine: 2, Start: 151, End: 192, Release: 151, Due: 0
+Job: 38, Operation: 0, Machine: 1, Start: 2880, End: 2955, Release: 2955, Due: 6282
 
 
-Job: 69, Machine: 2, Start: 192, End: 231, Release: 192, Due: 0
+Job: 34, Operation: 0, Machine: 1, Start: 2955, End: 3070, Release: 3070, Due: 2147483647
 
 
-Job: 4, Machine: 2, Start: 231, End: 265, Release: 0, Due: 231
+Job: 87, Operation: 0, Machine: 1, Start: 3070, End: 3244, Release: 3244, Due: 2147483647
 
 
-Job: 5, Machine: 2, Start: 265, End: 435, Release: 0, Due: 265
+Job: 338, Operation: 0, Machine: 1, Start: 3244, End: 3322, Release: 3322, Due: 2147483647
 
 
-Job: 11, Machine: 2, Start: 435, End: 443, Release: 435, Due: 0
+Job: 9, Operation: 0, Machine: 1, Start: 3322, End: 3408, Release: 3408, Due: 10170
 
 
-Job: 13, Machine: 2, Start: 443, End: 477, Release: 0, Due: 443
+Job: 78, Operation: 0, Machine: 1, Start: 3408, End: 3587, Release: 3587, Due: 13125
 
 
-Job: 18, Machine: 2, Start: 477, End: 481, Release: 477, Due: 0
+Job: 85, Operation: 0, Machine: 1, Start: 3587, End: 3716, Release: 3716, Due: 2147483647
 
 
-Job: 55, Machine: 2, Start: 481, End: 659, Release: 481, Due: 0
+Job: 92, Operation: 0, Machine: 1, Start: 4320, End: 4406, Release: 4406, Due: 5023
 
 
-Job: 70, Machine: 2, Start: 659, End: 833, Release: 659, Due: 0
+Job: 90, Operation: 0, Machine: 1, Start: 4406, End: 4483, Release: 4483, Due: 14942
 
 
-Job: 18, Machine: 2, Start: 1440, End: 1492, Release: 0, Due: 1440
+Job: 101, Operation: 0, Machine: 1, Start: 4483, End: 4514, Release: 4514, Due: 11597
 
 
-Job: 19, Machine: 2, Start: 1492, End: 1589, Release: 1492, Due: 0
+Job: 310, Operation: 0, Machine: 1, Start: 4514, End: 4586, Release: 4586, Due: 2147483647
 
 
-Job: 7, Machine: 2, Start: 1589, End: 1607, Release: 1589, Due: 0
+Job: 105, Operation: 0, Machine: 1, Start: 4586, End: 4746, Release: 4746, Due: 2932
+é 0 e nao estou fazendo na hora certa
 
 
-Job: 19, Machine: 2, Start: 1607, End: 1663, Release: 0, Due: 1607
+Job: 116, Operation: 0, Machine: 1, Start: 4746, End: 4813, Release: 4813, Due: 4447
+é 0 e nao estou fazendo na hora certa
 
 
-Job: 10, Machine: 2, Start: 1663, End: 1677, Release: 1663, Due: 0
+Job: 42, Operation: 0, Machine: 1, Start: 4813, End: 4899, Release: 4899, Due: 8751
 
 
-Job: 22, Machine: 2, Start: 1677, End: 1681, Release: 1677, Due: 0
+Job: 76, Operation: 1, Machine: 1, Start: 4899, End: 5000, Release: 1051, Due: 4899
 
 
-Job: 11, Machine: 2, Start: 1681, End: 1769, Release: 0, Due: 1681
+Job: 93, Operation: 0, Machine: 1, Start: 5000, End: 5023, Release: 5023, Due: 11790
 
 
-Job: 22, Machine: 2, Start: 1769, End: 1808, Release: 0, Due: 1769
+Job: 92, Operation: 1, Machine: 1, Start: 5023, End: 5195, Release: 4406, Due: 5023
 
 
-Job: 1, Machine: 2, Start: 1808, End: 1845, Release: 0, Due: 1808
+Job: 40, Operation: 0, Machine: 1, Start: 5760, End: 5834, Release: 5834, Due: 4628
+é 0 e nao estou fazendo na hora certa
 
 
-Job: 68, Machine: 2, Start: 1845, End: 1867, Release: 1845, Due: 0
+Job: 384, Operation: 0, Machine: 1, Start: 5834, End: 5945, Release: 5945, Due: 2147483647
 
 
-Job: 51, Machine: 2, Start: 1867, End: 1901, Release: 1867, Due: 0
+Job: 94, Operation: 0, Machine: 1, Start: 5945, End: 6020, Release: 6020, Due: 14643
 
 
-Job: 52, Machine: 2, Start: 1901, End: 1987, Release: 1901, Due: 0
+Job: 84, Operation: 0, Machine: 1, Start: 6020, End: 6129, Release: 6129, Due: 2147483647
 
 
-Job: 64, Machine: 2, Start: 1987, End: 2047, Release: 1987, Due: 0
+Job: 5, Operation: 0, Machine: 1, Start: 6129, End: 6178, Release: 6178, Due: 2147483647
 
 
-Job: 57, Machine: 2, Start: 2047, End: 2083, Release: 2047, Due: 0
+Job: 385, Operation: 0, Machine: 1, Start: 6178, End: 6214, Release: 6214, Due: 2147483647
 
 
-Job: 17, Machine: 2, Start: 2083, End: 2253, Release: 0, Due: 2083
+Job: 73, Operation: 0, Machine: 1, Start: 6214, End: 6228, Release: 6228, Due: 12231
 
 
-725
-15173
+Job: 398, Operation: 0, Machine: 1, Start: 6228, End: 6304, Release: 6304, Due: 2147483647
+
+
+Job: 289, Operation: 0, Machine: 1, Start: 6304, End: 6337, Release: 6337, Due: 2147483647
+
+
+Job: 369, Operation: 0, Machine: 1, Start: 6337, End: 6385, Release: 6385, Due: 2147483647
+
+
+Job: 22, Operation: 1, Machine: 1, Start: 6385, End: 6532, Release: 1744, Due: 6385
+
+
+Job: 48, Operation: 0, Machine: 1, Start: 7200, End: 7251, Release: 7251, Due: 2147483647
+
+
+Job: 54, Operation: 0, Machine: 1, Start: 7251, End: 7352, Release: 7352, Due: 2147483647
+
+
+Job: 75, Operation: 0, Machine: 1, Start: 7352, End: 7456, Release: 7456, Due: 2281
+é 0 e nao estou fazendo na hora certa
+
+
+Job: 281, Operation: 0, Machine: 1, Start: 7456, End: 7630, Release: 7630, Due: 2147483647
+
+
+Job: 268, Operation: 0, Machine: 1, Start: 7630, End: 7682, Release: 7682, Due: 2147483647
+
+
+Job: 66, Operation: 0, Machine: 1, Start: 7682, End: 7832, Release: 7832, Due: 2147483647
+
+
+Job: 46, Operation: 0, Machine: 1, Start: 7832, End: 7980, Release: 7980, Due: 2147483647
+
+
+Job: 376, Operation: 0, Machine: 1, Start: 8640, End: 8729, Release: 8729, Due: 2147483647
+
+
+Job: 43, Operation: 0, Machine: 1, Start: 8729, End: 8806, Release: 8806, Due: 1841
+é 0 e nao estou fazendo na hora certa
+
+
+Job: 125, Operation: 1, Machine: 1, Start: 8806, End: 8866, Release: 2152, Due: 8806
+
+
+Job: 294, Operation: 0, Machine: 1, Start: 8866, End: 9011, Release: 9011, Due: 2147483647
+
+
+Job: 124, Operation: 0, Machine: 1, Start: 9011, End: 9110, Release: 9110, Due: 4835
+é 0 e nao estou fazendo na hora certa
+
+
+Job: 8, Operation: 0, Machine: 1, Start: 9110, End: 9149, Release: 9149, Due: 10443
+
+
+Job: 123, Operation: 0, Machine: 1, Start: 9149, End: 9274, Release: 9274, Due: 2147483647
+
+
+Job: 388, Operation: 0, Machine: 1, Start: 9274, End: 9425, Release: 9425, Due: 2147483647
+
+
+Job: 7, Operation: 0, Machine: 1, Start: 10080, End: 10170, Release: 10170, Due: 12158
+
+
+Job: 9, Operation: 1, Machine: 1, Start: 10170, End: 10299, Release: 3408, Due: 10170
+
+
+Job: 320, Operation: 0, Machine: 1, Start: 10299, End: 10443, Release: 10443, Due: 2147483647
+
+
+Job: 8, Operation: 1, Machine: 1, Start: 10443, End: 10507, Release: 9149, Due: 10443
+
+
+Job: 391, Operation: 0, Machine: 1, Start: 10507, End: 10684, Release: 10684, Due: 2147483647
+
+
+Job: 70, Operation: 0, Machine: 1, Start: 10684, End: 10777, Release: 10777, Due: 10263
+é 0 e nao estou fazendo na hora certa
+
+
+Job: 77, Operation: 0, Machine: 1, Start: 10777, End: 10956, Release: 10956, Due: 2147483647
+
+
+Job: 41, Operation: 0, Machine: 1, Start: 11520, End: 11570, Release: 11570, Due: 7869
+é 0 e nao estou fazendo na hora certa
+
+
+Job: 373, Operation: 0, Machine: 1, Start: 11570, End: 11740, Release: 11740, Due: 2147483647
+
+
+Job: 287, Operation: 0, Machine: 1, Start: 11740, End: 11790, Release: 11790, Due: 2147483647
+
+
+Job: 93, Operation: 1, Machine: 1, Start: 11790, End: 11878, Release: 5023, Due: 11790
+
+
+Job: 83, Operation: 0, Machine: 1, Start: 11878, End: 11896, Release: 11896, Due: 10135
+é 0 e nao estou fazendo na hora certa
+
+
+Job: 51, Operation: 0, Machine: 1, Start: 11896, End: 12035, Release: 12035, Due: 2147483647
+
+
+Job: 266, Operation: 0, Machine: 1, Start: 12035, End: 12166, Release: 12166, Due: 2147483647
+
+
+Job: 306, Operation: 0, Machine: 1, Start: 12166, End: 12170, Release: 12170, Due: 2147483647
+
+
+Job: 381, Operation: 0, Machine: 1, Start: 12170, End: 12195, Release: 12195, Due: 2147483647
+
+
+Job: 131, Operation: 1, Machine: 1, Start: 12195, End: 12339, Release: 1793, Due: 12195
+
+
+Job: 86, Operation: 0, Machine: 1, Start: 12960, End: 13069, Release: 13069, Due: 2131
+é 0 e nao estou fazendo na hora certa
+
+
+Job: 102, Operation: 0, Machine: 1, Start: 13069, End: 13131, Release: 13131, Due: 2147483647
+
+
+Job: 64, Operation: 0, Machine: 1, Start: 13131, End: 13193, Release: 13193, Due: 10288
+é 0 e nao estou fazendo na hora certa
+
+
+Job: 30, Operation: 0, Machine: 1, Start: 13193, End: 13237, Release: 13237, Due: 2147483647
+
+
+Job: 275, Operation: 0, Machine: 1, Start: 13237, End: 13297, Release: 13297, Due: 2147483647
+
+
+Job: 111, Operation: 0, Machine: 1, Start: 13297, End: 13357, Release: 13357, Due: 14445
+
+
+Job: 103, Operation: 0, Machine: 1, Start: 13357, End: 13506, Release: 13506, Due: 14930
+
+
+Job: 130, Operation: 1, Machine: 1, Start: 13506, End: 13643, Release: 291, Due: 13506
+
+
+Job: 33, Operation: 0, Machine: 1, Start: 13643, End: 13783, Release: 13783, Due: 1575
+é 0 e nao estou fazendo na hora certa
+
+
+Job: 19, Operation: 0, Machine: 1, Start: 14400, End: 14445, Release: 14445, Due: 10715
+é 0 e nao estou fazendo na hora certa
+
+
+Job: 111, Operation: 1, Machine: 1, Start: 14445, End: 14620, Release: 13357, Due: 14445
+
+
+Job: 382, Operation: 0, Machine: 1, Start: 14620, End: 14743, Release: 14743, Due: 2147483647
+
+
+Job: 314, Operation: 0, Machine: 1, Start: 14743, End: 14759, Release: 14759, Due: 2147483647
+
+
+Job: 299, Operation: 0, Machine: 1, Start: 14759, End: 14900, Release: 14900, Due: 2147483647
+
+
+Job: 89, Operation: 0, Machine: 1, Start: 14900, End: 14930, Release: 14930, Due: 75
+é 0 e nao estou fazendo na hora certa
+
+
+Job: 103, Operation: 1, Machine: 1, Start: 14930, End: 14942, Release: 13506, Due: 14930
+
+
+Job: 90, Operation: 1, Machine: 1, Start: 14942, End: 14946, Release: 4483, Due: 14942
+
+
+Job: 27, Operation: 0, Machine: 1, Start: 14946, End: 15036, Release: 15036, Due: 5760
+é 0 e nao estou fazendo na hora certa
+
+
+Job: 59, Operation: 1, Machine: 1, Start: 15036, End: 15100, Release: 1804, Due: 15036
+
+
+Job: 379, Operation: 0, Machine: 1, Start: 15100, End: 15237, Release: 15237, Due: 2147483647
+
+
+Job: 329, Operation: 0, Machine: 2, Start: 0, End: 75, Release: 75, Due: 2147483647
+é 0 e estou fazendo na hora certa
+é 0 e estou fazendo na hora certa
+é 0 e estou fazendo na hora certa
+é 0 e estou fazendo na hora certa
+é 0 e estou fazendo na hora certa
+é 0 e estou fazendo na hora certa
+é 0 e estou fazendo na hora certa
+é 0 e estou fazendo na hora certa
+
+
+Job: 89, Operation: 1, Machine: 2, Start: 75, End: 144, Release: 14930, Due: 75
+é 1 e nao estou fazendo na hora certa
+é 0 e estou fazendo na hora certa
+é 0 e estou fazendo na hora certa
+é 0 e estou fazendo na hora certa
+
+
+Job: 393, Operation: 0, Machine: 2, Start: 144, End: 172, Release: 172, Due: 2147483647
+é 0 e estou fazendo na hora certa
+é 0 e estou fazendo na hora certa
+
+
+Job: 113, Operation: 0, Machine: 2, Start: 172, End: 260, Release: 260, Due: 14619
+é 0 e estou fazendo na hora certa
+
+
+Job: 100, Operation: 0, Machine: 2, Start: 260, End: 423, Release: 423, Due: 1545
+
+
+Job: 53, Operation: 0, Machine: 2, Start: 423, End: 500, Release: 500, Due: 3154
+
+
+Job: 283, Operation: 0, Machine: 2, Start: 500, End: 651, Release: 651, Due: 2147483647
+
+
+Job: 81, Operation: 0, Machine: 2, Start: 651, End: 825, Release: 825, Due: 2147483647
+
+
+Job: 288, Operation: 0, Machine: 2, Start: 1440, End: 1545, Release: 1545, Due: 2147483647
+
+
+Job: 100, Operation: 1, Machine: 2, Start: 1545, End: 1575, Release: 423, Due: 1545
+
+
+Job: 33, Operation: 1, Machine: 2, Start: 1575, End: 1706, Release: 13783, Due: 1575
+é 1 e nao estou fazendo na hora certa
+
+
+Job: 397, Operation: 0, Machine: 2, Start: 1706, End: 1754, Release: 1754, Due: 2147483647
+
+
+Job: 311, Operation: 0, Machine: 2, Start: 1754, End: 1774, Release: 1774, Due: 2147483647
+
+
+Job: 107, Operation: 0, Machine: 2, Start: 1774, End: 1841, Release: 1841, Due: 2147483647
+
+
+Job: 43, Operation: 1, Machine: 2, Start: 1841, End: 1993, Release: 8806, Due: 1841
+é 1 e nao estou fazendo na hora certa
+
+
+Job: 32, Operation: 0, Machine: 2, Start: 1993, End: 2080, Release: 2080, Due: 11520
+
+
+Job: 56, Operation: 0, Machine: 2, Start: 2080, End: 2131, Release: 2131, Due: 8765
+
+
+Job: 86, Operation: 1, Machine: 2, Start: 2131, End: 2281, Release: 13069, Due: 2131
+é 1 e nao estou fazendo na hora certa
+
+
+Job: 75, Operation: 1, Machine: 2, Start: 2281, End: 2457, Release: 7456, Due: 2281
+é 1 e nao estou fazendo na hora certa
+
+
+Job: 23, Operation: 0, Machine: 2, Start: 2880, End: 2932, Release: 2932, Due: 10710
+
+
+Job: 105, Operation: 1, Machine: 2, Start: 2932, End: 3102, Release: 4746, Due: 2932
+é 1 e nao estou fazendo na hora certa
+
+
+Job: 16, Operation: 0, Machine: 2, Start: 3102, End: 3106, Release: 3106, Due: 7426
+
+
+Job: 357, Operation: 0, Machine: 2, Start: 3106, End: 3154, Release: 3154, Due: 2147483647
+
+
+Job: 53, Operation: 1, Machine: 2, Start: 3154, End: 3207, Release: 500, Due: 3154
+
+
+Job: 58, Operation: 0, Machine: 2, Start: 3207, End: 3386, Release: 3386, Due: 4884
+
+
+Job: 28, Operation: 0, Machine: 2, Start: 3386, End: 3434, Release: 3434, Due: 11934
+
+
+Job: 17, Operation: 0, Machine: 2, Start: 3434, End: 3443, Release: 3443, Due: 5848
+
+
+Job: 26, Operation: 0, Machine: 2, Start: 3443, End: 3621, Release: 3621, Due: 2147483647
+
+
+Job: 2, Operation: 0, Machine: 2, Start: 3621, End: 3768, Release: 3768, Due: 8829
+
+
+Job: 282, Operation: 0, Machine: 2, Start: 4320, End: 4338, Release: 4338, Due: 2147483647
+
+
+Job: 364, Operation: 0, Machine: 2, Start: 4338, End: 4447, Release: 4447, Due: 2147483647
+
+
+Job: 116, Operation: 1, Machine: 2, Start: 4447, End: 4596, Release: 4813, Due: 4447
+é 1 e nao estou fazendo na hora certa
+
+
+Job: 96, Operation: 0, Machine: 2, Start: 4596, End: 4628, Release: 4628, Due: 11994
+
+
+Job: 40, Operation: 1, Machine: 2, Start: 4628, End: 4706, Release: 5834, Due: 4628
+é 1 e nao estou fazendo na hora certa
+
+
+Job: 298, Operation: 0, Machine: 2, Start: 4706, End: 4718, Release: 4718, Due: 2147483647
+
+
+Job: 316, Operation: 0, Machine: 2, Start: 4718, End: 4835, Release: 4835, Due: 2147483647
+
+
+Job: 124, Operation: 1, Machine: 2, Start: 4835, End: 4884, Release: 9110, Due: 4835
+é 1 e nao estou fazendo na hora certa
+é 1 e estou fazendo na hora certa
+
+
+Job: 58, Operation: 1, Machine: 2, Start: 4884, End: 4939, Release: 3386, Due: 4884
+é 1 e estou fazendo na hora certa
+
+
+Job: 88, Operation: 0, Machine: 2, Start: 4939, End: 5037, Release: 5037, Due: 7503
+
+
+Job: 55, Operation: 0, Machine: 2, Start: 5037, End: 5078, Release: 5078, Due: 2147483647
+
+
+Job: 27, Operation: 1, Machine: 2, Start: 5760, End: 5815, Release: 15036, Due: 5760
+é 1 e nao estou fazendo na hora certa
+
+
+Job: 318, Operation: 0, Machine: 2, Start: 5815, End: 5848, Release: 5848, Due: 2147483647
+
+
+Job: 17, Operation: 1, Machine: 2, Start: 5848, End: 5915, Release: 3443, Due: 5848
+é 1 e estou fazendo na hora certa
+
+
+Job: 91, Operation: 0, Machine: 2, Start: 5915, End: 5936, Release: 5936, Due: 2147483647
+
+
+Job: 349, Operation: 0, Machine: 2, Start: 5936, End: 5972, Release: 5972, Due: 2147483647
+
+
+Job: 307, Operation: 0, Machine: 2, Start: 5972, End: 6133, Release: 6133, Due: 2147483647
+
+
+Job: 71, Operation: 0, Machine: 2, Start: 6133, End: 6282, Release: 6282, Due: 9277
+
+
+Job: 38, Operation: 1, Machine: 2, Start: 6282, End: 6296, Release: 2955, Due: 6282
+
+
+Job: 337, Operation: 0, Machine: 2, Start: 6296, End: 6428, Release: 6428, Due: 2147483647
+
+
+Job: 52, Operation: 0, Machine: 2, Start: 6428, End: 6433, Release: 6433, Due: 2147483647
+
+
+Job: 353, Operation: 0, Machine: 2, Start: 6433, End: 6570, Release: 6570, Due: 2147483647
+
+
+Job: 68, Operation: 0, Machine: 2, Start: 7200, End: 7277, Release: 7277, Due: 14904
+
+
+Job: 270, Operation: 0, Machine: 2, Start: 7277, End: 7426, Release: 7426, Due: 2147483647
+
+
+Job: 16, Operation: 1, Machine: 2, Start: 7426, End: 7503, Release: 3106, Due: 7426
+
+
+Job: 88, Operation: 1, Machine: 2, Start: 7503, End: 7538, Release: 5037, Due: 7503
+é 1 e estou fazendo na hora certa
+
+
+Job: 3, Operation: 0, Machine: 2, Start: 7538, End: 7560, Release: 7560, Due: 11829
+
+
+Job: 331, Operation: 0, Machine: 2, Start: 7560, End: 7712, Release: 7712, Due: 2147483647
+
+
+Job: 117, Operation: 1, Machine: 2, Start: 7712, End: 7869, Release: 543, Due: 7712
+
+
+Job: 41, Operation: 1, Machine: 2, Start: 7869, End: 7908, Release: 11570, Due: 7869
+é 1 e nao estou fazendo na hora certa
+
+
+Job: 301, Operation: 0, Machine: 2, Start: 7908, End: 8040, Release: 8040, Due: 2147483647
+
+
+Job: 57, Operation: 0, Machine: 2, Start: 8640, End: 8751, Release: 8751, Due: 2147483647
+
+
+Job: 42, Operation: 1, Machine: 2, Start: 8751, End: 8765, Release: 4899, Due: 8751
+
+
+Job: 56, Operation: 1, Machine: 2, Start: 8765, End: 8829, Release: 2131, Due: 8765
+
+
+Job: 2, Operation: 1, Machine: 2, Start: 8829, End: 8922, Release: 3768, Due: 8829
+é 1 e estou fazendo na hora certa
+
+
+Job: 50, Operation: 0, Machine: 2, Start: 8922, End: 8974, Release: 8974, Due: 2147483647
+
+
+Job: 104, Operation: 0, Machine: 2, Start: 8974, End: 9006, Release: 9006, Due: 2147483647
+
+
+Job: 370, Operation: 0, Machine: 2, Start: 9006, End: 9107, Release: 9107, Due: 2147483647
+
+
+Job: 356, Operation: 0, Machine: 2, Start: 9107, End: 9200, Release: 9200, Due: 2147483647
+
+
+Job: 112, Operation: 0, Machine: 2, Start: 9200, End: 9252, Release: 9252, Due: 2147483647
+é 1 e estou fazendo na hora certa
+
+
+Job: 129, Operation: 0, Machine: 2, Start: 9252, End: 9277, Release: 9277, Due: 2147483647
+
+
+Job: 71, Operation: 1, Machine: 2, Start: 9277, End: 9316, Release: 6282, Due: 9277
+
+
+Job: 343, Operation: 0, Machine: 2, Start: 9316, End: 9446, Release: 9446, Due: 2147483647
+
+
+Job: 82, Operation: 0, Machine: 2, Start: 10080, End: 10135, Release: 10135, Due: 10293
+
+
+Job: 83, Operation: 1, Machine: 2, Start: 10135, End: 10231, Release: 11896, Due: 10135
+é 1 e nao estou fazendo na hora certa
+
+
+Job: 10, Operation: 0, Machine: 2, Start: 10231, End: 10263, Release: 10263, Due: 10783
+
+
+Job: 70, Operation: 1, Machine: 2, Start: 10263, End: 10288, Release: 10777, Due: 10263
+é 1 e nao estou fazendo na hora certa
+
+
+Job: 64, Operation: 1, Machine: 2, Start: 10288, End: 10293, Release: 13193, Due: 10288
+é 1 e nao estou fazendo na hora certa
+
+
+Job: 82, Operation: 1, Machine: 2, Start: 10293, End: 10362, Release: 10135, Due: 10293
+
+
+Job: 371, Operation: 0, Machine: 2, Start: 10362, End: 10491, Release: 10491, Due: 2147483647
+
+
+Job: 372, Operation: 0, Machine: 2, Start: 10491, End: 10637, Release: 10637, Due: 2147483647
+
+
+Job: 276, Operation: 0, Machine: 2, Start: 10637, End: 10710, Release: 10710, Due: 2147483647
+
+
+Job: 23, Operation: 1, Machine: 2, Start: 10710, End: 10715, Release: 2932, Due: 10710
+
+
+Job: 19, Operation: 1, Machine: 2, Start: 10715, End: 10749, Release: 14445, Due: 10715
+é 1 e nao estou fazendo na hora certa
+
+
+Job: 11, Operation: 0, Machine: 2, Start: 10749, End: 10783, Release: 10783, Due: 2147483647
+
+
+Job: 10, Operation: 1, Machine: 2, Start: 10783, End: 10942, Release: 10263, Due: 10783
+é 1 e estou fazendo na hora certa
+
+
+Job: 32, Operation: 1, Machine: 2, Start: 11520, End: 11597, Release: 2080, Due: 11520
+
+
+Job: 101, Operation: 1, Machine: 2, Start: 11597, End: 11690, Release: 4514, Due: 11597
+é 1 e estou fazendo na hora certa
+
+
+Job: 378, Operation: 0, Machine: 2, Start: 11690, End: 11829, Release: 11829, Due: 2147483647
+
+
+Job: 3, Operation: 1, Machine: 2, Start: 11829, End: 11934, Release: 7560, Due: 11829
+
+
+Job: 28, Operation: 1, Machine: 2, Start: 11934, End: 11994, Release: 3434, Due: 11934
+é 1 e estou fazendo na hora certa
+
+
+Job: 96, Operation: 1, Machine: 2, Start: 11994, End: 12158, Release: 4628, Due: 11994
+
+
+Job: 7, Operation: 1, Machine: 2, Start: 12158, End: 12231, Release: 10170, Due: 12158
+
+
+Job: 73, Operation: 1, Machine: 2, Start: 12231, End: 12351, Release: 6228, Due: 12231
+
+
+Job: 269, Operation: 0, Machine: 2, Start: 12960, End: 13057, Release: 13057, Due: 2147483647
+
+
+Job: 14, Operation: 0, Machine: 2, Start: 13057, End: 13125, Release: 13125, Due: 2147483647
+
+
+Job: 78, Operation: 1, Machine: 2, Start: 13125, End: 13285, Release: 3587, Due: 13125
+é 1 e estou fazendo na hora certa
+
+
+Job: 291, Operation: 0, Machine: 2, Start: 13285, End: 13305, Release: 13305, Due: 2147483647
+é 1 e estou fazendo na hora certa
+
+
+Job: 336, Operation: 0, Machine: 2, Start: 13305, End: 13462, Release: 13462, Due: 2147483647
+
+
+Job: 279, Operation: 0, Machine: 2, Start: 13462, End: 13527, Release: 13527, Due: 2147483647
+
+
+Job: 303, Operation: 0, Machine: 2, Start: 13527, End: 13653, Release: 13653, Due: 2147483647
+
+
+Job: 309, Operation: 0, Machine: 2, Start: 13653, End: 13748, Release: 13748, Due: 2147483647
+
+
+Job: 302, Operation: 0, Machine: 2, Start: 14400, End: 14497, Release: 14497, Due: 2147483647
+é 1 e estou fazendo na hora certa
+
+
+Job: 365, Operation: 0, Machine: 2, Start: 14497, End: 14501, Release: 14501, Due: 2147483647
+é 1 e estou fazendo na hora certa
+
+
+Job: 366, Operation: 0, Machine: 2, Start: 14501, End: 14619, Release: 14619, Due: 2147483647
+
+
+Job: 113, Operation: 1, Machine: 2, Start: 14619, End: 14643, Release: 260, Due: 14619
+
+
+Job: 94, Operation: 1, Machine: 2, Start: 14643, End: 14764, Release: 6020, Due: 14643
+
+
+Job: 347, Operation: 0, Machine: 2, Start: 14764, End: 14776, Release: 14776, Due: 2147483647
+
+
+Job: 67, Operation: 1, Machine: 2, Start: 14776, End: 14853, Release: 915, Due: 14776
+
+
+Job: 65, Operation: 0, Machine: 2, Start: 14853, End: 14904, Release: 14904, Due: 2147483647
+
+
+Job: 68, Operation: 1, Machine: 2, Start: 14904, End: 15072, Release: 7277, Due: 14904
+
+
+Job: 339, Operation: 0, Machine: 2, Start: 15072, End: 15240, Release: 15240, Due: 2147483647
+é 1 e estou fazendo na hora certa
+
+
+Old solution length: 399
+New solution length: 210
+Sem Lugar length: 2
+-436
+252570

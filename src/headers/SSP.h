@@ -32,8 +32,8 @@ struct solSSP: public solution{
 	std::vector<int> sol; 
 	std::vector<int> releaseDates;
 	std::vector<int> dueDates;
+	vector<JobTime> jobsTime;
 };
-
 
 class SSP: public Problem<solSSP>{
 	private:
@@ -46,8 +46,6 @@ class SSP: public Problem<solSSP>{
 		int numberOfPriorityJobs;
 		int capacityMagazine;
 		int diferent_toolset_mode;
-
-		vector<JobTime> jobsTime;
 
     	map<int, int> ferramentas;
 		vector<vector<bool>> toolJob;

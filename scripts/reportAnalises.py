@@ -55,8 +55,11 @@ def verificarPrecedencia(files):
             for estado in machine:
                 job = estado['job']
                 if estado['operation'] == 1: 
-                    if not (job in FimOperacao0) or estado['start'] < FimOperacao0[job]: quantidadePrecedenciaQuebradaPorInstancia[index] += 1
+                    if not (job in FimOperacao0) or estado['start'] < FimOperacao0[job]: 
+                        print(f'Precedencia quebrada para a instancia {index + 1} no job {job}')
+                        quantidadePrecedenciaQuebradaPorInstancia[index] += 1
 
+    print(quantidadePrecedenciaQuebradaPorInstancia)
     return quantidadePrecedenciaQuebradaPorInstancia
 
 def verificarPrecedenciaAsSingleMachine(files):
@@ -77,6 +80,7 @@ def verificarPrecedenciaAsSingleMachine(files):
                         quantidadePrecedenciaQuebradaPorInstancia[index] += 1
                     else : precedencia[job].pop()
     
+    print(quantidadePrecedenciaQuebradaPorInstancia)
     return quantidadePrecedenciaQuebradaPorInstancia
 
     # for index, report in enumerate(files):

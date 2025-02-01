@@ -36,11 +36,8 @@ struct JobTime {
     int machine;
     int start;
     int end;
-    int releaseDate;
-    int dueDate;
-    JobTime(Job job_, int machine_, int start_, int end_, int releaseDate_, int dueDate_): job(job_), machine(machine_), start(start_), end(end_), releaseDate(releaseDate_), dueDate(dueDate_) {}
+    JobTime(Job job_, int machine_, int start_, int end_): job(job_), machine(machine_), start(start_), end(end_) {}
 };
-
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // DEFINIÇÕES DO PLOBLEMA

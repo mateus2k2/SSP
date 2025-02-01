@@ -14,7 +14,7 @@ solSSP SSP::two_opt(solSSP sol) {
     int first = 0;
     int last = 0;
     std::random_device rnd_device;
-    std::mt19937 mersenne_engine{rnd_device()};
+    std::mt19937 mersenne_engine{RANDSEED};
     std::uniform_int_distribution<int> dist{0, (numberJobs - 1)};
 
     if(diferent_toolset_mode == 1){ 
@@ -50,7 +50,7 @@ solSSP SSP::two_swap(solSSP sol) {
     int first = 0;
     int last = 0;
     std::random_device rnd_device;
-    std::mt19937 mersenne_engine{rnd_device()}; // rnd_device()
+    std::mt19937 mersenne_engine{RANDSEED};
     std::uniform_int_distribution<int> dist {0, (numberJobs-1)};
 
     int countErros = 0;
@@ -133,7 +133,7 @@ solSSP SSP::insertion(solSSP sol) {
     int from = 0;
     int to = 0;
     std::random_device rnd_device;
-    std::mt19937 mersenne_engine{rnd_device()};
+    std::mt19937 mersenne_engine{RANDSEED};
     std::uniform_int_distribution<int> dist{0, (numberJobs - 1)};
 
     if(diferent_toolset_mode == 1){ 
