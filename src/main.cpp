@@ -117,6 +117,10 @@ int main(int argc, char* argv[]) {
     sol = prob->neighbor(sol);
     sol = prob->neighbor(sol);
     sol = prob->neighbor(sol);
+    sol = prob->neighbor(sol);
+    sol = prob->neighbor(sol);
+    sol = prob->neighbor(sol);
+    sol = prob->neighbor(sol);
     prob->evaluateReportKTNS(sol, filenameJobs, filenameTools, filenameoutput, 0, false);
     solSSP finalSolution = prob->ajustFinalSolution(sol);
     prob->evaluateReportKTNS(finalSolution, filenameJobs, filenameTools, filenameoutput, 0, true);

@@ -30,7 +30,7 @@ else
 endif
 
 ifeq ($(RAND_MODE), 1)
-	RAND_MACRO = -DRANDSEED=rnd_device()
+	RAND_MACRO = -DRANDSEED="rnd_device()"
 else
 	RAND_MACRO = -DRANDSEED=42
 endif

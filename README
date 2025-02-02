@@ -17,3 +17,4 @@ make compilePT DEBUG_MODE=0 GATILHO_MODE=0 FAST_MODE=0
 "git.enabled": false
 
 ./scripts/runAuto.sh ./output/PTL100Diferent diferent > out
+./scripts/runMultiple.sh ./output/SameToolSet10 same > outGeral
