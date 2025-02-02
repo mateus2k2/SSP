@@ -14,7 +14,11 @@ solSSP SSP::two_opt(solSSP sol) {
     int first = 0;
     int last = 0;
     std::random_device rnd_device;
-    std::mt19937 mersenne_engine{RANDSEED};
+    #if defined(RANDSEED)
+        std::mt19937 mersenne_engine{rnd_device()};
+    #else
+        std::mt19937 mersenne_engine{42};
+    #endif
     std::uniform_int_distribution<int> dist{0, (numberJobs - 1)};
 
     if(diferent_toolset_mode == 1){ 
@@ -50,72 +54,76 @@ solSSP SSP::two_swap(solSSP sol) {
     int first = 0;
     int last = 0;
     std::random_device rnd_device;
-    std::mt19937 mersenne_engine{RANDSEED};
+    #if defined(RANDSEED)
+        std::mt19937 mersenne_engine{rnd_device()};
+    #else
+        std::mt19937 mersenne_engine{42};
+    #endif
     std::uniform_int_distribution<int> dist {0, (numberJobs-1)};
 
     int countErros = 0;
     int validSwap1 = false;
     int validSwap2 = false;
 
-    if(diferent_toolset_mode == 1) {    
-        do {
-            do {
-                first = dist(mersenne_engine);
-                last = dist(mersenne_engine);
-            } while (first == last);
-            if (first > last) std::swap(first, last);
+    // if(diferent_toolset_mode == 1) {    
+    //     do {
+    //         do {
+    //             first = dist(mersenne_engine);
+    //             last = dist(mersenne_engine);
+    //         } while (first == last);
+    //         if (first > last) std::swap(first, last);
             
-            validSwap1 = false;
-            validSwap2 = false;
+    //         validSwap1 = false;
+    //         validSwap2 = false;
 
-            if (originalJobs[s.sol[first]].indexOperation == 0) {
-                if (s.dueDates[originalJobs[s.sol[first]].indexJob] > last) {
-                    validSwap1 = true;
-                }
-            }
-            else if (originalJobs[s.sol[first]].indexOperation == 1) {
-                if (s.releaseDates[originalJobs[s.sol[first]].indexJob] < last) {
-                    validSwap1 = true;
-                }
-            }
-            if (originalJobs[s.sol[last]].indexOperation == 0) {
-                if (s.dueDates[originalJobs[s.sol[last]].indexJob] > first) {
-                    validSwap2 = true;
-                }
-            }
-            else if (originalJobs[s.sol[last]].indexOperation == 1) {
-                if (s.releaseDates[originalJobs[s.sol[last]].indexJob] < first) {
-                    validSwap2 = true;
-                }
-            }
-            if (countErros > 10000) {
-                s.Nup = sol.Nup;
-                s.Ndown = sol.Ndown;
-                return s;
-            }
-            countErros++;
+    //         if (originalJobs[s.sol[first]].indexOperation == 0) {
+    //             if (s.dueDates[originalJobs[s.sol[first]].indexJob] > last) {
+    //                 validSwap1 = true;
+    //             }
+    //         }
+    //         else if (originalJobs[s.sol[first]].indexOperation == 1) {
+    //             if (s.releaseDates[originalJobs[s.sol[first]].indexJob] < last) {
+    //                 validSwap1 = true;
+    //             }
+    //         }
+    //         if (originalJobs[s.sol[last]].indexOperation == 0) {
+    //             if (s.dueDates[originalJobs[s.sol[last]].indexJob] > first) {
+    //                 validSwap2 = true;
+    //             }
+    //         }
+    //         else if (originalJobs[s.sol[last]].indexOperation == 1) {
+    //             if (s.releaseDates[originalJobs[s.sol[last]].indexJob] < first) {
+    //                 validSwap2 = true;
+    //             }
+    //         }
+    //         if (countErros > 10000) {
+    //             s.Nup = sol.Nup;
+    //             s.Ndown = sol.Ndown;
+    //             return s;
+    //         }
+    //         countErros++;
 
-        } while (validSwap1 == false || validSwap2 == false);
+    //     } while (validSwap1 == false || validSwap2 == false);
 
-        if (originalJobs[s.sol[first]].indexOperation == 0) {
-            s.releaseDates[originalJobs[s.sol[first]].indexJob] = last;
-        }
-        else if (originalJobs[s.sol[first]].indexOperation == 1) {
-            s.dueDates[originalJobs[s.sol[first]].indexJob] = last;
-        }
-        if (originalJobs[s.sol[last]].indexOperation == 0) {
-            s.releaseDates[originalJobs[s.sol[last]].indexJob] = first;
-        }
-        else if (originalJobs[s.sol[last]].indexOperation == 1) {
-            s.dueDates[originalJobs[s.sol[last]].indexJob] = first;
-        }
-    }
-    else{
+    //     if (originalJobs[s.sol[first]].indexOperation == 0) {
+    //         s.releaseDates[originalJobs[s.sol[first]].indexJob] = last;
+    //     }
+    //     else if (originalJobs[s.sol[first]].indexOperation == 1) {
+    //         s.dueDates[originalJobs[s.sol[first]].indexJob] = last;
+    //     }
+    //     if (originalJobs[s.sol[last]].indexOperation == 0) {
+    //         s.releaseDates[originalJobs[s.sol[last]].indexJob] = first;
+    //     }
+    //     else if (originalJobs[s.sol[last]].indexOperation == 1) {
+    //         s.dueDates[originalJobs[s.sol[last]].indexJob] = first;
+    //     }
+    // }
+    // else{
         do {
             first = dist(mersenne_engine);
             last = dist(mersenne_engine);
         } while (first == last);
-    }
+    // }
 
     // cout << countErros << endl;
 
@@ -133,7 +141,11 @@ solSSP SSP::insertion(solSSP sol) {
     int from = 0;
     int to = 0;
     std::random_device rnd_device;
-    std::mt19937 mersenne_engine{RANDSEED};
+    #if defined(RANDSEED)
+        std::mt19937 mersenne_engine{rnd_device()};
+    #else
+        std::mt19937 mersenne_engine{42};
+    #endif
     std::uniform_int_distribution<int> dist{0, (numberJobs - 1)};
 
     if(diferent_toolset_mode == 1){ 

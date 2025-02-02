@@ -11,7 +11,11 @@ solSSP SSP::construction() { return constructionFunc(); }
 solSSP SSP::rand() {
     solSSP ss;
     std::random_device rnd_device;
-    std::mt19937 mersenne_engine{RANDSEED};
+    #if defined(RANDSEED)
+    std::mt19937 mersenne_engine{rnd_device()};
+    #else
+        std::mt19937 mersenne_engine{42};
+    #endif
 
     for (int i = 0; i < numberJobs; i++) {
         ss.sol.push_back(i);
@@ -29,7 +33,11 @@ solSSP SSP::rand() {
 solSSP SSP::randPriority() {
     solSSP ss;
     std::random_device rnd_device;
-    std::mt19937 mersenne_engine{RANDSEED};
+    #if defined(RANDSEED)
+        std::mt19937 mersenne_engine{rnd_device()};
+    #else
+        std::mt19937 mersenne_engine{42};
+    #endif
 
     // put the priority jobs first
     std::vector<int> priorityJobIndices;

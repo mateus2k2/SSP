@@ -30,9 +30,9 @@ else
 endif
 
 ifeq ($(RAND_MODE), 1)
-	RAND_MACRO = -DRANDSEED="rnd_device()"
+	RAND_MACRO = -DRANDSEED
 else
-	RAND_MACRO = -DRANDSEED=42
+	RAND_MACRO =
 endif
 
 debugCompilePT:
@@ -67,19 +67,19 @@ testPTGo:
 
 realPTGo:
 	make compilePT
-	./src/out/mainCpp "./input/MyInstancesDiferentToolSets/n=399,p=0.75,r=0.5,t=598,v0.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" \
+	./src/out/mainCpp "./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" \
 		--TEMP_INIT 0.1 \
 		--TEMP_FIM 0.5 \
 		--N_REPLICAS 11 \
 		--MCL 400 \
-		--PTL 10 \
+		--PTL 100 \
 		--TEMP_DIST 1 \
 		--TYPE_UPDATE 1 \
 		--INIT_SOL_TYPE 1 \
 		--TEMP_UPDATE 20 \
 		--PTL_TEMP_UPDATE_PROPORTION 1 \
 		--RESULT_REPORT 1 \
-		--DIFERENT_TOOLSETS_MODE 1 \
+		--DIFERENT_TOOLSETS_MODE 0 \
 
 # --------------------------------------------------------
 # Meus python
