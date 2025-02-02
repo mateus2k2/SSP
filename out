@@ -1,39 +1,40 @@
 clear
-[H[2J[3Jg++   -DRANDSEED="rnd_device()" ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lstdc++ 
+[H[2J[3Jg++   -DRANDSEED ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lstdc++ 
 echo "\n" 
 
 
-RODANDO INSTANCIAS DE ./input/MyInstancesDiferentToolSets
-2025-02-02 15:34:45.027 - 1 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=75,p=0.24,r=0.5,t=112,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=75,p=0.24,r=0.5,t=112,v0.csv
-2025-02-02 15:34:45.039 - 2 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=75,p=0.51,r=0.5,t=112,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=75,p=0.51,r=0.5,t=112,v0.csv
-2025-02-02 15:34:45.050 - 3 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=75,p=0.75,r=0.5,t=112,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=75,p=0.75,r=0.5,t=112,v0.csv
-2025-02-02 15:34:45.061 - 4 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=212,p=0.25,r=0.4,t=296,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=212,p=0.25,r=0.4,t=296,v0.csv
-2025-02-02 15:34:45.076 - 5 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=212,p=0.50,r=0.4,t=296,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=212,p=0.50,r=0.4,t=296,v0.csv
-2025-02-02 15:34:45.091 - 6 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=212,p=0.75,r=0.4,t=296,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=212,p=0.75,r=0.4,t=296,v0.csv
-2025-02-02 15:34:45.111 - 7 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=228,p=0.25,r=0.6,t=364,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=228,p=0.25,r=0.6,t=364,v0.csv
-2025-02-02 15:34:45.128 - 8 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=228,p=0.50,r=0.6,t=364,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=228,p=0.50,r=0.6,t=364,v0.csv
-2025-02-02 15:34:45.145 - 9 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=228,p=0.75,r=0.6,t=364,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=228,p=0.75,r=0.6,t=364,v0.csv
-2025-02-02 15:34:45.162 - 10 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=399,p=0.25,r=0.5,t=598,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=399,p=0.25,r=0.5,t=598,v0.csv
-2025-02-02 15:34:45.186 - 11 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=399,p=0.50,r=0.5,t=598,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=399,p=0.50,r=0.5,t=598,v0.csv
-2025-02-02 15:34:45.215 - 12 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=399,p=0.75,r=0.5,t=598,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=399,p=0.75,r=0.5,t=598,v0.csv
-2025-02-02 15:34:45.238 - 13 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=499,p=0.25,r=0.5,t=748,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=499,p=0.25,r=0.5,t=748,v0.csv
-2025-02-02 15:34:45.267 - 14 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=499,p=0.50,r=0.5,t=748,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=499,p=0.50,r=0.5,t=748,v0.csv
-2025-02-02 15:34:45.301 - 15 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=499,p=0.75,r=0.5,t=748,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=499,p=0.75,r=0.5,t=748,v0.csv
-2025-02-02 15:34:45.332 - 16 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=600,p=0.25,r=0.5,t=900,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=600,p=0.25,r=0.5,t=900,v0.csv
-2025-02-02 15:34:45.364 - 17 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=600,p=0.50,r=0.5,t=900,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=600,p=0.50,r=0.5,t=900,v0.csv
-2025-02-02 15:34:45.399 - 18 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=600,p=0.75,r=0.5,t=900,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=600,p=0.75,r=0.5,t=900,v0.csv
-2025-02-02 15:34:45.442 - 19 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=699,p=0.25,r=0.5,t=1048,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=699,p=0.25,r=0.5,t=1048,v0.csv
-2025-02-02 15:34:45.482 - 20 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=699,p=0.50,r=0.5,t=1048,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=699,p=0.50,r=0.5,t=1048,v0.csv
-2025-02-02 15:34:45.526 - 21 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=699,p=0.75,r=0.5,t=1048,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=699,p=0.75,r=0.5,t=1048,v0.csv
-2025-02-02 15:34:45.566 - 22 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=800,p=0.25,r=0.6,t=1265,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=800,p=0.25,r=0.6,t=1265,v0.csv
-2025-02-02 15:34:45.613 - 23 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=800,p=0.50,r=0.6,t=1265,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=800,p=0.50,r=0.6,t=1265,v0.csv
-2025-02-02 15:34:45.657 - 24 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=800,p=0.75,r=0.6,t=1265,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=800,p=0.75,r=0.6,t=1265,v0.csv
-2025-02-02 15:34:45.705 - 25 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=899,p=0.25,r=0.6,t=1265,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=899,p=0.25,r=0.6,t=1265,v0.csv
-2025-02-02 15:34:45.755 - 26 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=899,p=0.50,r=0.6,t=1265,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=899,p=0.50,r=0.6,t=1265,v0.csv
-2025-02-02 15:34:45.809 - 27 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=899,p=0.75,r=0.6,t=1265,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=899,p=0.75,r=0.6,t=1265,v0.csv
-2025-02-02 15:34:45.862 - 28 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=1000,p=0.25,r=0.6,t=1265,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=1000,p=0.25,r=0.6,t=1265,v0.csv
-2025-02-02 15:34:45.924 - 29 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=1000,p=0.50,r=0.6,t=1265,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=1000,p=0.50,r=0.6,t=1265,v0.csv
-2025-02-02 15:34:45.986 - 30 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=1000,p=0.75,r=0.6,t=1265,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=1000,p=0.75,r=0.6,t=1265,v0.csv
-2025-02-02 15:34:46.045 - 31 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=1236,p=0.25,r=0.6,t=1265,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=1236,p=0.25,r=0.6,t=1265,v0.csv
-2025-02-02 15:34:46.127 - 32 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=1236,p=0.50,r=0.6,t=1265,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=1236,p=0.50,r=0.6,t=1265,v0.csv
-2025-02-02 15:34:46.209 - 33 ./src/out/mainCpp ./input/MyInstancesDiferentToolSets/n=1236,p=0.75,r=0.6,t=1265,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet10/10/MyInstancesDiferentToolSets/n=1236,p=0.75,r=0.6,t=1265,v0.csv
+RODANDO INSTANCIAS DE ./input/MyInstancesSameToolSets
+2025-02-02 16:05:04.620 - 1 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet100/1/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv
+1156
+626
+2025-02-02 16:05:05.255 - 2 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=75,p=0.51,r=0.5,t=650,v1.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet100/1/MyInstancesSameToolSets/n=75,p=0.51,r=0.5,t=650,v1.csv
+912
+503
+2025-02-02 16:05:05.769 - 3 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=75,p=0.75,r=0.5,t=650,v2.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet100/1/MyInstancesSameToolSets/n=75,p=0.75,r=0.5,t=650,v2.csv
+1070
+4162
+2025-02-02 16:05:09.940 - 4 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=212,p=0.25,r=0.4,t=1390,v6.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet100/1/MyInstancesSameToolSets/n=212,p=0.25,r=0.4,t=1390,v6.csv
+2728
+3348
+2025-02-02 16:05:13.299 - 5 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=212,p=0.50,r=0.4,t=1390,v7.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet100/1/MyInstancesSameToolSets/n=212,p=0.50,r=0.4,t=1390,v7.csv
+2294
+3597
+2025-02-02 16:05:16.908 - 6 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=212,p=0.75,r=0.4,t=1390,v8.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet100/1/MyInstancesSameToolSets/n=212,p=0.75,r=0.4,t=1390,v8.csv
+1556
+3467
+2025-02-02 16:05:20.388 - 7 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=228,p=0.25,r=0.6,t=1520,v3.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet100/1/MyInstancesSameToolSets/n=228,p=0.25,r=0.6,t=1520,v3.csv
+2947
+2946
+2025-02-02 16:05:23.345 - 8 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=228,p=0.50,r=0.6,t=1520,v4.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet100/1/MyInstancesSameToolSets/n=228,p=0.50,r=0.6,t=1520,v4.csv
+2559
+3028
+2025-02-02 16:05:26.385 - 9 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=228,p=0.75,r=0.6,t=1520,v5.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet100/1/MyInstancesSameToolSets/n=228,p=0.75,r=0.6,t=1520,v5.csv
+1773
+2815
+2025-02-02 16:05:29.212 - 10 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=399,p=0.25,r=0.5,t=2310,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet100/1/MyInstancesSameToolSets/n=399,p=0.25,r=0.5,t=2310,v0.csv
+4856
+7415
+2025-02-02 16:05:36.639 - 11 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=399,p=0.50,r=0.5,t=2310,v1.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet100/1/MyInstancesSameToolSets/n=399,p=0.50,r=0.5,t=2310,v1.csv
+4154
+10624
+2025-02-02 16:05:47.275 - 12 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=399,p=0.75,r=0.5,t=2310,v2.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet100/1/MyInstancesSameToolSets/n=399,p=0.75,r=0.5,t=2310,v2.csv
