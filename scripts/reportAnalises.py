@@ -134,5 +134,8 @@ def main():
     if option == '3': verificarPrecedencia(fileWithPath)
     if option == '4': verificarPrecedenciaAsSingleMachine(fileWithPath)
 
+def mainCollection():
+    pass
+
 if __name__ == "__main__":
     main()
