@@ -1,4 +1,4 @@
-outputFolder=${1:-"./output/SameToolSet10"}
+outputFolder=${1:-"./output/Multiplos"}
 runMode=${2:-"both"}
 
 for i in $(seq 1 10)
