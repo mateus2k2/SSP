@@ -257,6 +257,3 @@ double SSP::evaluateReportKTNS(solSSP& solution, string filenameJobs, string fil
     return cost;
 }
 
-void makeReport(){
-
-}

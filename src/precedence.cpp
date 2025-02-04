@@ -6,91 +6,137 @@
 #endif
 
 solSSP SSP::ajustFinalSolution(solSSP sol) {
-    solSSP semLugars;
-    solSSP newSol = sol;
+    vector<int> s = sol.sol;
 
-    // newSol.jobsTime.clear();
-    // newSol.sol.clear();
-    vector<bool> wasSwapped(sol.jobsTime.size(), false);
-    
-    for (size_t i = 0; i < sol.jobsTime.size(); i++){
-        int jobIndex = sol.jobsTime[i].job.indexJob;
-        int indexOperation = sol.jobsTime[i].job.indexOperation;
-        // cout << fmt::format("Job: {0}, Operation: {1}, Machine: {2}, Start: {3}, End: {4}, Release: {5}, Due: {6}", jobIndex, indexOperation, sol.jobsTime[i].machine, sol.jobsTime[i].start, sol.jobsTime[i].end, sol.releaseDates[jobIndex], sol.dueDates[jobIndex]) << endl;
-        if(indexOperation == 0){
-            if(sol.jobsTime[i].end > sol.dueDates[jobIndex]){
-                // cout << "é 0 e nao estou fazendo na hora certa" << endl;
-                // semLugars.jobsTime.push_back(sol.jobsTime[i]);
-                // semLugars.sol.push_back(sol.sol[i]);
-                for (size_t j = 0; j < sol.jobsTime.size(); j++){
-                    if(sol.jobsTime[j].job.indexJob == jobIndex && sol.jobsTime[j].job.indexOperation == 1){
-                        // cout << "Swapping" << endl;
-                        if (wasSwapped[j] || wasSwapped[i]) break;
-                        swap(sol.jobsTime[i], sol.jobsTime[j]);
-                        swap(sol.sol[i], sol.sol[j]);
-                        wasSwapped[j] = true;
-                        wasSwapped[i] = true;
-                        break;
-                    }
+    vector<bool> magazineL(numberToolsReal, true);
+    unsigned int switchs = 0;
+    int numberJobsSol = s.size();
+    int jL;
+
+    int switchsInstances = 0;
+    int currantSwitchs = 0;
+    int fineshedJobsCount = 0;
+    int unfineshedPriorityCount = numberOfPriorityJobs;
+
+    int inicioJob = 0;
+    int fimJob = 0;
+    int extendedPlaningHorizon = (planingHorizon * numberMachines) * DAY;
+    int isFirstJobOfMachine = 1;
+
+    int logicalMachine = 0;
+
+    sol.releaseDates = vector<int>(numberJobs, -INT_MAX);
+    sol.dueDates = vector<int>(numberJobs, INT_MAX);
+
+    for (jL = 0; jL < numberJobsSol; ++jL) {
+
+        // ---------------------------------------------------------------------------
+        // switchs
+        // ---------------------------------------------------------------------------
+
+        currantSwitchs = 0;
+        vector<bool> magazineCL(numberToolsReal);
+        int left = jL;
+        int cmL = 0;
+
+        while ((cmL < capacityMagazine) && (left < numberJobsSol)) {
+            for (auto it = originalJobs[s[left]].toolSet.tools.begin(); ((it != originalJobs[s[left]].toolSet.tools.end()) && (cmL < capacityMagazine)); ++it) {
+                if ((magazineL[*it]) && (!magazineCL[*it])) {
+                    magazineCL[*it] = true;
+                    ++cmL;
+                } else if ((jL == left) && (!magazineCL[*it])) {
+                    magazineCL[*it] = true;
+                    ++cmL;
+                    ++currantSwitchs;
                 }
             }
-            // else{
-            //     newSol.jobsTime.push_back(sol.jobsTime[i]);
-            //     newSol.sol.push_back(sol.sol[i]);
-            // }
+            ++left;
         }
-        if(indexOperation == 1){
-            if(sol.jobsTime[i].start < sol.releaseDates[jobIndex]){
-                // cout << "é 1 e nao estou fazendo na hora certa" << endl;
-                // semLugars.jobsTime.push_back(sol.jobsTime[i]);
-                // semLugars.sol.push_back(sol.sol[i]);
-                for (size_t j = 0; j < sol.jobsTime.size(); j++){
-                    if(sol.jobsTime[j].job.indexJob == jobIndex && sol.jobsTime[j].job.indexOperation == 0){
-                        if (wasSwapped[j] || wasSwapped[i]) break;
-                        // cout << "Swapping" << endl;
-                        swap(sol.jobsTime[i], sol.jobsTime[j]);
-                        swap(sol.sol[i], sol.sol[j]);
-                        wasSwapped[j] = true;
-                        wasSwapped[i] = true;
-                        break;
-                    }
-                }
+
+        for (int t = 0; ((t < numberToolsReal) && (cmL < capacityMagazine)); t++) {
+            if ((magazineL[t]) && (!magazineCL[t])) {
+                magazineCL[t] = true;
+                ++cmL;
             }
-            // else{
-            //     newSol.jobsTime.push_back(sol.jobsTime[i]);
-            //     newSol.sol.push_back(sol.sol[i]);
-            // }
         }
 
-        // for (size_t j = 0; j < semLugars.sol.size(); j++){
-        //     int jobIndexSemLugar = semLugars.jobsTime[j].job.indexJob;
-        //     int indexOperationSemLugar = semLugars.jobsTime[j].job.indexOperation;
+        // ---------------------------------------------------------------------------
+        // TIME VERIFICATIONS
+        // ---------------------------------------------------------------------------
+        int fimJobBKP = fimJob;
+        int inicioJobBKP = inicioJob;
 
-        //     if(indexOperationSemLugar == 0){
-        //         if(sol.jobsTime[i].end <= sol.dueDates[jobIndexSemLugar]){
-        //             cout << "é 0 e estou fazendo na hora certa" << endl;
-        //             newSol.jobsTime.push_back(semLugars.jobsTime[j]);
-        //             newSol.sol.push_back(semLugars.sol[j]);
-        //             semLugars.jobsTime.erase(semLugars.jobsTime.begin() + j);
-        //             semLugars.sol.erase(semLugars.sol.begin() + j);
-        //         }
-        //     }
-        //     if(indexOperationSemLugar == 1){
-        //         if(sol.jobsTime[i].start >= sol.releaseDates[jobIndexSemLugar]){
-        //             cout << "é 1 e estou fazendo na hora certa" << endl;
-        //             newSol.jobsTime.push_back(semLugars.jobsTime[j]);
-        //             newSol.sol.push_back(semLugars.sol[j]);
-        //             semLugars.jobsTime.erase(semLugars.jobsTime.begin() + j);
-        //             semLugars.sol.erase(semLugars.sol.begin() + j);
-        //         }
-        //     }
-        // }
-        // cout << "\n" << endl;
+        fimJob = inicioJob + originalJobs[s[jL]].processingTime;
+
+        if (((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) ||                                           // verificar se estou em um periodo sem supervisao e houve troca de ferramenta
+            (inicioJob % (planingHorizon * DAY) + (originalJobs[s[jL]].processingTime) > (planingHorizon * DAY))) {  // verificar se o job excede o horizonte de planejamento unico (iria extender de uma maquina para outra)
+            inicioJob += DAY - (inicioJob % DAY);
+            fimJob = inicioJob + originalJobs[s[jL]].processingTime;
+        }
+
+        if ((inicioJob % (planingHorizon * DAY) == 0))
+            isFirstJobOfMachine = 1;
+        else
+            isFirstJobOfMachine = 0;
+
+        if (fimJob > extendedPlaningHorizon) break;
+
+        inicioJob = fimJob;
+        
+        // ---------------------------------------------------------------------------
+        // VERIFICAR DOE E RELEASE
+        // ---------------------------------------------------------------------------
+
+        int startTMP = (fimJob - originalJobs[s[jL]].processingTime) % (planingHorizon * DAY);
+        int endTMP = ((fimJob - 1) % (planingHorizon * DAY)) + 1;
+
+        //verficar due e release
+        if(originalJobs[s[jL]].indexOperation == 0){
+            if(startTMP > sol.releaseDates[originalJobs[s[jL]].indexJob]){
+                inicioJob = inicioJobBKP;
+                fimJob = fimJobBKP;
+            }
+            else{
+                //delete the the currant job from the s vector
+                s.erase(s.begin() + jL);
+            }
+        }
+        else{
+            if(endTMP < sol.dueDates[originalJobs[s[jL]].indexJob]){
+                inicioJob = inicioJobBKP;
+                fimJob = fimJobBKP;
+            }
+            else{
+                //delete the the currant job from the s vector
+                s.erase(s.begin() + jL);
+            }
+        }
+
+        //setar release e due
+        if(originalJobs[s[jL]].indexOperation == 0){
+            sol.releaseDates[originalJobs[s[jL]].indexJob] = endTMP;
+        }
+        else{
+            sol.dueDates[originalJobs[s[jL]].indexJob] = startTMP;
+        }
+
+        //oficializar a troca de ferramentas
+        magazineL = magazineCL;
+
+        // ---------------------------------------------------------------------------
+        // COSTS
+        // ---------------------------------------------------------------------------
+
+        if (isFirstJobOfMachine) currantSwitchs = 0;
+        switchs += currantSwitchs;
+        if (currantSwitchs > 0) ++switchsInstances;
+
+        fineshedJobsCount += originalJobs[s[jL]].isGrouped ? 2 : 1;
+        if (originalJobs[s[jL]].priority) unfineshedPriorityCount -= originalJobs[s[jL]].isGrouped ? 2 : 1;
+
     }
 
-    // cout << "Old solution length: " << sol.sol.size() << endl;
-    // cout << "New solution length: " << newSol.sol.size() << endl;
-    // cout << "Sem Lugar length: " << semLugars.sol.size() << endl;
+    int cost = (PROFITYFINISHED * fineshedJobsCount) - (COSTSWITCH * switchs) - (COSTSWITCHINSTANCE * switchsInstances) - (COSTPRIORITY * unfineshedPriorityCount);
 
     return sol;
 }
