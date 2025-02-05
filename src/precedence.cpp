@@ -12,6 +12,7 @@ solSSP SSP::ajustFinalSolution(solSSP sol) {
     unsigned int switchs = 0;
     int numberJobsSol = s.size();
     int jL;
+    int currantJob = 0;
 
     int switchsInstances = 0;
     int currantSwitchs = 0;
@@ -22,17 +23,22 @@ solSSP SSP::ajustFinalSolution(solSSP sol) {
     int fimJob = 0;
     int extendedPlaningHorizon = (planingHorizon * numberMachines) * DAY;
     int isFirstJobOfMachine = 1;
-
     int logicalMachine = 0;
 
     sol.releaseDates = vector<int>(numberJobs, -INT_MAX);
     sol.dueDates = vector<int>(numberJobs, INT_MAX);
 
-    for (jL = 0; jL < numberJobsSol; ++jL) {
+    while(!s.empty()){
+    // for (jL = 0; jL < numberJobsSol; ++jL) {
 
         // ---------------------------------------------------------------------------
         // switchs
         // ---------------------------------------------------------------------------
+        cout << "currantJob: " << currantJob << endl;
+        cout << "s.size(): " << s.size() << endl;
+
+        jL = currantJob;
+        numberJobsSol = s.size();
 
         currantSwitchs = 0;
         vector<bool> magazineCL(numberToolsReal);
@@ -92,23 +98,27 @@ solSSP SSP::ajustFinalSolution(solSSP sol) {
 
         //verficar due e release
         if(originalJobs[s[jL]].indexOperation == 0){
-            if(startTMP > sol.releaseDates[originalJobs[s[jL]].indexJob]){
+            if(endTMP > sol.dueDates[originalJobs[s[jL]].indexJob]){
                 inicioJob = inicioJobBKP;
                 fimJob = fimJobBKP;
+                currantJob++;
             }
             else{
                 //delete the the currant job from the s vector
                 s.erase(s.begin() + jL);
+                currantJob = 0;
             }
         }
         else{
-            if(endTMP < sol.dueDates[originalJobs[s[jL]].indexJob]){
+            if(endTMP < sol.releaseDates[originalJobs[s[jL]].indexJob]){
                 inicioJob = inicioJobBKP;
                 fimJob = fimJobBKP;
+                currantJob++;
             }
             else{
                 //delete the the currant job from the s vector
                 s.erase(s.begin() + jL);
+                currantJob = 0;
             }
         }
 
