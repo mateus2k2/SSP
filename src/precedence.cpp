@@ -7,6 +7,8 @@
 
 solSSP SSP::ajustFinalSolution(solSSP sol) {
     vector<int> s = sol.sol;
+    solSSP solAjusted;
+    // solAjusted.sol = sol.sol;
 
     vector<bool> magazineL(numberToolsReal, true);
     unsigned int switchs = 0;
@@ -34,9 +36,6 @@ solSSP SSP::ajustFinalSolution(solSSP sol) {
         // ---------------------------------------------------------------------------
         // switchs
         // ---------------------------------------------------------------------------
-        cout << "currantJob: " << currantJob << endl;
-        cout << "s.size(): " << s.size() << endl;
-
         jL = currantJob;
         numberJobsSol = s.size();
 
@@ -102,23 +101,15 @@ solSSP SSP::ajustFinalSolution(solSSP sol) {
                 inicioJob = inicioJobBKP;
                 fimJob = fimJobBKP;
                 currantJob++;
-            }
-            else{
-                //delete the the currant job from the s vector
-                s.erase(s.begin() + jL);
-                currantJob = 0;
+                continue;
             }
         }
-        else{
-            if(endTMP < sol.releaseDates[originalJobs[s[jL]].indexJob]){
+        if(originalJobs[s[jL]].indexOperation == 1){
+            if(startTMP < sol.releaseDates[originalJobs[s[jL]].indexJob]){
                 inicioJob = inicioJobBKP;
                 fimJob = fimJobBKP;
                 currantJob++;
-            }
-            else{
-                //delete the the currant job from the s vector
-                s.erase(s.begin() + jL);
-                currantJob = 0;
+                continue;
             }
         }
 
@@ -130,6 +121,14 @@ solSSP SSP::ajustFinalSolution(solSSP sol) {
             sol.dueDates[originalJobs[s[jL]].indexJob] = startTMP;
         }
 
+        solAjusted.sol.push_back(s[jL]);
+
+        // s.erase(s.begin() + jL);
+        // currantJob = 0;
+        cout << "Index: " << s[jL] << " Job: " << originalJobs[s[jL]].indexJob << " Operaiton: " << originalJobs[s[jL]].indexOperation << " Start: " << startTMP << " End: " << endTMP << endl;
+
+        s.erase(s.begin() + jL);
+        currantJob = 0;
         //oficializar a troca de ferramentas
         magazineL = magazineCL;
 
@@ -146,7 +145,14 @@ solSSP SSP::ajustFinalSolution(solSSP sol) {
 
     }
 
+    cout << "" << endl;
+    //print each  solution and the release and due dates
+    for (size_t i = 0; i < solAjusted.sol.size(); i++){
+        int jobNessaPoss = solAjusted.sol[i];
+        cout << "Index: " << jobNessaPoss << " job: " << originalJobs[jobNessaPoss].indexJob << " Operation: " << originalJobs[jobNessaPoss].indexOperation << " release: " << sol.releaseDates[originalJobs[jobNessaPoss].indexJob] << " due: " << sol.dueDates[originalJobs[jobNessaPoss].indexJob] << endl;
+    }
+
     int cost = (PROFITYFINISHED * fineshedJobsCount) - (COSTSWITCH * switchs) - (COSTSWITCHINSTANCE * switchsInstances) - (COSTPRIORITY * unfineshedPriorityCount);
 
-    return sol;
+    return solAjusted;
 }
