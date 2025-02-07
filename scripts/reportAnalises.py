@@ -83,24 +83,34 @@ def verificarPrecedenciaAsSingleMachine(files):
     print(quantidadePrecedenciaQuebradaPorInstancia)
     return quantidadePrecedenciaQuebradaPorInstancia
 
-    # for index, report in enumerate(files):
-    #     flatSolution = []
-    #     planejamento, machines, endInfo = rp.parseReport(report)
-    #     jobs = ld.loadJobs(planejamento['jobsFileName'])
+def verificarPares(files):
 
-    #     for machine in machines:
-    #         for estado in machine:
-    #             print(estado['job'], estado['operation'])
-    #             flatSolution.append(estado)
 
-    #     for i in range(1, len(flatSolution)):
-    #         jobAtual = flatSolution[i]
-    #         if(jobAtual['operation'] == 1):
-    #             for j in range(i, len(flatSolution)):
-    #                 jobCheck = flatSolution[j]
-    #                 if jobAtual['job'] == jobCheck['job'] and jobCheck['operation'] == 0:
-    #                     print(f'Precedencia quebrada para a instancia {index + 1} no job {jobAtual["job"]}')
-    #                     break 
+    for index, report in enumerate(files):
+        planejamento, machines, endInfo = rp.parseReport(report)
+        jobs = ld.loadJobs(planejamento['jobsFileName'])
+
+        for machine in machines:
+            for estado in machine:
+                # para cada job operation 0, vericicar se existe um operation 1 na list "jobs"
+                # se existir, verificar se ele existe 
+                job = estado['job']
+                problemaDeOperation1 = False
+                if estado['operation'] == 0: 
+                    for jobOriginal in jobs:
+                        if jobOriginal['Job'] == job and jobOriginal['Operation'] == 1:
+                            # print(f'Job {Job} esta na solucao e tem operacao 1')
+                            problemaDeOperation1 = True
+                            # verificar se a operacao 1 esta na solucao
+                            for machine in machines:
+                                for estado in machine:
+                                    if estado['job'] == job and estado['operation'] == 1:
+                                        problemaDeOperation1 = False
+                                        break
+                if problemaDeOperation1:
+                    print(f'Problema de Operation 1 para a instancia {index + 1} no job {job}')
+
+    return 0
 
 def totalUnfinishedJobs(machines, planejamento):
     jobs = ld.loadJobs(planejamento['jobsFileName'])
@@ -133,6 +143,7 @@ def main():
     if option == '2': analisarValores(fileWithPath)
     if option == '3': verificarPrecedencia(fileWithPath)
     if option == '4': verificarPrecedenciaAsSingleMachine(fileWithPath)
+    if option == '5': verificarPares(fileWithPath)
 
 def mainCollection():
     pass

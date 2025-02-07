@@ -27,7 +27,7 @@ solSSP SSP::ajustFinalSolution(solSSP sol) {
     int isFirstJobOfMachine = 1;
     int logicalMachine = 0;
 
-    sol.releaseDates = vector<int>(numberJobs, -INT_MAX);
+    sol.releaseDates = vector<int>(numberJobs, INT_MAX);
     sol.dueDates = vector<int>(numberJobs, INT_MAX);
 
     while(!s.empty()){
