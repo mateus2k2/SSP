@@ -109,58 +109,58 @@ int main(int argc, char* argv[]) {
     // TEST
     // ------------------------------------------------------------------------------
 
-    // prob->loadInstanceParans(filenameJobs);
-    // solSSP sol = prob->randPriority();
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // prob->evaluateReportKTNS(sol, filenameJobs, filenameTools, filenameoutput, 0, false);
-    // solSSP finalSolution = prob->ajustFinalSolution(sol);
-    // prob->evaluateReportKTNS(finalSolution, filenameJobs, filenameTools, filenameoutput, 0, true);
+    prob->loadInstanceParans(filenameJobs);
+    solSSP sol = prob->randPriority();
+    sol = prob->neighbor(sol);
+    sol = prob->neighbor(sol);
+    sol = prob->neighbor(sol);
+    sol = prob->neighbor(sol);
+    sol = prob->neighbor(sol);
+    sol = prob->neighbor(sol);
+    sol = prob->neighbor(sol);
+    sol = prob->neighbor(sol);
+    sol = prob->neighbor(sol);
+    sol = prob->neighbor(sol);
+    sol = prob->neighbor(sol);
+    sol = prob->neighbor(sol);
+    sol = prob->neighbor(sol);
+    sol = prob->neighbor(sol);
+    sol = prob->neighbor(sol);
+    sol = prob->neighbor(sol);
+    sol = prob->neighbor(sol);
+    sol = prob->neighbor(sol);
+    sol = prob->neighbor(sol);
+    sol = prob->neighbor(sol);
+    sol = prob->neighbor(sol);
+    sol = prob->neighbor(sol);
+    sol = prob->neighbor(sol);
+    prob->evaluateReportKTNS(sol, filenameJobs, filenameTools, filenameoutput, 0, false);
+    solSSP finalSolution = prob->ajustFinalSolution(sol);
+    prob->evaluateReportKTNS(finalSolution, filenameJobs, filenameTools, filenameoutput, 0, true);
 
     // ------------------------------------------------------------------------------
     // REAL
     // ------------------------------------------------------------------------------
 
-    prob->loadInstanceParans(filenameJobs);
-    if (instance_report) prob->printDataReport();
-    if (diferent_toolset_mode == 0) prob->groupJobs();
+    // prob->loadInstanceParans(filenameJobs);
+    // if (instance_report) prob->printDataReport();
+    // if (diferent_toolset_mode == 0) prob->groupJobs();
 
-    PT<solSSP> algo(tempIni, tempfim, tempN, MCL, PTL, tempD, uType, tempUp);
-    ExecTime et;
-    solSSP sol = algo.start(thN, prob);
+    // PT<solSSP> algo(tempIni, tempfim, tempN, MCL, PTL, tempD, uType, tempUp);
+    // ExecTime et;
+    // solSSP sol = algo.start(thN, prob);
 
-    if (diferent_toolset_mode == 1){
-        prob->evaluateReportKTNS(sol, filenameJobs, filenameTools, filenameoutput, et.getTimeMs(), false);
-        solSSP finalSolution = prob->ajustFinalSolution(sol);
-        prob->evaluateReportKTNS(finalSolution, filenameJobs, filenameTools, filenameoutput, et.getTimeMs(), true);
-    } 
-    else{
-        prob->evaluateReportKTNS(sol, filenameJobs, filenameTools, filenameoutput, et.getTimeMs(), true);
-    } 
+    // if (diferent_toolset_mode == 1){
+    //     prob->evaluateReportKTNS(sol, filenameJobs, filenameTools, filenameoutput, et.getTimeMs(), false);
+    //     solSSP finalSolution = prob->ajustFinalSolution(sol);
+    //     prob->evaluateReportKTNS(finalSolution, filenameJobs, filenameTools, filenameoutput, et.getTimeMs(), true);
+    // } 
+    // else{
+    //     prob->evaluateReportKTNS(sol, filenameJobs, filenameTools, filenameoutput, et.getTimeMs(), true);
+    // } 
 
-    if(print_cost) cout << (-1) * sol.evalSol << endl;
-    if(print_time) cout << et.getTimeMs() << endl;
+    // if(print_cost) cout << (-1) * sol.evalSol << endl;
+    // if(print_time) cout << et.getTimeMs() << endl;
 
     return 0;
 }

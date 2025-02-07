@@ -30,6 +30,15 @@ solSSP SSP::ajustFinalSolution(solSSP sol) {
     sol.releaseDates = vector<int>(numberJobs, INT_MAX);
     sol.dueDates = vector<int>(numberJobs, INT_MAX);
 
+    vector<bool> isReentrat(numberJobs, false);
+    vector<int> isReentratDid0(numberJobs, -1);
+
+    for (size_t i = 0; i < s.size(); i++){
+        if(originalJobs[s[i]].indexOperation == 1){
+            isReentrat[originalJobs[s[i]].indexJob] = true;
+        }
+    }
+
     while(!s.empty()){
     // for (jL = 0; jL < numberJobsSol; ++jL) {
 
@@ -116,16 +125,18 @@ solSSP SSP::ajustFinalSolution(solSSP sol) {
         //setar release e due
         if(originalJobs[s[jL]].indexOperation == 0){
             sol.releaseDates[originalJobs[s[jL]].indexJob] = endTMP;
+            if(isReentrat[originalJobs[s[jL]].indexJob]) isReentratDid0[originalJobs[s[jL]].indexJob] = 1;
         }
         else{
             sol.dueDates[originalJobs[s[jL]].indexJob] = startTMP;
+            if(isReentrat[originalJobs[s[jL]].indexJob]) isReentratDid0[originalJobs[s[jL]].indexJob] = 2;
         }
 
         solAjusted.sol.push_back(s[jL]);
 
         // s.erase(s.begin() + jL);
         // currantJob = 0;
-        cout << "Index: " << s[jL] << " Job: " << originalJobs[s[jL]].indexJob << " Operaiton: " << originalJobs[s[jL]].indexOperation << " Start: " << startTMP << " End: " << endTMP << endl;
+        // cout << "Index: " << s[jL] << " Job: " << originalJobs[s[jL]].indexJob << " Operaiton: " << originalJobs[s[jL]].indexOperation << " Start: " << startTMP << " End: " << endTMP << endl;
 
         s.erase(s.begin() + jL);
         currantJob = 0;
@@ -145,11 +156,17 @@ solSSP SSP::ajustFinalSolution(solSSP sol) {
 
     }
 
-    cout << "" << endl;
+    // cout << "" << endl;
     //print each  solution and the release and due dates
     for (size_t i = 0; i < solAjusted.sol.size(); i++){
         int jobNessaPoss = solAjusted.sol[i];
-        cout << "Index: " << jobNessaPoss << " job: " << originalJobs[jobNessaPoss].indexJob << " Operation: " << originalJobs[jobNessaPoss].indexOperation << " release: " << sol.releaseDates[originalJobs[jobNessaPoss].indexJob] << " due: " << sol.dueDates[originalJobs[jobNessaPoss].indexJob] << endl;
+        // cout << "Index: " << jobNessaPoss << " job: " << originalJobs[jobNessaPoss].indexJob << " Operation: " << originalJobs[jobNessaPoss].indexOperation << " release: " << sol.releaseDates[originalJobs[jobNessaPoss].indexJob] << " due: " << sol.dueDates[originalJobs[jobNessaPoss].indexJob] << endl;
+    }
+
+    for (size_t i = 0; i < isReentratDid0.size(); i++){
+        if(isReentratDid0[i] == 1){
+            cout << "Job: " << i << " tem operacao 0 e ela não esta na solucao" << endl;
+        }
     }
 
     int cost = (PROFITYFINISHED * fineshedJobsCount) - (COSTSWITCH * switchs) - (COSTSWITCHINSTANCE * switchsInstances) - (COSTPRIORITY * unfineshedPriorityCount);
