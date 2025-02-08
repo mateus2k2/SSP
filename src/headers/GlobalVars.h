@@ -31,14 +31,6 @@ typedef struct{
     vector<int> processingTimes;
 }Job;
 
-struct JobTime {
-    Job job;
-    int machine;
-    int start;
-    int end;
-    JobTime(Job job_, int machine_, int start_, int end_): job(job_), machine(machine_), start(start_), end(end_) {}
-};
-
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // DEFINIÇÕES DO PLOBLEMA
 // ------------------------------------------------------------------------------------------------------------------------------------------------------

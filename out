@@ -1,40 +1,24 @@
+make compilePT
+make[1]: Entering directory '/home/mateus/WSL/IC/SSP'
 clear
-[H[2J[3Jg++   -DRANDSEED ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread -O3 -march=native -lstdc++ 
+[H[2J[3Jg++ -DDEBUG  -DRANDSEED ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread  -march=native -lstdc++ -lfmt
 echo "\n" 
 
 
-RODANDO INSTANCIAS DE ./input/MyInstancesSameToolSets
-2025-02-02 16:05:04.620 - 1 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet100/1/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv
-1156
-626
-2025-02-02 16:05:05.255 - 2 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=75,p=0.51,r=0.5,t=650,v1.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet100/1/MyInstancesSameToolSets/n=75,p=0.51,r=0.5,t=650,v1.csv
-912
-503
-2025-02-02 16:05:05.769 - 3 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=75,p=0.75,r=0.5,t=650,v2.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet100/1/MyInstancesSameToolSets/n=75,p=0.75,r=0.5,t=650,v2.csv
-1070
-4162
-2025-02-02 16:05:09.940 - 4 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=212,p=0.25,r=0.4,t=1390,v6.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet100/1/MyInstancesSameToolSets/n=212,p=0.25,r=0.4,t=1390,v6.csv
-2728
-3348
-2025-02-02 16:05:13.299 - 5 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=212,p=0.50,r=0.4,t=1390,v7.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet100/1/MyInstancesSameToolSets/n=212,p=0.50,r=0.4,t=1390,v7.csv
-2294
-3597
-2025-02-02 16:05:16.908 - 6 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=212,p=0.75,r=0.4,t=1390,v8.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet100/1/MyInstancesSameToolSets/n=212,p=0.75,r=0.4,t=1390,v8.csv
-1556
-3467
-2025-02-02 16:05:20.388 - 7 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=228,p=0.25,r=0.6,t=1520,v3.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet100/1/MyInstancesSameToolSets/n=228,p=0.25,r=0.6,t=1520,v3.csv
-2947
-2946
-2025-02-02 16:05:23.345 - 8 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=228,p=0.50,r=0.6,t=1520,v4.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet100/1/MyInstancesSameToolSets/n=228,p=0.50,r=0.6,t=1520,v4.csv
-2559
-3028
-2025-02-02 16:05:26.385 - 9 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=228,p=0.75,r=0.6,t=1520,v5.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet100/1/MyInstancesSameToolSets/n=228,p=0.75,r=0.6,t=1520,v5.csv
-1773
-2815
-2025-02-02 16:05:29.212 - 10 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=399,p=0.25,r=0.5,t=2310,v0.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet100/1/MyInstancesSameToolSets/n=399,p=0.25,r=0.5,t=2310,v0.csv
-4856
-7415
-2025-02-02 16:05:36.639 - 11 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=399,p=0.50,r=0.5,t=2310,v1.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet100/1/MyInstancesSameToolSets/n=399,p=0.50,r=0.5,t=2310,v1.csv
-4154
-10624
-2025-02-02 16:05:47.275 - 12 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=399,p=0.75,r=0.5,t=2310,v2.csv ./input/Processed/ToolSetInt.csv ./output/SameToolSet100/1/MyInstancesSameToolSets/n=399,p=0.75,r=0.5,t=2310,v2.csv
+make[1]: Leaving directory '/home/mateus/WSL/IC/SSP'
+./src/out/mainCpp "./input/MyInstancesDiferentToolSets/n=75,p=0.24,r=0.5,t=112,v0.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" \
+	--TEMP_INIT 0.1 \
+	--TEMP_FIM 0.5 \
+	--N_REPLICAS 11 \
+	--MCL 400 \
+	--PTL 10 \
+	--TEMP_DIST 1 \
+	--TYPE_UPDATE 1 \
+	--INIT_SOL_TYPE 1 \
+	--TEMP_UPDATE 20 \
+	--PTL_TEMP_UPDATE_PROPORTION 1 \
+	--RESULT_REPORT 1 \
+	--DIFERENT_TOOLSETS_MODE 1 \
+
+-390
+19032

@@ -32,7 +32,6 @@ struct solSSP: public solution{
 	std::vector<int> sol; 
 	std::vector<int> releaseDates;
 	std::vector<int> dueDates;
-	vector<JobTime> jobsTime;
 };
 
 class SSP: public Problem<solSSP>{
@@ -67,10 +66,6 @@ class SSP: public Problem<solSSP>{
 		void printDataReport();
 		void setParans(int capacityMagazine, int numberMachines, int planingHorizon, int unsupervised, int movementType, int initSolType, int diferent_toolset_mode);
 		
-		void groupJobs();
-		void setupPermutations();
-		solSSP ajustFinalSolution(solSSP sol);
-
 		solSSP construction();
 		solSSP randPriority();
 		solSSP rand();
@@ -79,9 +74,11 @@ class SSP: public Problem<solSSP>{
 		solSSP two_opt(solSSP sol);
 		solSSP two_swap(solSSP sol);
 		solSSP insertion(solSSP sol);
-		
+
+		void groupJobs();
 		double evaluate(solSSP& s);
-		double evaluateReportKTNS(solSSP &sol, string filenameJobs, string filenameTools, string solutionReportFileName, int time, bool writeToFile);
+		double evaluateReportKTNS(solSSP &sol, string filenameJobs, string filenameTools, string solutionReportFileName, int time);
+		solSSP postProcessDifferent(solSSP &sol);
 		
 };
 
