@@ -92,7 +92,7 @@ solSSP SSP::two_swap(solSSP sol) {
             }
 
             if (originalJobs[s.sol[last]].indexOperation == 0) {
-                validSwap1 = true;
+                validSwap2 = true;
             }
             else {
                 if (s.releaseDates[originalJobs[s.sol[last]].indexJob] < first) {
@@ -100,7 +100,7 @@ solSSP SSP::two_swap(solSSP sol) {
                 }
             }
             if(countErros > 10000){
-                cout << "ERRO" << endl;
+                // cout << "ERRO" << endl;
                 s.Nup = sol.Nup;
                 s.Ndown = sol.Ndown;
                 return s;

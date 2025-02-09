@@ -154,7 +154,10 @@ int main(int argc, char* argv[]) {
     if (diferent_toolset_mode == 1) finalSolution = prob->postProcessDifferent(sol);
     double cost = prob->evaluateReportKTNS(finalSolution, filenameJobs, filenameTools, filenameoutput, et.getTimeMs());
 
-    if(print_cost) cout << cost << endl;
+    if(print_cost){ 
+        cout << -sol.evalSol << endl;
+        cout << cost << endl;
+    }
     if(print_time) cout << et.getTimeMs() << endl;
 
     return 0;
