@@ -65,67 +65,71 @@ solSSP SSP::two_swap(solSSP sol) {
     int validSwap1 = false;
     int validSwap2 = false;
 
-    // if(diferent_toolset_mode == 1) {    
-    //     do {
-    //         do {
-    //             first = dist(mersenne_engine);
-    //             last = dist(mersenne_engine);
-    //         } while (first == last);
-    //         if (first > last) std::swap(first, last);
+    if(diferent_toolset_mode == 1) {
+        do {
+            do {
+                first = dist(mersenne_engine);
+                last = dist(mersenne_engine);
+            } while (first == last);
+            if (first > last) std::swap(first, last);
             
-    //         validSwap1 = false;
-    //         validSwap2 = false;
+            int lastBKP = max(0, last - s.dueDates[originalJobs[s.sol[first]].indexJob]);
+            last = lastBKP <= first ? last : lastBKP;
 
-    //         if (originalJobs[s.sol[first]].indexOperation == 0) {
-    //             if (s.dueDates[originalJobs[s.sol[first]].indexJob] > last) {
-    //                 validSwap1 = true;
-    //             }
-    //         }
-    //         else if (originalJobs[s.sol[first]].indexOperation == 1) {
-    //             if (s.releaseDates[originalJobs[s.sol[first]].indexJob] < last) {
-    //                 validSwap1 = true;
-    //             }
-    //         }
-    //         if (originalJobs[s.sol[last]].indexOperation == 0) {
-    //             if (s.dueDates[originalJobs[s.sol[last]].indexJob] > first) {
-    //                 validSwap2 = true;
-    //             }
-    //         }
-    //         else if (originalJobs[s.sol[last]].indexOperation == 1) {
-    //             if (s.releaseDates[originalJobs[s.sol[last]].indexJob] < first) {
-    //                 validSwap2 = true;
-    //             }
-    //         }
-    //         if (countErros > 10000) {
-    //             s.Nup = sol.Nup;
-    //             s.Ndown = sol.Ndown;
-    //             return s;
-    //         }
-    //         countErros++;
+            int firstBKP = min(numberJobs - 1, first + s.releaseDates[originalJobs[s.sol[last]].indexJob]);
+            first = firstBKP >= last ? first : firstBKP; 
+            
+            validSwap1 = false;
+            validSwap2 = false;
 
-    //     } while (validSwap1 == false || validSwap2 == false);
+            if (originalJobs[s.sol[first]].indexOperation == 0) {
+                if (s.dueDates[originalJobs[s.sol[first]].indexJob] > last) {
+                    validSwap1 = true;
+                }
+            }
+            else {
+                validSwap1 = true;
+            }
 
-    //     if (originalJobs[s.sol[first]].indexOperation == 0) {
-    //         s.releaseDates[originalJobs[s.sol[first]].indexJob] = last;
-    //     }
-    //     else if (originalJobs[s.sol[first]].indexOperation == 1) {
-    //         s.dueDates[originalJobs[s.sol[first]].indexJob] = last;
-    //     }
-    //     if (originalJobs[s.sol[last]].indexOperation == 0) {
-    //         s.releaseDates[originalJobs[s.sol[last]].indexJob] = first;
-    //     }
-    //     else if (originalJobs[s.sol[last]].indexOperation == 1) {
-    //         s.dueDates[originalJobs[s.sol[last]].indexJob] = first;
-    //     }
-    // }
-    // else{
+            if (originalJobs[s.sol[last]].indexOperation == 0) {
+                validSwap1 = true;
+            }
+            else {
+                if (s.releaseDates[originalJobs[s.sol[last]].indexJob] < first) {
+                    validSwap2 = true;
+                }
+            }
+            if(countErros > 10000){
+                cout << "ERRO" << endl;
+                s.Nup = sol.Nup;
+                s.Ndown = sol.Ndown;
+                return s;
+            }
+            countErros++;
+
+        } while (validSwap1 == false || validSwap2 == false);
+
+        if (originalJobs[s.sol[first]].indexOperation == 0) {
+            s.releaseDates[originalJobs[s.sol[first]].indexJob] = last;
+        }
+        else if (originalJobs[s.sol[first]].indexOperation == 1) {
+            s.dueDates[originalJobs[s.sol[first]].indexJob] = last;
+        }
+        if (originalJobs[s.sol[last]].indexOperation == 0) {
+            s.releaseDates[originalJobs[s.sol[last]].indexJob] = first;
+        }
+        else if (originalJobs[s.sol[last]].indexOperation == 1) {
+            s.dueDates[originalJobs[s.sol[last]].indexJob] = first;
+        }
+    }
+    else{
         do {
             first = dist(mersenne_engine);
             last = dist(mersenne_engine);
         } while (first == last);
-    // }
+    }
 
-    // cout << countErros << endl;
+    cout << "countErros: " << countErros << endl;
 
     std::swap(s.sol[first], s.sol[last]);
     s.Nup = sol.Nup;

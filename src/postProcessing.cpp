@@ -199,7 +199,6 @@ solSSP SSP::postProcessDifferent(solSSP& sol) {
         sol.dueDates = vector<int>(numberJobs, INT_MAX);
         
         isReentratDid0 = vector<int>(numberJobs, -1);
-
     }
 
     // cout << "" << endl;
@@ -221,7 +220,6 @@ solSSP SSP::postProcessDifferent(solSSP& sol) {
 
     return solAjusted;
 }
-
 
 double SSP::evaluateReportKTNS(solSSP& solution, string filenameJobs, string filenameTools, string solutionReportFileName, int time) {
     vector<int> s = solution.sol;
