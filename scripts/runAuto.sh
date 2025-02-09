@@ -25,7 +25,7 @@ run_instances() {
             --TEMP_FIM 0.5 \
             --N_REPLICAS 11 \
             --MCL 400 \
-            --PTL 10 \
+            --PTL 100 \
             --TEMP_DIST 1 \
             --TYPE_UPDATE 1 \
             --INIT_SOL_TYPE 1 \
