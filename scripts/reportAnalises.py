@@ -56,10 +56,9 @@ def verificarPrecedencia(files):
                 job = estado['job']
                 if estado['operation'] == 1: 
                     if not (job in FimOperacao0) or estado['start'] < FimOperacao0[job]: 
-                        print(f'Precedencia quebrada para a instancia {index + 1} no job {job}')
+                        # print(f'Precedencia quebrada para a instancia {index + 1} no job {job}')
                         quantidadePrecedenciaQuebradaPorInstancia[index] += 1
 
-    print(quantidadePrecedenciaQuebradaPorInstancia)
     return quantidadePrecedenciaQuebradaPorInstancia
 
 def verificarPrecedenciaAsSingleMachine(files):
@@ -80,12 +79,9 @@ def verificarPrecedenciaAsSingleMachine(files):
                         quantidadePrecedenciaQuebradaPorInstancia[index] += 1
                     else : precedencia[job].pop()
     
-    print(quantidadePrecedenciaQuebradaPorInstancia)
     return quantidadePrecedenciaQuebradaPorInstancia
 
 def verificarPares(files):
-
-
     for index, report in enumerate(files):
         planejamento, machines, endInfo = rp.parseReport(report)
         jobs = ld.loadJobs(planejamento['jobsFileName'])
@@ -139,7 +135,7 @@ def main():
     # get the option from the user 
     option = sys.argv[2]
 
-    if option == '1':  validarPasta(fileWithPath)  
+    if option == '1': validarPasta(fileWithPath)  
     if option == '2': analisarValores(fileWithPath)
     if option == '3': verificarPrecedencia(fileWithPath)
     if option == '4': verificarPrecedenciaAsSingleMachine(fileWithPath)

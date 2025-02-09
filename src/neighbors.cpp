@@ -99,12 +99,7 @@ solSSP SSP::two_swap(solSSP sol) {
                     validSwap2 = true;
                 }
             }
-            if(countErros > 10000){
-                // cout << "ERRO" << endl;
-                s.Nup = sol.Nup;
-                s.Ndown = sol.Ndown;
-                return s;
-            }
+
             countErros++;
 
         } while (validSwap1 == false || validSwap2 == false);
@@ -129,7 +124,7 @@ solSSP SSP::two_swap(solSSP sol) {
         } while (first == last);
     }
 
-    // cout << "countErros: " << countErros << endl;
+    // if (countErros > 30) cout << "countErros: " << countErros << endl;
 
     std::swap(s.sol[first], s.sol[last]);
     s.Nup = sol.Nup;
