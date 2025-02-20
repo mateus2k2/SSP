@@ -1,0 +1,418 @@
+#------------------------------------------------------------------------------
+# irace: An implementation in R of (Elitist) Iterated Racing
+# Version: 3.5.6863679
+# Copyright (C) 2010-2020
+# Manuel Lopez-Ibanez     <manuel.lopez-ibanez@manchester.ac.uk>
+# Jeremie Dubois-Lacoste  
+# Leslie Perez Caceres    <leslie.perez.caceres@ulb.ac.be>
+#
+# This is free software, and you are welcome to redistribute it under certain
+# conditions.  See the GNU General Public License for details. There is NO
+# WARRANTY; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+# irace builds upon previous code from the race package:
+#     race: Racing methods for the selection of the best
+#     Copyright (C) 2003 Mauro Birattari
+#------------------------------------------------------------------------------
+# installed at: /home/mateus/R/x86_64-pc-linux-gnu-library/4.1/irace
+# called with: 
+== irace == WARNING: A default scenario file '/home/mateus/apps/SSP/tuning/scenario.txt' has been found and will be read.
+# 2025-02-02 18:36:33 -03: Initialization
+# Elitist race
+# Elitist new instances: 1
+# Elitist limit: 2
+# nbIterations: 4
+# minNbSurvival: 4
+# nbParameters: 7
+# seed: 1814539210
+# confidence level: 0.95
+# budget: 8448
+# mu: 5
+# deterministic: FALSE
+
+# 2025-02-02 18:36:33 -03: Iteration 1 of 4
+# experimentsUsedSoFar: 0
+# remainingBudget: 8448
+# currentBudget: 2112
+# nbConfigurations: 352
+# Markers:
+     x No test is performed.
+     c Configurations are discarded only due to capping.
+     - The test is performed and some configurations are discarded.
+     = The test is performed but no configuration is discarded.
+     ! The test is performed and configurations could be discarded but elite configurations are preserved.
+     . All alive configurations are elite and nothing is discarded
+
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+| |   Instance|      Alive|       Best|       Mean best| Exp so far|  W time|  rho|KenW|  Qvar|
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+|x|          1|        352|        218|    -1193.000000|        352|00:40:07|   NA|  NA|    NA|
+|x|          2|        352|        218|    -7199.500000|        704|16:21:40|+0.52|0.76|0.5587|
+|x|          3|        352|        218|    -6837.333333|       1056|13:33:48|+0.67|0.78|0.3786|
+|x|          4|        352|        334|    -5952.250000|       1408|04:11:49|+0.73|0.80|0.2871|
+|-|          5|         74|         48|    -5983.000000|       1760|13:36:35|+0.15|0.32|0.8320|
+|-|          6|         28|         48|    -5183.333333|       1834|00:09:57|-0.06|0.12|1.0291|
+|=|          7|         28|         48|    -4918.714286|       1862|00:25:48|-0.02|0.12|0.9899|
+|=|          8|         28|         48|    -5947.625000|       1890|04:16:31|+0.01|0.14|0.9468|
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+Best-so-far configuration:          48    mean value:     -5947.625000
+Description of the best-so-far configuration:
+   .ID. tempInit tempFim mcl tempDist movimentType initialSolution proporsaoTempUpdate .PARENT.
+48   48      0.1       5 500        1            1               0                   4       NA
+
+# 2025-02-05 23:52:52 -03: Elite configurations (first number is the configuration ID; listed from best to worst according to the sum of ranks):
+    tempInit tempFim mcl tempDist movimentType initialSolution proporsaoTempUpdate
+48       0.1       5 500        1            1               0                   4
+154      0.1       5 500        2            1               0                   3
+324     0.01     0.5 500        3            1               0                   5
+166     0.01       1 500        1            1               0                   4
+# 2025-02-05 23:52:52 -03: Iteration 2 of 4
+# experimentsUsedSoFar: 1890
+# remainingBudget: 6558
+# currentBudget: 2186
+# nbConfigurations: 246
+# Markers:
+     x No test is performed.
+     c Configurations are discarded only due to capping.
+     - The test is performed and some configurations are discarded.
+     = The test is performed but no configuration is discarded.
+     ! The test is performed and configurations could be discarded but elite configurations are preserved.
+     . All alive configurations are elite and nothing is discarded
+
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+| |   Instance|      Alive|       Best|       Mean best| Exp so far|  W time|  rho|KenW|  Qvar|
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+|x|          9|        246|        367|    -6263.000000|        246|10:07:26|   NA|  NA|    NA|
+|x|          4|        246|        370|    -4785.000000|        488|03:04:44|+0.89|0.95|0.0605|
+|x|          8|        246|        370|    -7618.333333|        730|05:56:46|+0.91|0.94|0.0476|
+|x|          6|        246|        551|    -6014.250000|        972|00:31:16|+0.82|0.86|0.1821|
+|-|          7|         32|        551|    -5477.000000|       1214|03:05:12|+0.03|0.23|0.9203|
+|=|          2|         32|        370|    -6769.666667|       1242|04:20:47|+0.01|0.17|0.9639|
+|=|          5|         32|        370|    -6672.428571|       1270|01:24:12|+0.01|0.15|0.9549|
+|=|          3|         32|        370|    -6597.625000|       1298|01:23:53|+0.06|0.17|0.9084|
+|=|          1|         32|        370|    -5996.777778|       1326|00:04:24|+0.05|0.15|0.9128|
+|-|         10|         16|        370|    -5515.900000|       1358|00:05:08|-0.05|0.05|0.9739|
+|=|         11|         16|        370|    -6225.000000|       1374|02:37:36|-0.04|0.06|0.9590|
+|=|         12|         16|        370|    -5983.000000|       1390|00:15:44|-0.01|0.07|0.9399|
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+Best-so-far configuration:         370    mean value:     -5983.000000
+Description of the best-so-far configuration:
+    .ID. tempInit tempFim mcl tempDist movimentType initialSolution proporsaoTempUpdate .PARENT.
+370  370      0.2       5 500        1            1               0                   4       48
+
+# 2025-02-08 08:50:07 -03: Elite configurations (first number is the configuration ID; listed from best to worst according to the sum of ranks):
+    tempInit tempFim mcl tempDist movimentType initialSolution proporsaoTempUpdate
+370      0.2       5 500        1            1               0                   4
+459     0.01       5 400        3            1               0                   5
+376      0.2       1 500        2            1               0                   5
+551      0.1       5 500        1            1               0                   3
+# 2025-02-08 08:50:07 -03: Iteration 3 of 4
+# experimentsUsedSoFar: 3280
+# remainingBudget: 5168
+# currentBudget: 2584
+# nbConfigurations: 202
+# Markers:
+     x No test is performed.
+     c Configurations are discarded only due to capping.
+     - The test is performed and some configurations are discarded.
+     = The test is performed but no configuration is discarded.
+     ! The test is performed and configurations could be discarded but elite configurations are preserved.
+     . All alive configurations are elite and nothing is discarded
+
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+| |   Instance|      Alive|       Best|       Mean best| Exp so far|  W time|  rho|KenW|  Qvar|
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+|x|         13|        202|        662|    -6272.000000|        202|08:51:33|   NA|  NA|    NA|
+|x|          5|        202|        598|    -6227.500000|        400|08:40:39|+0.88|0.94|0.0255|
+|x|          8|        202|        766|    -8587.666667|        598|02:22:18|+0.89|0.92|0.0198|
+|x|          1|        202|        766|    -6738.250000|        796|00:27:24|+0.78|0.83|0.1640|
+|-|         11|         33|        766|    -8048.800000|        994|02:31:27|-0.12|0.10|1.0913|
+|=|          4|         33|        766|    -7254.166667|       1023|00:28:35|-0.08|0.10|1.0613|
+|=|          3|         33|        766|    -7082.428571|       1052|01:31:41|-0.05|0.10|1.0368|
+|=|          7|         33|        712|    -6589.000000|       1081|00:28:55|-0.02|0.11|0.9999|
+|=|          2|         33|        712|    -7327.777778|       1110|04:45:12|+0.00|0.11|0.9824|
+|=|         12|         33|        370|    -6926.000000|       1139|00:28:54|+0.00|0.10|0.9798|
+|=|          6|         33|        598|    -6395.181818|       1168|00:04:48|-0.00|0.09|0.9802|
+|=|         10|         33|        598|    -5961.250000|       1197|00:04:48|+0.01|0.09|0.9718|
+|=|          9|         33|        598|    -5972.000000|       1226|01:31:29|+0.01|0.08|0.9699|
+|=|         14|         33|        598|    -5781.857143|       1259|00:32:36|+0.00|0.07|0.9736|
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+Best-so-far configuration:         598    mean value:     -5781.857143
+Description of the best-so-far configuration:
+    .ID. tempInit tempFim mcl tempDist movimentType initialSolution proporsaoTempUpdate .PARENT.
+598  598      0.2       5 500        1            1               0                   3      370
+
+# 2025-02-11 17:40:34 -03: Elite configurations (first number is the configuration ID; listed from best to worst according to the sum of ranks):
+    tempInit tempFim mcl tempDist movimentType initialSolution proporsaoTempUpdate
+598      0.2       5 500        1            1               0                   3
+370      0.2       5 500        1            1               0                   4
+551      0.1       5 500        1            1               0                   3
+653      0.1       5 500        2            1               0                   3
+# 2025-02-11 17:40:34 -03: Iteration 4 of 4
+# experimentsUsedSoFar: 4539
+# remainingBudget: 3909
+# currentBudget: 3909
+# nbConfigurations: 264
+# Markers:
+     x No test is performed.
+     c Configurations are discarded only due to capping.
+     - The test is performed and some configurations are discarded.
+     = The test is performed but no configuration is discarded.
+     ! The test is performed and configurations could be discarded but elite configurations are preserved.
+     . All alive configurations are elite and nothing is discarded
+
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+| |   Instance|      Alive|       Best|       Mean best| Exp so far|  W time|  rho|KenW|  Qvar|
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+|x|         15|        264|        926|    -1193.000000|        264|00:39:48|   NA|  NA|    NA|
+|x|          1|        264|        924|    -1192.000000|        524|00:38:59|+0.61|0.80|0.2646|
+|x|          6|        264|       1009|    -1191.000000|        784|00:39:16|+0.56|0.70|0.2719|
+|x|          4|        264|       1009|    -1718.500000|       1044|03:52:18|+0.57|0.67|0.2657|
+|-|         12|        101|        903|    -2046.400000|       1304|03:51:54|-0.11|0.11|1.0929|
+|=|          5|        101|       1009|    -2728.666667|       1401|05:04:44|-0.07|0.11|1.0552|
+|=|         14|        101|        947|    -2835.714286|       1498|01:36:01|-0.04|0.11|1.0239|
+|=|          9|        101|       1009|    -3234.625000|       1595|05:03:54|+0.00|0.13|0.9874|
+|=|          8|        101|       1009|    -4334.888889|       1692|15:48:00|+0.00|0.11|0.9806|
+|=|          7|        101|        370|    -4245.300000|       1789|01:35:48|+0.01|0.11|0.9759|
+|=|         11|        101|        370|    -5069.909091|       1886|15:41:27|+0.02|0.11|0.9662|
+|-|         10|         53|        891|    -4741.750000|       1983|00:16:09|-0.05|0.04|1.0259|
+|=|          3|         53|        903|    -4842.923077|       2032|02:35:44|-0.04|0.04|1.0123|
+|=|         13|         53|        903|    -4942.000000|       2081|02:35:50|-0.03|0.05|1.0063|
+|=|          2|         53|        903|    -5492.000000|       2130|08:02:58|-0.02|0.05|0.9996|
+|=|         16|         53|        903|    -5968.937500|       2183|08:36:03|-0.02|0.05|0.9962|
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+Best-so-far configuration:         903    mean value:     -5968.937500
+Description of the best-so-far configuration:
+    .ID. tempInit tempFim mcl tempDist movimentType initialSolution proporsaoTempUpdate .PARENT.
+903  903      0.2       5 500        1            1               0                   5      370
+
+# 2025-02-14 22:19:35 -03: Elite configurations (first number is the configuration ID; listed from best to worst according to the sum of ranks):
+    tempInit tempFim mcl tempDist movimentType initialSolution proporsaoTempUpdate
+835      0.1       5 500        3            1               0                   3
+865     0.01       5 500        1            1               0                   4
+873      0.1       5 500        1            1               0                   4
+551      0.1       5 500        1            1               0                   3
+# 2025-02-14 22:19:35 -03: Iteration 5 of 5
+# experimentsUsedSoFar: 6722
+# remainingBudget: 1726
+# currentBudget: 1726
+# nbConfigurations: 105
+# Markers:
+     x No test is performed.
+     c Configurations are discarded only due to capping.
+     - The test is performed and some configurations are discarded.
+     = The test is performed but no configuration is discarded.
+     ! The test is performed and configurations could be discarded but elite configurations are preserved.
+     . All alive configurations are elite and nothing is discarded
+
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+| |   Instance|      Alive|       Best|       Mean best| Exp so far|  W time|  rho|KenW|  Qvar|
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+|x|         17|        105|       1055|    -6239.000000|        105|04:58:29|   NA|  NA|    NA|
+|x|         10|        105|       1131|    -3685.000000|        206|00:14:59|+0.58|0.79|0.2765|
+|x|         11|        105|       1131|    -6876.333333|        307|14:35:15|+0.63|0.75|0.1929|
+|x|          5|        105|       1131|    -6700.000000|        408|04:44:38|+0.63|0.72|0.1457|
+|-|          7|         41|       1131|    -6016.800000|        509|01:28:22|-0.07|0.14|1.0705|
+|=|          9|         41|       1069|    -6070.000000|        546|01:58:46|-0.06|0.12|1.0492|
+|=|          3|         41|       1071|    -6064.714286|        583|01:57:56|-0.02|0.13|1.0058|
+|=|          6|         41|        865|    -5415.750000|        620|00:06:11|-0.04|0.09|1.0147|
+|=|         14|         41|        865|    -5183.444444|        657|00:36:55|-0.02|0.10|0.9960|
+|=|          4|         41|        865|    -4994.900000|        694|00:37:00|+0.00|0.10|0.9785|
+|=|          1|         41|        865|    -4649.090909|        731|00:06:10|+0.02|0.11|0.9644|
+|=|          8|         41|        865|    -5351.500000|        768|06:05:38|+0.01|0.09|0.9654|
+|=|         13|         41|        865|    -5417.000000|        805|01:58:03|+0.02|0.10|0.9490|
+|=|         12|         41|        865|    -5265.928571|        842|00:37:13|+0.02|0.09|0.9485|
+|-|          2|         24|        865|    -5804.133333|        879|06:01:38|-0.03|0.04|0.9853|
+|=|         16|         24|        865|    -6266.187500|        899|03:16:18|-0.03|0.04|0.9807|
+|=|         15|         24|        865|    -5967.411765|        919|00:03:18|-0.02|0.04|0.9690|
+|=|         18|         24|        865|    -5815.222222|        943|00:23:49|-0.01|0.05|0.9638|
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+Best-so-far configuration:         865    mean value:     -5815.222222
+Description of the best-so-far configuration:
+    .ID. tempInit tempFim mcl tempDist movimentType initialSolution proporsaoTempUpdate .PARENT.
+865  865     0.01       5 500        1            1               0                   4      598
+
+# 2025-02-17 00:10:22 -03: Elite configurations (first number is the configuration ID; listed from best to worst according to the sum of ranks):
+     tempInit tempFim mcl tempDist movimentType initialSolution proporsaoTempUpdate
+865      0.01       5 500        1            1               0                   4
+835       0.1       5 500        3            1               0                   3
+1121      0.1       5 500        3            1               0                   5
+551       0.1       5 500        1            1               0                   3
+# 2025-02-17 00:10:22 -03: Iteration 6 of 6
+# experimentsUsedSoFar: 7665
+# remainingBudget: 783
+# currentBudget: 783
+# nbConfigurations: 45
+# Markers:
+     x No test is performed.
+     c Configurations are discarded only due to capping.
+     - The test is performed and some configurations are discarded.
+     = The test is performed but no configuration is discarded.
+     ! The test is performed and configurations could be discarded but elite configurations are preserved.
+     . All alive configurations are elite and nothing is discarded
+
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+| |   Instance|      Alive|       Best|       Mean best| Exp so far|  W time|  rho|KenW|  Qvar|
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+|x|         19|         45|       1171|    -1192.000000|         45|00:06:45|   NA|  NA|    NA|
+|x|         14|         45|       1176|    -2261.000000|         86|00:36:07|+0.36|0.68|0.2420|
+|x|          2|         45|       1121|    -5945.333333|        127|06:03:11|+0.49|0.66|0.1613|
+|x|          5|         45|       1184|    -5994.750000|        168|01:57:24|+0.57|0.68|0.1189|
+|-|          6|         17|       1155|    -5020.800000|        209|00:06:13|-0.11|0.11|1.0435|
+|=|          1|         17|       1155|    -4382.666667|        222|00:02:13|-0.09|0.09|1.0289|
+|=|         17|         17|        865|    -4652.571429|        235|00:41:44|-0.06|0.09|0.9990|
+|=|         10|         17|        865|    -4219.750000|        248|00:02:10|-0.05|0.08|0.9861|
+|=|         15|         17|        865|    -3882.777778|        261|00:02:13|-0.02|0.09|0.9576|
+|=|          4|         17|        865|    -3824.300000|        274|00:13:16|-0.01|0.10|0.9461|
+|=|         11|         17|       1176|    -4677.000000|        287|02:10:05|-0.01|0.08|0.9506|
+|=|          7|         17|       1176|    -4561.833333|        300|00:13:02|+0.00|0.09|0.9399|
+|=|          9|         17|       1176|    -4689.000000|        313|00:41:02|+0.01|0.09|0.9266|
+|=|         12|         17|        865|    -4576.142857|        326|00:13:01|+0.03|0.10|0.9144|
+|=|          3|         17|        865|    -4676.800000|        339|00:41:07|+0.02|0.09|0.9217|
+|=|         13|         17|        865|    -4772.187500|        352|00:40:41|+0.03|0.09|0.9115|
+|-|          8|         13|       1189|    -5266.941176|        365|02:08:08|+0.01|0.07|0.9195|
+|=|         16|         13|       1182|    -5734.888889|        374|01:28:41|+0.02|0.07|0.9138|
+|=|         18|         13|       1189|    -5582.789474|        383|00:08:50|+0.02|0.07|0.9121|
+|=|         20|         13|       1182|    -5987.800000|        396|02:06:45|+0.01|0.06|0.9219|
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+Best-so-far configuration:        1182    mean value:     -5987.800000
+Description of the best-so-far configuration:
+     .ID. tempInit tempFim mcl tempDist movimentType initialSolution proporsaoTempUpdate .PARENT.
+1182 1182     0.01       5 500        1            1               0                   4      865
+
+# 2025-02-17 20:33:10 -03: Elite configurations (first number is the configuration ID; listed from best to worst according to the sum of ranks):
+     tempInit tempFim mcl tempDist movimentType initialSolution proporsaoTempUpdate
+1121      0.1       5 500        3            1               0                   5
+1155      0.1       5 500        1            1               0                   4
+835       0.1       5 500        3            1               0                   3
+865      0.01       5 500        1            1               0                   4
+# 2025-02-17 20:33:10 -03: Iteration 7 of 7
+# experimentsUsedSoFar: 8061
+# remainingBudget: 387
+# currentBudget: 387
+# nbConfigurations: 22
+# Markers:
+     x No test is performed.
+     c Configurations are discarded only due to capping.
+     - The test is performed and some configurations are discarded.
+     = The test is performed but no configuration is discarded.
+     ! The test is performed and configurations could be discarded but elite configurations are preserved.
+     . All alive configurations are elite and nothing is discarded
+
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+| |   Instance|      Alive|       Best|       Mean best| Exp so far|  W time|  rho|KenW|  Qvar|
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+|x|         21|         22|       1206|    -3330.000000|         22|00:20:03|   NA|  NA|    NA|
+|x|         17|         22|        865|    -4749.500000|         40|00:52:07|+0.16|0.58|0.1251|
+|x|         15|         22|        865|    -3562.000000|         58|00:02:41|+0.25|0.50|0.2272|
+|x|         14|         22|        865|    -3502.750000|         76|00:16:07|+0.33|0.50|0.2060|
+|-|          3|         13|       1201|    -4023.800000|         94|00:52:11|-0.07|0.15|0.9830|
+|=|          8|         13|       1201|    -5539.333333|        103|01:29:18|-0.06|0.11|0.9756|
+|=|          5|         13|       1121|    -5631.714286|        112|00:28:23|-0.04|0.11|0.9439|
+|=|         20|         13|       1201|    -6562.750000|        121|01:28:12|-0.08|0.05|0.9836|
+|=|         19|         13|       1201|    -5966.000000|        130|00:01:29|-0.03|0.08|0.9416|
+|=|          4|         13|       1201|    -5693.700000|        139|00:09:13|-0.04|0.06|0.9494|
+|=|         18|         13|       1155|    -5508.000000|        148|00:09:09|-0.04|0.06|0.9512|
+|=|          7|         13|       1121|    -5301.750000|        157|00:09:00|-0.02|0.07|0.9360|
+|=|          6|         13|       1155|    -5007.846154|        166|00:01:29|-0.01|0.07|0.9220|
+|=|         12|         13|       1155|    -4886.571429|        175|00:09:02|+0.02|0.09|0.8961|
+|=|         16|         13|       1155|    -5443.933333|        184|01:29:41|+0.00|0.07|0.9110|
+|=|          9|         13|       1155|    -5483.312500|        193|00:28:43|-0.01|0.06|0.9200|
+|=|         11|         13|       1155|    -5932.235294|        202|01:28:29|+0.00|0.06|0.9171|
+|=|          1|         13|       1155|    -5668.888889|        211|00:01:30|+0.01|0.06|0.9106|
+|=|         13|         13|       1155|    -5690.473684|        220|00:28:40|+0.02|0.07|0.9025|
+|=|          2|         13|       1155|    -6064.800000|        229|01:28:50|+0.03|0.08|0.8878|
+|-|         10|         10|       1155|    -5832.380952|        238|00:01:28|-0.01|0.04|0.9029|
+|=|         22|         10|        865|    -5614.954545|        248|00:01:40|+0.00|0.05|0.8914|
+|=|         23|         10|        865|    -5947.826087|        258|01:38:11|+0.01|0.05|0.8875|
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+Best-so-far configuration:         865    mean value:     -5947.826087
+Description of the best-so-far configuration:
+    .ID. tempInit tempFim mcl tempDist movimentType initialSolution proporsaoTempUpdate .PARENT.
+865  865     0.01       5 500        1            1               0                   4      598
+
+# 2025-02-18 10:08:59 -03: Elite configurations (first number is the configuration ID; listed from best to worst according to the sum of ranks):
+     tempInit tempFim mcl tempDist movimentType initialSolution proporsaoTempUpdate
+865      0.01       5 500        1            1               0                   4
+835       0.1       5 500        3            1               0                   3
+1155      0.1       5 500        1            1               0                   4
+1121      0.1       5 500        3            1               0                   5
+# 2025-02-18 10:08:59 -03: Iteration 8 of 8
+# experimentsUsedSoFar: 8319
+# remainingBudget: 129
+# currentBudget: 129
+# nbConfigurations: 9
+# Markers:
+     x No test is performed.
+     c Configurations are discarded only due to capping.
+     - The test is performed and some configurations are discarded.
+     = The test is performed but no configuration is discarded.
+     ! The test is performed and configurations could be discarded but elite configurations are preserved.
+     . All alive configurations are elite and nothing is discarded
+
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+| |   Instance|      Alive|       Best|       Mean best| Exp so far|  W time|  rho|KenW|  Qvar|
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+|x|         24|          9|       1215|    -6200.000000|          9|00:28:20|   NA|  NA|    NA|
+|x|          3|          9|       1121|    -6155.500000|         14|00:16:03|-0.20|0.40|1.1205|
+|x|         20|          9|       1214|    -8486.000000|         19|00:49:36|-0.21|0.20|1.0675|
+|x|          4|          9|       1214|    -7204.750000|         24|00:04:57|-0.11|0.17|0.9956|
+|=|         13|          9|       1214|    -6995.600000|         29|00:15:54|-0.08|0.14|0.9823|
+|=|         12|          9|       1214|    -6382.000000|         34|00:04:55|-0.01|0.16|0.9228|
+|=|          9|          9|       1214|    -6340.428571|         39|00:15:39|-0.04|0.11|0.9394|
+|=|         16|          9|       1214|    -7195.875000|         44|00:49:40|-0.04|0.09|0.9321|
+|=|         14|          9|       1214|    -6771.444444|         49|00:04:54|+0.01|0.12|0.8925|
+|=|         21|          9|       1214|    -6433.300000|         54|00:04:57|+0.02|0.12|0.8803|
+|=|         18|          9|       1214|    -6152.636364|         59|00:04:56|+0.04|0.13|0.8589|
+|=|          7|          9|       1216|    -5919.916667|         64|00:04:56|+0.02|0.11|0.8724|
+|=|         23|          9|       1216|    -6486.538462|         69|00:48:47|+0.02|0.10|0.8742|
+|=|         15|          9|       1216|    -6107.857143|         74|00:00:49|+0.03|0.10|0.8636|
+|=|          1|          9|       1216|    -5779.600000|         79|00:00:49|+0.02|0.08|0.8759|
+|=|          8|          9|       1216|    -6243.000000|         84|00:49:14|+0.01|0.07|0.8867|
+|=|         19|          9|       1216|    -5945.764706|         89|00:00:49|+0.01|0.07|0.8870|
+|=|         17|          9|       1216|    -5959.166667|         94|00:15:51|+0.02|0.07|0.8768|
+|=|          2|          9|       1216|    -6340.736842|         99|00:49:09|+0.02|0.08|0.8812|
+|=|         11|          9|       1216|    -6679.900000|        104|00:49:11|+0.02|0.07|0.8840|
+|=|         22|          9|       1216|    -6418.190476|        109|00:00:49|+0.02|0.07|0.8826|
+|=|          5|          9|       1216|    -6406.227273|        114|00:15:47|+0.03|0.07|0.8810|
+|=|         10|          9|       1216|    -6179.304348|        119|00:00:49|+0.03|0.07|0.8769|
+|=|          6|          9|       1216|    -5971.166667|        124|00:00:49|+0.02|0.06|0.8854|
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+Best-so-far configuration:        1216    mean value:     -5971.166667
+Description of the best-so-far configuration:
+     .ID. tempInit tempFim mcl tempDist movimentType initialSolution proporsaoTempUpdate .PARENT.
+1216 1216     0.01       5 500        1            1               0                   4      865
+
+# 2025-02-18 17:26:51 -03: Elite configurations (first number is the configuration ID; listed from best to worst according to the sum of ranks):
+     tempInit tempFim mcl tempDist movimentType initialSolution proporsaoTempUpdate
+835       0.1       5 500        3            1               0                   3
+1121      0.1       5 500        3            1               0                   5
+1155      0.1       5 500        1            1               0                   4
+865      0.01       5 500        1            1               0                   4
+# 2025-02-18 17:26:51 -03: Stopped because there is not enough budget left to race more than the minimum (4)
+# You may either increase the budget or set 'minNbSurvival' to a lower value
+# Iteration: 9
+# nbIterations: 9
+# experimentsUsedSoFar: 8443
+# timeUsed: 0
+# remainingBudget: 5
+# currentBudget: 5
+# number of elites: 4
+# nbConfigurations: 4
+# Total CPU user time: 21186900, CPU sys time: 755472.5, Wall-clock time: 1378218
+# Best configurations (first number is the configuration ID; listed from best to worst according to the sum of ranks):
+     tempInit tempFim mcl tempDist movimentType initialSolution proporsaoTempUpdate
+835       0.1       5 500        3            1               0                   3
+1121      0.1       5 500        3            1               0                   5
+1155      0.1       5 500        1            1               0                   4
+865      0.01       5 500        1            1               0                   4
+# Best configurations as commandlines (first number is the configuration ID; same order as above):
+835   --TEMP_INIT 0.1 --TEMP_FIM 5 --MCL 500 --TEMP_DIST 3 --TYPE_UPDATE 1 --INIT_SOL_TYPE 0 --PTL_TEMP_UPDATE_PROPORTION 3
+1121  --TEMP_INIT 0.1 --TEMP_FIM 5 --MCL 500 --TEMP_DIST 3 --TYPE_UPDATE 1 --INIT_SOL_TYPE 0 --PTL_TEMP_UPDATE_PROPORTION 5
+1155  --TEMP_INIT 0.1 --TEMP_FIM 5 --MCL 500 --TEMP_DIST 1 --TYPE_UPDATE 1 --INIT_SOL_TYPE 0 --PTL_TEMP_UPDATE_PROPORTION 4
+865   --TEMP_INIT 0.01 --TEMP_FIM 5 --MCL 500 --TEMP_DIST 1 --TYPE_UPDATE 1 --INIT_SOL_TYPE 0 --PTL_TEMP_UPDATE_PROPORTION 4
+
+
+# Testing of elite configurations: 1 
+# Testing iteration configurations: FALSE 
+# 2025-02-18 17:26:51 -03: No test instances, skip testing

@@ -1,5 +1,5 @@
-#include <algorithm>
 #include <atomic>
+#include <algorithm>
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
@@ -156,9 +156,12 @@ int main(int argc, char* argv[]) {
 
     if(print_cost){ 
         cout << -sol.evalSol << endl;
-        cout << cost << endl;
+        // cout << cost << endl;
     }
     if(print_time) cout << et.getTimeMs() << endl;
 
     return 0;
 }
+
+// 11532 rand priority
+// 11458 rand 

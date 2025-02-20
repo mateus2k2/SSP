@@ -67,7 +67,7 @@ testPTGo:
 
 realPTGo:
 	make compilePT
-	./src/out/mainCpp "./input/MyInstancesDiferentToolSets/n=75,p=0.24,r=0.5,t=112,v0.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" \
+	./src/out/mainCpp "./input/MyInstancesSameToolSets/n=1000,p=0.25,r=0.6,t=3950,v18.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" \
 		--TEMP_INIT 0.1 \
 		--TEMP_FIM 0.5 \
 		--N_REPLICAS 11 \
@@ -75,11 +75,11 @@ realPTGo:
 		--PTL 10 \
 		--TEMP_DIST 1 \
 		--TYPE_UPDATE 1 \
-		--INIT_SOL_TYPE 1 \
+		--INIT_SOL_TYPE 0 \
 		--TEMP_UPDATE 20 \
 		--PTL_TEMP_UPDATE_PROPORTION 1 \
 		--RESULT_REPORT 1 \
-		--DIFERENT_TOOLSETS_MODE 1 \
+		--DIFERENT_TOOLSETS_MODE 0 \
 
 # --------------------------------------------------------
 # Meus python
