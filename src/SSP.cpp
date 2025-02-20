@@ -29,7 +29,7 @@ void SSP::setParans(int capacityMagazine1, int numberMachines1, int planingHoriz
 
 	// rand = 0
 	// randPriority = 1
-	if (initSolType1 == 0) this->constructionFunc = std::bind(&SSP::rand, this);
-	if (initSolType1 == 1) this->constructionFunc = std::bind(&SSP::randPriority, this);
+	if (initSolType1 == 0) this->constructionFunc = std::bind(&SSP::randPriority, this);
+	if (initSolType1 == 1) this->constructionFunc = std::bind(&SSP::rand, this);
 }
 
