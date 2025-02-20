@@ -22,17 +22,19 @@ run_instances() {
         echo "$timestamp - $counter ./src/out/mainCpp $instancesFolder/$filename $toolSetsFile $outputFolder/$filename"
         ./src/out/mainCpp "$instancesFolder/$filename" "$toolSetsFile" "$outputFolder/$filename" \
             --TEMP_INIT 0.1 \
-            --TEMP_FIM 0.5 \
+            --TEMP_FIM 5 \
             --N_REPLICAS 11 \
-            --MCL 400 \
-            --PTL 100 \
-            --TEMP_DIST 1 \
+            --MCL 500 \
+            --PTL 600 \
+            --TEMP_DIST 3 \
             --TYPE_UPDATE 1 \
-            --INIT_SOL_TYPE 1 \
-            --TEMP_UPDATE 5 \
-            --PTL_TEMP_UPDATE_PROPORTION 1 \
+            --INIT_SOL_TYPE 0 \
+            --TEMP_UPDATE 3500 \
+            --PTL_TEMP_UPDATE_PROPORTION 3 \
             --DIFERENT_TOOLSETS_MODE $instanceMode
         counter=$((counter+1))
+
+        # --TEMP_INIT 0.1 --TEMP_FIM 5 --MCL 500 --TEMP_DIST 3 --TYPE_UPDATE 1 --INIT_SOL_TYPE 0 --PTL_TEMP_UPDATE_PROPORTION 3
 
         # stringToSend="$counter - Instância $instancesFolder/$filename finalizada"
         # wget --header="Content-Type: application/json" \

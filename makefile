@@ -49,15 +49,16 @@ compilePT:
 testPTGo:
 	make compilePT
 	src/out/mainCpp ./input/Exemplo/Jobs.csv ./input/Exemplo/ToolSets.csv ./output/Exemplo/exemplo.txt  \
-		--TEMP_INIT 0.2 \
-		--TEMP_FIM 1 \
-		--N_REPLICAS 16 \
-		--MCL 400 \
+		--TEMP_INIT 0.1 \
+		--TEMP_FIM 5 \
+		--N_REPLICAS 11 \
+		--MCL 500 \
 		--PTL 1000 \
-		--TEMP_DIST 1 \
+		--TEMP_DIST 3 \
 		--TYPE_UPDATE 1 \
-		--TEMP_UPDATE 35000 \
-		--PTL_TEMP_UPDATE_PROPORTION 1 \
+		--INIT_SOL_TYPE 0 \
+		--TEMP_UPDATE 3500 \
+		--PTL_TEMP_UPDATE_PROPORTION 3 \
 		--CAPACITY 8 \
 		--MACHINES 2 \
 		--DAYS 2 \
@@ -65,21 +66,25 @@ testPTGo:
 		--INSTANCE_REPORT 1 \
 		--DIFERENT_TOOLSETS_MODE 0 \
 
+#  --TEMP_INIT 0.1 --TEMP_FIM 5 --MCL 500 --TEMP_DIST 3 --TYPE_UPDATE 1 --INIT_SOL_TYPE 0 --PTL_TEMP_UPDATE_PROPORTION 3
+
 realPTGo:
 	make compilePT
 	./src/out/mainCpp "./input/MyInstancesSameToolSets/n=1000,p=0.25,r=0.6,t=3950,v18.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" \
 		--TEMP_INIT 0.1 \
-		--TEMP_FIM 0.5 \
+		--TEMP_FIM 5 \
 		--N_REPLICAS 11 \
-		--MCL 400 \
+		--MCL 500 \
 		--PTL 10 \
-		--TEMP_DIST 1 \
+		--TEMP_DIST 3 \
 		--TYPE_UPDATE 1 \
 		--INIT_SOL_TYPE 0 \
-		--TEMP_UPDATE 20 \
-		--PTL_TEMP_UPDATE_PROPORTION 1 \
+		--TEMP_UPDATE 3500 \
+		--PTL_TEMP_UPDATE_PROPORTION 3 \
 		--RESULT_REPORT 1 \
 		--DIFERENT_TOOLSETS_MODE 0 \
+
+
 
 # --------------------------------------------------------
 # Meus python
