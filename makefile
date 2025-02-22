@@ -52,7 +52,7 @@ runPT:
 		--TEMP_FIM 5 \
 		--N_REPLICAS 11 \
 		--MCL 500 \
-		--PTL 10 \
+		--PTL 600 \
 		--TEMP_DIST 3 \
 		--TYPE_UPDATE 1 \
 		--INIT_SOL_TYPE 0 \
