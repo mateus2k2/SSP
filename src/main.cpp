@@ -76,8 +76,6 @@ int main(int argc, char* argv[]) {
             tempUp = stoi(arguments[i+1]);
         else if(arguments[i]== "--THREAD_USED")
             thN = stoi(arguments[i+1]);
-		else if(arguments[i]== "--THREAD_USED")
-            thN = stoi(arguments[i+1]);
 		else if(arguments[i]== "--INIT_SOL_TYPE")
 			initSolType = stoi(arguments[i+1]);
 		else if(arguments[i]== "--PTL_TEMP_UPDATE_PROPORTION")
@@ -162,6 +160,3 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
-
-// 11532 rand priority
-// 11458 rand 

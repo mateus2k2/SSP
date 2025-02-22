@@ -46,30 +46,7 @@ compilePT:
 	g++ $(DEBUG_MACRO) $(GATILHO_MACRO) $(RAND_MACRO) ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread $(FAST_MACRO) -march=native -lstdc++ $(USE_FTM)
 	echo "\n" 
 
-testPTGo:
-	make compilePT
-	src/out/mainCpp ./input/Exemplo/Jobs.csv ./input/Exemplo/ToolSets.csv ./output/Exemplo/exemplo.txt  \
-		--TEMP_INIT 0.1 \
-		--TEMP_FIM 5 \
-		--N_REPLICAS 11 \
-		--MCL 500 \
-		--PTL 1000 \
-		--TEMP_DIST 3 \
-		--TYPE_UPDATE 1 \
-		--INIT_SOL_TYPE 0 \
-		--TEMP_UPDATE 3500 \
-		--PTL_TEMP_UPDATE_PROPORTION 3 \
-		--CAPACITY 8 \
-		--MACHINES 2 \
-		--DAYS 2 \
-		--UNSUPERVISED_MINUTS 720 \
-		--INSTANCE_REPORT 1 \
-		--DIFERENT_TOOLSETS_MODE 0 \
-
-#  --TEMP_INIT 0.1 --TEMP_FIM 5 --MCL 500 --TEMP_DIST 3 --TYPE_UPDATE 1 --INIT_SOL_TYPE 0 --PTL_TEMP_UPDATE_PROPORTION 3
-
-realPTGo:
-	make compilePT
+runPT:
 	./src/out/mainCpp "./input/MyInstancesSameToolSets/n=1000,p=0.25,r=0.6,t=3950,v18.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" \
 		--TEMP_INIT 0.1 \
 		--TEMP_FIM 5 \
@@ -84,7 +61,9 @@ realPTGo:
 		--RESULT_REPORT 1 \
 		--DIFERENT_TOOLSETS_MODE 0 \
 
-
+realPTGo:
+	make compilePT
+	make runPT
 
 # --------------------------------------------------------
 # Meus python
