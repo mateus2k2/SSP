@@ -19,3 +19,5 @@ make compilePT DEBUG_MODE=0 GATILHO_MODE=0 FAST_MODE=0
 
 ./scripts/runAuto.sh ./output/PTL100DiferentAjustado diferent > out
 ./scripts/runMultiple.sh ./output/RealSameToolSet same > out
+
+

@@ -1,25 +1,32 @@
-make compilePT
-make[1]: Entering directory '/home/mateus/WSL/IC/SSP'
-clear
-[H[2J[3Jg++ -DDEBUG  -DRANDSEED ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread  -march=native -lstdc++ -lfmt
-echo "\n" 
+PTL = 10
+11576
+37242
 
+PTL = 100
+13086
+405121
 
-make[1]: Leaving directory '/home/mateus/WSL/IC/SSP'
-./src/out/mainCpp "./input/MyInstancesDiferentToolSets/n=75,p=0.24,r=0.5,t=112,v0.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" \
-	--TEMP_INIT 0.1 \
-	--TEMP_FIM 0.5 \
-	--N_REPLICAS 11 \
-	--MCL 400 \
-	--PTL 10 \
-	--TEMP_DIST 1 \
-	--TYPE_UPDATE 1 \
-	--INIT_SOL_TYPE 1 \
-	--TEMP_UPDATE 20 \
-	--PTL_TEMP_UPDATE_PROPORTION 1 \
-	--RESULT_REPORT 1 \
-	--DIFERENT_TOOLSETS_MODE 1 \
+PTL = 200
+13640
+835461
 
-609
-384
-15491
+PTL = 400
+13780
+1755362
+
+PTL = 500
+13888
+2199493
+
+PTL = 600
+13975
+2628898
+
+PTL = 1000
+14481
+8802468
+
+PTL = 2000
+14662
+9904422
+
