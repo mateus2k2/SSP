@@ -1,32 +1,14 @@
-PTL = 10
-11576
-37242
-
-PTL = 100
-13086
-405121
-
-PTL = 200
-13640
-835461
-
-PTL = 400
-13780
-1755362
-
-PTL = 500
-13888
-2199493
-
-PTL = 600
-13975
-2628898
-
-PTL = 1000
-14481
-8802468
-
-PTL = 2000
-14662
-9904422
+./src/out/mainCpp "./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" \
+	--TEMP_INIT 0.1 \
+	--TEMP_FIM 5 \
+	--N_REPLICAS 2 \
+	--MCL 50 \
+	--PTL 100 \
+	--TEMP_DIST 3 \
+	--TYPE_UPDATE 1 \
+	--INIT_SOL_TYPE 0 \
+	--TEMP_UPDATE 3500 \
+	--PTL_TEMP_UPDATE_PROPORTION 3 \
+	--RESULT_REPORT 1 \
+	--DIFERENT_TOOLSETS_MODE 0 \
 

@@ -47,12 +47,12 @@ compilePT:
 	echo "\n" 
 
 runPT:
-	./src/out/mainCpp "./input/MyInstancesSameToolSets/n=1000,p=0.25,r=0.6,t=3950,v18.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" \
+	./src/out/mainCpp "./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" \
 		--TEMP_INIT 0.1 \
 		--TEMP_FIM 5 \
-		--N_REPLICAS 11 \
-		--MCL 500 \
-		--PTL 600 \
+		--N_REPLICAS 2 \
+		--MCL 50 \
+		--PTL 100 \
 		--TEMP_DIST 3 \
 		--TYPE_UPDATE 1 \
 		--INIT_SOL_TYPE 0 \

@@ -77,7 +77,7 @@ class SSP: public Problem<solSSP>{
 
 		void groupJobs();
 		double evaluate(solSSP& s);
-		double evaluateReportKTNS(solSSP &sol, string filenameJobs, string filenameTools, string solutionReportFileName, int time);
+		double evaluateReportKTNS(solSSP &sol, string filenameJobs, string filenameTools, fstream& solutionReportFile);
 		solSSP postProcessDifferent(solSSP &sol);
 		
 };

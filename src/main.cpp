@@ -47,8 +47,6 @@ int main(int argc, char* argv[]) {
     int unsupervised           = 0.5*DAY;
 	int diferent_toolset_mode  = 0;
 	int instance_report        = 0;
-    int print_time             = 1;
-    int print_cost             = 1;
 	
 	// Instance file name
 	string filenameJobs = arguments[0];
@@ -92,11 +90,6 @@ int main(int argc, char* argv[]) {
 			instance_report = stoi(arguments[i+1]);
 		else if(arguments[i]== "--DIFERENT_TOOLSETS_MODE")
 			diferent_toolset_mode = stoi(arguments[i+1]);
-        else if(arguments[i]== "--PRINT_TIME")
-            print_time = stoi(arguments[i+1]);
-        else if(arguments[i]== "--PRINT_COST")
-            print_cost = stoi(arguments[i+1]);
-
     }
 	tempUp = PTL/ptlTempUpProportion;
 
@@ -139,6 +132,13 @@ int main(int argc, char* argv[]) {
     // ------------------------------------------------------------------------------
     // REAL
     // ------------------------------------------------------------------------------
+    fstream solutionReportFile;
+    solutionReportFile.open(filenameoutput, ios::out);
+    if (!solutionReportFile.is_open()) {
+        cerr << "Error: Could not open solution report file: " << filenameoutput << endl;
+        exit(1);
+    }
+
 
     prob->loadInstanceParans(filenameJobs);
     if (instance_report) prob->printDataReport();
@@ -150,13 +150,25 @@ int main(int argc, char* argv[]) {
     solSSP finalSolution = sol;
 
     if (diferent_toolset_mode == 1) finalSolution = prob->postProcessDifferent(sol);
-    double cost = prob->evaluateReportKTNS(finalSolution, filenameJobs, filenameTools, filenameoutput, et.getTimeMs());
+    double cost = prob->evaluateReportKTNS(finalSolution, filenameJobs, filenameTools, solutionReportFile);
 
-    if(print_cost){ 
-        cout << -sol.evalSol << endl;
-        // cout << cost << endl;
-    }
-    if(print_time) cout << et.getTimeMs() << endl;
+    solSSP initFromBest = algo.getInitFromBest();
+    vector<solSSP> initAll = algo.getInitAll();
+
+    double meanInitial = 0; 
+    std::sort(initAll.begin(), initAll.end(), [](auto a, auto b) { return a.evalSol > b.evalSol; });
+    for (size_t i = 0; i < initAll.size(); i++) meanInitial += initAll[i].evalSol;
+    meanInitial = meanInitial/initAll.size();
+
+    solutionReportFile << "Final Solution: " << cost << endl;
+    solutionReportFile << "Time: " << et.getTimeMs() << endl;
+    solutionReportFile << "PTL: " << sol.ptl << endl; //PTL onde a melhor solucao foi gerada
+    solutionReportFile << "MCMC: " << sol.mcmc << endl; //Index da cadeia de markove onde a melhor solucao foi gerada
+    solutionReportFile << "Best Initial: " << -initAll[0].evalSol << endl;
+    solutionReportFile << "Mean Initial: " << -meanInitial << endl;
+
+    solutionReportFile.close();
+
 
     return 0;
 }

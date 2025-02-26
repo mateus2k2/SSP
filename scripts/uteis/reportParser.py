@@ -24,9 +24,11 @@ def parseReport(file_path):
     file = open(file_path, 'r')
     file_content = file.read()
     
-    lines = file_content.splitlines()
-    timeSpent = int(lines.pop().split(';')[1])    
-    end_info = lines.pop().split(';')
+    linesAux = file_content.splitlines()
+    end_index = linesAux.index("END")
+
+    lines = linesAux[:end_index]
+    end_info = linesAux[end_index + 1:]
     
     instancesName = lines.pop(0)
     jobsFileName = instancesName.split(';')[0]
@@ -51,13 +53,11 @@ def parseReport(file_path):
         machines.append(machine_info)
     
     endInfoObj = {}
-    endInfoObj['fineshedPriorityCount'] = int(end_info[1])
-    endInfoObj['switchs'] = int(end_info[2])
-    endInfoObj['switchsInstances'] = int(end_info[3])
-    endInfoObj['unfinesedPriorityCount'] = int(end_info[4])
-    endInfoObj['cost'] = int(end_info[5])
-    endInfoObj['timeSpent'] = timeSpent
+    for item in end_info:
+        key, value = item.replace(';', '').split(':') if ':' in item else item.split(' ', 1)
+        endInfoObj[key.strip()] = int(value.strip())
     
+    print(endInfoObj)
     return  planejamentoObj, machines, endInfoObj
 
 def printReport(machines, planejamento):
@@ -86,3 +86,5 @@ def printReport(machines, planejamento):
         
         print(f"end_info = {end_info}")
         print("\n----------------------------------------------------------------\n")
+
+parseReport("/home/mateus/WSL/IC/SSP/output/Exemplo/exemplo.txt")

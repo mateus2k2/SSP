@@ -25,7 +25,6 @@ solSSP SSP::postProcessDifferent(solSSP& sol) {
     int fimJob = 0;
     int extendedPlaningHorizon = (planingHorizon * numberMachines) * DAY;
     int isFirstJobOfMachine = 1;
-    int logicalMachine = 0;
 
     sol.releaseDates = vector<int>(numberJobs, -INT_MAX);
     sol.dueDates = vector<int>(numberJobs, INT_MAX);
@@ -147,25 +146,18 @@ solSSP SSP::postProcessDifferent(solSSP& sol) {
 
     // cout << "" << endl;
     //print each  solution and the release and due dates
-    for (size_t i = 0; i < solAjusted.sol.size(); i++){
-        int jobNessaPoss = solAjusted.sol[i];
+    // for (size_t i = 0; i < solAjusted.sol.size(); i++){
+        // int jobNessaPoss = solAjusted.sol[i];
         // cout << "Index: " << jobNessaPoss << " job: " << originalJobs[jobNessaPoss].indexJob << " Operation: " << originalJobs[jobNessaPoss].indexOperation << " release: " << sol.releaseDates[originalJobs[jobNessaPoss].indexJob] << " due: " << sol.dueDates[originalJobs[jobNessaPoss].indexJob] << endl;
-    }
+    // }
 
-    int cost = (PROFITYFINISHED * fineshedJobsCount) - (COSTSWITCH * switchs) - (COSTSWITCHINSTANCE * switchsInstances) - (COSTPRIORITY * unfineshedPriorityCount);
+    // int cost = (PROFITYFINISHED * fineshedJobsCount) - (COSTSWITCH * switchs) - (COSTSWITCHINSTANCE * switchsInstances) - (COSTPRIORITY * unfineshedPriorityCount);
 
     return solAjusted;
 }
 
-double SSP::evaluateReportKTNS(solSSP& solution, string filenameJobs, string filenameTools, string solutionReportFileName, int time) {
+double SSP::evaluateReportKTNS(solSSP& solution, string filenameJobs, string filenameTools, fstream& solutionReportFile) {
     vector<int> s = solution.sol;
-
-    fstream solutionReportFile;
-    solutionReportFile.open(solutionReportFileName, ios::out);
-    if (!solutionReportFile.is_open()) {
-        cerr << "Error: Could not open solution report file: " << solutionReportFileName << endl;
-        exit(1);
-    }
 
     vector<bool> magazineL(numberToolsReal, true);
     unsigned int switchs = 0;
@@ -292,16 +284,11 @@ double SSP::evaluateReportKTNS(solSSP& solution, string filenameJobs, string fil
 
     int cost = (PROFITYFINISHED * fineshedJobsCount) - (COSTSWITCH * switchs) - (COSTSWITCHINSTANCE * switchsInstances) - (COSTPRIORITY * unfineshedPriorityCount);
 
-    solutionReportFile << "END;";
-    solutionReportFile << fineshedJobsCount << ";";
-    solutionReportFile << switchs << ";";
-    solutionReportFile << switchsInstances << ";";
-    solutionReportFile << unfineshedPriorityCount << ";";
-    solutionReportFile << cost << "\n";
-
-    solutionReportFile << "TIME;" << time << endl;
-
-    solutionReportFile.close();
+    solutionReportFile << "END" << endl;
+    solutionReportFile << "fineshedJobsCount: " << fineshedJobsCount << endl;
+    solutionReportFile << "switchs: " << switchs << endl;
+    solutionReportFile << "switchsInstances: " << switchsInstances << endl;
+    solutionReportFile << "unfineshedPriorityCount: " << unfineshedPriorityCount << endl;
 
     return cost;
 }

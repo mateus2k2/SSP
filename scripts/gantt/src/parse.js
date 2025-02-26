@@ -38,10 +38,9 @@ function parseMachineSection(machineSection) {
 
 
 function parseFileFunc(fileContent) {
-    let lines = fileContent.split('\n');
-    lines.pop(); 
-    let timeInfo = lines.pop();
-    let endInfo = lines.pop();
+    let parts = fileContent.split('END');
+    let lines = parts[0].split("\n").filter(line => line !== "")
+    let endInfo = parts[1].split("\n").filter(line => line !== "")
 
     const fileName = lines.shift().split(';');  // Remove the first line with file paths
     const header = lines.shift();  // Remove the second line (the header)
@@ -67,16 +66,12 @@ function parseFileFunc(fileContent) {
         machines.push(operations);
     });
 
-    // Split the endInfo string by semicolon and parse the individual values
-    const endInfoParts = endInfo.split(';');
-    const endInfoObj = {
-        'fineshedPriorityCount': parseInt(endInfoParts[1]),
-        'switchs': parseInt(endInfoParts[2]),
-        'switchsInstances': parseInt(endInfoParts[3]),
-        'unfinesedPriorityCount': parseInt(endInfoParts[4]),
-        'cost': parseInt(endInfoParts[5]),
-        'time': parseInt(timeInfo.split(';')[1]),
-    };
+    const endInfoObj = endInfo.reduce((obj, item) => {
+        const [key, value] = item.replace(';', '').split(':').map(str => str.trim());
+        obj[key] = isNaN(value) ? value : Number(value);
+        return obj;
+    }, {});
+    
 
     return {
         machines: machines,
