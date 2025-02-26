@@ -10,6 +10,10 @@ import uteis.reportParser as rp
 import uteis.validador as vd
 import uteis.loadData as ld
 
+# ---------------------------------------------------------------------------------------------------
+# VALIDADOR
+# ---------------------------------------------------------------------------------------------------
+
 def validarPasta(files):
 
     for report in files:
@@ -114,6 +118,10 @@ def totalUnfinishedJobs(machines, planejamento):
     for machine in machines:
         total -= len(machine)
     return total
+
+# ---------------------------------------------------------------------------------------------------
+# ANALISES
+# ---------------------------------------------------------------------------------------------------
 
 def analisarValores(files):
     precedenciasViloladas =  verificarPrecedencia(files)

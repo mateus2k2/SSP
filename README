@@ -18,6 +18,6 @@ curl -X POST "https://api.telegram.org/bot8094164826:AAF_tYz1mWAB-site3dt1iFJUMP
 make compilePT DEBUG_MODE=1 GATILHO_MODE=1 FAST_MODE=0
 
 ./scripts/runAuto.sh ./output/PTL100DiferentAjustado diferent > out
-./scripts/runMultiple.sh ./output/RealSameToolSet same > out
+./scripts/runMultiple.sh ./output/TCC2V2 same > out
 
 
