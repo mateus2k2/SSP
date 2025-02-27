@@ -51,8 +51,9 @@ runPT:
 		--TEMP_INIT 0.1 \
 		--TEMP_FIM 5 \
 		--N_REPLICAS 2 \
-		--MCL 50 \
-		--PTL 100 \
+		--MCL 5 \
+		--PTL 10 \
+		--PASSO_GATILHO 10 \
 		--TEMP_DIST 3 \
 		--TYPE_UPDATE 1 \
 		--INIT_SOL_TYPE 0 \

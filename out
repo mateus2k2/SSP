@@ -2,8 +2,9 @@
 	--TEMP_INIT 0.1 \
 	--TEMP_FIM 5 \
 	--N_REPLICAS 2 \
-	--MCL 50 \
+	--MCL 5 \
 	--PTL 100 \
+	--PASSO_GATILHO 10 \
 	--TEMP_DIST 3 \
 	--TYPE_UPDATE 1 \
 	--INIT_SOL_TYPE 0 \
@@ -12,3 +13,451 @@
 	--RESULT_REPORT 1 \
 	--DIFERENT_TOOLSETS_MODE 0 \
 
+init Solution: -682.000000 Node: MCMC1
+init Solution: -716.000000 Node: MCMC2
+Best Solution: -695.000000 execAtual: 0 Node: MCMC1
+Best Solution: -743.000000 execAtual: 0 Node: MCMC2
+Best Solution: -725.000000 execAtual: 0 Node: MCMC1
+theEnd MCMC = execAtual: 1 execMax: 100 ptlToBestSol: 0 node: MCMC1
+theEnd MCMC = execAtual: 1 execMax: 100 ptlToBestSol: 0 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 1 execMax: 100 node: Swap1
+Best Solution: -743.000000 execAtual: 1 Node: MCMC1
+Best Solution: -776.000000 execAtual: 1 Node: MCMC1
+theEnd MCMC = execAtual: 2 execMax: 100 ptlToBestSol: 0 node: MCMC2
+theEnd MCMC = execAtual: 2 execMax: 100 ptlToBestSol: 1 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 2 execMax: 100 node: Swap1
+Best Solution: -779.000000 execAtual: 2 Node: MCMC1
+theEnd MCMC = execAtual: 3 execMax: 100 ptlToBestSol: 0 node: MCMC2
+theEnd MCMC = execAtual: 3 execMax: 100 ptlToBestSol: 2 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 3 execMax: 100 node: Swap1
+Best Solution: -788.000000 execAtual: 3 Node: MCMC1
+Best Solution: -772.000000 execAtual: 3 Node: MCMC2
+Best Solution: -778.000000 execAtual: 3 Node: MCMC2
+theEnd MCMC = execAtual: 4 execMax: 100 ptlToBestSol: 3 node: MCMC1
+theEnd MCMC = execAtual: 4 execMax: 100 ptlToBestSol: 3 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 4 execMax: 100 node: Swap1
+Best Solution: -837.000000 execAtual: 4 Node: MCMC2
+Best Solution: -870.000000 execAtual: 4 Node: MCMC2
+Best Solution: -798.000000 execAtual: 4 Node: MCMC1
+theEnd MCMC = execAtual: 5 execMax: 100 ptlToBestSol: 4 node: MCMC2
+theEnd MCMC = execAtual: 5 execMax: 100 ptlToBestSol: 4 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 5 execMax: 100 node: Swap1
+Best Solution: -870.000000 execAtual: 5 Node: MCMC1
+theEnd MCMC = execAtual: 6 execMax: 100 ptlToBestSol: 4 node: MCMC2
+Best Solution: -900.000000 execAtual: 5 Node: MCMC1
+theEnd MCMC = execAtual: 6 execMax: 100 ptlToBestSol: 5 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 6 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 7 execMax: 100 ptlToBestSol: 5 node: MCMC1
+theEnd MCMC = execAtual: 7 execMax: 100 ptlToBestSol: 4 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 7 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 8 execMax: 100 ptlToBestSol: 4 node: MCMC2
+theEnd MCMC = execAtual: 8 execMax: 100 ptlToBestSol: 5 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 8 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 9 execMax: 100 ptlToBestSol: 4 node: MCMC2
+theEnd MCMC = execAtual: 9 execMax: 100 ptlToBestSol: 5 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 9 execMax: 100 node: Swap1
+Best Solution: -910.000000 execAtual: 9 Node: MCMC1
+theEnd MCMC = execAtual: 10 execMax: 100 ptlToBestSol: 9 node: MCMC1
+theEnd MCMC = execAtual: 10 execMax: 100 ptlToBestSol: 4 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 10 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 11 execMax: 100 ptlToBestSol: 4 node: MCMC2
+theEnd MCMC = execAtual: 11 execMax: 100 ptlToBestSol: 9 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 11 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 12 execMax: 100 ptlToBestSol: 4 node: MCMC2
+theEnd MCMC = execAtual: 12 execMax: 100 ptlToBestSol: 9 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 12 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 13 execMax: 100 ptlToBestSol: 9 node: MCMC1
+theEnd MCMC = execAtual: 13 execMax: 100 ptlToBestSol: 4 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 13 execMax: 100 node: Swap1
+Best Solution: -929.000000 execAtual: 13 Node: MCMC1
+theEnd MCMC = execAtual: 14 execMax: 100 ptlToBestSol: 4 node: MCMC2
+theEnd MCMC = execAtual: 14 execMax: 100 ptlToBestSol: 13 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 14 execMax: 100 node: Swap1
+Best Solution: -939.000000 execAtual: 14 Node: MCMC1
+Best Solution: -944.000000 execAtual: 14 Node: MCMC1
+theEnd MCMC = execAtual: 15 execMax: 100 ptlToBestSol: 4 node: MCMC2
+Best Solution: -949.000000 execAtual: 14 Node: MCMC1
+theEnd MCMC = execAtual: 15 execMax: 100 ptlToBestSol: 14 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 15 execMax: 100 node: Swap1
+Best Solution: -873.000000 execAtual: 15 Node: MCMC2
+theEnd MCMC = execAtual: 16 execMax: 100 ptlToBestSol: 14 node: MCMC1
+theEnd MCMC = execAtual: 16 execMax: 100 ptlToBestSol: 15 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 16 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 17 execMax: 100 ptlToBestSol: 14 node: MCMC1
+theEnd MCMC = execAtual: 17 execMax: 100 ptlToBestSol: 15 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 17 execMax: 100 node: Swap1
+Best Solution: -874.000000 execAtual: 17 Node: MCMC2
+theEnd MCMC = execAtual: 18 execMax: 100 ptlToBestSol: 14 node: MCMC1
+theEnd MCMC = execAtual: 18 execMax: 100 ptlToBestSol: 17 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 18 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 19 execMax: 100 ptlToBestSol: 14 node: MCMC1
+theEnd MCMC = execAtual: 19 execMax: 100 ptlToBestSol: 17 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 19 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 20 execMax: 100 ptlToBestSol: 14 node: MCMC1
+theEnd MCMC = execAtual: 20 execMax: 100 ptlToBestSol: 17 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 20 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 21 execMax: 100 ptlToBestSol: 17 node: MCMC2
+theEnd MCMC = execAtual: 21 execMax: 100 ptlToBestSol: 14 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 21 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 22 execMax: 100 ptlToBestSol: 17 node: MCMC2
+Best Solution: -974.000000 execAtual: 21 Node: MCMC1
+theEnd MCMC = execAtual: 22 execMax: 100 ptlToBestSol: 21 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 22 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 23 execMax: 100 ptlToBestSol: 21 node: MCMC1
+theEnd MCMC = execAtual: 23 execMax: 100 ptlToBestSol: 17 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 23 execMax: 100 node: Swap1
+Best Solution: -981.000000 execAtual: 23 Node: MCMC1
+theEnd MCMC = execAtual: 24 execMax: 100 ptlToBestSol: 17 node: MCMC2
+theEnd MCMC = execAtual: 24 execMax: 100 ptlToBestSol: 23 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 24 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 25 execMax: 100 ptlToBestSol: 23 node: MCMC1
+theEnd MCMC = execAtual: 25 execMax: 100 ptlToBestSol: 17 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 25 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 26 execMax: 100 ptlToBestSol: 17 node: MCMC2
+theEnd MCMC = execAtual: 26 execMax: 100 ptlToBestSol: 23 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 26 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 27 execMax: 100 ptlToBestSol: 23 node: MCMC1
+Best Solution: -905.000000 execAtual: 26 Node: MCMC2
+theEnd MCMC = execAtual: 27 execMax: 100 ptlToBestSol: 26 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 27 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 28 execMax: 100 ptlToBestSol: 26 node: MCMC2
+theEnd MCMC = execAtual: 28 execMax: 100 ptlToBestSol: 23 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 28 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 29 execMax: 100 ptlToBestSol: 26 node: MCMC2
+theEnd MCMC = execAtual: 29 execMax: 100 ptlToBestSol: 23 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 29 execMax: 100 node: Swap1
+Best Solution: -907.000000 execAtual: 29 Node: MCMC2
+theEnd MCMC = execAtual: 30 execMax: 100 ptlToBestSol: 23 node: MCMC1
+theEnd MCMC = execAtual: 30 execMax: 100 ptlToBestSol: 29 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 30 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 31 execMax: 100 ptlToBestSol: 23 node: MCMC1
+theEnd MCMC = execAtual: 31 execMax: 100 ptlToBestSol: 29 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 31 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 32 execMax: 100 ptlToBestSol: 23 node: MCMC1
+Best Solution: -932.000000 execAtual: 31 Node: MCMC2
+theEnd MCMC = execAtual: 32 execMax: 100 ptlToBestSol: 31 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 32 execMax: 100 node: Swap1
+Best Solution: -979.000000 execAtual: 32 Node: MCMC2
+theEnd MCMC = execAtual: 33 execMax: 100 ptlToBestSol: 23 node: MCMC1
+theEnd MCMC = execAtual: 33 execMax: 100 ptlToBestSol: 32 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 33 execMax: 100 node: Swap1
+Best Solution: -1010.000000 execAtual: 33 Node: MCMC2
+theEnd MCMC = execAtual: 34 execMax: 100 ptlToBestSol: 23 node: MCMC1
+theEnd MCMC = execAtual: 34 execMax: 100 ptlToBestSol: 33 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 34 execMax: 100 node: Swap1
+Best Solution: -1010.000000 execAtual: 34 Node: MCMC1
+theEnd MCMC = execAtual: 35 execMax: 100 ptlToBestSol: 33 node: MCMC1
+theEnd MCMC = execAtual: 35 execMax: 100 ptlToBestSol: 33 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 35 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 36 execMax: 100 ptlToBestSol: 33 node: MCMC2
+theEnd MCMC = execAtual: 36 execMax: 100 ptlToBestSol: 33 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 36 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 37 execMax: 100 ptlToBestSol: 33 node: MCMC1
+theEnd MCMC = execAtual: 37 execMax: 100 ptlToBestSol: 33 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 37 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 38 execMax: 100 ptlToBestSol: 33 node: MCMC1
+theEnd MCMC = execAtual: 38 execMax: 100 ptlToBestSol: 33 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 38 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 39 execMax: 100 ptlToBestSol: 33 node: MCMC1
+theEnd MCMC = execAtual: 39 execMax: 100 ptlToBestSol: 33 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 39 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 40 execMax: 100 ptlToBestSol: 33 node: MCMC1
+theEnd MCMC = execAtual: 40 execMax: 100 ptlToBestSol: 33 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 40 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 41 execMax: 100 ptlToBestSol: 33 node: MCMC2
+theEnd MCMC = execAtual: 41 execMax: 100 ptlToBestSol: 33 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 41 execMax: 100 node: Swap1
+Best Solution: -1011.000000 execAtual: 41 Node: MCMC2
+theEnd MCMC = execAtual: 42 execMax: 100 ptlToBestSol: 33 node: MCMC1
+theEnd MCMC = execAtual: 42 execMax: 100 ptlToBestSol: 41 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 42 execMax: 100 node: Swap1
+Best Solution: -1011.000000 execAtual: 42 Node: MCMC1
+theEnd MCMC = execAtual: 43 execMax: 100 ptlToBestSol: 41 node: MCMC2
+theEnd MCMC = execAtual: 43 execMax: 100 ptlToBestSol: 41 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 43 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 44 execMax: 100 ptlToBestSol: 41 node: MCMC1
+theEnd MCMC = execAtual: 44 execMax: 100 ptlToBestSol: 41 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 44 execMax: 100 node: Swap1
+Best Solution: -1023.000000 execAtual: 44 Node: MCMC1
+theEnd MCMC = execAtual: 45 execMax: 100 ptlToBestSol: 41 node: MCMC2
+theEnd MCMC = execAtual: 45 execMax: 100 ptlToBestSol: 44 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 45 execMax: 100 node: Swap1
+Best Solution: -1025.000000 execAtual: 45 Node: MCMC1
+theEnd MCMC = execAtual: 46 execMax: 100 ptlToBestSol: 41 node: MCMC2
+theEnd MCMC = execAtual: 46 execMax: 100 ptlToBestSol: 45 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 46 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 47 execMax: 100 ptlToBestSol: 45 node: MCMC1
+theEnd MCMC = execAtual: 47 execMax: 100 ptlToBestSol: 41 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 47 execMax: 100 node: Swap1
+Best Solution: -1025.000000 execAtual: 47 Node: MCMC2
+theEnd MCMC = execAtual: 48 execMax: 100 ptlToBestSol: 45 node: MCMC1
+theEnd MCMC = execAtual: 48 execMax: 100 ptlToBestSol: 46 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 48 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 49 execMax: 100 ptlToBestSol: 45 node: MCMC1
+theEnd MCMC = execAtual: 49 execMax: 100 ptlToBestSol: 46 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 49 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 50 execMax: 100 ptlToBestSol: 46 node: MCMC2
+theEnd MCMC = execAtual: 50 execMax: 100 ptlToBestSol: 45 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 50 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 51 execMax: 100 ptlToBestSol: 45 node: MCMC1
+theEnd MCMC = execAtual: 51 execMax: 100 ptlToBestSol: 46 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 51 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 52 execMax: 100 ptlToBestSol: 46 node: MCMC2
+theEnd MCMC = execAtual: 52 execMax: 100 ptlToBestSol: 45 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 52 execMax: 100 node: Swap1
+Best Solution: -1029.000000 execAtual: 52 Node: MCMC1
+theEnd MCMC = execAtual: 53 execMax: 100 ptlToBestSol: 46 node: MCMC2
+theEnd MCMC = execAtual: 53 execMax: 100 ptlToBestSol: 52 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 53 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 54 execMax: 100 ptlToBestSol: 46 node: MCMC2
+theEnd MCMC = execAtual: 54 execMax: 100 ptlToBestSol: 52 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 54 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 55 execMax: 100 ptlToBestSol: 52 node: MCMC1
+theEnd MCMC = execAtual: 55 execMax: 100 ptlToBestSol: 46 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 55 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 56 execMax: 100 ptlToBestSol: 46 node: MCMC2
+theEnd MCMC = execAtual: 56 execMax: 100 ptlToBestSol: 52 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 56 execMax: 100 node: Swap1
+Best Solution: -1029.000000 execAtual: 56 Node: MCMC2
+theEnd MCMC = execAtual: 57 execMax: 100 ptlToBestSol: 52 node: MCMC1
+theEnd MCMC = execAtual: 57 execMax: 100 ptlToBestSol: 55 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 57 execMax: 100 node: Swap1
+Best Solution: -1043.000000 execAtual: 57 Node: MCMC1
+theEnd MCMC = execAtual: 58 execMax: 100 ptlToBestSol: 55 node: MCMC2
+Best Solution: -1054.000000 execAtual: 57 Node: MCMC1
+theEnd MCMC = execAtual: 58 execMax: 100 ptlToBestSol: 57 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 58 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 59 execMax: 100 ptlToBestSol: 55 node: MCMC2
+theEnd MCMC = execAtual: 59 execMax: 100 ptlToBestSol: 57 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 59 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 60 execMax: 100 ptlToBestSol: 55 node: MCMC2
+theEnd MCMC = execAtual: 60 execMax: 100 ptlToBestSol: 57 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 60 execMax: 100 node: Swap1
+Best Solution: -1057.000000 execAtual: 60 Node: MCMC1
+theEnd MCMC = execAtual: 61 execMax: 100 ptlToBestSol: 55 node: MCMC2
+theEnd MCMC = execAtual: 61 execMax: 100 ptlToBestSol: 60 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 61 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 62 execMax: 100 ptlToBestSol: 55 node: MCMC2
+theEnd MCMC = execAtual: 62 execMax: 100 ptlToBestSol: 60 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 62 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 63 execMax: 100 ptlToBestSol: 60 node: MCMC1
+theEnd MCMC = execAtual: 63 execMax: 100 ptlToBestSol: 55 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 63 execMax: 100 node: Swap1
+Best Solution: -1057.000000 execAtual: 63 Node: MCMC2
+theEnd MCMC = execAtual: 64 execMax: 100 ptlToBestSol: 60 node: MCMC1
+theEnd MCMC = execAtual: 64 execMax: 100 ptlToBestSol: 61 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 64 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 65 execMax: 100 ptlToBestSol: 61 node: MCMC2
+theEnd MCMC = execAtual: 65 execMax: 100 ptlToBestSol: 60 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 65 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 66 execMax: 100 ptlToBestSol: 60 node: MCMC1
+theEnd MCMC = execAtual: 66 execMax: 100 ptlToBestSol: 61 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 66 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 67 execMax: 100 ptlToBestSol: 61 node: MCMC2
+theEnd MCMC = execAtual: 67 execMax: 100 ptlToBestSol: 60 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 67 execMax: 100 node: Swap1
+Best Solution: -1059.000000 execAtual: 67 Node: MCMC1
+theEnd MCMC = execAtual: 68 execMax: 100 ptlToBestSol: 61 node: MCMC2
+theEnd MCMC = execAtual: 68 execMax: 100 ptlToBestSol: 67 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 68 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 69 execMax: 100 ptlToBestSol: 67 node: MCMC1
+theEnd MCMC = execAtual: 69 execMax: 100 ptlToBestSol: 61 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 69 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 70 execMax: 100 ptlToBestSol: 67 node: MCMC1
+theEnd MCMC = execAtual: 70 execMax: 100 ptlToBestSol: 61 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 70 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 71 execMax: 100 ptlToBestSol: 67 node: MCMC1
+theEnd MCMC = execAtual: 71 execMax: 100 ptlToBestSol: 61 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 71 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 72 execMax: 100 ptlToBestSol: 67 node: MCMC1
+theEnd MCMC = execAtual: 72 execMax: 100 ptlToBestSol: 61 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 72 execMax: 100 node: Swap1
+Best Solution: -1059.000000 execAtual: 72 Node: MCMC2
+theEnd MCMC = execAtual: 73 execMax: 100 ptlToBestSol: 67 node: MCMC1
+theEnd MCMC = execAtual: 73 execMax: 100 ptlToBestSol: 71 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 73 execMax: 100 node: Swap1
+Best Solution: -1060.000000 execAtual: 73 Node: MCMC1
+theEnd MCMC = execAtual: 74 execMax: 100 ptlToBestSol: 73 node: MCMC1
+theEnd MCMC = execAtual: 74 execMax: 100 ptlToBestSol: 71 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 74 execMax: 100 node: Swap1
+Best Solution: -1060.000000 execAtual: 74 Node: MCMC2
+theEnd MCMC = execAtual: 75 execMax: 100 ptlToBestSol: 73 node: MCMC2
+theEnd MCMC = execAtual: 75 execMax: 100 ptlToBestSol: 73 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 75 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 76 execMax: 100 ptlToBestSol: 73 node: MCMC1
+theEnd MCMC = execAtual: 76 execMax: 100 ptlToBestSol: 73 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 76 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 77 execMax: 100 ptlToBestSol: 73 node: MCMC1
+theEnd MCMC = execAtual: 77 execMax: 100 ptlToBestSol: 73 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 77 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 78 execMax: 100 ptlToBestSol: 73 node: MCMC2
+theEnd MCMC = execAtual: 78 execMax: 100 ptlToBestSol: 73 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 78 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 79 execMax: 100 ptlToBestSol: 73 node: MCMC2
+theEnd MCMC = execAtual: 79 execMax: 100 ptlToBestSol: 73 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 79 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 80 execMax: 100 ptlToBestSol: 73 node: MCMC1
+Best Solution: -1070.000000 execAtual: 79 Node: MCMC2
+theEnd MCMC = execAtual: 80 execMax: 100 ptlToBestSol: 79 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 80 execMax: 100 node: Swap1
+Best Solution: -1070.000000 execAtual: 80 Node: MCMC1
+theEnd MCMC = execAtual: 81 execMax: 100 ptlToBestSol: 79 node: MCMC1
+theEnd MCMC = execAtual: 81 execMax: 100 ptlToBestSol: 79 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 81 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 82 execMax: 100 ptlToBestSol: 79 node: MCMC1
+theEnd MCMC = execAtual: 82 execMax: 100 ptlToBestSol: 79 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 82 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 83 execMax: 100 ptlToBestSol: 79 node: MCMC2
+theEnd MCMC = execAtual: 83 execMax: 100 ptlToBestSol: 79 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 83 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 84 execMax: 100 ptlToBestSol: 79 node: MCMC2
+theEnd MCMC = execAtual: 84 execMax: 100 ptlToBestSol: 79 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 84 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 85 execMax: 100 ptlToBestSol: 79 node: MCMC2
+theEnd MCMC = execAtual: 85 execMax: 100 ptlToBestSol: 79 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 85 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 86 execMax: 100 ptlToBestSol: 79 node: MCMC1
+theEnd MCMC = execAtual: 86 execMax: 100 ptlToBestSol: 79 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 86 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 87 execMax: 100 ptlToBestSol: 79 node: MCMC2
+theEnd MCMC = execAtual: 87 execMax: 100 ptlToBestSol: 79 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 87 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 88 execMax: 100 ptlToBestSol: 79 node: MCMC1
+theEnd MCMC = execAtual: 88 execMax: 100 ptlToBestSol: 79 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 88 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 89 execMax: 100 ptlToBestSol: 79 node: MCMC2
+theEnd MCMC = execAtual: 89 execMax: 100 ptlToBestSol: 79 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 89 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 90 execMax: 100 ptlToBestSol: 79 node: MCMC2
+theEnd MCMC = execAtual: 90 execMax: 100 ptlToBestSol: 79 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 90 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 91 execMax: 100 ptlToBestSol: 79 node: MCMC1
+theEnd MCMC = execAtual: 91 execMax: 100 ptlToBestSol: 79 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 91 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 92 execMax: 100 ptlToBestSol: 79 node: MCMC2
+theEnd MCMC = execAtual: 92 execMax: 100 ptlToBestSol: 79 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 92 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 93 execMax: 100 ptlToBestSol: 79 node: MCMC2
+theEnd MCMC = execAtual: 93 execMax: 100 ptlToBestSol: 79 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 93 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 94 execMax: 100 ptlToBestSol: 79 node: MCMC2
+theEnd MCMC = execAtual: 94 execMax: 100 ptlToBestSol: 79 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 94 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 95 execMax: 100 ptlToBestSol: 79 node: MCMC2
+theEnd MCMC = execAtual: 95 execMax: 100 ptlToBestSol: 79 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 95 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 96 execMax: 100 ptlToBestSol: 79 node: MCMC2
+theEnd MCMC = execAtual: 96 execMax: 100 ptlToBestSol: 79 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 96 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 97 execMax: 100 ptlToBestSol: 79 node: MCMC1
+theEnd MCMC = execAtual: 97 execMax: 100 ptlToBestSol: 79 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 97 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 98 execMax: 100 ptlToBestSol: 79 node: MCMC2
+theEnd MCMC = execAtual: 98 execMax: 100 ptlToBestSol: 79 node: MCMC1
+NodeSwap: Swap1
+theEnd = execAtual: 98 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 99 execMax: 100 ptlToBestSol: 79 node: MCMC1
+theEnd MCMC = execAtual: 99 execMax: 100 ptlToBestSol: 79 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 99 execMax: 100 node: Swap1
+theEnd MCMC = execAtual: 100 execMax: 100 ptlToBestSol: 79 node: MCMC1
+theEnd MCMC = execAtual: 100 execMax: 100 ptlToBestSol: 79 node: MCMC2
+NodeSwap: Swap1
+theEnd = execAtual: 100 execMax: 100 node: Swap1

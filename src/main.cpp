@@ -31,7 +31,8 @@ int main(int argc, char* argv[]) {
 	float tempfim = 2.0;
 	int tempN = 10;
 	int MCL = 0;
-	int PTL = 2;	
+	int PTL = 2;
+    int passoGatilho = 0;	
 	int tempUp = 50;
 	int tempD = 1;
 	int uType = 0;
@@ -90,6 +91,8 @@ int main(int argc, char* argv[]) {
 			instance_report = stoi(arguments[i+1]);
 		else if(arguments[i]== "--DIFERENT_TOOLSETS_MODE")
 			diferent_toolset_mode = stoi(arguments[i+1]);
+        else if(arguments[i]== "--PASSO_GATILHO")
+            passoGatilho = stoi(arguments[i+1]);
     }
 	tempUp = PTL/ptlTempUpProportion;
 
@@ -144,7 +147,7 @@ int main(int argc, char* argv[]) {
     if (instance_report) prob->printDataReport();
     if (diferent_toolset_mode == 0) prob->groupJobs();
 
-    PT<solSSP> algo(tempIni, tempfim, tempN, MCL, PTL, tempD, uType, tempUp);
+    PT<solSSP> algo(tempIni, tempfim, tempN, MCL, PTL, passoGatilho, tempD, uType, tempUp);
     ExecTime et;
     solSSP sol = algo.start(thN, prob);
     solSSP finalSolution = sol;
@@ -169,6 +172,8 @@ int main(int argc, char* argv[]) {
 
     solutionReportFile.close();
 
+    cout << "Final Solution: " << cost << endl;
+    cout << "Time: " << et.getTimeMs() << endl;
 
     return 0;
 }
