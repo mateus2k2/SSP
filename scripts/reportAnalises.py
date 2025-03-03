@@ -168,29 +168,33 @@ def analisarMediaValores(listDirs, subDir = 'MyInstancesSameToolSets', totalPTL 
             BestInitialAcc[file] = BestInitialAcc.get(file, []) + [endInfo['bestInitial']]
             MeanInitialAcc[file] = MeanInitialAcc.get(file, []) + [endInfo['meanInitial']]
 
-    print('File, FineshedJobsCount, UnfineshedPriorityCount, TotalUnfinishedJobsCount, SwitchsInstances, Switchs')
+    print()
+
+    separator = '&'
     for index, file in enumerate(filesList): 
         print((
             f'{file}; '
-            f'{statistics.mean(fineshedJobsCountAcc[file]):,.2f}; '
-            f'{statistics.mean(unfineshedPriorityCountAcc[file]):,.2f}; '
-            f'{statistics.mean(totalUnfinishedJobsCountAcc[file]):,.2f}; '
-            f'{statistics.mean(switchsInstancesAcc[file]):,.2f}; '
+            f'{statistics.mean(fineshedJobsCountAcc[file]):,.2f} {separator} '
+            f'{statistics.mean(unfineshedPriorityCountAcc[file]):,.2f} {separator} '
+            f'{statistics.mean(totalUnfinishedJobsCountAcc[file]):,.2f} {separator} '
+            f'{statistics.mean(switchsInstancesAcc[file]):,.2f} {separator} '
             f'{statistics.mean(switchsAcc[file]):,.2f}'
         ).replace('.', ','))
     
-    print('\nFile, Media das melhores Iniciais, Media das Medias Da soluções Iniciais, Melhor Solucao, Media da Solucao, Desvio Padrao da Solucao, Tempo Medio, PTL Medio')
+    print()
     for index, file in enumerate(filesList): 
+        gap = max(FinalSolutionAcc[file]) - max(BestInitialAcc[file])
         print((
-            f'{file}; '
-            f'{statistics.mean(BestInitialAcc[file]):.2f}; '
-            f'{statistics.mean(MeanInitialAcc[file]):.2f}; '
-            f'{max(FinalSolutionAcc[file]):.2f}; '
-            f'{statistics.mean(FinalSolutionAcc[file]):.2f}; '
-            f'{statistics.stdev(FinalSolutionAcc[file]):.2f}; '
-            f'{statistics.stdev(FinalSolutionAcc[file]):.2f}; '
-            f'{(statistics.mean(PTLAcc[file])/totalPTL)*100:.2f}; '
-            f'{statistics.mean(TimeAcc[file]):.2f} '
+            f'{file} {separator} '
+            f'{statistics.mean(BestInitialAcc[file]):.2f} {separator} '
+            f'{max(BestInitialAcc[file]):.2f} {separator} '
+            f'{statistics.mean(MeanInitialAcc[file]):.2f} {separator} '
+            f'{max(FinalSolutionAcc[file]):.2f} {separator} '
+            f'{statistics.mean(FinalSolutionAcc[file]):.2f} {separator} '
+            f'{statistics.stdev(FinalSolutionAcc[file]):.2f} {separator} '
+            f'{statistics.mean(TimeAcc[file]):.2f} {separator} '
+            f'{(statistics.mean(PTLAcc[file])/totalPTL)*100:.2f} {separator} '
+            f'{(max(FinalSolutionAcc[file])):.2f}'
         ).replace('.', ','))
 
 
