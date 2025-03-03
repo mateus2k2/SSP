@@ -5,6 +5,7 @@
 import sys
 import os
 from natsort import natsorted
+import statistics
 
 import uteis.reportParser as rp
 import uteis.validador as vd
@@ -130,6 +131,69 @@ def analisarValores(files):
         totalUnfinishedJobsCount = totalUnfinishedJobs(machines, planejamento)
         print(f'{index + 1} {endInfo["fineshedPriorityCount"]} {endInfo["unfinesedPriorityCount"]} {totalUnfinishedJobsCount} {endInfo["switchsInstances"]} {endInfo["switchs"]} {endInfo["cost"]} {endInfo["timeSpent"]/1000:.2f}'.replace('.', ',') + f' {precedenciasViloladas[index]}')
 
+def analisarMediaValores(listDirs, subDir = 'MyInstancesSameToolSets', totalPTL = 600):
+    filesList = []
+
+    fineshedJobsCountAcc = {}
+    switchsAcc = {} 
+    switchsInstancesAcc = {} 
+    unfineshedPriorityCountAcc = {}
+    totalUnfinishedJobsCountAcc = {} 
+    FinalSolutionAcc = {}  
+    TimeAcc = {} 
+    PTLAcc = {} 
+    MCMCAcc = {} 
+    BestInitialAcc = {} 
+    MeanInitialAcc = {}
+
+    # iterate over each directory and get the list of files inside it
+    for dir in listDirs:
+        files = os.listdir(f'{dir}/{subDir}')
+        files = natsorted(files)
+        for file in files:
+            if file not in filesList: filesList.append(file)
+
+            planejamento, machines, endInfo = rp.parseReport(f'{dir}/{subDir}/{file}')
+            totalUnfinishedJobsCount = totalUnfinishedJobs(machines, planejamento)
+            
+            fineshedJobsCountAcc[file] = fineshedJobsCountAcc.get(file, []) + [endInfo['fineshedjobscount']]
+            totalUnfinishedJobsCountAcc[file] = totalUnfinishedJobsCountAcc.get(file, []) + [totalUnfinishedJobsCount]
+            switchsAcc[file] = switchsAcc.get(file, []) + [endInfo['switchs']]
+            switchsInstancesAcc[file] = switchsInstancesAcc.get(file, []) + [endInfo['switchsinstances']]
+            unfineshedPriorityCountAcc[file] = unfineshedPriorityCountAcc.get(file, []) + [endInfo['unfineshedprioritycount']]
+            FinalSolutionAcc[file] = FinalSolutionAcc.get(file, []) + [endInfo['finalSolution']]
+            TimeAcc[file] = TimeAcc.get(file, []) + [endInfo['time']/1000]
+            PTLAcc[file] = PTLAcc.get(file, []) + [endInfo['ptl']]
+            MCMCAcc[file] = MCMCAcc.get(file, []) + [endInfo['mcmc']]
+            BestInitialAcc[file] = BestInitialAcc.get(file, []) + [endInfo['bestInitial']]
+            MeanInitialAcc[file] = MeanInitialAcc.get(file, []) + [endInfo['meanInitial']]
+
+    print('File, FineshedJobsCount, UnfineshedPriorityCount, TotalUnfinishedJobsCount, SwitchsInstances, Switchs')
+    for index, file in enumerate(filesList): 
+        print((
+            f'{file}; '
+            f'{statistics.mean(fineshedJobsCountAcc[file]):,.2f}; '
+            f'{statistics.mean(unfineshedPriorityCountAcc[file]):,.2f}; '
+            f'{statistics.mean(totalUnfinishedJobsCountAcc[file]):,.2f}; '
+            f'{statistics.mean(switchsInstancesAcc[file]):,.2f}; '
+            f'{statistics.mean(switchsAcc[file]):,.2f}'
+        ).replace('.', ','))
+    
+    print('\nFile, Media das melhores Iniciais, Media das Medias Da soluções Iniciais, Melhor Solucao, Media da Solucao, Desvio Padrao da Solucao, Tempo Medio, PTL Medio')
+    for index, file in enumerate(filesList): 
+        print((
+            f'{file}; '
+            f'{statistics.mean(BestInitialAcc[file]):.2f}; '
+            f'{statistics.mean(MeanInitialAcc[file]):.2f}; '
+            f'{max(FinalSolutionAcc[file]):.2f}; '
+            f'{statistics.mean(FinalSolutionAcc[file]):.2f}; '
+            f'{statistics.stdev(FinalSolutionAcc[file]):.2f}; '
+            f'{statistics.stdev(FinalSolutionAcc[file]):.2f}; '
+            f'{(statistics.mean(PTLAcc[file])/totalPTL)*100:.2f}; '
+            f'{statistics.mean(TimeAcc[file]):.2f} '
+        ).replace('.', ','))
+
+
 # ---------------------------------------------------------------------------------------------------
 # MAIN
 # ---------------------------------------------------------------------------------------------------
@@ -148,6 +212,7 @@ def main():
     if option == '3': verificarPrecedencia(fileWithPath)
     if option == '4': verificarPrecedenciaAsSingleMachine(fileWithPath)
     if option == '5': verificarPares(fileWithPath)
+    if option == '6': analisarMediaValores(fileWithPath)
 
 def mainCollection():
     pass

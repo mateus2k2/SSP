@@ -22,3 +22,15 @@ make runPT
 ./scripts/runMultiple.sh ./output/TCC2V2 same > out
 
 
+
+n=75,p=0.24,r=0.5,t=650,v0.csv
+n=212,p=0.25,r=0.4,t=1390,v6.csv
+n=228,p=0.25,r=0.6,t=1520,v3.csv
+n=399,p=0.25,r=0.5,t=2310,v0.csv
+n=499,p=0.25,r=0.5,t=2690,v3.csv
+n=600,p=0.25,r=0.5,t=3096,v6.csv
+n=699,p=0.25,r=0.5,t=3420,v9.csv
+n=800,p=0.25,r=0.6,t=3527,v12.csv
+n=899,p=0.25,r=0.6,t=3746,v15.csv
+n=1000,p=0.25,r=0.6,t=3950,v18.csv
+n=1236,p=0.25,r=0.6,t=4431,v21.csv

@@ -1,3 +1,5 @@
+import re
+
 # ---------------------------------------------------------------------------------------------------
 # REPORT PARSER
 # ---------------------------------------------------------------------------------------------------
@@ -19,6 +21,10 @@ def parseMachineSection(machine_section):
         })
 
     return operationsObj
+
+def to_camel_case(s):
+    words = re.split(r'[\s_-]+', s)
+    return words[0].lower() + ''.join(word.capitalize() for word in words[1:])
 
 def parseReport(file_path):
     file = open(file_path, 'r')
@@ -55,9 +61,8 @@ def parseReport(file_path):
     endInfoObj = {}
     for item in end_info:
         key, value = item.replace(';', '').split(':') if ':' in item else item.split(' ', 1)
-        endInfoObj[key.strip()] = int(value.strip())
+        endInfoObj[to_camel_case(key.strip())] = float(value.strip())
     
-    print(endInfoObj)
     return  planejamentoObj, machines, endInfoObj
 
 def printReport(machines, planejamento):
@@ -87,4 +92,4 @@ def printReport(machines, planejamento):
         print(f"end_info = {end_info}")
         print("\n----------------------------------------------------------------\n")
 
-parseReport("/home/mateus/WSL/IC/SSP/output/Exemplo/exemplo.txt")
+# parseReport("/home/mateus/WSL/IC/SSP/output/Exemplo/exemplo.txt")

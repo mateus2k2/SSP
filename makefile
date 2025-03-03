@@ -73,7 +73,7 @@ realPTGo:
 # TODO
 analisyFolder:
 	clear
-	python ./scripts/reportAnalises.py ./output/TCC2V1/1/MyInstancesSameToolSets 1
+	python ./scripts/reportAnalises.py ./output/TCC2V2/ 6
 	echo "\n"
 
 # --------------------------------------------------------
