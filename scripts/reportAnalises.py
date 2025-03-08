@@ -170,11 +170,11 @@ def analisarMediaValores(listDirs, subDir = 'MyInstancesSameToolSets', totalPTL 
 
     print()
 
-    separator = '&'
+    separator = ';'
     for index, file in enumerate(filesList): 
         endPrint = ''
-        if index == len(filesList) - 1: endPrint = ' \\\\ \\hline'
-        else : endPrint = ' \\\\'
+        # if index == len(filesList) - 1: endPrint = ' \\\\ \\hline'
+        # else : endPrint = ' \\\\'
         print((
             f'{file} {separator} '
             f'{statistics.mean(fineshedJobsCountAcc[file]):,.2f} {separator} '
@@ -191,13 +191,13 @@ def analisarMediaValores(listDirs, subDir = 'MyInstancesSameToolSets', totalPTL 
         stdPercent = statistics.stdev(FinalSolutionAcc[file])/statistics.mean(FinalSolutionAcc[file]) * 100
         
         endPrint = ''
-        if index == len(filesList) - 1: endPrint = ' \\\\ \\hline'
-        else : endPrint = ' \\\\'
+        # if index == len(filesList) - 1: endPrint = ' \\\\ \\hline'
+        # else : endPrint = ' \\\\'
         print((
             f'{file} {separator} '
             f'{statistics.mean(BestInitialAcc[file]):.2f} {separator} '
-            # f'{max(BestInitialAcc[file]):.2f} {separator} '
-            # f'{statistics.mean(MeanInitialAcc[file]):.2f} {separator} '
+            f'{max(BestInitialAcc[file]):.2f} {separator} '
+            f'{statistics.mean(MeanInitialAcc[file]):.2f} {separator} '
             f'{max(FinalSolutionAcc[file]):.2f} {separator} '
             f'{statistics.mean(FinalSolutionAcc[file]):.2f} {separator} '
             f'{(stdPercent):.2f} {separator} '
