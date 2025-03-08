@@ -6,7 +6,7 @@ compileVar=${3:-"1"}
 [ ! -d "$outputFolder/MyInstancesSameToolSets" ] && mkdir -p "$outputFolder/MyInstancesSameToolSets"
 [ ! -d "$outputFolder/MyInstancesDiferentToolSets" ] && mkdir -p "$outputFolder/MyInstancesDiferentToolSets"
 
-make compilePT DEBUG_MODE=0 GATILHO_MODE=0 FAST_MODE=0
+make compilePT DEBUG_MODE=0 GATILHO_MODE=0 FAST_COMPILE_MODE=0
 
 run_instances() {
     local instancesFolder=$1

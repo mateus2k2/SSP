@@ -159,7 +159,7 @@ int main(int argc, char* argv[]) {
     vector<solSSP> initAll = algo.getInitAll();
 
     double meanInitial = 0; 
-    std::sort(initAll.begin(), initAll.end(), [](auto a, auto b) { return a.evalSol > b.evalSol; });
+    std::sort(initAll.begin(), initAll.end(), [](auto a, auto b) { return a.evalSol < b.evalSol; });
     for (size_t i = 0; i < initAll.size(); i++) meanInitial += initAll[i].evalSol;
     meanInitial = meanInitial/initAll.size();
 

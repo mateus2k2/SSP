@@ -6,7 +6,7 @@ OUTPUT = src/out/mainCpp
 
 DEBUG_MODE=1
 GATILHO_MODE=0
-FAST_MODE=1
+FAST_COMPILE_MODE=1
 RAND_MODE=1
 
 ifeq ($(DEBUG_MODE), 1)
@@ -23,10 +23,10 @@ else
 	GATILHO_MACRO =
 endif
 
-ifeq ($(FAST_MODE), 1)
-	FAST_MACRO = 
+ifeq ($(FAST_COMPILE_MODE), 1)
+	FAST_COMPILE_MACRO = 
 else
-	FAST_MACRO = -O3
+	FAST_COMPILE_MACRO = -O3
 endif
 
 ifeq ($(RAND_MODE), 1)
@@ -43,14 +43,14 @@ debugCompilePT:
 
 compilePT:
 	clear
-	g++ $(DEBUG_MACRO) $(GATILHO_MACRO) $(RAND_MACRO) ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread $(FAST_MACRO) -march=native -lstdc++ $(USE_FTM)
+	g++ $(DEBUG_MACRO) $(GATILHO_MACRO) $(RAND_MACRO) ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -o src/out/mainCpp -Wno-unused-result -lpthread $(FAST_COMPILE_MACRO) -march=native -lstdc++ $(USE_FTM)
 	echo "\n" 
 
 runPT:
 	./src/out/mainCpp "./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" \
 		--TEMP_INIT 0.1 \
 		--TEMP_FIM 5 \
-		--N_REPLICAS 2 \
+		--N_REPLICAS 11 \
 		--MCL 5 \
 		--PTL 10 \
 		--PASSO_GATILHO 10 \

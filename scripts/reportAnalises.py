@@ -172,29 +172,39 @@ def analisarMediaValores(listDirs, subDir = 'MyInstancesSameToolSets', totalPTL 
 
     separator = '&'
     for index, file in enumerate(filesList): 
+        endPrint = ''
+        if index == len(filesList) - 1: endPrint = ' \\\\ \\hline'
+        else : endPrint = ' \\\\'
         print((
-            f'{file}; '
+            f'{file} {separator} '
             f'{statistics.mean(fineshedJobsCountAcc[file]):,.2f} {separator} '
             f'{statistics.mean(unfineshedPriorityCountAcc[file]):,.2f} {separator} '
             f'{statistics.mean(totalUnfinishedJobsCountAcc[file]):,.2f} {separator} '
             f'{statistics.mean(switchsInstancesAcc[file]):,.2f} {separator} '
             f'{statistics.mean(switchsAcc[file]):,.2f}'
+            f'{endPrint}'
         ).replace('.', ','))
     
     print()
     for index, file in enumerate(filesList): 
-        gap = max(FinalSolutionAcc[file]) - max(BestInitialAcc[file])
+        gap = (max(FinalSolutionAcc[file]) - statistics.mean(BestInitialAcc[file]))/max(FinalSolutionAcc[file]) * 100
+        stdPercent = statistics.stdev(FinalSolutionAcc[file])/statistics.mean(FinalSolutionAcc[file]) * 100
+        
+        endPrint = ''
+        if index == len(filesList) - 1: endPrint = ' \\\\ \\hline'
+        else : endPrint = ' \\\\'
         print((
             f'{file} {separator} '
             f'{statistics.mean(BestInitialAcc[file]):.2f} {separator} '
-            f'{max(BestInitialAcc[file]):.2f} {separator} '
-            f'{statistics.mean(MeanInitialAcc[file]):.2f} {separator} '
+            # f'{max(BestInitialAcc[file]):.2f} {separator} '
+            # f'{statistics.mean(MeanInitialAcc[file]):.2f} {separator} '
             f'{max(FinalSolutionAcc[file]):.2f} {separator} '
             f'{statistics.mean(FinalSolutionAcc[file]):.2f} {separator} '
-            f'{statistics.stdev(FinalSolutionAcc[file]):.2f} {separator} '
+            f'{(stdPercent):.2f} {separator} '
             f'{statistics.mean(TimeAcc[file]):.2f} {separator} '
             f'{(statistics.mean(PTLAcc[file])/totalPTL)*100:.2f} {separator} '
-            f'{(max(FinalSolutionAcc[file])):.2f}'
+            f'{(gap):.2f}'
+            f'{endPrint}'
         ).replace('.', ','))
 
 
