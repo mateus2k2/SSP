@@ -135,13 +135,16 @@ int main(int argc, char* argv[]) {
     // ------------------------------------------------------------------------------
     // REAL
     // ------------------------------------------------------------------------------
+
+    prob->modelo(filenameoutput);
+    return 0;
+
     fstream solutionReportFile;
     solutionReportFile.open(filenameoutput, ios::out);
     if (!solutionReportFile.is_open()) {
         cerr << "Error: Could not open solution report file: " << filenameoutput << endl;
         exit(1);
     }
-
 
     prob->loadInstanceParans(filenameJobs);
     if (instance_report) prob->printDataReport();

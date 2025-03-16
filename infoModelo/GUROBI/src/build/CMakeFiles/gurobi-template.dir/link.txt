@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG -rdynamic CMakeFiles/gurobi-template.dir/teste.cpp.o -o gurobi-template   -L/home/mateus/WSL/IC/GUROBI/gurobi1201/linux64/lib  -Wl,-rpath,/home/mateus/WSL/IC/GUROBI/gurobi1201/linux64/lib /home/mateus/WSL/IC/GUROBI/gurobi1201/linux64/lib/libgurobi_c++.a -lgurobi120 

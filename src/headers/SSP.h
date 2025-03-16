@@ -80,6 +80,7 @@ class SSP: public Problem<solSSP>{
 		double evaluateReportKTNS(solSSP &sol, string filenameJobs, string filenameTools, fstream& solutionReportFile);
 		solSSP postProcessDifferent(solSSP &sol);
 		
+		int modelo(string filenameoutput);
 };
 
 #endif 

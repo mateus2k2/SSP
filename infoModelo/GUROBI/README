@@ -1,0 +1,18 @@
+sshuttle -r mateus@200.239.132.108:4096 0.0.0.0/0
+ParallelTempering
+
+sudo docker run --rm -it --network host --name=firefox -p 5800:5800 -v /docker/appdata/firefox:/config:rw jlesage/firefox
+curl -s ifconfig.me
+
+https://portal.gurobi.com/iam/licenses/list/
+https://www.gurobi.com/resources/functional-code-examples/
+https://support.gurobi.com/hc/en-us/articles/4534161999889-How-do-I-install-Gurobi-Optimizer
+https://support.gurobi.com/hc/en-us/articles/360044290292-How-do-I-install-Gurobi-for-Python
+https://support.gurobi.com/hc/en-us/articles/7367019222929-How-do-I-set-up-Gurobi-in-WSL2-Windows-Subsystem-for-Linux
+
+CPP
+https://support.gurobi.com/hc/en-us/articles/360039499751-How-do-I-use-CMake-to-build-Gurobi-C-C-projects
+https://stackoverflow.com/questions/46779850/cannot-compile-gurobi-examples-in-version-7-5-1
+g++ marco.cpp -std=c++98 -m64 -g -o marco.out -I$GUROBI_HOME/include -L$GUROBI_HOME/lib -lgurobi_c++ -lgurobi120 -lm
+
+grbgetkey b3a435b4-5af3-46fa-bc0c-17ea96efcf6c --input wsl2-hostinfo.txt

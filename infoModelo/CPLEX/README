@@ -1,0 +1,12 @@
+https://www.ibm.com/academic/
+https://academic.ibm.com/a2mt/downloads/data_science#/
+
+sudo /bin/bash cplex_studio2211.linux_x86_64.bin
+
+python /opt/ibm/ILOG/CPLEX_Studio2211/python/setup.py install 
+conda create --name cplex python=3.10
+conda activate cplex
+pip install docplex
+
+g++ -c -m64 -fPIC -fno-strict-aliasing -fexceptions -DNDEBUG -I$CPLEX_HOME/include -I$CPLEX_HOME/../concert/include teste.cpp -o teste.out
+g++ -m64 -fPIC -fno-strict-aliasing -fexceptions -DNDEBUG -I$CPLEX_HOME/include -I$CPLEX_HOME/../concert/include -L$CPLEX_HOME/lib/x86-64_linux/static_pic -L$CPLEX_HOME/../concert/lib/x86-64_linux/static_pic -o teste teste.out -lconcert -lilocplex -lcplex -lm -lpthread -ldl

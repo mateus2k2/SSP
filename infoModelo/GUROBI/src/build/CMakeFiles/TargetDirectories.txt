@@ -1,0 +1,3 @@
+/home/mateus/WSL/IC/GUROBI/src/build/CMakeFiles/gurobi-template.dir
+/home/mateus/WSL/IC/GUROBI/src/build/CMakeFiles/edit_cache.dir
+/home/mateus/WSL/IC/GUROBI/src/build/CMakeFiles/rebuild_cache.dir
