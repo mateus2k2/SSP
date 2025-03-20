@@ -26,6 +26,7 @@ run_instances() {
             --N_REPLICAS 11 \
             --MCL 500 \
             --PTL 600 \
+		    --PASSO_GATILHO 10 \
             --TEMP_DIST 3 \
             --TYPE_UPDATE 1 \
             --INIT_SOL_TYPE 0 \

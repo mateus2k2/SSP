@@ -2,6 +2,8 @@
 # Meus Codigos cpp
 # --------------------------------------------------------
 
+# make DEBUG_MODE=0 GATILHO_MODE=0 FAST_COMPILE_MODE=0 RAND_MODE=1 PTGo
+
 OUTPUT = src/out/mainCpp
 
 DEBUG_MODE=1
@@ -47,29 +49,28 @@ compilePT:
 	echo "\n" 
 
 runPT:
-	./src/out/mainCpp "./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" \
+	./src/out/mainCpp "./input/MyInstancesSameToolSets/n=212,p=0.75,r=0.4,t=1390,v8.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" \
 		--TEMP_INIT 0.1 \
 		--TEMP_FIM 5 \
 		--N_REPLICAS 11 \
-		--MCL 5 \
-		--PTL 10 \
+		--MCL 500 \
+		--PTL 600 \
 		--PASSO_GATILHO 10 \
 		--TEMP_DIST 3 \
 		--TYPE_UPDATE 1 \
 		--INIT_SOL_TYPE 0 \
 		--TEMP_UPDATE 3500 \
 		--PTL_TEMP_UPDATE_PROPORTION 3 \
-		--RESULT_REPORT 1 \
 		--DIFERENT_TOOLSETS_MODE 0 \
 
 runModelo:
-	./src/out/mainCpp "./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv" "./input/Processed/ToolSetInt.csv" "./output/Modelo" 
+	./src/out/mainCpp "./input/MyInstancesSameToolSets/n=212,p=0.75,r=0.4,t=1390,v8.csv" "./input/Processed/ToolSetInt.csv" "./output/Modelo" 
 
-realModeloGo:
+modeloGo:
 	make compilePT
 	make runModelo
 
-realPTGo:
+PTGo:
 	make compilePT
 	make runPT
 

@@ -136,8 +136,8 @@ int main(int argc, char* argv[]) {
     // REAL
     // ------------------------------------------------------------------------------
 
-    prob->modelo(filenameoutput);
-    return 0;
+    // prob->modelo(filenameoutput);
+    // return 0;
 
     fstream solutionReportFile;
     solutionReportFile.open(filenameoutput, ios::out);
@@ -177,6 +177,10 @@ int main(int argc, char* argv[]) {
 
     cout << "Final Solution: " << cost << endl;
     cout << "Time: " << et.getTimeMs() << endl;
+
+    // fstream solutionReportFileInit;
+    // solutionReportFileInit.open("/home/mateus/WSL/IC/SSP/output/Exemplo/exemploInit.txt", ios::out);
+    // prob->evaluateReportKTNS(initAll[0], filenameJobs, filenameTools, solutionReportFileInit);
 
     return 0;
 }
