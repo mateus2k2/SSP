@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "defines": [
+                "DEBUG",
+                "GATILHO",
+                "DIFERENT_TOOLSETS_MODE",
+                "RANDSEED"
+            ],
+            "intelliSenseMode": "linux-gcc-x64",
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c17",
+            "cppStandard": "gnu++17",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/opt/gurobi1201/linux64/include"
+            ]
+        }
+    ],
+    "version": 4
+}

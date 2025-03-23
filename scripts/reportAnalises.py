@@ -124,6 +124,15 @@ def totalUnfinishedJobs(machines, planejamento):
 # ANALISES
 # ---------------------------------------------------------------------------------------------------
 
+def getFileParans(file):
+    # n=600,p=0.25,r=0.5,t=3096,v6.csv
+    parans = file.split(',')
+    n = int(parans[0].split('=')[1])
+    p = float(parans[1].split('=')[1])
+    r = float(parans[2].split('=')[1])
+    t = int(parans[3].split('=')[1])
+    return n, p, r, t
+
 def analisarValores(files):
     precedenciasViloladas =  verificarPrecedencia(files)
     for index, report in enumerate(files):
@@ -168,44 +177,100 @@ def analisarMediaValores(listDirs, subDir = 'MyInstancesSameToolSets', totalPTL 
             BestInitialAcc[file] = BestInitialAcc.get(file, []) + [endInfo['bestInitial']]
             MeanInitialAcc[file] = MeanInitialAcc.get(file, []) + [endInfo['meanInitial']]
 
-    print()
+    # print()
 
-    separator = ';'
-    for index, file in enumerate(filesList): 
-        endPrint = ''
-        # if index == len(filesList) - 1: endPrint = ' \\\\ \\hline'
-        # else : endPrint = ' \\\\'
-        print((
-            f'{file} {separator} '
-            f'{statistics.mean(fineshedJobsCountAcc[file]):,.2f} {separator} '
-            f'{statistics.mean(unfineshedPriorityCountAcc[file]):,.2f} {separator} '
-            f'{statistics.mean(totalUnfinishedJobsCountAcc[file]):,.2f} {separator} '
-            f'{statistics.mean(switchsInstancesAcc[file]):,.2f} {separator} '
-            f'{statistics.mean(switchsAcc[file]):,.2f}'
-            f'{endPrint}'
-        ).replace('.', ','))
+    # separator = ';'
+    # for index, file in enumerate(filesList): 
+    #     endPrint = ''
+    #     # if index == len(filesList) - 1: endPrint = ' \\\\ \\hline'
+    #     # else : endPrint = ' \\\\'
+    #     print((
+    #         f'{file} {separator} '
+    #         f'{statistics.mean(fineshedJobsCountAcc[file]):,.2f} {separator} '
+    #         f'{statistics.mean(unfineshedPriorityCountAcc[file]):,.2f} {separator} '
+    #         f'{statistics.mean(totalUnfinishedJobsCountAcc[file]):,.2f} {separator} '
+    #         f'{statistics.mean(switchsInstancesAcc[file]):,.2f} {separator} '
+    #         f'{statistics.mean(switchsAcc[file]):,.2f}'
+    #         f'{endPrint}'
+    #     ).replace('.', ','))
+    #     if(index % 3 == 0): print("\\hline")
     
-    print()
-    for index, file in enumerate(filesList): 
-        gap = (max(FinalSolutionAcc[file]) - statistics.mean(BestInitialAcc[file]))/max(FinalSolutionAcc[file]) * 100
-        stdPercent = statistics.stdev(FinalSolutionAcc[file])/statistics.mean(FinalSolutionAcc[file]) * 100
+    # print()
+    # for index, file in enumerate(filesList): 
+    #     gap = (max(FinalSolutionAcc[file]) - statistics.mean(BestInitialAcc[file]))/max(FinalSolutionAcc[file]) * 100
+    #     stdPercent = statistics.stdev(FinalSolutionAcc[file])/statistics.mean(FinalSolutionAcc[file]) * 100
         
-        endPrint = ''
-        # if index == len(filesList) - 1: endPrint = ' \\\\ \\hline'
-        # else : endPrint = ' \\\\'
-        print((
-            f'{file} {separator} '
-            f'{statistics.mean(BestInitialAcc[file]):.2f} {separator} '
-            f'{max(BestInitialAcc[file]):.2f} {separator} '
-            f'{statistics.mean(MeanInitialAcc[file]):.2f} {separator} '
-            f'{max(FinalSolutionAcc[file]):.2f} {separator} '
-            f'{statistics.mean(FinalSolutionAcc[file]):.2f} {separator} '
-            f'{(stdPercent):.2f} {separator} '
-            f'{statistics.mean(TimeAcc[file]):.2f} {separator} '
-            f'{(statistics.mean(PTLAcc[file])/totalPTL)*100:.2f} {separator} '
-            f'{(gap):.2f}'
-            f'{endPrint}'
-        ).replace('.', ','))
+    #     endPrint = ''
+    #     # if index == len(filesList) - 1: endPrint = ' \\\\ \\hline'
+    #     # else : endPrint = ' \\\\'
+    #     print((
+    #         f'{file} {separator} '
+    #         f'{statistics.mean(BestInitialAcc[file]):.2f} {separator} '
+    #         f'{max(BestInitialAcc[file]):.2f} {separator} '
+    #         f'{statistics.mean(MeanInitialAcc[file]):.2f} {separator} '
+    #         f'{max(FinalSolutionAcc[file]):.2f} {separator} '
+    #         f'{statistics.mean(FinalSolutionAcc[file]):.2f} {separator} '
+    #         f'{(stdPercent):.2f} {separator} '
+    #         f'{statistics.mean(TimeAcc[file]):.2f} {separator} '
+    #         f'{(statistics.mean(PTLAcc[file])/totalPTL)*100:.2f} {separator} '
+    #         f'{(gap):.2f}'
+    #         f'{endPrint}'
+    #     ).replace('.', ','))
+    #     if(index % 3 == 0): print("\\hline")
+
+    # print(max(fineshedJobsCountAcc['n=600,p=0.25,r=0.5,t=3096,v6.csv']))
+    # print(max(fineshedJobsCountAcc['n=600,p=0.50,r=0.5,t=3096,v7.csv']))
+    # print(max(fineshedJobsCountAcc['n=600,p=0.75,r=0.5,t=3096,v8.csv']))
+
+    # print(min(fineshedJobsCountAcc['n=600,p=0.25,r=0.5,t=3096,v6.csv']))
+    # print(min(fineshedJobsCountAcc['n=600,p=0.50,r=0.5,t=3096,v7.csv']))
+    # print(min(fineshedJobsCountAcc['n=600,p=0.75,r=0.5,t=3096,v8.csv']))
+
+
+
+
+    # acc = []
+    # for index, file in enumerate(filesList): 
+    #     totalTarefas, taxaPrioridade, taxaReentrancia, numeroFerramentas = getFileParans(file)
+    #     prioritariasNaoFinalizadas = statistics.mean(unfineshedPriorityCountAcc[file])
+    #     porcentagemPrioritariasNaoFinalizadas = (prioritariasNaoFinalizadas/totalTarefas) * 100
+    #     acc.append(porcentagemPrioritariasNaoFinalizadas)
+    #     print(file, porcentagemPrioritariasNaoFinalizadas)
+    
+    # print(statistics.mean(acc))
+    # print(max(acc))
+    # print(min(acc))
+
+
+
+
+    # for index, file in enumerate(filesList): 
+        # print(min(TimeAcc[file]))
+
+
+
+    # acc = []
+    # for index, file in enumerate(filesList): 
+    #     S0 = statistics.mean(BestInitialAcc[file])
+    #     SStar = max(FinalSolutionAcc[file])
+    #     S = statistics.mean(FinalSolutionAcc[file])
+    #     gap = (SStar - S)/SStar * 100
+    #     acc.append(gap)
+    #     print(gap)     
+    # print("mean ", statistics.mean(acc))
+
+
+
+
+    acc = []
+    for index, file in enumerate(filesList): 
+        S0 = statistics.mean(BestInitialAcc[file])
+        SStar = max(FinalSolutionAcc[file])
+        S = statistics.mean(FinalSolutionAcc[file])
+        gap = (SStar - S0)/SStar * 100
+        acc.append(gap)
+        print(gap)     
+    print("mean ", statistics.mean(acc))
 
 
 # ---------------------------------------------------------------------------------------------------
