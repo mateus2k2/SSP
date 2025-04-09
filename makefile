@@ -49,7 +49,10 @@ compilePT:
 	echo "\n" 
 
 runPT:
-	./src/out/mainCpp "./input/MyInstancesSameToolSets/n=212,p=0.75,r=0.4,t=1390,v8.csv" "./input/Processed/ToolSetInt.csv" "./output/Exemplo/exemplo.txt" \
+	./src/out/mainCpp \
+		"./input/MyInstancesSameToolSets/n=212,p=0.75,r=0.4,t=1390,v8.csv" \
+		"./input/Processed/ToolSetInt.csv" \
+		"./output/Modelo" \
 		--TEMP_INIT 0.1 \
 		--TEMP_FIM 5 \
 		--N_REPLICAS 11 \
@@ -62,6 +65,7 @@ runPT:
 		--TEMP_UPDATE 3500 \
 		--PTL_TEMP_UPDATE_PROPORTION 3 \
 		--DIFERENT_TOOLSETS_MODE 0 \
+		--MODELO 1 \
 
 runModelo:
 	./src/out/mainCpp "./input/MyInstancesSameToolSets/n=212,p=0.75,r=0.4,t=1390,v8.csv" "./input/Processed/ToolSetInt.csv" "./output/Modelo" 

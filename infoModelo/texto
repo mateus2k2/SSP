@@ -1,0 +1,28 @@
+𝑠𝑗𝑘 starting time of operation (𝑗, 𝑘)
+𝑒𝑗𝑘 ending time of operation (𝑗, 𝑘)
+
+
+𝑚
+𝑥     equal to 1 if operation (𝑗, 𝑘) is directly followed by operation (𝑗′, 𝑘′) on machine 𝑚, 0 otherwise
+𝑗𝑘𝑗′𝑘′
+
+
+𝑚
+𝛽   equal to 1 if operation (𝑗, 𝑘) is assigned to machine 𝑚, 0 otherwise
+𝑗𝑘
+
+
+𝛼𝑗𝑘 equal to 1 if operation (𝑗, 𝑘) is completed within scheduling horizon 𝐻, 0 otherwise
+
+
+𝑡
+𝑦   equal to 1 if tool 𝑡 is present at the start of processing operation (𝑗, 𝑘), 0 otherwise   
+𝑗𝑘
+
+
+𝑡
+𝑧   equal to 1 if tool 𝑡 is inserted at the start of operation (𝑗, 𝑘), 0 otherwise
+𝑗𝑘
+
+
+𝑙𝑗𝑘 equal to 1 if a tool switching instance occurs at the start of operation (𝑗, 𝑘), 0 otherwise

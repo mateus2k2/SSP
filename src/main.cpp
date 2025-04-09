@@ -48,6 +48,9 @@ int main(int argc, char* argv[]) {
     int unsupervised           = 0.5*DAY;
 	int diferent_toolset_mode  = 0;
 	int instance_report        = 0;
+
+    // modelo
+    int modelo = 0;
 	
 	// Instance file name
 	string filenameJobs = arguments[0];
@@ -93,6 +96,8 @@ int main(int argc, char* argv[]) {
 			diferent_toolset_mode = stoi(arguments[i+1]);
         else if(arguments[i]== "--PASSO_GATILHO")
             passoGatilho = stoi(arguments[i+1]);
+        else if(arguments[i]== "--MODELO")
+            modelo = stoi(arguments[i+1]);
     }
 	tempUp = PTL/ptlTempUpProportion;
 
@@ -133,22 +138,32 @@ int main(int argc, char* argv[]) {
     // prob->evaluateReportKTNS(finalSolution, filenameJobs, filenameTools, filenameoutput, 0, true);
 
     // ------------------------------------------------------------------------------
-    // REAL
+    // DATA LOADIDNG
     // ------------------------------------------------------------------------------
-
-    // prob->modelo(filenameoutput);
-    // return 0;
 
     fstream solutionReportFile;
     solutionReportFile.open(filenameoutput, ios::out);
-    if (!solutionReportFile.is_open()) {
+    if (!solutionReportFile.is_open() && !modelo) {
         cerr << "Error: Could not open solution report file: " << filenameoutput << endl;
         exit(1);
     }
 
     prob->loadInstanceParans(filenameJobs);
     if (instance_report) prob->printDataReport();
-    if (diferent_toolset_mode == 0) prob->groupJobs();
+    if (diferent_toolset_mode == 0 && !modelo) prob->groupJobs();
+
+    // ------------------------------------------------------------------------------
+    // MODELO
+    // ------------------------------------------------------------------------------
+    
+    if(modelo){ 
+        prob->modelo(filenameoutput);
+        return 0;
+    }
+
+    // ------------------------------------------------------------------------------
+    // REAL
+    // ------------------------------------------------------------------------------
 
     PT<solSSP> algo(tempIni, tempfim, tempN, MCL, PTL, passoGatilho, tempD, uType, tempUp);
     ExecTime et;
