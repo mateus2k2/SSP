@@ -1,28 +1,117 @@
-𝑠𝑗𝑘 starting time of operation (𝑗, 𝑘)
-𝑒𝑗𝑘 ending time of operation (𝑗, 𝑘)
+implement the variables and constraints of the model 
+refer to the pdf for details 
+
+------------------------------------------------------------------------------------
+SETS
+------------------------------------------------------------------------------------
+
+J = set of jobs. made of one or more operations
+O = set of all operations of all jobs. Ex: Oj = {(j, k), k = {1, 2, ..., nj} }
+M = set of machines
+H = scheduling horizon 
+
+------------------------------------------------------------------------------------
+VARS
+------------------------------------------------------------------------------------
+
+𝑠 (𝑗𝑘) starting time of operation (𝑗, 𝑘)
+
+𝑒 (𝑗𝑘) ending time of operation (𝑗, 𝑘)
+
+𝑥 (m) (𝑗𝑘𝑗′𝑘′)     equal to 1 if operation (𝑗, 𝑘) is directly followed by operation (𝑗′, 𝑘′) on machine 𝑚, 0 otherwise
+
+𝛽 (m) (𝑗𝑘)   equal to 1 if operation (𝑗, 𝑘) is assigned to machine 𝑚, 0 otherwise
+
+𝛼 (𝑗𝑘) equal to 1 if operation (𝑗, 𝑘) is completed within scheduling horizon 𝐻, 0 otherwise
+
+𝑦 (t) (jk)  equal to 1 if tool 𝑡 is present at the start of processing operation (𝑗, 𝑘), 0 otherwise   
+
+𝑧 (t) (jk)   equal to 1 if tool 𝑡 is inserted at the start of operation (𝑗, 𝑘), 0 otherwise
+
+𝑙 (𝑗𝑘) equal to 1 if a tool switching instance occurs at the start of operation (𝑗, 𝑘), 0 otherwise
+
+new Vars for linear obj
+𝛿(𝑗𝑘)                    ∀(𝑗, 𝑘) ∈ 𝑂
+𝜆(𝑡)(𝑗𝑘)                 ∀(𝑗, 𝑘) ∈ 𝑂, ∀𝑡 ∈ 𝑇
+
+------------------------------------------------------------------------------------
+RESTRICAO DE DOMINIO
+------------------------------------------------------------------------------------
+
+𝑥 (𝑚) (𝑗𝑘𝑗′𝑘′) ∈ {0, 1} ∀(𝑗, 𝑘) ∈ 𝑂, ∀(𝑗′, 𝑘′) ∈ 𝑂, ∀𝑚 ∈ 𝑀
+
+𝛽 (𝑚) (𝑗𝑘)  ∈ {0, 1} ∀(𝑗, 𝑘) ∈ 𝑂, ∀𝑚 ∈ 𝑀
+
+𝑦 (𝑡) (𝑗𝑘) ∈ {0, 1} ∀(𝑗, 𝑘) ∈ 𝑂, ∀𝑡 ∈ 𝑇
+𝑧 (𝑡) (𝑗𝑘) ∈ {0, 1} ∀(𝑗, 𝑘) ∈ 𝑂, ∀𝑡 ∈ 𝑇
 
 
-𝑚
-𝑥     equal to 1 if operation (𝑗, 𝑘) is directly followed by operation (𝑗′, 𝑘′) on machine 𝑚, 0 otherwise
-𝑗𝑘𝑗′𝑘′
+𝛼 (𝑗𝑘) ∈ {0, 1} ∀(𝑗, 𝑘) ∈ 𝑂 
+𝑙 (𝑗𝑘)  ∈ {0, 1} ∀(𝑗, 𝑘) ∈ 𝑂 
 
 
-𝑚
-𝛽   equal to 1 if operation (𝑗, 𝑘) is assigned to machine 𝑚, 0 otherwise
-𝑗𝑘
+𝑠 (𝑗𝑘) ≥ 0 ∀(𝑗, 𝑘) ∈ 𝑂 
+𝑒 (𝑗𝑘) ≥ 0 ∀(𝑗, 𝑘) ∈ 𝑂 
 
 
-𝛼𝑗𝑘 equal to 1 if operation (𝑗, 𝑘) is completed within scheduling horizon 𝐻, 0 otherwise
+-----------------------------------------------------------------------------------------
+RESTRICAO
+-----------------------------------------------------------------------------------------
+
+L = Σ (𝑗,𝑘) ∈ 𝑂 𝑝𝑗𝑘 + ⌈ 𝐻 𝑡(𝑈)/24 ⌉
 
 
-𝑡
-𝑦   equal to 1 if tool 𝑡 is present at the start of processing operation (𝑗, 𝑘), 0 otherwise   
-𝑗𝑘
+make sure that each operation can only be preceded and followed by at most one operation, respectively
+Σ (𝑚 ∈ 𝑀) Σ (𝑗′,𝑘′) ∈ 𝑂 (𝑗′,𝑘′)≠(𝑗,𝑘) 𝑥(𝑚)(𝑗𝑘𝑗′𝑘′) ≤ 1              ∀(𝑗, 𝑘) ∈ 𝑂 
+Σ (𝑚 ∈ 𝑀) Σ (𝑗′,𝑘′) ∈ 𝑂 (𝑗′,𝑘′)≠(𝑗,𝑘) 𝑥(𝑚)(𝑗𝑘𝑗′𝑘′) ≤ 1              ∀(𝑗', 𝑘') ∈ 𝑂 
+
+impose that each operation is assigned to one machine only.
+Σ (𝑚 ∈ 𝑀) 𝛽 (𝑚) (𝑗𝑘) = 1
+
+enforce that two successive operations must be carried out on the same machine.
+2𝑥 (𝑚) (𝑗𝑘𝑗′𝑘′) ≤ 𝛽(𝑚)(𝑗𝑘) + 𝛽(𝑚)(𝑗′𝑘′)                                 ∀(𝑗, 𝑘) ∈ 𝑂, ∀(𝑗′, 𝑘′) ∈ 𝑂∖{(𝑗, 𝑘)}, ∀𝑚 ∈ 𝑀
+Σ (𝑗,𝑘) ∈ 𝑂 Σ (𝑗′,𝑘′) ∈ 𝑂   𝑥 (m) (𝑗𝑘𝑗′𝑘′) + 1 ≥ Σ (𝑗,𝑘) ∈ 𝑂 𝛽 (m)(jk)   ∀𝑚 ∈ 𝑀
+
+make sure that the ending time of an operation is constrained by its starting time and processing time.
+𝑒(𝑗𝑘) = 𝑠(𝑗𝑘) + 𝑝(𝑗𝑘)                       ∀(𝑗, 𝑘) ∈ 𝑂
+
+guarantee that an operation can only start after its preceding operation on the same machine is completed,
+𝑠(𝑗𝑘) + L(1 - 𝑥 (m) (𝑗𝑘𝑗′𝑘′)) ≥ 𝑒(𝑗′𝑘′)     ∀(𝑗, 𝑘) ∈ 𝑂, ∀(𝑗′, 𝑘′) ∈ 𝑂∖{(𝑗, 𝑘)}, ∀𝑚 ∈ 𝑀
+
+enforce the precedence relations between two operations of the same job.
+𝑒(𝑗𝑘) ≤ 𝑠(𝑖, 𝑗+1)                           ∀𝑖 ∈ 𝐼, 𝑗 = (1,…, 𝑛𝑖 − 1), 𝑛𝑖 > 1
+
+ensure that if an operation is completed within the scheduling horizon
+(𝐻 −  𝑒𝑗𝑘) / L < 𝛼(jk) ≤ 1 - (e(jk) - H)/L      ∀(𝑗, 𝑘) ∈ 𝑂
+
+impose that the sum of all tools present at the start of an operation does not exceed the tool capacity.
+Σ 𝑡∈𝑇 𝑦(𝑡)(𝑗𝑘) ≤ 𝑇(𝐶)               ∀(𝑗, 𝑘) ∈ 𝑂
+
+states that a tool switch occurs (i.e., 𝑧(𝑡)(𝑗𝑘) = 1) when tool 𝑡 required for operation (𝑗, 𝑘) is not present in the tool magazine during the processing of preceding operation (𝑗′, 𝑘′).
+𝑥 (𝑚) (𝑗𝑘𝑗′𝑘′) + 𝑦(𝑡) (𝑗𝑘) − 𝑦(𝑡)(𝑗′𝑘′) ≤ 𝑧(𝑡)(𝑗𝑘) + 1          ∀(𝑗, 𝑘) ∈ 𝑂, ∀(𝑗′, 𝑘′) ∈ 𝑂∖{(𝑗, 𝑘)},
+
+ensure that all required tools for operation (𝑗, 𝑘) are present at the start of the operation
+𝑦(𝑡)(𝑗𝑘) = 1                    ∀(𝑗, 𝑘) ∈ 𝑂, ∀𝑡 ∈ 𝑇𝑗𝑘
+
+Constraints (14) and (15) make sure that each tool switch results in a tool switching instance, and vice versa, i.e., that at each tool switching instance, one or more tools are switched.
+𝑧(𝑡)(𝑗𝑘) ≤ 𝑙(𝑗𝑘)                 ∀(𝑗, 𝑘) ∈ 𝑂, ∀𝑡 ∈ 𝑇
+𝑙(𝑗𝑘) ≤ Σ 𝑡 ∈ 𝑇 𝑧(𝑡)(𝑗𝑘)         ∀(𝑗, 𝑘) ∈ 𝑂
+
+impose that tool switching instances can only occur during supervised shifts, i.e., during the first (24−𝑡𝑈 ) supervised hours of each day, where (𝑠𝑗𝑘 mod 24) is a modulo that determines the time (hour) of a day at which operation (𝑗, 𝑘) begins. For example, if 𝑠𝑗𝑘 = 30 and 𝑡𝑈 = 12, then 𝑙𝑗𝑘 ≤ 1.5, which indicates that a tool switching instance may happen at hour 30
+𝑙(𝑗𝑘) ≤ 2 − (𝑠(𝑗𝑘) mod 24) / 24 − 𝑡𝑈    ∀(𝑗, 𝑘) ∈ 𝑂
+
+Linear
+𝛿𝑗𝑘 ≤ 𝛼𝑗𝑘 ∀(𝑗, 𝑘) ∈ 𝑂
+𝛿𝑗𝑘 ≤ 𝑙𝑗𝑘 ∀(𝑗, 𝑘) ∈ 𝑂
+𝛿𝑗𝑘 ≥ 𝛼𝑗𝑘 + 𝑙𝑗𝑘 − 1 ∀(𝑗, 𝑘) ∈ 𝑂
+
+since the parallel machines are identical, there exist many alternative solutions that are similar but mirror the allocation of operations over the machines. Hence, we exclude those alternatives by adding symmetry-breaking constraints (28)
+Σ (𝑗,𝑘)∈𝑂 𝛽(𝑚−1)(𝑗𝑘) ≥ Σ (𝑗,𝑘)∈𝑂 𝛽(𝑚)(𝑗𝑘)    ∀𝑚 ∈ 𝑀∖{1}
+
+----------------------------------------------------------------------
+OBJ
+----------------------------------------------------------------------
 
 
-𝑡
-𝑧   equal to 1 if tool 𝑡 is inserted at the start of operation (𝑗, 𝑘), 0 otherwise
-𝑗𝑘
+max(r * Σ [(𝑗,𝑘) ∈ 𝑂] 𝛼(𝑗𝑘) − 𝑐(𝑝) Σ [(𝑗,𝑘) ∈ 𝑂(𝑃)] (1−𝛼(𝑗𝑘)) - ( 𝑐(𝑓) Σ [(𝑗,𝑘) ∈ 𝑂] 𝛿(𝑗𝑘) + 𝑐(v) ) Σ [(𝑗,𝑘)∈𝑂] Σ[𝑡∈𝑇] 𝜆(𝑡)(𝑗𝑘))
 
-
-𝑙𝑗𝑘 equal to 1 if a tool switching instance occurs at the start of operation (𝑗, 𝑘), 0 otherwise

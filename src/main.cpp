@@ -162,7 +162,7 @@ int main(int argc, char* argv[]) {
     }
 
     // ------------------------------------------------------------------------------
-    // REAL
+    // SSP
     // ------------------------------------------------------------------------------
 
     PT<solSSP> algo(tempIni, tempfim, tempN, MCL, PTL, passoGatilho, tempD, uType, tempUp);
