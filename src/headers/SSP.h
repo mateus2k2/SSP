@@ -81,6 +81,7 @@ class SSP: public Problem<solSSP>{
 		solSSP postProcessDifferent(solSSP &sol);
 		
 		int modelo(string filenameoutput);
+		void loadModelData();
 };
 
 #endif 

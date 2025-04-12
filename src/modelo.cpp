@@ -11,24 +11,34 @@
 
 using namespace std;
 
-int SSP::modelo(string folderOutput) {
-    double r;   // recompensa por operação concluída
-    double cp;  // custo por operação perdida (em O_P)
-    double cf;  // custo por troca supervisionada
-    double cv;  // custo por ferramenta trocada
-    int H;      // Horizonte de agendamento
-    int tU;     // Duração do turno não supervisionado
-    int TC;     // Capacidade total de ferramentas
+// -------------------------------------------------
+// PARAMS
+// -------------------------------------------------
+double r;   // recompensa por operação concluída
+double cp;  // custo por operação perdida (em O_P)
+double cf;  // custo por troca supervisionada
+double cv;  // custo por ferramenta trocada
+int H;      // Horizonte de agendamento
+int tU;     // Duração do turno não supervisionado
+int TC;     // Capacidade total de ferramentas
 
-    // -------------------------------------------------
-    // SETS
-    // -------------------------------------------------
-    vector<pair<int, int>> operationsMOCK;           // Lista de operações (j,k)
-    vector<int> machinesMOCK;                        // Lista de máquinas m
-    vector<int> toolsMOCK;                           // Lista de ferramentas t
-    map<int, int> jobOperationsCount;                // job → número de operações
-    map<pair<int, int>, vector<int>> requiredTools;  // (j,k) → lista de ferramentas requeridas
-    set<pair<int, int>> O_P;                         // subconjunto de operações penalizadas se não concluídas
+// -------------------------------------------------
+// SETS
+// -------------------------------------------------
+vector<pair<int, int>> operationsMOCK;           // Lista de operações (j,k)
+vector<int> machinesMOCK;                        // Lista de máquinas m
+vector<int> toolsMOCK;                           // Lista de ferramentas t
+map<int, int> jobOperationsCount;                // job → número de operações
+map<pair<int, int>, vector<int>> requiredTools;  // (j,k) → lista de ferramentas requeridas
+set<pair<int, int>> O_P;                         // subconjunto de operações penalizadas se não concluídas
+map<pair<int, int>, int> p;                      // (j,k) → tempo de processamento
+
+void SSP::loadModelData(){
+    
+}
+
+int SSP::modelo(string folderOutput) {
+    loadModelData();
 
     try {
         GRBEnv env = GRBEnv();
@@ -39,8 +49,8 @@ int SSP::modelo(string folderOutput) {
         // -------------------------------------------------
 
         // Variáveis de tempo
-        map<pair<int, int>, GRBVar> s;  // s(jk): tempo de início
-        map<pair<int, int>, GRBVar> e;  // e(jk): tempo de término
+        map<pair<int, int>, GRBVar> s;                  // s(jk): tempo de início
+        map<pair<int, int>, GRBVar> e;                  // e(jk): tempo de término
 
         // Variáveis binárias
         map<tuple<int, int, int, int, int>, GRBVar> x;  // x(m)(jk,j'k')
@@ -51,12 +61,10 @@ int SSP::modelo(string folderOutput) {
         map<pair<int, int>, GRBVar> l;                  // l(jk)
 
         // Variáveis auxiliares para obj linear
-        map<pair<int, int>, GRBVar> delta;         // δ(jk)
-        map<tuple<int, int, int>, GRBVar> lambda;  // λ(t)(jk)
+        map<pair<int, int>, GRBVar> delta;              // δ(jk)
+        map<tuple<int, int, int>, GRBVar> lambda;       // λ(t)(jk)
 
-        map<pair<int, int>, int> p = {
-            {{1, 1}, 5}, {{1, 2}, 7}, {{2, 1}, 10},  // e assim por diante
-        };
+        
 
         for (auto [j, k] : operationsMOCK) {
             // Adiciona variáveis de tempo
@@ -86,11 +94,12 @@ int SSP::modelo(string folderOutput) {
         // RESTRICTIONS
         // -------------------------------------------------
 
-        int L = 0;
-        for (auto [j, k] : operationsMOCK) {
-            L += p[{j, k}];  // Soma de todos os tempos de processamento
-        }
-        L += ceil((double)H * tU / 24.0);  // H: horizonte, tU: duração do turno não supervisionado
+        // int L = 0;
+        // for (auto [j, k] : operationsMOCK) {
+        //     L += p[{j, k}];  // Soma de todos os tempos de processamento
+        // }
+        // L += ceil((double)H * tU / 24.0);  // H: horizonte, tU: duração do turno não supervisionado
+        int L = INT_MAX;
 
         // (2) Cada operação pode ser seguida por no máximo uma outra operação
         for (auto [j, k] : operationsMOCK) {
