@@ -43,15 +43,11 @@ void SSP::loadModelData(){
     tU = 12;
     TC = 8;
 
-
     operationsModel = { {1, 1}, {1, 2}, {2, 1}, {3, 1}, {3, 2}, {4, 1}, {4, 2}, {5, 1}, {6, 1}, {7,  1} };
-
     machinesModel = {1, 2};
-
     toolsModel = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
-
     jobOperationsCount = { {1, 2}, {2, 1}, {3, 2}, {4, 2}, {5, 1}, {6, 1}, {7, 1} };
-
+    
     requiredTools = {
         { {1, 1}, {1,2,3,4,5} },
         { {1, 2}, {1,2,3,4,5} },
@@ -64,7 +60,6 @@ void SSP::loadModelData(){
         { {6, 1}, {15,16,17,18,19,20} },
         { {7, 1}, {1,2,3,4,5} }
     };
-
     priorityOperations = {
         {1, 1},
         {1, 2},
@@ -72,7 +67,6 @@ void SSP::loadModelData(){
         {4, 2},
         {7, 1}
     };
-
     processingTimes = {
         { {1, 1}, 3 },
         { {1, 2}, 5 },
@@ -142,12 +136,11 @@ int SSP::modelo(string folderOutput) {
         // RESTRICTIONS
         // -------------------------------------------------
 
-        // int L = 0;
-        // for (auto [j, k] : operationsModel) {
-        //     L += processingTimes[{j, k}];  // Soma de todos os tempos de processamento
-        // }
-        // L += ceil((double)H * tU / 24.0);  // H: horizonte, tU: duração do turno não supervisionado
-        int L = INT_MAX;
+        int L = 0;
+        for (auto [j, k] : operationsModel) {
+            L += processingTimes[{j, k}];  // Soma de todos os tempos de processamento
+        }
+        L += ceil((double)H * tU / 24.0);  // H: horizonte, tU: duração do turno não supervisionado
 
         // (2) Cada operação pode ser seguida por no máximo uma outra operação
         for (auto [j, k] : operationsModel) {
