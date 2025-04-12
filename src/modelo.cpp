@@ -15,7 +15,7 @@ using namespace std;
 // PARAMS
 // -------------------------------------------------
 double r;   // recompensa por operação concluída
-double cp;  // custo por operação perdida (em O_P)
+double cp;  // custo por operação perdida (em priorityOperations)
 double cf;  // custo por troca supervisionada
 double cv;  // custo por ferramenta trocada
 int H;      // Horizonte de agendamento
@@ -25,16 +25,66 @@ int TC;     // Capacidade total de ferramentas
 // -------------------------------------------------
 // SETS
 // -------------------------------------------------
-vector<pair<int, int>> operationsMOCK;           // Lista de operações (j,k)
-vector<int> machinesMOCK;                        // Lista de máquinas m
-vector<int> toolsMOCK;                           // Lista de ferramentas t
+vector<pair<int, int>> operationsModel;          // Lista de operações (j,k)
+vector<int> machinesModel;                       // Lista de máquinas m
+vector<int> toolsModel;                          // Lista de ferramentas t
 map<int, int> jobOperationsCount;                // job → número de operações
 map<pair<int, int>, vector<int>> requiredTools;  // (j,k) → lista de ferramentas requeridas
-set<pair<int, int>> O_P;                         // subconjunto de operações penalizadas se não concluídas
-map<pair<int, int>, int> p;                      // (j,k) → tempo de processamento
+set<pair<int, int>> priorityOperations;          // subconjunto de operações penalizadas se não concluídas
+map<pair<int, int>, int> processingTimes;        // (j,k) → tempo de processamento
 
 void SSP::loadModelData(){
-    
+
+    r = 30;
+    cp = 30;
+    cf = 10;
+    cv = 1;
+    H = 48;
+    tU = 12;
+    TC = 8;
+
+
+    operationsModel = { {1, 1}, {1, 2}, {2, 1}, {3, 1}, {3, 2}, {4, 1}, {4, 2}, {5, 1}, {6, 1}, {7,  1} };
+
+    machinesModel = {1, 2};
+
+    toolsModel = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
+
+    jobOperationsCount = { {1, 2}, {2, 1}, {3, 2}, {4, 2}, {5, 1}, {6, 1}, {7, 1} };
+
+    requiredTools = {
+        { {1, 1}, {1,2,3,4,5} },
+        { {1, 2}, {1,2,3,4,5} },
+        { {2, 1}, {12,13,14,15,16,17,18} },
+        { {3, 1}, {4,5,6,7,8,9,10,11,12,13} },
+        { {3, 2}, {4,5,6,7,8,9,10,11,12,13} },
+        { {4, 1}, {12,13,14,15,16,17,18} },
+        { {4, 2}, {12,13,14,15,16,17,18} },
+        { {5, 1}, {5,6,7} },
+        { {6, 1}, {15,16,17,18,19,20} },
+        { {7, 1}, {1,2,3,4,5} }
+    };
+
+    priorityOperations = {
+        {1, 1},
+        {1, 2},
+        {4, 1},
+        {4, 2},
+        {7, 1}
+    };
+
+    processingTimes = {
+        { {1, 1}, 3 },
+        { {1, 2}, 5 },
+        { {2, 1}, 7 },
+        { {3, 1}, 6 },
+        { {3, 2}, 8 },
+        { {4, 1}, 4 },
+        { {4, 2}, 9 },
+        { {5, 1}, 6 },
+        { {6, 1}, 10 },
+        { {7, 1}, 5 }
+    };
 }
 
 int SSP::modelo(string folderOutput) {
@@ -64,9 +114,7 @@ int SSP::modelo(string folderOutput) {
         map<pair<int, int>, GRBVar> delta;              // δ(jk)
         map<tuple<int, int, int>, GRBVar> lambda;       // λ(t)(jk)
 
-        
-
-        for (auto [j, k] : operationsMOCK) {
+        for (auto [j, k] : operationsModel) {
             // Adiciona variáveis de tempo
             s[{j, k}] = model.addVar(0.0, GRB_INFINITY, 0.0, GRB_CONTINUOUS, "s_" + to_string(j) + "_" + to_string(k));
             e[{j, k}] = model.addVar(0.0, GRB_INFINITY, 0.0, GRB_CONTINUOUS, "e_" + to_string(j) + "_" + to_string(k));
@@ -76,14 +124,14 @@ int SSP::modelo(string folderOutput) {
 
             delta[{j, k}] = model.addVar(0.0, 1.0, 0.0, GRB_BINARY, "delta_" + to_string(j) + "_" + to_string(k));
 
-            for (int m : machinesMOCK) {
+            for (int m : machinesModel) {
                 beta[{m, j, k}] = model.addVar(0.0, 1.0, 0.0, GRB_BINARY, "beta_" + to_string(m) + "_" + to_string(j) + "_" + to_string(k));
-                for (auto [j2, k2] : operationsMOCK) {
+                for (auto [j2, k2] : operationsModel) {
                     if (j != j2 || k != k2) x[{m, j, k, j2, k2}] = model.addVar(0.0, 1.0, 0.0, GRB_BINARY, "x_" + to_string(m) + "_" + to_string(j) + "_" + to_string(k) + "_" + to_string(j2) + "_" + to_string(k2));
                 }
             }
 
-            for (int t : toolsMOCK) {
+            for (int t : toolsModel) {
                 y[{t, j, k}] = model.addVar(0.0, 1.0, 0.0, GRB_BINARY, "y_" + to_string(t) + "_" + to_string(j) + "_" + to_string(k));
                 z[{t, j, k}] = model.addVar(0.0, 1.0, 0.0, GRB_BINARY, "z_" + to_string(t) + "_" + to_string(j) + "_" + to_string(k));
                 lambda[{t, j, k}] = model.addVar(0.0, 1.0, 0.0, GRB_BINARY, "lambda_" + to_string(t) + "_" + to_string(j) + "_" + to_string(k));
@@ -95,17 +143,17 @@ int SSP::modelo(string folderOutput) {
         // -------------------------------------------------
 
         // int L = 0;
-        // for (auto [j, k] : operationsMOCK) {
-        //     L += p[{j, k}];  // Soma de todos os tempos de processamento
+        // for (auto [j, k] : operationsModel) {
+        //     L += processingTimes[{j, k}];  // Soma de todos os tempos de processamento
         // }
         // L += ceil((double)H * tU / 24.0);  // H: horizonte, tU: duração do turno não supervisionado
         int L = INT_MAX;
 
         // (2) Cada operação pode ser seguida por no máximo uma outra operação
-        for (auto [j, k] : operationsMOCK) {
+        for (auto [j, k] : operationsModel) {
             GRBLinExpr expr = 0;
-            for (int m : machinesMOCK) {
-                for (auto [j2, k2] : operationsMOCK) {
+            for (int m : machinesModel) {
+                for (auto [j2, k2] : operationsModel) {
                     if (j != j2 || k != k2) {
                         auto key = make_tuple(m, j, k, j2, k2);
                         if (x.count(key)) {
@@ -118,10 +166,10 @@ int SSP::modelo(string folderOutput) {
         }
 
         // (3) Restrição: Cada operação pode ser precedida por no máximo uma outra operação
-        for (auto [j2, k2] : operationsMOCK) {
+        for (auto [j2, k2] : operationsModel) {
             GRBLinExpr expr = 0;
-            for (int m : machinesMOCK) {
-                for (auto [j, k] : operationsMOCK) {
+            for (int m : machinesModel) {
+                for (auto [j, k] : operationsModel) {
                     if (j != j2 || k != k2) {
                         auto key = make_tuple(m, j, k, j2, k2);
                         if (x.count(key)) {
@@ -134,18 +182,18 @@ int SSP::modelo(string folderOutput) {
         }
 
         // (4) Restrição: cada operação (j,k) deve ser atribuída a exatamente uma máquina
-        for (auto [j, k] : operationsMOCK) {
+        for (auto [j, k] : operationsModel) {
             GRBLinExpr expr = 0;
-            for (int m : machinesMOCK) {
+            for (int m : machinesModel) {
                 expr += beta[{m, j, k}];
             }
             model.addConstr(expr == 1, "assign_once_" + to_string(j) + "_" + to_string(k));
         }
 
         // (5) Restrição: se (j,k) é seguido por (j',k') na máquina m, então ambos estão atribuídos à mesma máquina
-        for (int m : machinesMOCK) {
-            for (auto [j, k] : operationsMOCK) {
-                for (auto [j2, k2] : operationsMOCK) {
+        for (int m : machinesModel) {
+            for (auto [j, k] : operationsModel) {
+                for (auto [j2, k2] : operationsModel) {
                     if (j != j2 || k != k2) {
                         auto key_x = make_tuple(m, j, k, j2, k2);
                         if (x.count(key_x)) {
@@ -160,13 +208,13 @@ int SSP::modelo(string folderOutput) {
         }
 
         // (6) Restrição: sequência válida de operações atribuídas à mesma máquina
-        for (int m : machinesMOCK) {
+        for (int m : machinesModel) {
             GRBLinExpr lhs = 0;
             GRBLinExpr rhs = 0;
 
-            for (auto [j, k] : operationsMOCK) {
+            for (auto [j, k] : operationsModel) {
                 rhs += beta[{m, j, k}];
-                for (auto [j2, k2] : operationsMOCK) {
+                for (auto [j2, k2] : operationsModel) {
                     if (j != j2 || k != k2) {
                         auto key_x = make_tuple(m, j, k, j2, k2);
                         if (x.count(key_x)) {
@@ -179,15 +227,15 @@ int SSP::modelo(string folderOutput) {
             model.addConstr(lhs + 1 >= rhs, "link_beta_x_" + to_string(m));
         }
 
-        // (7) Restrição: e(jk) = s(jk) + p(jk)  para cada operação
-        for (auto [j, k] : operationsMOCK) {
-            model.addConstr(e[{j, k}] == s[{j, k}] + p[{j, k}], "end_equals_start_plus_p_" + to_string(j) + "_" + to_string(k));
+        // (7) Restrição: e(jk) = s(jk) + processingTimes(jk)  para cada operação
+        for (auto [j, k] : operationsModel) {
+            model.addConstr(e[{j, k}] == s[{j, k}] + processingTimes[{j, k}], "end_equals_start_plus_p_" + to_string(j) + "_" + to_string(k));
         }
 
         // (8) Restrição: s(jk) + L(1 - x(m)(jk,j'k')) >= e(j'k')  para garantir sequência na mesma máquina
-        for (int m : machinesMOCK) {
-            for (auto [j, k] : operationsMOCK) {
-                for (auto [j2, k2] : operationsMOCK) {
+        for (int m : machinesModel) {
+            for (auto [j, k] : operationsModel) {
+                for (auto [j2, k2] : operationsModel) {
                     if (j != j2 || k != k2) {
                         auto key_x = make_tuple(m, j, k, j2, k2);
                         if (x.count(key_x)) {
@@ -215,27 +263,27 @@ int SSP::modelo(string folderOutput) {
 
         // (10) Restrição para definir se uma operação foi concluída dentro do horizonte H
         const double eps = 1e-5;
-        for (auto [j, k] : operationsMOCK) {
+        for (auto [j, k] : operationsModel) {
             model.addConstr(alpha[{j, k}] >= (H - e[{j, k}]) / (double)L + eps, "alpha_lb_" + to_string(j) + "_" + to_string(k));
             model.addConstr(alpha[{j, k}] <= 1 - (e[{j, k}] - H) / (double)L, "alpha_ub_" + to_string(j) + "_" + to_string(k));
         }
 
         // (11) Restrição: soma das ferramentas presentes no início da operação não pode ultrapassar T_C
-        for (auto [j, k] : operationsMOCK) {
+        for (auto [j, k] : operationsModel) {
             GRBLinExpr expr = 0;
-            for (int t : toolsMOCK) {
+            for (int t : toolsModel) {
                 expr += y[{t, j, k}];
             }
             model.addConstr(expr <= TC, "tool_capacity_" + to_string(j) + "_" + to_string(k));
         }
 
         // (12) states that a tool switch occurs (i.e., 𝑧(𝑡)(𝑗𝑘) = 1) when tool 𝑡 required for operation (𝑗, 𝑘) is not present in the tool magazine during the processing of preceding operation (𝑗′, 𝑘′).
-        for (int m : machinesMOCK) {
-            for (auto [j, k] : operationsMOCK) {
-                for (auto [j2, k2] : operationsMOCK) {
+        for (int m : machinesModel) {
+            for (auto [j, k] : operationsModel) {
+                for (auto [j2, k2] : operationsModel) {
                     if (j == j2 && k == k2) continue;
 
-                    for (int t : toolsMOCK) {
+                    for (int t : toolsModel) {
                         auto key_x = make_tuple(m, j, k, j2, k2);
                         if (!x.count(key_x)) continue;
 
@@ -259,16 +307,16 @@ int SSP::modelo(string folderOutput) {
         }
 
         // (14) Restrição: z(t)(jk) <= l(jk)
-        for (auto [j, k] : operationsMOCK) {
-            for (int t : toolsMOCK) {
+        for (auto [j, k] : operationsModel) {
+            for (int t : toolsModel) {
                 model.addConstr(z[{t, j, k}] <= l[{j, k}], "tool_switch_implies_instance_" + to_string(t) + "_" + to_string(j) + "_" + to_string(k));
             }
         }
 
         // (15) Restrição: l(jk) <= soma de z(t)(jk)
-        for (auto [j, k] : operationsMOCK) {
+        for (auto [j, k] : operationsModel) {
             GRBLinExpr sum_z = 0;
-            for (int t : toolsMOCK) {
+            for (int t : toolsModel) {
                 sum_z += z[{t, j, k}];
             }
             model.addConstr(l[{j, k}] <= sum_z, "instance_implies_tool_switch_" + to_string(j) + "_" + to_string(k));
@@ -278,7 +326,7 @@ int SSP::modelo(string folderOutput) {
         map<pair<int, int>, GRBVar> h;  // hora do dia (s mod 24)
         map<pair<int, int>, GRBVar> q;  // número do dia (s div 24)
 
-        for (auto [j, k] : operationsMOCK) {
+        for (auto [j, k] : operationsModel) {
             h[{j, k}] = model.addVar(0.0, 24.0, 0.0, GRB_CONTINUOUS, "h_" + to_string(j) + "_" + to_string(k));
             q[{j, k}] = model.addVar(0.0, GRB_INFINITY, 0.0, GRB_INTEGER, "q_" + to_string(j) + "_" + to_string(k));
 
@@ -291,7 +339,7 @@ int SSP::modelo(string folderOutput) {
         }
 
         // (25)-(27) Linearização de delta(jk) = alpha(jk) * l(jk)
-        for (auto [j, k] : operationsMOCK) {
+        for (auto [j, k] : operationsModel) {
             model.addConstr(delta[{j, k}] <= alpha[{j, k}], "delta_le_alpha_" + to_string(j) + "_" + to_string(k));
 
             model.addConstr(delta[{j, k}] <= l[{j, k}], "delta_le_l_" + to_string(j) + "_" + to_string(k));
@@ -300,14 +348,14 @@ int SSP::modelo(string folderOutput) {
         }
 
         // (28) since the parallel machines are identical, there exist many alternative solutions that are similar but mirror the allocation of operations over the machines. Hence, we exclude those alternatives by adding symmetry-breaking constraints (28)
-        for (int idx = 1; idx < machinesMOCK.size(); ++idx) {
-            int m_prev = machinesMOCK[idx - 1];
-            int m_curr = machinesMOCK[idx];
+        for (int idx = 1; idx < machinesModel.size(); ++idx) {
+            int m_prev = machinesModel[idx - 1];
+            int m_curr = machinesModel[idx];
 
             GRBLinExpr sum_prev = 0;
             GRBLinExpr sum_curr = 0;
 
-            for (auto [j, k] : operationsMOCK) {
+            for (auto [j, k] : operationsModel) {
                 sum_prev += beta[{m_prev, j, k}];
                 sum_curr += beta[{m_curr, j, k}];
             }
@@ -322,23 +370,23 @@ int SSP::modelo(string folderOutput) {
         GRBLinExpr obj = 0;
 
         // + r * sum(alpha)
-        for (auto [j, k] : operationsMOCK) {
+        for (auto [j, k] : operationsModel) {
             obj += r * alpha[{j, k}];
         }
 
-        // - c(p) * sum(1 - alpha) para operações em O_P
-        for (auto [j, k] : O_P) {
+        // - c(processingTimes) * sum(1 - alpha) para operações em priorityOperations
+        for (auto [j, k] : priorityOperations) {
             obj += -cp * (1 - alpha[{j, k}]);
         }
 
         // - c(f) * sum(delta)
-        for (auto [j, k] : operationsMOCK) {
+        for (auto [j, k] : operationsModel) {
             obj += -cf * delta[{j, k}];
         }
 
         // - c(v) * sum(lambda)
-        for (auto [j, k] : operationsMOCK) {
-            for (int t : toolsMOCK) {
+        for (auto [j, k] : operationsModel) {
+            for (int t : toolsModel) {
                 obj += -cv * lambda[{t, j, k}];
             }
         }
