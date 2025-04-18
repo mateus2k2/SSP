@@ -71,6 +71,7 @@ int SSP::laodInstance(string filename) {
             }
         }
     }
+    numberOfTools = ferramentaIndex;
 
     // iterate over all iriginalJobs toolsets and create the normalized toolsets
     for (auto &thisJob : originalJobs) {

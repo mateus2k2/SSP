@@ -1,2 +1,273 @@
-$qT_{emp}$
-$N_{kmax}$
+make compilePT
+make[1]: Entering directory '/home/mateus/WSL/IC/SSP'
+clear
+[H[2J[3Jg++ -DDEBUG  -DRANDSEED ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -m64 -g -o src/out/mainCpp -I/opt/gurobi1201/linux64/include -L/opt/gurobi1201/linux64/lib -lgurobi_c++ -lgurobi120 -lm -Wno-unused-result -lpthread  -march=native -lstdc++ -lfmt
+echo "\n" 
+
+
+make[1]: Leaving directory '/home/mateus/WSL/IC/SSP'
+make runPT
+make[1]: Entering directory '/home/mateus/WSL/IC/SSP'
+./src/out/mainCpp \
+	"./input/Exemplo/Jobs.csv" \
+	"./input/Exemplo/ToolSets.csv" \
+	"./output/Modelo" \
+	--TEMP_INIT 0.1 \
+	--TEMP_FIM 5 \
+	--N_REPLICAS 11 \
+	--MCL 500 \
+	--PTL 600 \
+	--PASSO_GATILHO 10 \
+	--TEMP_DIST 3 \
+	--TYPE_UPDATE 1 \
+	--INIT_SOL_TYPE 0 \
+	--TEMP_UPDATE 3500 \
+	--PTL_TEMP_UPDATE_PROPORTION 3 \
+	--DIFERENT_TOOLSETS_MODE 0 \
+	--MODELO 1 \
+
+
+------------------------------------------------------------------------------------------------------------------------------------------
+DATA REPORT
+------------------------------------------------------------------------------------------------------------------------------------------
+
+Number of Machines: 2
+Capacity of Magazine: 8
+Planing Horizon: 2
+Unsupervised: 720
+
+Number of Tools: 21
+
+Number of Original Jobs: 10
+
+
+------------------------------------------------------------------------------------------------------------------------------------------
+JOBS DATA
+------------------------------------------------------------------------------------------------------------------------------------------
+
+Index: 0
+Job: 1
+Operation: 1
+ProcessingTime: 3
+Priority: true
+ToolSet Tools: 1 2 3 4 5
+thisJob.indexToolSet: 1
+thisJob.toolSet.indexToolSet: 1
+Normalized ToolSet Tools: 0 1 2 3 4
+isGrouped: false
+ProcessingTimes: 
+
+Index: 1
+Job: 1
+Operation: 2
+ProcessingTime: 5
+Priority: true
+ToolSet Tools: 5 6 7
+thisJob.indexToolSet: 4
+thisJob.toolSet.indexToolSet: 4
+Normalized ToolSet Tools: 4 5 6
+isGrouped: false
+ProcessingTimes: 
+
+Index: 2
+Job: 2
+Operation: 1
+ProcessingTime: 7
+Priority: false
+ToolSet Tools: 12 13 14 15 16 17 18
+thisJob.indexToolSet: 2
+thisJob.toolSet.indexToolSet: 2
+Normalized ToolSet Tools: 7 8 9 10 11 12 13
+isGrouped: false
+ProcessingTimes: 
+
+Index: 3
+Job: 3
+Operation: 1
+ProcessingTime: 6
+Priority: false
+ToolSet Tools: 4 5 8 9 10 11 12 13
+thisJob.indexToolSet: 3
+thisJob.toolSet.indexToolSet: 3
+Normalized ToolSet Tools: 3 4 14 15 16 17 7 8
+isGrouped: false
+ProcessingTimes: 
+
+Index: 4
+Job: 3
+Operation: 2
+ProcessingTime: 8
+Priority: false
+ToolSet Tools: 1 2 3 4 5
+thisJob.indexToolSet: 1
+thisJob.toolSet.indexToolSet: 1
+Normalized ToolSet Tools: 0 1 2 3 4
+isGrouped: false
+ProcessingTimes: 
+
+Index: 5
+Job: 4
+Operation: 1
+ProcessingTime: 4
+Priority: true
+ToolSet Tools: 12 13 14 15 16 17 18
+thisJob.indexToolSet: 2
+thisJob.toolSet.indexToolSet: 2
+Normalized ToolSet Tools: 7 8 9 10 11 12 13
+isGrouped: false
+ProcessingTimes: 
+
+Index: 6
+Job: 4
+Operation: 2
+ProcessingTime: 9
+Priority: true
+ToolSet Tools: 12 13 14 15 16 17 18
+thisJob.indexToolSet: 2
+thisJob.toolSet.indexToolSet: 2
+Normalized ToolSet Tools: 7 8 9 10 11 12 13
+isGrouped: false
+ProcessingTimes: 
+
+Index: 7
+Job: 5
+Operation: 1
+ProcessingTime: 6
+Priority: false
+ToolSet Tools: 5 6 7
+thisJob.indexToolSet: 4
+thisJob.toolSet.indexToolSet: 4
+Normalized ToolSet Tools: 4 5 6
+isGrouped: false
+ProcessingTimes: 
+
+Index: 8
+Job: 6
+Operation: 1
+ProcessingTime: 10
+Priority: false
+ToolSet Tools: 15 16 17 18 19 20
+thisJob.indexToolSet: 5
+thisJob.toolSet.indexToolSet: 5
+Normalized ToolSet Tools: 10 11 12 13 18 19
+isGrouped: false
+ProcessingTimes: 
+
+Index: 9
+Job: 7
+Operation: 1
+ProcessingTime: 5
+Priority: true
+ToolSet Tools: 1 2 3 4 5
+thisJob.indexToolSet: 1
+thisJob.toolSet.indexToolSet: 1
+Normalized ToolSet Tools: 0 1 2 3 4
+isGrouped: false
+ProcessingTimes: 
+
+------------------------------------------------------------------------------------------------------------------------------------------
+TOOL SET
+------------------------------------------------------------------------------------------------------------------------------------------
+
+ToolSet: 1
+Tools: 1 2 3 4 5
+
+ToolSet: 2
+Tools: 12 13 14 15 16 17 18
+
+ToolSet: 3
+Tools: 4 5 8 9 10 11 12 13
+
+ToolSet: 4
+Tools: 5 6 7
+
+ToolSet: 5
+Tools: 15 16 17 18 19 20
+
+------------------------------------------------------------------------------------------------------------------------------------------
+TOOL NORMALIZED
+------------------------------------------------------------------------------------------------------------------------------------------
+
+ToolSet: 1
+Tools: 0 1 2 3 4
+
+ToolSet: 2
+Tools: 7 8 9 10 11 12 13
+
+ToolSet: 3
+Tools: 3 4 14 15 16 17 7 8
+
+ToolSet: 4
+Tools: 4 5 6
+
+ToolSet: 5
+Tools: 10 11 12 13 18 19
+
+------------------------------------------------------------------------------------------------------------------------------------------
+TOOL JOB
+------------------------------------------------------------------------------------------------------------------------------------------
+
+Tool: 0
+Jobs: false true false true false false false true false false
+
+Tool: 1
+Jobs: false true false true false false false true false false
+
+Tool: 2
+Jobs: false true false true false false false true false false
+
+Tool: 3
+Jobs: false true false true false false false true false false
+
+Tool: 4
+Jobs: false true false true false true false true false false
+
+Tool: 5
+Jobs: false true false false false true false false false false
+
+Tool: 6
+Jobs: false true false false false true false false false false
+
+Tool: 7
+Jobs: false false true true true false false false false false
+
+Tool: 8
+Jobs: false false true true true false false false false false
+
+Tool: 9
+Jobs: false false true false true false false false false false
+
+Tool: 10
+Jobs: false false true false true false true false false false
+
+Tool: 11
+Jobs: false false true false true false true false false false
+
+Tool: 12
+Jobs: false false true false true false true false false false
+
+Tool: 13
+Jobs: false false true false true false true false false false
+
+Tool: 14
+Jobs: false false false true false false false false false false
+
+Tool: 15
+Jobs: false false false true false false false false false false
+
+Tool: 16
+Jobs: false false false true false false false false false false
+
+Tool: 17
+Jobs: false false false true false false false false false false
+
+Tool: 18
+Jobs: false false false false false false true false false false
+
+Tool: 19
+Jobs: false false false false false false true false false false
+
+Tool: 20
+Jobs: false false false false false false false false false false
+
+make[1]: Leaving directory '/home/mateus/WSL/IC/SSP'

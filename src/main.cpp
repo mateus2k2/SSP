@@ -157,6 +157,8 @@ int main(int argc, char* argv[]) {
     // ------------------------------------------------------------------------------
     
     if(modelo){ 
+        prob->printDataReport();
+        exit(0);
         prob->modelo(filenameoutput);
         return 0;
     }

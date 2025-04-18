@@ -48,10 +48,13 @@ compilePT:
 	g++ $(DEBUG_MACRO) $(GATILHO_MACRO) $(RAND_MACRO) ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -m64 -g -o src/out/mainCpp -I${GUROBI_HOME}/include -L${GUROBI_HOME}/lib -lgurobi_c++ -lgurobi120 -lm -Wno-unused-result -lpthread $(FAST_COMPILE_MACRO) -march=native -lstdc++ $(USE_FTM)
 	echo "\n" 
 
+# "./input/MyInstancesSameToolSets/n=212,p=0.75,r=0.4,t=1390,v8.csv" \
+# "./input/Processed/ToolSetInt.csv" \
+
 runPT:
 	./src/out/mainCpp \
-		"./input/MyInstancesSameToolSets/n=212,p=0.75,r=0.4,t=1390,v8.csv" \
-		"./input/Processed/ToolSetInt.csv" \
+		"./input/Exemplo/Jobs.csv" \
+		"./input/Exemplo/ToolSets.csv" \
 		"./output/Modelo" \
 		--TEMP_INIT 0.1 \
 		--TEMP_FIM 5 \

@@ -1,5 +1,5 @@
 \ LP format - for model browsing. Use MPS format to capture full model detail.
-\ Signature: 0x8984752f895304a4
+\ Signature: 0x4943c19623977a02
 Maximize
   60 alpha_1_1 - 10 delta_1_1 - lambda_1_1_1 - lambda_2_1_1 - lambda_3_1_1
    - lambda_4_1_1 - lambda_5_1_1 - lambda_6_1_1 - lambda_7_1_1
@@ -369,219 +369,399 @@ Subject To
    + x_2_6_1_7_1 - beta_2_7_1 + x_2_7_1_1_1 + x_2_7_1_1_2 + x_2_7_1_2_1
    + x_2_7_1_3_1 + x_2_7_1_3_2 + x_2_7_1_4_1 + x_2_7_1_4_2 + x_2_7_1_5_1
    + x_2_7_1_6_1 >= -1
- end_equals_start_plus_p_1_1: - s_1_1 + e_1_1 = 3
- end_equals_start_plus_p_1_2: - s_1_2 + e_1_2 = 5
- end_equals_start_plus_p_2_1: - s_2_1 + e_2_1 = 7
- end_equals_start_plus_p_3_1: - s_3_1 + e_3_1 = 6
- end_equals_start_plus_p_3_2: - s_3_2 + e_3_2 = 8
- end_equals_start_plus_p_4_1: - s_4_1 + e_4_1 = 4
- end_equals_start_plus_p_4_2: - s_4_2 + e_4_2 = 9
- end_equals_start_plus_p_5_1: - s_5_1 + e_5_1 = 6
- end_equals_start_plus_p_6_1: - s_6_1 + e_6_1 = 10
- end_equals_start_plus_p_7_1: - s_7_1 + e_7_1 = 5
- precedence_on_machine_1_1_1_1_2: s_1_1 - 87 x_1_1_1_1_2 - e_1_2 >= -87
- precedence_on_machine_1_1_1_2_1: s_1_1 - 87 x_1_1_1_2_1 - e_2_1 >= -87
- precedence_on_machine_1_1_1_3_1: s_1_1 - 87 x_1_1_1_3_1 - e_3_1 >= -87
- precedence_on_machine_1_1_1_3_2: s_1_1 - 87 x_1_1_1_3_2 - e_3_2 >= -87
- precedence_on_machine_1_1_1_4_1: s_1_1 - 87 x_1_1_1_4_1 - e_4_1 >= -87
- precedence_on_machine_1_1_1_4_2: s_1_1 - 87 x_1_1_1_4_2 - e_4_2 >= -87
- precedence_on_machine_1_1_1_5_1: s_1_1 - 87 x_1_1_1_5_1 - e_5_1 >= -87
- precedence_on_machine_1_1_1_6_1: s_1_1 - 87 x_1_1_1_6_1 - e_6_1 >= -87
- precedence_on_machine_1_1_1_7_1: s_1_1 - 87 x_1_1_1_7_1 - e_7_1 >= -87
- precedence_on_machine_1_1_2_1_1: - e_1_1 + s_1_2 - 87 x_1_1_2_1_1 >= -87
- precedence_on_machine_1_1_2_2_1: s_1_2 - 87 x_1_1_2_2_1 - e_2_1 >= -87
- precedence_on_machine_1_1_2_3_1: s_1_2 - 87 x_1_1_2_3_1 - e_3_1 >= -87
- precedence_on_machine_1_1_2_3_2: s_1_2 - 87 x_1_1_2_3_2 - e_3_2 >= -87
- precedence_on_machine_1_1_2_4_1: s_1_2 - 87 x_1_1_2_4_1 - e_4_1 >= -87
- precedence_on_machine_1_1_2_4_2: s_1_2 - 87 x_1_1_2_4_2 - e_4_2 >= -87
- precedence_on_machine_1_1_2_5_1: s_1_2 - 87 x_1_1_2_5_1 - e_5_1 >= -87
- precedence_on_machine_1_1_2_6_1: s_1_2 - 87 x_1_1_2_6_1 - e_6_1 >= -87
- precedence_on_machine_1_1_2_7_1: s_1_2 - 87 x_1_1_2_7_1 - e_7_1 >= -87
- precedence_on_machine_1_2_1_1_1: - e_1_1 + s_2_1 - 87 x_1_2_1_1_1 >= -87
- precedence_on_machine_1_2_1_1_2: - e_1_2 + s_2_1 - 87 x_1_2_1_1_2 >= -87
- precedence_on_machine_1_2_1_3_1: s_2_1 - 87 x_1_2_1_3_1 - e_3_1 >= -87
- precedence_on_machine_1_2_1_3_2: s_2_1 - 87 x_1_2_1_3_2 - e_3_2 >= -87
- precedence_on_machine_1_2_1_4_1: s_2_1 - 87 x_1_2_1_4_1 - e_4_1 >= -87
- precedence_on_machine_1_2_1_4_2: s_2_1 - 87 x_1_2_1_4_2 - e_4_2 >= -87
- precedence_on_machine_1_2_1_5_1: s_2_1 - 87 x_1_2_1_5_1 - e_5_1 >= -87
- precedence_on_machine_1_2_1_6_1: s_2_1 - 87 x_1_2_1_6_1 - e_6_1 >= -87
- precedence_on_machine_1_2_1_7_1: s_2_1 - 87 x_1_2_1_7_1 - e_7_1 >= -87
- precedence_on_machine_1_3_1_1_1: - e_1_1 + s_3_1 - 87 x_1_3_1_1_1 >= -87
- precedence_on_machine_1_3_1_1_2: - e_1_2 + s_3_1 - 87 x_1_3_1_1_2 >= -87
- precedence_on_machine_1_3_1_2_1: - e_2_1 + s_3_1 - 87 x_1_3_1_2_1 >= -87
- precedence_on_machine_1_3_1_3_2: s_3_1 - 87 x_1_3_1_3_2 - e_3_2 >= -87
- precedence_on_machine_1_3_1_4_1: s_3_1 - 87 x_1_3_1_4_1 - e_4_1 >= -87
- precedence_on_machine_1_3_1_4_2: s_3_1 - 87 x_1_3_1_4_2 - e_4_2 >= -87
- precedence_on_machine_1_3_1_5_1: s_3_1 - 87 x_1_3_1_5_1 - e_5_1 >= -87
- precedence_on_machine_1_3_1_6_1: s_3_1 - 87 x_1_3_1_6_1 - e_6_1 >= -87
- precedence_on_machine_1_3_1_7_1: s_3_1 - 87 x_1_3_1_7_1 - e_7_1 >= -87
- precedence_on_machine_1_3_2_1_1: - e_1_1 + s_3_2 - 87 x_1_3_2_1_1 >= -87
- precedence_on_machine_1_3_2_1_2: - e_1_2 + s_3_2 - 87 x_1_3_2_1_2 >= -87
- precedence_on_machine_1_3_2_2_1: - e_2_1 + s_3_2 - 87 x_1_3_2_2_1 >= -87
- precedence_on_machine_1_3_2_3_1: - e_3_1 + s_3_2 - 87 x_1_3_2_3_1 >= -87
- precedence_on_machine_1_3_2_4_1: s_3_2 - 87 x_1_3_2_4_1 - e_4_1 >= -87
- precedence_on_machine_1_3_2_4_2: s_3_2 - 87 x_1_3_2_4_2 - e_4_2 >= -87
- precedence_on_machine_1_3_2_5_1: s_3_2 - 87 x_1_3_2_5_1 - e_5_1 >= -87
- precedence_on_machine_1_3_2_6_1: s_3_2 - 87 x_1_3_2_6_1 - e_6_1 >= -87
- precedence_on_machine_1_3_2_7_1: s_3_2 - 87 x_1_3_2_7_1 - e_7_1 >= -87
- precedence_on_machine_1_4_1_1_1: - e_1_1 + s_4_1 - 87 x_1_4_1_1_1 >= -87
- precedence_on_machine_1_4_1_1_2: - e_1_2 + s_4_1 - 87 x_1_4_1_1_2 >= -87
- precedence_on_machine_1_4_1_2_1: - e_2_1 + s_4_1 - 87 x_1_4_1_2_1 >= -87
- precedence_on_machine_1_4_1_3_1: - e_3_1 + s_4_1 - 87 x_1_4_1_3_1 >= -87
- precedence_on_machine_1_4_1_3_2: - e_3_2 + s_4_1 - 87 x_1_4_1_3_2 >= -87
- precedence_on_machine_1_4_1_4_2: s_4_1 - 87 x_1_4_1_4_2 - e_4_2 >= -87
- precedence_on_machine_1_4_1_5_1: s_4_1 - 87 x_1_4_1_5_1 - e_5_1 >= -87
- precedence_on_machine_1_4_1_6_1: s_4_1 - 87 x_1_4_1_6_1 - e_6_1 >= -87
- precedence_on_machine_1_4_1_7_1: s_4_1 - 87 x_1_4_1_7_1 - e_7_1 >= -87
- precedence_on_machine_1_4_2_1_1: - e_1_1 + s_4_2 - 87 x_1_4_2_1_1 >= -87
- precedence_on_machine_1_4_2_1_2: - e_1_2 + s_4_2 - 87 x_1_4_2_1_2 >= -87
- precedence_on_machine_1_4_2_2_1: - e_2_1 + s_4_2 - 87 x_1_4_2_2_1 >= -87
- precedence_on_machine_1_4_2_3_1: - e_3_1 + s_4_2 - 87 x_1_4_2_3_1 >= -87
- precedence_on_machine_1_4_2_3_2: - e_3_2 + s_4_2 - 87 x_1_4_2_3_2 >= -87
- precedence_on_machine_1_4_2_4_1: - e_4_1 + s_4_2 - 87 x_1_4_2_4_1 >= -87
- precedence_on_machine_1_4_2_5_1: s_4_2 - 87 x_1_4_2_5_1 - e_5_1 >= -87
- precedence_on_machine_1_4_2_6_1: s_4_2 - 87 x_1_4_2_6_1 - e_6_1 >= -87
- precedence_on_machine_1_4_2_7_1: s_4_2 - 87 x_1_4_2_7_1 - e_7_1 >= -87
- precedence_on_machine_1_5_1_1_1: - e_1_1 + s_5_1 - 87 x_1_5_1_1_1 >= -87
- precedence_on_machine_1_5_1_1_2: - e_1_2 + s_5_1 - 87 x_1_5_1_1_2 >= -87
- precedence_on_machine_1_5_1_2_1: - e_2_1 + s_5_1 - 87 x_1_5_1_2_1 >= -87
- precedence_on_machine_1_5_1_3_1: - e_3_1 + s_5_1 - 87 x_1_5_1_3_1 >= -87
- precedence_on_machine_1_5_1_3_2: - e_3_2 + s_5_1 - 87 x_1_5_1_3_2 >= -87
- precedence_on_machine_1_5_1_4_1: - e_4_1 + s_5_1 - 87 x_1_5_1_4_1 >= -87
- precedence_on_machine_1_5_1_4_2: - e_4_2 + s_5_1 - 87 x_1_5_1_4_2 >= -87
- precedence_on_machine_1_5_1_6_1: s_5_1 - 87 x_1_5_1_6_1 - e_6_1 >= -87
- precedence_on_machine_1_5_1_7_1: s_5_1 - 87 x_1_5_1_7_1 - e_7_1 >= -87
- precedence_on_machine_1_6_1_1_1: - e_1_1 + s_6_1 - 87 x_1_6_1_1_1 >= -87
- precedence_on_machine_1_6_1_1_2: - e_1_2 + s_6_1 - 87 x_1_6_1_1_2 >= -87
- precedence_on_machine_1_6_1_2_1: - e_2_1 + s_6_1 - 87 x_1_6_1_2_1 >= -87
- precedence_on_machine_1_6_1_3_1: - e_3_1 + s_6_1 - 87 x_1_6_1_3_1 >= -87
- precedence_on_machine_1_6_1_3_2: - e_3_2 + s_6_1 - 87 x_1_6_1_3_2 >= -87
- precedence_on_machine_1_6_1_4_1: - e_4_1 + s_6_1 - 87 x_1_6_1_4_1 >= -87
- precedence_on_machine_1_6_1_4_2: - e_4_2 + s_6_1 - 87 x_1_6_1_4_2 >= -87
- precedence_on_machine_1_6_1_5_1: - e_5_1 + s_6_1 - 87 x_1_6_1_5_1 >= -87
- precedence_on_machine_1_6_1_7_1: s_6_1 - 87 x_1_6_1_7_1 - e_7_1 >= -87
- precedence_on_machine_1_7_1_1_1: - e_1_1 + s_7_1 - 87 x_1_7_1_1_1 >= -87
- precedence_on_machine_1_7_1_1_2: - e_1_2 + s_7_1 - 87 x_1_7_1_1_2 >= -87
- precedence_on_machine_1_7_1_2_1: - e_2_1 + s_7_1 - 87 x_1_7_1_2_1 >= -87
- precedence_on_machine_1_7_1_3_1: - e_3_1 + s_7_1 - 87 x_1_7_1_3_1 >= -87
- precedence_on_machine_1_7_1_3_2: - e_3_2 + s_7_1 - 87 x_1_7_1_3_2 >= -87
- precedence_on_machine_1_7_1_4_1: - e_4_1 + s_7_1 - 87 x_1_7_1_4_1 >= -87
- precedence_on_machine_1_7_1_4_2: - e_4_2 + s_7_1 - 87 x_1_7_1_4_2 >= -87
- precedence_on_machine_1_7_1_5_1: - e_5_1 + s_7_1 - 87 x_1_7_1_5_1 >= -87
- precedence_on_machine_1_7_1_6_1: - e_6_1 + s_7_1 - 87 x_1_7_1_6_1 >= -87
- precedence_on_machine_2_1_1_1_2: s_1_1 - 87 x_2_1_1_1_2 - e_1_2 >= -87
- precedence_on_machine_2_1_1_2_1: s_1_1 - 87 x_2_1_1_2_1 - e_2_1 >= -87
- precedence_on_machine_2_1_1_3_1: s_1_1 - 87 x_2_1_1_3_1 - e_3_1 >= -87
- precedence_on_machine_2_1_1_3_2: s_1_1 - 87 x_2_1_1_3_2 - e_3_2 >= -87
- precedence_on_machine_2_1_1_4_1: s_1_1 - 87 x_2_1_1_4_1 - e_4_1 >= -87
- precedence_on_machine_2_1_1_4_2: s_1_1 - 87 x_2_1_1_4_2 - e_4_2 >= -87
- precedence_on_machine_2_1_1_5_1: s_1_1 - 87 x_2_1_1_5_1 - e_5_1 >= -87
- precedence_on_machine_2_1_1_6_1: s_1_1 - 87 x_2_1_1_6_1 - e_6_1 >= -87
- precedence_on_machine_2_1_1_7_1: s_1_1 - 87 x_2_1_1_7_1 - e_7_1 >= -87
- precedence_on_machine_2_1_2_1_1: - e_1_1 + s_1_2 - 87 x_2_1_2_1_1 >= -87
- precedence_on_machine_2_1_2_2_1: s_1_2 - 87 x_2_1_2_2_1 - e_2_1 >= -87
- precedence_on_machine_2_1_2_3_1: s_1_2 - 87 x_2_1_2_3_1 - e_3_1 >= -87
- precedence_on_machine_2_1_2_3_2: s_1_2 - 87 x_2_1_2_3_2 - e_3_2 >= -87
- precedence_on_machine_2_1_2_4_1: s_1_2 - 87 x_2_1_2_4_1 - e_4_1 >= -87
- precedence_on_machine_2_1_2_4_2: s_1_2 - 87 x_2_1_2_4_2 - e_4_2 >= -87
- precedence_on_machine_2_1_2_5_1: s_1_2 - 87 x_2_1_2_5_1 - e_5_1 >= -87
- precedence_on_machine_2_1_2_6_1: s_1_2 - 87 x_2_1_2_6_1 - e_6_1 >= -87
- precedence_on_machine_2_1_2_7_1: s_1_2 - 87 x_2_1_2_7_1 - e_7_1 >= -87
- precedence_on_machine_2_2_1_1_1: - e_1_1 + s_2_1 - 87 x_2_2_1_1_1 >= -87
- precedence_on_machine_2_2_1_1_2: - e_1_2 + s_2_1 - 87 x_2_2_1_1_2 >= -87
- precedence_on_machine_2_2_1_3_1: s_2_1 - 87 x_2_2_1_3_1 - e_3_1 >= -87
- precedence_on_machine_2_2_1_3_2: s_2_1 - 87 x_2_2_1_3_2 - e_3_2 >= -87
- precedence_on_machine_2_2_1_4_1: s_2_1 - 87 x_2_2_1_4_1 - e_4_1 >= -87
- precedence_on_machine_2_2_1_4_2: s_2_1 - 87 x_2_2_1_4_2 - e_4_2 >= -87
- precedence_on_machine_2_2_1_5_1: s_2_1 - 87 x_2_2_1_5_1 - e_5_1 >= -87
- precedence_on_machine_2_2_1_6_1: s_2_1 - 87 x_2_2_1_6_1 - e_6_1 >= -87
- precedence_on_machine_2_2_1_7_1: s_2_1 - 87 x_2_2_1_7_1 - e_7_1 >= -87
- precedence_on_machine_2_3_1_1_1: - e_1_1 + s_3_1 - 87 x_2_3_1_1_1 >= -87
- precedence_on_machine_2_3_1_1_2: - e_1_2 + s_3_1 - 87 x_2_3_1_1_2 >= -87
- precedence_on_machine_2_3_1_2_1: - e_2_1 + s_3_1 - 87 x_2_3_1_2_1 >= -87
- precedence_on_machine_2_3_1_3_2: s_3_1 - 87 x_2_3_1_3_2 - e_3_2 >= -87
- precedence_on_machine_2_3_1_4_1: s_3_1 - 87 x_2_3_1_4_1 - e_4_1 >= -87
- precedence_on_machine_2_3_1_4_2: s_3_1 - 87 x_2_3_1_4_2 - e_4_2 >= -87
- precedence_on_machine_2_3_1_5_1: s_3_1 - 87 x_2_3_1_5_1 - e_5_1 >= -87
- precedence_on_machine_2_3_1_6_1: s_3_1 - 87 x_2_3_1_6_1 - e_6_1 >= -87
- precedence_on_machine_2_3_1_7_1: s_3_1 - 87 x_2_3_1_7_1 - e_7_1 >= -87
- precedence_on_machine_2_3_2_1_1: - e_1_1 + s_3_2 - 87 x_2_3_2_1_1 >= -87
- precedence_on_machine_2_3_2_1_2: - e_1_2 + s_3_2 - 87 x_2_3_2_1_2 >= -87
- precedence_on_machine_2_3_2_2_1: - e_2_1 + s_3_2 - 87 x_2_3_2_2_1 >= -87
- precedence_on_machine_2_3_2_3_1: - e_3_1 + s_3_2 - 87 x_2_3_2_3_1 >= -87
- precedence_on_machine_2_3_2_4_1: s_3_2 - 87 x_2_3_2_4_1 - e_4_1 >= -87
- precedence_on_machine_2_3_2_4_2: s_3_2 - 87 x_2_3_2_4_2 - e_4_2 >= -87
- precedence_on_machine_2_3_2_5_1: s_3_2 - 87 x_2_3_2_5_1 - e_5_1 >= -87
- precedence_on_machine_2_3_2_6_1: s_3_2 - 87 x_2_3_2_6_1 - e_6_1 >= -87
- precedence_on_machine_2_3_2_7_1: s_3_2 - 87 x_2_3_2_7_1 - e_7_1 >= -87
- precedence_on_machine_2_4_1_1_1: - e_1_1 + s_4_1 - 87 x_2_4_1_1_1 >= -87
- precedence_on_machine_2_4_1_1_2: - e_1_2 + s_4_1 - 87 x_2_4_1_1_2 >= -87
- precedence_on_machine_2_4_1_2_1: - e_2_1 + s_4_1 - 87 x_2_4_1_2_1 >= -87
- precedence_on_machine_2_4_1_3_1: - e_3_1 + s_4_1 - 87 x_2_4_1_3_1 >= -87
- precedence_on_machine_2_4_1_3_2: - e_3_2 + s_4_1 - 87 x_2_4_1_3_2 >= -87
- precedence_on_machine_2_4_1_4_2: s_4_1 - 87 x_2_4_1_4_2 - e_4_2 >= -87
- precedence_on_machine_2_4_1_5_1: s_4_1 - 87 x_2_4_1_5_1 - e_5_1 >= -87
- precedence_on_machine_2_4_1_6_1: s_4_1 - 87 x_2_4_1_6_1 - e_6_1 >= -87
- precedence_on_machine_2_4_1_7_1: s_4_1 - 87 x_2_4_1_7_1 - e_7_1 >= -87
- precedence_on_machine_2_4_2_1_1: - e_1_1 + s_4_2 - 87 x_2_4_2_1_1 >= -87
- precedence_on_machine_2_4_2_1_2: - e_1_2 + s_4_2 - 87 x_2_4_2_1_2 >= -87
- precedence_on_machine_2_4_2_2_1: - e_2_1 + s_4_2 - 87 x_2_4_2_2_1 >= -87
- precedence_on_machine_2_4_2_3_1: - e_3_1 + s_4_2 - 87 x_2_4_2_3_1 >= -87
- precedence_on_machine_2_4_2_3_2: - e_3_2 + s_4_2 - 87 x_2_4_2_3_2 >= -87
- precedence_on_machine_2_4_2_4_1: - e_4_1 + s_4_2 - 87 x_2_4_2_4_1 >= -87
- precedence_on_machine_2_4_2_5_1: s_4_2 - 87 x_2_4_2_5_1 - e_5_1 >= -87
- precedence_on_machine_2_4_2_6_1: s_4_2 - 87 x_2_4_2_6_1 - e_6_1 >= -87
- precedence_on_machine_2_4_2_7_1: s_4_2 - 87 x_2_4_2_7_1 - e_7_1 >= -87
- precedence_on_machine_2_5_1_1_1: - e_1_1 + s_5_1 - 87 x_2_5_1_1_1 >= -87
- precedence_on_machine_2_5_1_1_2: - e_1_2 + s_5_1 - 87 x_2_5_1_1_2 >= -87
- precedence_on_machine_2_5_1_2_1: - e_2_1 + s_5_1 - 87 x_2_5_1_2_1 >= -87
- precedence_on_machine_2_5_1_3_1: - e_3_1 + s_5_1 - 87 x_2_5_1_3_1 >= -87
- precedence_on_machine_2_5_1_3_2: - e_3_2 + s_5_1 - 87 x_2_5_1_3_2 >= -87
- precedence_on_machine_2_5_1_4_1: - e_4_1 + s_5_1 - 87 x_2_5_1_4_1 >= -87
- precedence_on_machine_2_5_1_4_2: - e_4_2 + s_5_1 - 87 x_2_5_1_4_2 >= -87
- precedence_on_machine_2_5_1_6_1: s_5_1 - 87 x_2_5_1_6_1 - e_6_1 >= -87
- precedence_on_machine_2_5_1_7_1: s_5_1 - 87 x_2_5_1_7_1 - e_7_1 >= -87
- precedence_on_machine_2_6_1_1_1: - e_1_1 + s_6_1 - 87 x_2_6_1_1_1 >= -87
- precedence_on_machine_2_6_1_1_2: - e_1_2 + s_6_1 - 87 x_2_6_1_1_2 >= -87
- precedence_on_machine_2_6_1_2_1: - e_2_1 + s_6_1 - 87 x_2_6_1_2_1 >= -87
- precedence_on_machine_2_6_1_3_1: - e_3_1 + s_6_1 - 87 x_2_6_1_3_1 >= -87
- precedence_on_machine_2_6_1_3_2: - e_3_2 + s_6_1 - 87 x_2_6_1_3_2 >= -87
- precedence_on_machine_2_6_1_4_1: - e_4_1 + s_6_1 - 87 x_2_6_1_4_1 >= -87
- precedence_on_machine_2_6_1_4_2: - e_4_2 + s_6_1 - 87 x_2_6_1_4_2 >= -87
- precedence_on_machine_2_6_1_5_1: - e_5_1 + s_6_1 - 87 x_2_6_1_5_1 >= -87
- precedence_on_machine_2_6_1_7_1: s_6_1 - 87 x_2_6_1_7_1 - e_7_1 >= -87
- precedence_on_machine_2_7_1_1_1: - e_1_1 + s_7_1 - 87 x_2_7_1_1_1 >= -87
- precedence_on_machine_2_7_1_1_2: - e_1_2 + s_7_1 - 87 x_2_7_1_1_2 >= -87
- precedence_on_machine_2_7_1_2_1: - e_2_1 + s_7_1 - 87 x_2_7_1_2_1 >= -87
- precedence_on_machine_2_7_1_3_1: - e_3_1 + s_7_1 - 87 x_2_7_1_3_1 >= -87
- precedence_on_machine_2_7_1_3_2: - e_3_2 + s_7_1 - 87 x_2_7_1_3_2 >= -87
- precedence_on_machine_2_7_1_4_1: - e_4_1 + s_7_1 - 87 x_2_7_1_4_1 >= -87
- precedence_on_machine_2_7_1_4_2: - e_4_2 + s_7_1 - 87 x_2_7_1_4_2 >= -87
- precedence_on_machine_2_7_1_5_1: - e_5_1 + s_7_1 - 87 x_2_7_1_5_1 >= -87
- precedence_on_machine_2_7_1_6_1: - e_6_1 + s_7_1 - 87 x_2_7_1_6_1 >= -87
+ end_equals_start_plus_p_1_1: - s_1_1 + e_1_1 = 180
+ end_equals_start_plus_p_1_2: - s_1_2 + e_1_2 = 300
+ end_equals_start_plus_p_2_1: - s_2_1 + e_2_1 = 420
+ end_equals_start_plus_p_3_1: - s_3_1 + e_3_1 = 360
+ end_equals_start_plus_p_3_2: - s_3_2 + e_3_2 = 480
+ end_equals_start_plus_p_4_1: - s_4_1 + e_4_1 = 240
+ end_equals_start_plus_p_4_2: - s_4_2 + e_4_2 = 540
+ end_equals_start_plus_p_5_1: - s_5_1 + e_5_1 = 360
+ end_equals_start_plus_p_6_1: - s_6_1 + e_6_1 = 600
+ end_equals_start_plus_p_7_1: - s_7_1 + e_7_1 = 300
+ precedence_on_machine_1_1_1_1_2: s_1_1 - 90180 x_1_1_1_1_2 - e_1_2
+   >= -90180
+ precedence_on_machine_1_1_1_2_1: s_1_1 - 90180 x_1_1_1_2_1 - e_2_1
+   >= -90180
+ precedence_on_machine_1_1_1_3_1: s_1_1 - 90180 x_1_1_1_3_1 - e_3_1
+   >= -90180
+ precedence_on_machine_1_1_1_3_2: s_1_1 - 90180 x_1_1_1_3_2 - e_3_2
+   >= -90180
+ precedence_on_machine_1_1_1_4_1: s_1_1 - 90180 x_1_1_1_4_1 - e_4_1
+   >= -90180
+ precedence_on_machine_1_1_1_4_2: s_1_1 - 90180 x_1_1_1_4_2 - e_4_2
+   >= -90180
+ precedence_on_machine_1_1_1_5_1: s_1_1 - 90180 x_1_1_1_5_1 - e_5_1
+   >= -90180
+ precedence_on_machine_1_1_1_6_1: s_1_1 - 90180 x_1_1_1_6_1 - e_6_1
+   >= -90180
+ precedence_on_machine_1_1_1_7_1: s_1_1 - 90180 x_1_1_1_7_1 - e_7_1
+   >= -90180
+ precedence_on_machine_1_1_2_1_1: - e_1_1 + s_1_2 - 90180 x_1_1_2_1_1
+   >= -90180
+ precedence_on_machine_1_1_2_2_1: s_1_2 - 90180 x_1_1_2_2_1 - e_2_1
+   >= -90180
+ precedence_on_machine_1_1_2_3_1: s_1_2 - 90180 x_1_1_2_3_1 - e_3_1
+   >= -90180
+ precedence_on_machine_1_1_2_3_2: s_1_2 - 90180 x_1_1_2_3_2 - e_3_2
+   >= -90180
+ precedence_on_machine_1_1_2_4_1: s_1_2 - 90180 x_1_1_2_4_1 - e_4_1
+   >= -90180
+ precedence_on_machine_1_1_2_4_2: s_1_2 - 90180 x_1_1_2_4_2 - e_4_2
+   >= -90180
+ precedence_on_machine_1_1_2_5_1: s_1_2 - 90180 x_1_1_2_5_1 - e_5_1
+   >= -90180
+ precedence_on_machine_1_1_2_6_1: s_1_2 - 90180 x_1_1_2_6_1 - e_6_1
+   >= -90180
+ precedence_on_machine_1_1_2_7_1: s_1_2 - 90180 x_1_1_2_7_1 - e_7_1
+   >= -90180
+ precedence_on_machine_1_2_1_1_1: - e_1_1 + s_2_1 - 90180 x_1_2_1_1_1
+   >= -90180
+ precedence_on_machine_1_2_1_1_2: - e_1_2 + s_2_1 - 90180 x_1_2_1_1_2
+   >= -90180
+ precedence_on_machine_1_2_1_3_1: s_2_1 - 90180 x_1_2_1_3_1 - e_3_1
+   >= -90180
+ precedence_on_machine_1_2_1_3_2: s_2_1 - 90180 x_1_2_1_3_2 - e_3_2
+   >= -90180
+ precedence_on_machine_1_2_1_4_1: s_2_1 - 90180 x_1_2_1_4_1 - e_4_1
+   >= -90180
+ precedence_on_machine_1_2_1_4_2: s_2_1 - 90180 x_1_2_1_4_2 - e_4_2
+   >= -90180
+ precedence_on_machine_1_2_1_5_1: s_2_1 - 90180 x_1_2_1_5_1 - e_5_1
+   >= -90180
+ precedence_on_machine_1_2_1_6_1: s_2_1 - 90180 x_1_2_1_6_1 - e_6_1
+   >= -90180
+ precedence_on_machine_1_2_1_7_1: s_2_1 - 90180 x_1_2_1_7_1 - e_7_1
+   >= -90180
+ precedence_on_machine_1_3_1_1_1: - e_1_1 + s_3_1 - 90180 x_1_3_1_1_1
+   >= -90180
+ precedence_on_machine_1_3_1_1_2: - e_1_2 + s_3_1 - 90180 x_1_3_1_1_2
+   >= -90180
+ precedence_on_machine_1_3_1_2_1: - e_2_1 + s_3_1 - 90180 x_1_3_1_2_1
+   >= -90180
+ precedence_on_machine_1_3_1_3_2: s_3_1 - 90180 x_1_3_1_3_2 - e_3_2
+   >= -90180
+ precedence_on_machine_1_3_1_4_1: s_3_1 - 90180 x_1_3_1_4_1 - e_4_1
+   >= -90180
+ precedence_on_machine_1_3_1_4_2: s_3_1 - 90180 x_1_3_1_4_2 - e_4_2
+   >= -90180
+ precedence_on_machine_1_3_1_5_1: s_3_1 - 90180 x_1_3_1_5_1 - e_5_1
+   >= -90180
+ precedence_on_machine_1_3_1_6_1: s_3_1 - 90180 x_1_3_1_6_1 - e_6_1
+   >= -90180
+ precedence_on_machine_1_3_1_7_1: s_3_1 - 90180 x_1_3_1_7_1 - e_7_1
+   >= -90180
+ precedence_on_machine_1_3_2_1_1: - e_1_1 + s_3_2 - 90180 x_1_3_2_1_1
+   >= -90180
+ precedence_on_machine_1_3_2_1_2: - e_1_2 + s_3_2 - 90180 x_1_3_2_1_2
+   >= -90180
+ precedence_on_machine_1_3_2_2_1: - e_2_1 + s_3_2 - 90180 x_1_3_2_2_1
+   >= -90180
+ precedence_on_machine_1_3_2_3_1: - e_3_1 + s_3_2 - 90180 x_1_3_2_3_1
+   >= -90180
+ precedence_on_machine_1_3_2_4_1: s_3_2 - 90180 x_1_3_2_4_1 - e_4_1
+   >= -90180
+ precedence_on_machine_1_3_2_4_2: s_3_2 - 90180 x_1_3_2_4_2 - e_4_2
+   >= -90180
+ precedence_on_machine_1_3_2_5_1: s_3_2 - 90180 x_1_3_2_5_1 - e_5_1
+   >= -90180
+ precedence_on_machine_1_3_2_6_1: s_3_2 - 90180 x_1_3_2_6_1 - e_6_1
+   >= -90180
+ precedence_on_machine_1_3_2_7_1: s_3_2 - 90180 x_1_3_2_7_1 - e_7_1
+   >= -90180
+ precedence_on_machine_1_4_1_1_1: - e_1_1 + s_4_1 - 90180 x_1_4_1_1_1
+   >= -90180
+ precedence_on_machine_1_4_1_1_2: - e_1_2 + s_4_1 - 90180 x_1_4_1_1_2
+   >= -90180
+ precedence_on_machine_1_4_1_2_1: - e_2_1 + s_4_1 - 90180 x_1_4_1_2_1
+   >= -90180
+ precedence_on_machine_1_4_1_3_1: - e_3_1 + s_4_1 - 90180 x_1_4_1_3_1
+   >= -90180
+ precedence_on_machine_1_4_1_3_2: - e_3_2 + s_4_1 - 90180 x_1_4_1_3_2
+   >= -90180
+ precedence_on_machine_1_4_1_4_2: s_4_1 - 90180 x_1_4_1_4_2 - e_4_2
+   >= -90180
+ precedence_on_machine_1_4_1_5_1: s_4_1 - 90180 x_1_4_1_5_1 - e_5_1
+   >= -90180
+ precedence_on_machine_1_4_1_6_1: s_4_1 - 90180 x_1_4_1_6_1 - e_6_1
+   >= -90180
+ precedence_on_machine_1_4_1_7_1: s_4_1 - 90180 x_1_4_1_7_1 - e_7_1
+   >= -90180
+ precedence_on_machine_1_4_2_1_1: - e_1_1 + s_4_2 - 90180 x_1_4_2_1_1
+   >= -90180
+ precedence_on_machine_1_4_2_1_2: - e_1_2 + s_4_2 - 90180 x_1_4_2_1_2
+   >= -90180
+ precedence_on_machine_1_4_2_2_1: - e_2_1 + s_4_2 - 90180 x_1_4_2_2_1
+   >= -90180
+ precedence_on_machine_1_4_2_3_1: - e_3_1 + s_4_2 - 90180 x_1_4_2_3_1
+   >= -90180
+ precedence_on_machine_1_4_2_3_2: - e_3_2 + s_4_2 - 90180 x_1_4_2_3_2
+   >= -90180
+ precedence_on_machine_1_4_2_4_1: - e_4_1 + s_4_2 - 90180 x_1_4_2_4_1
+   >= -90180
+ precedence_on_machine_1_4_2_5_1: s_4_2 - 90180 x_1_4_2_5_1 - e_5_1
+   >= -90180
+ precedence_on_machine_1_4_2_6_1: s_4_2 - 90180 x_1_4_2_6_1 - e_6_1
+   >= -90180
+ precedence_on_machine_1_4_2_7_1: s_4_2 - 90180 x_1_4_2_7_1 - e_7_1
+   >= -90180
+ precedence_on_machine_1_5_1_1_1: - e_1_1 + s_5_1 - 90180 x_1_5_1_1_1
+   >= -90180
+ precedence_on_machine_1_5_1_1_2: - e_1_2 + s_5_1 - 90180 x_1_5_1_1_2
+   >= -90180
+ precedence_on_machine_1_5_1_2_1: - e_2_1 + s_5_1 - 90180 x_1_5_1_2_1
+   >= -90180
+ precedence_on_machine_1_5_1_3_1: - e_3_1 + s_5_1 - 90180 x_1_5_1_3_1
+   >= -90180
+ precedence_on_machine_1_5_1_3_2: - e_3_2 + s_5_1 - 90180 x_1_5_1_3_2
+   >= -90180
+ precedence_on_machine_1_5_1_4_1: - e_4_1 + s_5_1 - 90180 x_1_5_1_4_1
+   >= -90180
+ precedence_on_machine_1_5_1_4_2: - e_4_2 + s_5_1 - 90180 x_1_5_1_4_2
+   >= -90180
+ precedence_on_machine_1_5_1_6_1: s_5_1 - 90180 x_1_5_1_6_1 - e_6_1
+   >= -90180
+ precedence_on_machine_1_5_1_7_1: s_5_1 - 90180 x_1_5_1_7_1 - e_7_1
+   >= -90180
+ precedence_on_machine_1_6_1_1_1: - e_1_1 + s_6_1 - 90180 x_1_6_1_1_1
+   >= -90180
+ precedence_on_machine_1_6_1_1_2: - e_1_2 + s_6_1 - 90180 x_1_6_1_1_2
+   >= -90180
+ precedence_on_machine_1_6_1_2_1: - e_2_1 + s_6_1 - 90180 x_1_6_1_2_1
+   >= -90180
+ precedence_on_machine_1_6_1_3_1: - e_3_1 + s_6_1 - 90180 x_1_6_1_3_1
+   >= -90180
+ precedence_on_machine_1_6_1_3_2: - e_3_2 + s_6_1 - 90180 x_1_6_1_3_2
+   >= -90180
+ precedence_on_machine_1_6_1_4_1: - e_4_1 + s_6_1 - 90180 x_1_6_1_4_1
+   >= -90180
+ precedence_on_machine_1_6_1_4_2: - e_4_2 + s_6_1 - 90180 x_1_6_1_4_2
+   >= -90180
+ precedence_on_machine_1_6_1_5_1: - e_5_1 + s_6_1 - 90180 x_1_6_1_5_1
+   >= -90180
+ precedence_on_machine_1_6_1_7_1: s_6_1 - 90180 x_1_6_1_7_1 - e_7_1
+   >= -90180
+ precedence_on_machine_1_7_1_1_1: - e_1_1 + s_7_1 - 90180 x_1_7_1_1_1
+   >= -90180
+ precedence_on_machine_1_7_1_1_2: - e_1_2 + s_7_1 - 90180 x_1_7_1_1_2
+   >= -90180
+ precedence_on_machine_1_7_1_2_1: - e_2_1 + s_7_1 - 90180 x_1_7_1_2_1
+   >= -90180
+ precedence_on_machine_1_7_1_3_1: - e_3_1 + s_7_1 - 90180 x_1_7_1_3_1
+   >= -90180
+ precedence_on_machine_1_7_1_3_2: - e_3_2 + s_7_1 - 90180 x_1_7_1_3_2
+   >= -90180
+ precedence_on_machine_1_7_1_4_1: - e_4_1 + s_7_1 - 90180 x_1_7_1_4_1
+   >= -90180
+ precedence_on_machine_1_7_1_4_2: - e_4_2 + s_7_1 - 90180 x_1_7_1_4_2
+   >= -90180
+ precedence_on_machine_1_7_1_5_1: - e_5_1 + s_7_1 - 90180 x_1_7_1_5_1
+   >= -90180
+ precedence_on_machine_1_7_1_6_1: - e_6_1 + s_7_1 - 90180 x_1_7_1_6_1
+   >= -90180
+ precedence_on_machine_2_1_1_1_2: s_1_1 - 90180 x_2_1_1_1_2 - e_1_2
+   >= -90180
+ precedence_on_machine_2_1_1_2_1: s_1_1 - 90180 x_2_1_1_2_1 - e_2_1
+   >= -90180
+ precedence_on_machine_2_1_1_3_1: s_1_1 - 90180 x_2_1_1_3_1 - e_3_1
+   >= -90180
+ precedence_on_machine_2_1_1_3_2: s_1_1 - 90180 x_2_1_1_3_2 - e_3_2
+   >= -90180
+ precedence_on_machine_2_1_1_4_1: s_1_1 - 90180 x_2_1_1_4_1 - e_4_1
+   >= -90180
+ precedence_on_machine_2_1_1_4_2: s_1_1 - 90180 x_2_1_1_4_2 - e_4_2
+   >= -90180
+ precedence_on_machine_2_1_1_5_1: s_1_1 - 90180 x_2_1_1_5_1 - e_5_1
+   >= -90180
+ precedence_on_machine_2_1_1_6_1: s_1_1 - 90180 x_2_1_1_6_1 - e_6_1
+   >= -90180
+ precedence_on_machine_2_1_1_7_1: s_1_1 - 90180 x_2_1_1_7_1 - e_7_1
+   >= -90180
+ precedence_on_machine_2_1_2_1_1: - e_1_1 + s_1_2 - 90180 x_2_1_2_1_1
+   >= -90180
+ precedence_on_machine_2_1_2_2_1: s_1_2 - 90180 x_2_1_2_2_1 - e_2_1
+   >= -90180
+ precedence_on_machine_2_1_2_3_1: s_1_2 - 90180 x_2_1_2_3_1 - e_3_1
+   >= -90180
+ precedence_on_machine_2_1_2_3_2: s_1_2 - 90180 x_2_1_2_3_2 - e_3_2
+   >= -90180
+ precedence_on_machine_2_1_2_4_1: s_1_2 - 90180 x_2_1_2_4_1 - e_4_1
+   >= -90180
+ precedence_on_machine_2_1_2_4_2: s_1_2 - 90180 x_2_1_2_4_2 - e_4_2
+   >= -90180
+ precedence_on_machine_2_1_2_5_1: s_1_2 - 90180 x_2_1_2_5_1 - e_5_1
+   >= -90180
+ precedence_on_machine_2_1_2_6_1: s_1_2 - 90180 x_2_1_2_6_1 - e_6_1
+   >= -90180
+ precedence_on_machine_2_1_2_7_1: s_1_2 - 90180 x_2_1_2_7_1 - e_7_1
+   >= -90180
+ precedence_on_machine_2_2_1_1_1: - e_1_1 + s_2_1 - 90180 x_2_2_1_1_1
+   >= -90180
+ precedence_on_machine_2_2_1_1_2: - e_1_2 + s_2_1 - 90180 x_2_2_1_1_2
+   >= -90180
+ precedence_on_machine_2_2_1_3_1: s_2_1 - 90180 x_2_2_1_3_1 - e_3_1
+   >= -90180
+ precedence_on_machine_2_2_1_3_2: s_2_1 - 90180 x_2_2_1_3_2 - e_3_2
+   >= -90180
+ precedence_on_machine_2_2_1_4_1: s_2_1 - 90180 x_2_2_1_4_1 - e_4_1
+   >= -90180
+ precedence_on_machine_2_2_1_4_2: s_2_1 - 90180 x_2_2_1_4_2 - e_4_2
+   >= -90180
+ precedence_on_machine_2_2_1_5_1: s_2_1 - 90180 x_2_2_1_5_1 - e_5_1
+   >= -90180
+ precedence_on_machine_2_2_1_6_1: s_2_1 - 90180 x_2_2_1_6_1 - e_6_1
+   >= -90180
+ precedence_on_machine_2_2_1_7_1: s_2_1 - 90180 x_2_2_1_7_1 - e_7_1
+   >= -90180
+ precedence_on_machine_2_3_1_1_1: - e_1_1 + s_3_1 - 90180 x_2_3_1_1_1
+   >= -90180
+ precedence_on_machine_2_3_1_1_2: - e_1_2 + s_3_1 - 90180 x_2_3_1_1_2
+   >= -90180
+ precedence_on_machine_2_3_1_2_1: - e_2_1 + s_3_1 - 90180 x_2_3_1_2_1
+   >= -90180
+ precedence_on_machine_2_3_1_3_2: s_3_1 - 90180 x_2_3_1_3_2 - e_3_2
+   >= -90180
+ precedence_on_machine_2_3_1_4_1: s_3_1 - 90180 x_2_3_1_4_1 - e_4_1
+   >= -90180
+ precedence_on_machine_2_3_1_4_2: s_3_1 - 90180 x_2_3_1_4_2 - e_4_2
+   >= -90180
+ precedence_on_machine_2_3_1_5_1: s_3_1 - 90180 x_2_3_1_5_1 - e_5_1
+   >= -90180
+ precedence_on_machine_2_3_1_6_1: s_3_1 - 90180 x_2_3_1_6_1 - e_6_1
+   >= -90180
+ precedence_on_machine_2_3_1_7_1: s_3_1 - 90180 x_2_3_1_7_1 - e_7_1
+   >= -90180
+ precedence_on_machine_2_3_2_1_1: - e_1_1 + s_3_2 - 90180 x_2_3_2_1_1
+   >= -90180
+ precedence_on_machine_2_3_2_1_2: - e_1_2 + s_3_2 - 90180 x_2_3_2_1_2
+   >= -90180
+ precedence_on_machine_2_3_2_2_1: - e_2_1 + s_3_2 - 90180 x_2_3_2_2_1
+   >= -90180
+ precedence_on_machine_2_3_2_3_1: - e_3_1 + s_3_2 - 90180 x_2_3_2_3_1
+   >= -90180
+ precedence_on_machine_2_3_2_4_1: s_3_2 - 90180 x_2_3_2_4_1 - e_4_1
+   >= -90180
+ precedence_on_machine_2_3_2_4_2: s_3_2 - 90180 x_2_3_2_4_2 - e_4_2
+   >= -90180
+ precedence_on_machine_2_3_2_5_1: s_3_2 - 90180 x_2_3_2_5_1 - e_5_1
+   >= -90180
+ precedence_on_machine_2_3_2_6_1: s_3_2 - 90180 x_2_3_2_6_1 - e_6_1
+   >= -90180
+ precedence_on_machine_2_3_2_7_1: s_3_2 - 90180 x_2_3_2_7_1 - e_7_1
+   >= -90180
+ precedence_on_machine_2_4_1_1_1: - e_1_1 + s_4_1 - 90180 x_2_4_1_1_1
+   >= -90180
+ precedence_on_machine_2_4_1_1_2: - e_1_2 + s_4_1 - 90180 x_2_4_1_1_2
+   >= -90180
+ precedence_on_machine_2_4_1_2_1: - e_2_1 + s_4_1 - 90180 x_2_4_1_2_1
+   >= -90180
+ precedence_on_machine_2_4_1_3_1: - e_3_1 + s_4_1 - 90180 x_2_4_1_3_1
+   >= -90180
+ precedence_on_machine_2_4_1_3_2: - e_3_2 + s_4_1 - 90180 x_2_4_1_3_2
+   >= -90180
+ precedence_on_machine_2_4_1_4_2: s_4_1 - 90180 x_2_4_1_4_2 - e_4_2
+   >= -90180
+ precedence_on_machine_2_4_1_5_1: s_4_1 - 90180 x_2_4_1_5_1 - e_5_1
+   >= -90180
+ precedence_on_machine_2_4_1_6_1: s_4_1 - 90180 x_2_4_1_6_1 - e_6_1
+   >= -90180
+ precedence_on_machine_2_4_1_7_1: s_4_1 - 90180 x_2_4_1_7_1 - e_7_1
+   >= -90180
+ precedence_on_machine_2_4_2_1_1: - e_1_1 + s_4_2 - 90180 x_2_4_2_1_1
+   >= -90180
+ precedence_on_machine_2_4_2_1_2: - e_1_2 + s_4_2 - 90180 x_2_4_2_1_2
+   >= -90180
+ precedence_on_machine_2_4_2_2_1: - e_2_1 + s_4_2 - 90180 x_2_4_2_2_1
+   >= -90180
+ precedence_on_machine_2_4_2_3_1: - e_3_1 + s_4_2 - 90180 x_2_4_2_3_1
+   >= -90180
+ precedence_on_machine_2_4_2_3_2: - e_3_2 + s_4_2 - 90180 x_2_4_2_3_2
+   >= -90180
+ precedence_on_machine_2_4_2_4_1: - e_4_1 + s_4_2 - 90180 x_2_4_2_4_1
+   >= -90180
+ precedence_on_machine_2_4_2_5_1: s_4_2 - 90180 x_2_4_2_5_1 - e_5_1
+   >= -90180
+ precedence_on_machine_2_4_2_6_1: s_4_2 - 90180 x_2_4_2_6_1 - e_6_1
+   >= -90180
+ precedence_on_machine_2_4_2_7_1: s_4_2 - 90180 x_2_4_2_7_1 - e_7_1
+   >= -90180
+ precedence_on_machine_2_5_1_1_1: - e_1_1 + s_5_1 - 90180 x_2_5_1_1_1
+   >= -90180
+ precedence_on_machine_2_5_1_1_2: - e_1_2 + s_5_1 - 90180 x_2_5_1_1_2
+   >= -90180
+ precedence_on_machine_2_5_1_2_1: - e_2_1 + s_5_1 - 90180 x_2_5_1_2_1
+   >= -90180
+ precedence_on_machine_2_5_1_3_1: - e_3_1 + s_5_1 - 90180 x_2_5_1_3_1
+   >= -90180
+ precedence_on_machine_2_5_1_3_2: - e_3_2 + s_5_1 - 90180 x_2_5_1_3_2
+   >= -90180
+ precedence_on_machine_2_5_1_4_1: - e_4_1 + s_5_1 - 90180 x_2_5_1_4_1
+   >= -90180
+ precedence_on_machine_2_5_1_4_2: - e_4_2 + s_5_1 - 90180 x_2_5_1_4_2
+   >= -90180
+ precedence_on_machine_2_5_1_6_1: s_5_1 - 90180 x_2_5_1_6_1 - e_6_1
+   >= -90180
+ precedence_on_machine_2_5_1_7_1: s_5_1 - 90180 x_2_5_1_7_1 - e_7_1
+   >= -90180
+ precedence_on_machine_2_6_1_1_1: - e_1_1 + s_6_1 - 90180 x_2_6_1_1_1
+   >= -90180
+ precedence_on_machine_2_6_1_1_2: - e_1_2 + s_6_1 - 90180 x_2_6_1_1_2
+   >= -90180
+ precedence_on_machine_2_6_1_2_1: - e_2_1 + s_6_1 - 90180 x_2_6_1_2_1
+   >= -90180
+ precedence_on_machine_2_6_1_3_1: - e_3_1 + s_6_1 - 90180 x_2_6_1_3_1
+   >= -90180
+ precedence_on_machine_2_6_1_3_2: - e_3_2 + s_6_1 - 90180 x_2_6_1_3_2
+   >= -90180
+ precedence_on_machine_2_6_1_4_1: - e_4_1 + s_6_1 - 90180 x_2_6_1_4_1
+   >= -90180
+ precedence_on_machine_2_6_1_4_2: - e_4_2 + s_6_1 - 90180 x_2_6_1_4_2
+   >= -90180
+ precedence_on_machine_2_6_1_5_1: - e_5_1 + s_6_1 - 90180 x_2_6_1_5_1
+   >= -90180
+ precedence_on_machine_2_6_1_7_1: s_6_1 - 90180 x_2_6_1_7_1 - e_7_1
+   >= -90180
+ precedence_on_machine_2_7_1_1_1: - e_1_1 + s_7_1 - 90180 x_2_7_1_1_1
+   >= -90180
+ precedence_on_machine_2_7_1_1_2: - e_1_2 + s_7_1 - 90180 x_2_7_1_1_2
+   >= -90180
+ precedence_on_machine_2_7_1_2_1: - e_2_1 + s_7_1 - 90180 x_2_7_1_2_1
+   >= -90180
+ precedence_on_machine_2_7_1_3_1: - e_3_1 + s_7_1 - 90180 x_2_7_1_3_1
+   >= -90180
+ precedence_on_machine_2_7_1_3_2: - e_3_2 + s_7_1 - 90180 x_2_7_1_3_2
+   >= -90180
+ precedence_on_machine_2_7_1_4_1: - e_4_1 + s_7_1 - 90180 x_2_7_1_4_1
+   >= -90180
+ precedence_on_machine_2_7_1_4_2: - e_4_2 + s_7_1 - 90180 x_2_7_1_4_2
+   >= -90180
+ precedence_on_machine_2_7_1_5_1: - e_5_1 + s_7_1 - 90180 x_2_7_1_5_1
+   >= -90180
+ precedence_on_machine_2_7_1_6_1: - e_6_1 + s_7_1 - 90180 x_2_7_1_6_1
+   >= -90180
  precedence_job_1_op_1: e_1_1 - s_1_2 <= 0
  precedence_job_3_op_1: e_3_1 - s_3_2 <= 0
  precedence_job_4_op_1: e_4_1 - s_4_2 <= 0
- alpha_lb_1_1: 0.0114942528735632 e_1_1 + alpha_1_1 >= 0.5517341379310344
- alpha_ub_1_1: 0.0114942528735632 e_1_1 + alpha_1_1 <= 1.551724137931034
- alpha_lb_1_2: 0.0114942528735632 e_1_2 + alpha_1_2 >= 0.5517341379310344
- alpha_ub_1_2: 0.0114942528735632 e_1_2 + alpha_1_2 <= 1.551724137931034
- alpha_lb_2_1: 0.0114942528735632 e_2_1 + alpha_2_1 >= 0.5517341379310344
- alpha_ub_2_1: 0.0114942528735632 e_2_1 + alpha_2_1 <= 1.551724137931034
- alpha_lb_3_1: 0.0114942528735632 e_3_1 + alpha_3_1 >= 0.5517341379310344
- alpha_ub_3_1: 0.0114942528735632 e_3_1 + alpha_3_1 <= 1.551724137931034
- alpha_lb_3_2: 0.0114942528735632 e_3_2 + alpha_3_2 >= 0.5517341379310344
- alpha_ub_3_2: 0.0114942528735632 e_3_2 + alpha_3_2 <= 1.551724137931034
- alpha_lb_4_1: 0.0114942528735632 e_4_1 + alpha_4_1 >= 0.5517341379310344
- alpha_ub_4_1: 0.0114942528735632 e_4_1 + alpha_4_1 <= 1.551724137931034
- alpha_lb_4_2: 0.0114942528735632 e_4_2 + alpha_4_2 >= 0.5517341379310344
- alpha_ub_4_2: 0.0114942528735632 e_4_2 + alpha_4_2 <= 1.551724137931034
- alpha_lb_5_1: 0.0114942528735632 e_5_1 + alpha_5_1 >= 0.5517341379310344
- alpha_ub_5_1: 0.0114942528735632 e_5_1 + alpha_5_1 <= 1.551724137931034
- alpha_lb_6_1: 0.0114942528735632 e_6_1 + alpha_6_1 >= 0.5517341379310344
- alpha_ub_6_1: 0.0114942528735632 e_6_1 + alpha_6_1 <= 1.551724137931034
- alpha_lb_7_1: 0.0114942528735632 e_7_1 + alpha_7_1 >= 0.5517341379310344
- alpha_ub_7_1: 0.0114942528735632 e_7_1 + alpha_7_1 <= 1.551724137931034
+ alpha_lb_1_1: 1.10889e-05 e_1_1 + alpha_1_1 >= 0.031946127744511
+ alpha_ub_1_1: 1.10889e-05 e_1_1 + alpha_1_1 <= 1.031936127744511
+ alpha_lb_1_2: 1.10889e-05 e_1_2 + alpha_1_2 >= 0.031946127744511
+ alpha_ub_1_2: 1.10889e-05 e_1_2 + alpha_1_2 <= 1.031936127744511
+ alpha_lb_2_1: 1.10889e-05 e_2_1 + alpha_2_1 >= 0.031946127744511
+ alpha_ub_2_1: 1.10889e-05 e_2_1 + alpha_2_1 <= 1.031936127744511
+ alpha_lb_3_1: 1.10889e-05 e_3_1 + alpha_3_1 >= 0.031946127744511
+ alpha_ub_3_1: 1.10889e-05 e_3_1 + alpha_3_1 <= 1.031936127744511
+ alpha_lb_3_2: 1.10889e-05 e_3_2 + alpha_3_2 >= 0.031946127744511
+ alpha_ub_3_2: 1.10889e-05 e_3_2 + alpha_3_2 <= 1.031936127744511
+ alpha_lb_4_1: 1.10889e-05 e_4_1 + alpha_4_1 >= 0.031946127744511
+ alpha_ub_4_1: 1.10889e-05 e_4_1 + alpha_4_1 <= 1.031936127744511
+ alpha_lb_4_2: 1.10889e-05 e_4_2 + alpha_4_2 >= 0.031946127744511
+ alpha_ub_4_2: 1.10889e-05 e_4_2 + alpha_4_2 <= 1.031936127744511
+ alpha_lb_5_1: 1.10889e-05 e_5_1 + alpha_5_1 >= 0.031946127744511
+ alpha_ub_5_1: 1.10889e-05 e_5_1 + alpha_5_1 <= 1.031936127744511
+ alpha_lb_6_1: 1.10889e-05 e_6_1 + alpha_6_1 >= 0.031946127744511
+ alpha_ub_6_1: 1.10889e-05 e_6_1 + alpha_6_1 <= 1.031936127744511
+ alpha_lb_7_1: 1.10889e-05 e_7_1 + alpha_7_1 >= 0.031946127744511
+ alpha_ub_7_1: 1.10889e-05 e_7_1 + alpha_7_1 <= 1.031936127744511
  tool_capacity_1_1: y_1_1_1 + y_2_1_1 + y_3_1_1 + y_4_1_1 + y_5_1_1
    + y_6_1_1 + y_7_1_1 + y_8_1_1 + y_9_1_1 + y_10_1_1 + y_11_1_1 + y_12_1_1
    + y_13_1_1 + y_14_1_1 + y_15_1_1 + y_16_1_1 + y_17_1_1 + y_18_1_1
@@ -7031,8 +7211,6 @@ Subject To
  required_tool_18_2_1: y_18_2_1 = 1
  required_tool_4_3_1: y_4_3_1 = 1
  required_tool_5_3_1: y_5_3_1 = 1
- required_tool_6_3_1: y_6_3_1 = 1
- required_tool_7_3_1: y_7_3_1 = 1
  required_tool_8_3_1: y_8_3_1 = 1
  required_tool_9_3_1: y_9_3_1 = 1
  required_tool_10_3_1: y_10_3_1 = 1
@@ -7041,8 +7219,6 @@ Subject To
  required_tool_13_3_1: y_13_3_1 = 1
  required_tool_4_3_2: y_4_3_2 = 1
  required_tool_5_3_2: y_5_3_2 = 1
- required_tool_6_3_2: y_6_3_2 = 1
- required_tool_7_3_2: y_7_3_2 = 1
  required_tool_8_3_2: y_8_3_2 = 1
  required_tool_9_3_2: y_9_3_2 = 1
  required_tool_10_3_2: y_10_3_2 = 1
@@ -7318,25 +7494,25 @@ Subject To
    - z_11_7_1 - z_12_7_1 - z_13_7_1 - z_14_7_1 - z_15_7_1 - z_16_7_1
    - z_17_7_1 - z_18_7_1 - z_19_7_1 - z_20_7_1 <= 0
  mod_reconstruction_1_1: s_1_1 - h_1_1 - 24 q_1_1 = 0
- supervised_tool_switch_1_1: l_1_1 + 0.0833333333333333 h_1_1 <= 2
+ supervised_tool_switch_1_1: l_1_1 - 0.0014367816091954 h_1_1 <= 2
  mod_reconstruction_1_2: s_1_2 - h_1_2 - 24 q_1_2 = 0
- supervised_tool_switch_1_2: l_1_2 + 0.0833333333333333 h_1_2 <= 2
+ supervised_tool_switch_1_2: l_1_2 - 0.0014367816091954 h_1_2 <= 2
  mod_reconstruction_2_1: s_2_1 - h_2_1 - 24 q_2_1 = 0
- supervised_tool_switch_2_1: l_2_1 + 0.0833333333333333 h_2_1 <= 2
+ supervised_tool_switch_2_1: l_2_1 - 0.0014367816091954 h_2_1 <= 2
  mod_reconstruction_3_1: s_3_1 - h_3_1 - 24 q_3_1 = 0
- supervised_tool_switch_3_1: l_3_1 + 0.0833333333333333 h_3_1 <= 2
+ supervised_tool_switch_3_1: l_3_1 - 0.0014367816091954 h_3_1 <= 2
  mod_reconstruction_3_2: s_3_2 - h_3_2 - 24 q_3_2 = 0
- supervised_tool_switch_3_2: l_3_2 + 0.0833333333333333 h_3_2 <= 2
+ supervised_tool_switch_3_2: l_3_2 - 0.0014367816091954 h_3_2 <= 2
  mod_reconstruction_4_1: s_4_1 - h_4_1 - 24 q_4_1 = 0
- supervised_tool_switch_4_1: l_4_1 + 0.0833333333333333 h_4_1 <= 2
+ supervised_tool_switch_4_1: l_4_1 - 0.0014367816091954 h_4_1 <= 2
  mod_reconstruction_4_2: s_4_2 - h_4_2 - 24 q_4_2 = 0
- supervised_tool_switch_4_2: l_4_2 + 0.0833333333333333 h_4_2 <= 2
+ supervised_tool_switch_4_2: l_4_2 - 0.0014367816091954 h_4_2 <= 2
  mod_reconstruction_5_1: s_5_1 - h_5_1 - 24 q_5_1 = 0
- supervised_tool_switch_5_1: l_5_1 + 0.0833333333333333 h_5_1 <= 2
+ supervised_tool_switch_5_1: l_5_1 - 0.0014367816091954 h_5_1 <= 2
  mod_reconstruction_6_1: s_6_1 - h_6_1 - 24 q_6_1 = 0
- supervised_tool_switch_6_1: l_6_1 + 0.0833333333333333 h_6_1 <= 2
+ supervised_tool_switch_6_1: l_6_1 - 0.0014367816091954 h_6_1 <= 2
  mod_reconstruction_7_1: s_7_1 - h_7_1 - 24 q_7_1 = 0
- supervised_tool_switch_7_1: l_7_1 + 0.0833333333333333 h_7_1 <= 2
+ supervised_tool_switch_7_1: l_7_1 - 0.0014367816091954 h_7_1 <= 2
  delta_le_alpha_1_1: - alpha_1_1 + delta_1_1 <= 0
  delta_le_l_1_1: - l_1_1 + delta_1_1 <= 0
  delta_ge_sum_minus1_1_1: - alpha_1_1 - l_1_1 + delta_1_1 >= -1

@@ -12,7 +12,7 @@
 using namespace std;
 
 // -------------------------------------------------
-// PARAMS
+// DEFINIÇÃO DOS PARAMS
 // -------------------------------------------------
 double r;   // recompensa por operação concluída
 double cp;  // custo por operação perdida (em priorityOperations)
@@ -23,7 +23,7 @@ int tU;     // Duração do turno não supervisionado
 int TC;     // Capacidade total de ferramentas
 
 // -------------------------------------------------
-// SETS
+// DEFINIÇÃO DOS SETS
 // -------------------------------------------------
 vector<pair<int, int>> operationsModel;          // Lista de operações (j,k)
 vector<int> machinesModel;                       // Lista de máquinas m
@@ -33,52 +33,258 @@ map<pair<int, int>, vector<int>> requiredTools;  // (j,k) → lista de ferrament
 set<pair<int, int>> priorityOperations;          // subconjunto de operações penalizadas se não concluídas
 map<pair<int, int>, int> processingTimes;        // (j,k) → tempo de processamento
 
-void SSP::loadModelData(){
+// -------------------------------------------------
+// DEFINIÇÃO DAS VARS
+// -------------------------------------------------
 
+// Variáveis de tempo
+map<pair<int, int>, GRBVar> s;  // s(jk): tempo de início
+map<pair<int, int>, GRBVar> e;  // e(jk): tempo de término
+
+// Variáveis binárias
+map<tuple<int, int, int, int, int>, GRBVar> x;  // x(m)(jk,j'k')
+map<tuple<int, int, int>, GRBVar> betaVar;      // β(m)(jk)
+map<pair<int, int>, GRBVar> alpha;              // α(jk)
+map<tuple<int, int, int>, GRBVar> y;            // y(t)(jk)
+map<tuple<int, int, int>, GRBVar> z;            // z(t)(jk)
+map<pair<int, int>, GRBVar> l;                  // l(jk)
+
+// Variáveis auxiliares para obj linear
+map<pair<int, int>, GRBVar> delta;         // δ(jk)
+map<tuple<int, int, int>, GRBVar> lambda;  // λ(t)(jk)
+
+// -------------------------------------------------
+// FUNÇÕES
+// -------------------------------------------------
+
+void SSP::convertModelData(string folderOutput, GRBModel model) {
+    fstream solutionReportFile;
+    string filename = folderOutput + "/report.txt";
+    solutionReportFile.open(filename, ios::out);
+    if (!solutionReportFile.is_open()) {
+        cerr << "Error: Could not open solution report file: " << filename << endl;
+        exit(1);
+    }
+
+    cout << "\n--- Variable Values ---\n";
+
+    // // Print s(jk)
+    // cout << "\ns(jk):\n";
+    // for (const auto& [jk, var] : s) {
+    //     cout << "s(" << jk.first << "," << jk.second << ") = " << var.get(GRB_DoubleAttr_X) << endl;
+    // }
+
+    // // Print e(jk)
+    // cout << "\ne(jk):\n";
+    // for (const auto& [jk, var] : e) {
+    //     cout << "e(" << jk.first << "," << jk.second << ") = " << var.get(GRB_DoubleAttr_X) << endl;
+    // }
+
+    // // Print alpha(jk)
+    // cout << "\nalpha(jk):\n";
+    // for (const auto& [jk, var] : alpha) {
+    //     cout << "alpha(" << jk.first << "," << jk.second << ") = " << var.get(GRB_DoubleAttr_X) << endl;
+    // }
+
+    // // Print l(jk)
+    // cout << "\nl(jk):\n";
+    // for (const auto& [jk, var] : l) {
+    //     cout << "l(" << jk.first << "," << jk.second << ") = " << var.get(GRB_DoubleAttr_X) << endl;
+    // }
+
+    // // Print delta(jk)
+    // cout << "\ndelta(jk):\n";
+    // for (const auto& [jk, var] : delta) {
+    //     cout << "delta(" << jk.first << "," << jk.second << ") = " << var.get(GRB_DoubleAttr_X) << endl;
+    // }
+
+    // // Print betaVar(m,j,k)
+    // cout << "\nbeta(m,j,k):\n";
+    // for (const auto& [mjk, var] : betaVar) {
+    //     cout << "betaVar(" << get<0>(mjk) << "," << get<1>(mjk) << "," << get<2>(mjk) << ") = " << var.get(GRB_DoubleAttr_X) << endl;
+    // }
+
+    // // Print x(m,j,k,j',k')
+    // cout << "\nx(m,j,k,j',k'):\n";
+    // for (const auto& [mjkjk, var] : x) {
+    //     cout << "x(" << get<0>(mjkjk) << "," << get<1>(mjkjk) << "," << get<2>(mjkjk) << "," << get<3>(mjkjk) << "," << get<4>(mjkjk) << ") = " << var.get(GRB_DoubleAttr_X) << endl;
+    // }
+
+    // // Print y(t,j,k)
+    // cout << "\ny(t,j,k):\n";
+    // for (const auto& [tjk, var] : y) {
+    //     cout << "y(" << get<0>(tjk) << "," << get<1>(tjk) << "," << get<2>(tjk) << ") = " << var.get(GRB_DoubleAttr_X) << endl;
+    // }
+
+    // // Print z(t,j,k)
+    // cout << "\nz(t,j,k):\n";
+    // for (const auto& [tjk, var] : z) {
+    //     cout << "z(" << get<0>(tjk) << "," << get<1>(tjk) << "," << get<2>(tjk) << ") = " << var.get(GRB_DoubleAttr_X) << endl;
+    // }
+
+    // // Print lambda(t,j,k)
+    // cout << "\nlambda(t,j,k):\n";
+    // for (const auto& [tjk, var] : lambda) {
+    //     cout << "lambda(" << get<0>(tjk) << "," << get<1>(tjk) << "," << get<2>(tjk) << ") = " << var.get(GRB_DoubleAttr_X) << endl;
+    // }
+
+    // make a vector of tuples of the form (j,k) for the operations
+    vector<pair<int, int>> operationsSorted;
+    for (const auto& [j, k] : operationsModel) {
+        operationsSorted.push_back({j, k});
+    }
+    // sort the operations by start time
+    sort(operationsSorted.begin(), operationsSorted.end(), [&](const pair<int, int>& a, const pair<int, int>& b) { return s[a].get(GRB_DoubleAttr_X) < s[b].get(GRB_DoubleAttr_X); });
+
+    // convert
+    solutionReportFile << "arquivoJobs" << ";" << "arquivoTools" << endl;
+    solutionReportFile << H << ";" << tU << ";" << 1440 << endl;
+
+    // JOB;OPERATION;INICIO;FIM;TOOLS
+    // iterate of the machines
+    for (int m : machinesModel) {
+        solutionReportFile << "Machine: " << m - 1 << endl;
+        for (pair<int, int> op : operationsSorted) {
+            int j = op.first;
+            int k = op.second;
+
+            // check if the operation is assigned to the machine
+            if (betaVar[{m, j, k}].get(GRB_DoubleAttr_X) < 0.5) continue;
+
+            double start = s[{j, k}].get(GRB_DoubleAttr_X);
+            double end = e[{j, k}].get(GRB_DoubleAttr_X);
+
+            int priority = 0;
+            if (priorityOperations.count({j, k})) {
+                priority = 1;
+            } else {
+                priority = 0;
+            }
+
+            vector<int> toolsUsed;
+            for (int t : toolsModel) {
+                if (y[{t, j, k}].get(GRB_DoubleAttr_X) > 0.5) {
+                    toolsUsed.push_back(t);
+                }
+            }
+
+            solutionReportFile << j << ";" << k << ";" << start << ";" << end << ";" << priority << ";";
+            for (size_t i = 0; i < toolsUsed.size(); ++i) {
+                solutionReportFile << toolsUsed[i];
+                solutionReportFile << ",";
+            }
+            solutionReportFile << endl;
+        }
+    }
+
+    // END
+    // fineshedJobsCount: 613
+    // switchs: 2649
+    // switchsInstances: 270
+    // unfineshedPriorityCount: 167
+    // Final Solution: 8031
+    // Time: 3723799
+    // PTL: 596
+    // MCMC: 492
+    // Best Initial: -1687
+    // Mean Initial: -945
+    solutionReportFile << "END" << endl;
+    solutionReportFile << "Final Solution " << model.get(GRB_DoubleAttr_ObjVal) << endl;
+}
+
+void SSP::loadModelData() {
     r = 30;
     cp = 30;
     cf = 10;
     cv = 1;
-    H = 48;
-    tU = 12;
-    TC = 8;
+    // H = 2880; // 48 horas em minutos
+    // tU = 720; // 12 horas em minutos
+    // TC = 8;
 
-    operationsModel = { {1, 1}, {1, 2}, {2, 1}, {3, 1}, {3, 2}, {4, 1}, {4, 2}, {5, 1}, {6, 1}, {7,  1} };
-    machinesModel = {1, 2};
-    toolsModel = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
-    jobOperationsCount = { {1, 2}, {2, 1}, {3, 2}, {4, 2}, {5, 1}, {6, 1}, {7, 1} };
-    
-    requiredTools = {
-        { {1, 1}, {1,2,3,4,5} },
-        { {1, 2}, {1,2,3,4,5} },
-        { {2, 1}, {12,13,14,15,16,17,18} },
-        { {3, 1}, {4,5,6,7,8,9,10,11,12,13} },
-        { {3, 2}, {4,5,6,7,8,9,10,11,12,13} },
-        { {4, 1}, {12,13,14,15,16,17,18} },
-        { {4, 2}, {12,13,14,15,16,17,18} },
-        { {5, 1}, {5,6,7} },
-        { {6, 1}, {15,16,17,18,19,20} },
-        { {7, 1}, {1,2,3,4,5} }
-    };
-    priorityOperations = {
-        {1, 1},
-        {1, 2},
-        {4, 1},
-        {4, 2},
-        {7, 1}
-    };
-    processingTimes = {
-        { {1, 1}, 3 },
-        { {1, 2}, 5 },
-        { {2, 1}, 7 },
-        { {3, 1}, 6 },
-        { {3, 2}, 8 },
-        { {4, 1}, 4 },
-        { {4, 2}, 9 },
-        { {5, 1}, 6 },
-        { {6, 1}, 10 },
-        { {7, 1}, 5 }
-    };
+    // operationsModel = {{1, 1}, {1, 2}, {2, 1}, {3, 1}, {3, 2}, {4, 1}, {4, 2}, {5, 1}, {6, 1}, {7, 1}};
+    // machinesModel = {1, 2};
+    // toolsModel = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
+    // jobOperationsCount = {{1, 2}, {2, 1}, {3, 2}, {4, 2}, {5, 1}, {6, 1}, {7, 1}};
+
+    // requiredTools = {{{1, 1}, {1, 2, 3, 4, 5}}, {{1, 2}, {1, 2, 3, 4, 5}}, {{2, 1}, {12, 13, 14, 15, 16, 17, 18}}, {{3, 1}, {4, 5, 8, 9, 10, 11, 12, 13}}, {{3, 2}, {4, 5, 8, 9, 10, 11, 12, 13}}, {{4, 1}, {12, 13, 14, 15, 16, 17, 18}}, {{4, 2}, {12, 13, 14, 15, 16, 17, 18}}, {{5, 1}, {5, 6, 7}}, {{6, 1}, {15, 16, 17, 18, 19, 20}}, {{7, 1}, {1, 2, 3, 4, 5}}};
+    // priorityOperations = {{1, 1}, {1, 2}, {4, 1}, {4, 2}, {7, 1}};
+    // processingTimes = {{{1, 1}, 3*60}, {{1, 2}, 5*60}, {{2, 1}, 7*60}, {{3, 1}, 6*60}, {{3, 2}, 8*60}, {{4, 1}, 4*60}, {{4, 2}, 9*60}, {{5, 1}, 6*60}, {{6, 1}, 10*60}, {{7, 1}, 5*60}};
+
+    // LOADING REAL DATA
+    H = planingHorizon * 24 * 60;  // converte de dias para minutos
+    tU = unsupervised;             // ja esta em minutos
+    TC = capacityMagazine;
+
+    for (auto job : originalJobs) {
+        int jobIndex = job.indexJob;
+        int operationIndex = job.indexOperation;
+        operationsModel.push_back({jobIndex, operationIndex});
+        jobOperationsCount[jobIndex] = job.indexOperation;
+        processingTimes[{jobIndex, operationIndex}] = job.processingTime;
+        if (job.priority) priorityOperations.insert({jobIndex, operationIndex});
+
+        for (int i = 0; i <= job.indexOperation; i++) {
+            std::vector<int> incrementedTools;
+            for (int tool : job.toolSetNormalized.tools) {
+                incrementedTools.push_back(tool + 1);
+            }
+            requiredTools[{jobIndex, i}] = incrementedTools;
+        }
+    }
+
+    for (int i = 0; i < numberMachines; i++) {
+        machinesModel.push_back(i + 1);
+    }
+
+    for (int i = 0; i < numberTools; i++) {
+        toolsModel.push_back(i + 1);
+    }
+
+    // print all variables
+    cout << "H: " << H << endl;
+    cout << "tU: " << tU << endl;
+    cout << "TC: " << TC << endl;
+
+    cout << "operationsModel: ";
+    for (auto op : operationsModel) {
+        cout << "(" << op.first << "," << op.second << ") ";
+    }
+    cout << endl;
+
+    cout << "machinesModel: ";
+    for (auto m : machinesModel) {
+        cout << m << " ";
+    }
+    cout << endl;
+
+    cout << "toolsModel: ";
+    for (auto t : toolsModel) {
+        cout << t << " ";
+    }
+    cout << endl;
+
+    cout << "jobOperationsCount: ";
+    for (auto [j, k] : jobOperationsCount) {
+        cout << "(" << j << "," << k << ") ";
+    }
+    cout << endl;
+
+    cout << "requiredTools: " << endl;
+    for (auto [jk, tools] : requiredTools) {
+        cout << "(" << jk.first << "," << jk.second << ") -> ";
+        for (int t : tools) {
+            cout << t << " ";
+        }
+        cout << endl;
+    }
+
+    cout << "priorityOperations: ";
+    for (auto [j, k] : priorityOperations) {
+        cout << "(" << j << "," << k << ") ";
+    }
+    cout << endl;
+
+    exit(0);
 }
 
 int SSP::modelo(string folderOutput) {
@@ -89,27 +295,10 @@ int SSP::modelo(string folderOutput) {
         GRBModel model = GRBModel(env);
 
         // -------------------------------------------------
-        // VARS
+        // CRIAÇÃO DAS VARS
         // -------------------------------------------------
 
-        // Variáveis de tempo
-        map<pair<int, int>, GRBVar> s;                  // s(jk): tempo de início
-        map<pair<int, int>, GRBVar> e;                  // e(jk): tempo de término
-
-        // Variáveis binárias
-        map<tuple<int, int, int, int, int>, GRBVar> x;  // x(m)(jk,j'k')
-        map<tuple<int, int, int>, GRBVar> beta;         // β(m)(jk)
-        map<pair<int, int>, GRBVar> alpha;              // α(jk)
-        map<tuple<int, int, int>, GRBVar> y;            // y(t)(jk)
-        map<tuple<int, int, int>, GRBVar> z;            // z(t)(jk)
-        map<pair<int, int>, GRBVar> l;                  // l(jk)
-
-        // Variáveis auxiliares para obj linear
-        map<pair<int, int>, GRBVar> delta;              // δ(jk)
-        map<tuple<int, int, int>, GRBVar> lambda;       // λ(t)(jk)
-
         for (auto [j, k] : operationsModel) {
-            // Adiciona variáveis de tempo
             s[{j, k}] = model.addVar(0.0, GRB_INFINITY, 0.0, GRB_CONTINUOUS, "s_" + to_string(j) + "_" + to_string(k));
             e[{j, k}] = model.addVar(0.0, GRB_INFINITY, 0.0, GRB_CONTINUOUS, "e_" + to_string(j) + "_" + to_string(k));
 
@@ -119,7 +308,7 @@ int SSP::modelo(string folderOutput) {
             delta[{j, k}] = model.addVar(0.0, 1.0, 0.0, GRB_BINARY, "delta_" + to_string(j) + "_" + to_string(k));
 
             for (int m : machinesModel) {
-                beta[{m, j, k}] = model.addVar(0.0, 1.0, 0.0, GRB_BINARY, "beta_" + to_string(m) + "_" + to_string(j) + "_" + to_string(k));
+                betaVar[{m, j, k}] = model.addVar(0.0, 1.0, 0.0, GRB_BINARY, "beta_" + to_string(m) + "_" + to_string(j) + "_" + to_string(k));
                 for (auto [j2, k2] : operationsModel) {
                     if (j != j2 || k != k2) x[{m, j, k, j2, k2}] = model.addVar(0.0, 1.0, 0.0, GRB_BINARY, "x_" + to_string(m) + "_" + to_string(j) + "_" + to_string(k) + "_" + to_string(j2) + "_" + to_string(k2));
                 }
@@ -138,9 +327,9 @@ int SSP::modelo(string folderOutput) {
 
         int L = 0;
         for (auto [j, k] : operationsModel) {
-            L += processingTimes[{j, k}];  // Soma de todos os tempos de processamento
+            L += processingTimes[{j, k}];
         }
-        L += ceil((double)H * tU / 24.0);  // H: horizonte, tU: duração do turno não supervisionado
+        L += ceil((double)H * tU / 24.0);
 
         // (2) Cada operação pode ser seguida por no máximo uma outra operação
         for (auto [j, k] : operationsModel) {
@@ -178,7 +367,7 @@ int SSP::modelo(string folderOutput) {
         for (auto [j, k] : operationsModel) {
             GRBLinExpr expr = 0;
             for (int m : machinesModel) {
-                expr += beta[{m, j, k}];
+                expr += betaVar[{m, j, k}];
             }
             model.addConstr(expr == 1, "assign_once_" + to_string(j) + "_" + to_string(k));
         }
@@ -191,8 +380,8 @@ int SSP::modelo(string folderOutput) {
                         auto key_x = make_tuple(m, j, k, j2, k2);
                         if (x.count(key_x)) {
                             GRBLinExpr expr = 2 * x[key_x];
-                            expr -= beta[{m, j, k}];
-                            expr -= beta[{m, j2, k2}];
+                            expr -= betaVar[{m, j, k}];
+                            expr -= betaVar[{m, j2, k2}];
                             model.addConstr(expr <= 0, "same_machine_" + to_string(m) + "_" + to_string(j) + "_" + to_string(k) + "_" + to_string(j2) + "_" + to_string(k2));
                         }
                     }
@@ -206,7 +395,7 @@ int SSP::modelo(string folderOutput) {
             GRBLinExpr rhs = 0;
 
             for (auto [j, k] : operationsModel) {
-                rhs += beta[{m, j, k}];
+                rhs += betaVar[{m, j, k}];
                 for (auto [j2, k2] : operationsModel) {
                     if (j != j2 || k != k2) {
                         auto key_x = make_tuple(m, j, k, j2, k2);
@@ -341,7 +530,7 @@ int SSP::modelo(string folderOutput) {
         }
 
         // (28) since the parallel machines are identical, there exist many alternative solutions that are similar but mirror the allocation of operations over the machines. Hence, we exclude those alternatives by adding symmetry-breaking constraints (28)
-        for (int idx = 1; idx < machinesModel.size(); ++idx) {
+        for (long unsigned int idx = 1; idx < machinesModel.size(); ++idx) {
             int m_prev = machinesModel[idx - 1];
             int m_curr = machinesModel[idx];
 
@@ -349,8 +538,8 @@ int SSP::modelo(string folderOutput) {
             GRBLinExpr sum_curr = 0;
 
             for (auto [j, k] : operationsModel) {
-                sum_prev += beta[{m_prev, j, k}];
-                sum_curr += beta[{m_curr, j, k}];
+                sum_prev += betaVar[{m_prev, j, k}];
+                sum_curr += betaVar[{m_curr, j, k}];
             }
 
             model.addConstr(sum_prev >= sum_curr, "symmetry_break_" + to_string(m_prev) + "_ge_" + to_string(m_curr));
@@ -399,10 +588,6 @@ int SSP::modelo(string folderOutput) {
             cout << "O modelo nao pode ser resolvido porque e ilimitado" << endl;
             return 0;
         }
-        if (status == GRB_OPTIMAL) {
-            cout << "Solucao otima encontrada!" << endl;
-            cout << "O valor da solucao otima e: " << model.get(GRB_DoubleAttr_ObjVal) << endl;
-        }
         if (status == GRB_INFEASIBLE) {
             cout << "O modelo nao pode ser resolvido porque e inviavel. Verifique o arquivo InfeasibilityCheck.ilp" << endl;
             model.computeIIS();
@@ -410,31 +595,13 @@ int SSP::modelo(string folderOutput) {
             return 0;
         }
 
-        GRBVar* v = model.getVars();  // Acessa as variáveis do modelo depois de resolvido
-        int i, j, k;
-        for (int index = 0; index < model.get(GRB_IntAttr_NumVars); ++index) {
-            double sol = v[index].get(GRB_DoubleAttr_X);
-
-            if (sol > 0.0000001) {
-                sscanf(v[index].get(GRB_StringAttr_VarName).c_str(), "x(%d,%d,%d)", &i, &j, &k);
-                printf("A variavel x(%d,%d,%d) faz parte da solucao\n", i, j, k);
-            }
-        }
-
-        for (int index = 0; index < model.get(GRB_IntAttr_NumVars); ++index) {
-            double sol = v[index].get(GRB_DoubleAttr_X);
-            sscanf(v[index].get(GRB_StringAttr_VarName).c_str(), "x(%d,%d,%d)", &i, &j, &k);
-            printf("x(%d,%d,%d) = %.2lf\n", i, j, k, sol);
-        }
-
         model.write(folderOutput + "/modelSolution.sol");
+        convertModelData(folderOutput, model);
 
-    } 
-    catch (GRBException e) {
-        cout << "Erro numero: " << e.getErrorCode() << endl;
-        cout << e.getMessage() << endl;
-    } 
-    catch (...) {
+    } catch (GRBException error) {
+        cout << "Erro numero: " << error.getErrorCode() << endl;
+        cout << error.getMessage() << endl;
+    } catch (...) {
         cout << "Erro durante a construcao ou solucao do modelo" << endl;
     }
 

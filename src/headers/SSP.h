@@ -23,7 +23,7 @@
 #include <thread>
 #include <atomic>
 #include <functional> 
-
+#include "gurobi_c++.h"
 
 #include "../../../PTAPI/include/Problem.h"
 #include "GlobalVars.h"
@@ -46,6 +46,7 @@ class SSP: public Problem<solSSP>{
 		int capacityMagazine;
 		int diferent_toolset_mode;
 
+		int numberOfTools;
     	map<int, int> ferramentas;
 		vector<vector<bool>> toolJob;
 		
@@ -82,6 +83,7 @@ class SSP: public Problem<solSSP>{
 		
 		int modelo(string filenameoutput);
 		void loadModelData();
+		void convertModelData(string folderOutput, GRBModel model);
 };
 
 #endif 
