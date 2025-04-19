@@ -1,3 +1,5 @@
+// TODO: conjunto de ferramenta esta errodo 
+
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -138,7 +140,9 @@ void SSP::convertModelData(string folderOutput, GRBModel model) {
 
     // convert
     solutionReportFile << "arquivoJobs" << ";" << "arquivoTools" << endl;
-    solutionReportFile << H << ";" << tU << ";" << 1440 << endl;
+    // convert H to days
+
+    solutionReportFile << (H/60/24) << ";" << tU << ";" << 1440 << endl;
 
     // JOB;OPERATION;INICIO;FIM;TOOLS
     // iterate of the machines
@@ -197,39 +201,23 @@ void SSP::loadModelData() {
     cp = 30;
     cf = 10;
     cv = 1;
-    // H = 2880; // 48 horas em minutos
-    // tU = 720; // 12 horas em minutos
-    // TC = 8;
-
-    // operationsModel = {{1, 1}, {1, 2}, {2, 1}, {3, 1}, {3, 2}, {4, 1}, {4, 2}, {5, 1}, {6, 1}, {7, 1}};
-    // machinesModel = {1, 2};
-    // toolsModel = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
-    // jobOperationsCount = {{1, 2}, {2, 1}, {3, 2}, {4, 2}, {5, 1}, {6, 1}, {7, 1}};
-
-    // requiredTools = {{{1, 1}, {1, 2, 3, 4, 5}}, {{1, 2}, {1, 2, 3, 4, 5}}, {{2, 1}, {12, 13, 14, 15, 16, 17, 18}}, {{3, 1}, {4, 5, 8, 9, 10, 11, 12, 13}}, {{3, 2}, {4, 5, 8, 9, 10, 11, 12, 13}}, {{4, 1}, {12, 13, 14, 15, 16, 17, 18}}, {{4, 2}, {12, 13, 14, 15, 16, 17, 18}}, {{5, 1}, {5, 6, 7}}, {{6, 1}, {15, 16, 17, 18, 19, 20}}, {{7, 1}, {1, 2, 3, 4, 5}}};
-    // priorityOperations = {{1, 1}, {1, 2}, {4, 1}, {4, 2}, {7, 1}};
-    // processingTimes = {{{1, 1}, 3*60}, {{1, 2}, 5*60}, {{2, 1}, 7*60}, {{3, 1}, 6*60}, {{3, 2}, 8*60}, {{4, 1}, 4*60}, {{4, 2}, 9*60}, {{5, 1}, 6*60}, {{6, 1}, 10*60}, {{7, 1}, 5*60}};
-
-    // LOADING REAL DATA
     H = planingHorizon * 24 * 60;  // converte de dias para minutos
     tU = unsupervised;             // ja esta em minutos
     TC = capacityMagazine;
 
     for (auto job : originalJobs) {
-        int jobIndex = job.indexJob;
-        int operationIndex = job.indexOperation;
+        int jobIndex = job.indexJob+1;
+        int operationIndex = job.indexOperation+1;
         operationsModel.push_back({jobIndex, operationIndex});
-        jobOperationsCount[jobIndex] = job.indexOperation;
+        jobOperationsCount[jobIndex] = operationIndex;
         processingTimes[{jobIndex, operationIndex}] = job.processingTime;
         if (job.priority) priorityOperations.insert({jobIndex, operationIndex});
 
-        for (int i = 0; i <= job.indexOperation; i++) {
-            std::vector<int> incrementedTools;
-            for (int tool : job.toolSetNormalized.tools) {
-                incrementedTools.push_back(tool + 1);
-            }
-            requiredTools[{jobIndex, i}] = incrementedTools;
+        std::vector<int> incrementedTools;
+        for (int tool : job.toolSetNormalized.tools) {
+            incrementedTools.push_back(tool + 1);
         }
+        requiredTools[{jobIndex, operationIndex}] = incrementedTools;
     }
 
     for (int i = 0; i < numberMachines; i++) {
@@ -241,50 +229,50 @@ void SSP::loadModelData() {
     }
 
     // print all variables
-    cout << "H: " << H << endl;
-    cout << "tU: " << tU << endl;
-    cout << "TC: " << TC << endl;
+    // cout << "H: " << H << endl;
+    // cout << "tU: " << tU << endl;
+    // cout << "TC: " << TC << endl;
 
-    cout << "operationsModel: ";
-    for (auto op : operationsModel) {
-        cout << "(" << op.first << "," << op.second << ") ";
-    }
-    cout << endl;
+    // cout << "operationsModel: ";
+    // for (auto op : operationsModel) {
+    //     cout << "(" << op.first << "," << op.second << ") ";
+    // }
+    // cout << endl;
 
-    cout << "machinesModel: ";
-    for (auto m : machinesModel) {
-        cout << m << " ";
-    }
-    cout << endl;
+    // cout << "machinesModel: ";
+    // for (auto m : machinesModel) {
+    //     cout << m << " ";
+    // }
+    // cout << endl;
 
-    cout << "toolsModel: ";
-    for (auto t : toolsModel) {
-        cout << t << " ";
-    }
-    cout << endl;
+    // cout << "toolsModel: ";
+    // for (auto t : toolsModel) {
+    //     cout << t << " ";
+    // }
+    // cout << endl;
 
-    cout << "jobOperationsCount: ";
-    for (auto [j, k] : jobOperationsCount) {
-        cout << "(" << j << "," << k << ") ";
-    }
-    cout << endl;
+    // cout << "jobOperationsCount: ";
+    // for (auto [j, k] : jobOperationsCount) {
+    //     cout << "(" << j << "," << k << ") ";
+    // }
+    // cout << endl;
 
-    cout << "requiredTools: " << endl;
-    for (auto [jk, tools] : requiredTools) {
-        cout << "(" << jk.first << "," << jk.second << ") -> ";
-        for (int t : tools) {
-            cout << t << " ";
-        }
-        cout << endl;
-    }
+    // cout << "requiredTools: " << endl;
+    // for (auto [jk, tools] : requiredTools) {
+    //     cout << "(" << jk.first << "," << jk.second << ") -> ";
+    //     for (int t : tools) {
+    //         cout << t << " ";
+    //     }
+    //     cout << endl;
+    // }
 
-    cout << "priorityOperations: ";
-    for (auto [j, k] : priorityOperations) {
-        cout << "(" << j << "," << k << ") ";
-    }
-    cout << endl;
+    // cout << "priorityOperations: ";
+    // for (auto [j, k] : priorityOperations) {
+    //     cout << "(" << j << "," << k << ") ";
+    // }
+    // cout << endl;
 
-    exit(0);
+    // exit(0);
 }
 
 int SSP::modelo(string folderOutput) {
