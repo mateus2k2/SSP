@@ -45,9 +45,13 @@ class SSP: public Problem<solSSP>{
 		int numberOfPriorityJobs;
 		int capacityMagazine;
 		int diferent_toolset_mode;
+		
+		string inputJobsFile;
+		string inputToolsetsFile;
 
 		int numberOfTools;
     	map<int, int> ferramentas;
+    	map<int, int> ferramentNormalizadaXFerramentaReal;
 		vector<vector<bool>> toolJob;
 		
 		vector<Job> originalJobs;
@@ -66,7 +70,8 @@ class SSP: public Problem<solSSP>{
 		int loadInstanceParans(string filename);
 		void printDataReport();
 		void setParans(int capacityMagazine, int numberMachines, int planingHorizon, int unsupervised, int movementType, int initSolType, int diferent_toolset_mode);
-		
+		void setInputFiles(string filenameJobs, string filenameTools);
+
 		solSSP construction();
 		solSSP randPriority();
 		solSSP rand();
@@ -83,7 +88,7 @@ class SSP: public Problem<solSSP>{
 		
 		int modelo(string filenameoutput);
 		void loadModelData();
-		void convertModelData(string folderOutput, GRBModel model);
+		void convertModelData(string& folderOutput, GRBModel& model);
 };
 
 #endif 

@@ -23,6 +23,7 @@ def validarPasta(files):
         planejamento, machines, endInfo = rp.parseReport(report)
         toolSets = ld.loadToolSet(planejamento['toolSetFileName'])
         jobs = ld.loadJobs(planejamento['jobsFileName'])
+        print(endInfo)
 
         vd.checkMagazine(machines, toolSets, jobs)
         print()
@@ -138,7 +139,7 @@ def analisarValores(files):
     for index, report in enumerate(files):
         planejamento, machines, endInfo = rp.parseReport(report)
         totalUnfinishedJobsCount = totalUnfinishedJobs(machines, planejamento)
-        print(f'{index + 1} {endInfo["fineshedPriorityCount"]} {endInfo["unfinesedPriorityCount"]} {totalUnfinishedJobsCount} {endInfo["switchsInstances"]} {endInfo["switchs"]} {endInfo["cost"]} {endInfo["timeSpent"]/1000:.2f}'.replace('.', ',') + f' {precedenciasViloladas[index]}')
+        print(f'{index + 1} {endInfo["fineshedPriorityCount"]} {endInfo["unfinesedPriorityCount"]} {totalUnfinishedJobsCount} {endInfo["switchsInstances"]} {endInfo["switchs"]} {endInfo["finalSolutions"]} {endInfo["timeSpent"]/1000:.2f}'.replace('.', ',') + f' {precedenciasViloladas[index]}')
 
 def analisarMediaValores(listDirs, subDir = 'MyInstancesSameToolSets', totalPTL = 600):
     filesList = []
@@ -279,13 +280,17 @@ def analisarMediaValores(listDirs, subDir = 'MyInstancesSameToolSets', totalPTL 
 
 def main():
     folderName = sys.argv[1]
-    files = os.listdir(folderName)
-    files = natsorted(files) 
-    fileWithPath = [f"{folderName}/{file}" for file in files]
-
-    # get the option from the user 
     option = sys.argv[2]
 
+    fileWithPath = []
+    if(option == '0'):
+        fileWithPath = [folderName]
+    else:
+        files = os.listdir(folderName)
+        files = natsorted(files) 
+        fileWithPath = [f"{folderName}/{file}" for file in files]
+
+    if option == '0': validarPasta(fileWithPath)
     if option == '1': validarPasta(fileWithPath)  
     if option == '2': analisarValores(fileWithPath)
     if option == '3': verificarPrecedencia(fileWithPath)

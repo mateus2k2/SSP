@@ -67,6 +67,7 @@ int SSP::laodInstance(string filename) {
         for (auto &tool : thisJob.toolSet.tools) {
             if (ferramentas.find(tool) == ferramentas.end()) {
                 ferramentas[tool] = ferramentaIndex;
+                ferramentNormalizadaXFerramentaReal[ferramentaIndex] = tool;
                 ferramentaIndex++;
             }
         }

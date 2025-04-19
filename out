@@ -1,104 +1,56 @@
-make compilePT
-make[1]: Entering directory '/home/mateus/WSL/IC/SSP'
 clear
-[H[2J[3Jg++ -DDEBUG  -DRANDSEED ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -m64 -g -o src/out/mainCpp -I/opt/gurobi1201/linux64/include -L/opt/gurobi1201/linux64/lib -lgurobi_c++ -lgurobi120 -lm -Wno-unused-result -lpthread  -march=native -lstdc++ -lfmt
-echo "\n" 
+[H[2J[3Jpython ./scripts/reportAnalises.py ./output/Modelo/report.txt 0
+---Validating ./output/Modelo/report.txt---
+{'finalSolution': 280.0, 'fineshedJobsCount': 0.0, 'switchs': 0.0, 'switchsInstances': 0.0, 'unfineshedPriorityCount': 0.0, 'Time': 9.57817}
+Checking Magazine
+Machine 1/2
+OK
+Machine 2/2
+OK
+
+Checking Unsupervised Switchs
+Machine 1/2
+Error = Unsupervised Switch in Machine 1/2 | Job 2 Operation 0 | {8, 9, 10, 11, 12, 13}
+ERROR
+Machine 2/2
+OK
+
+Checking Switchs
+Error = Found 2 switchInstances and 9 toolSwitchs, expected 0.0 switchInstances and 0.0 toolSwitchs
+ERROR
+
+Checking Unfinished Jobs
+TODO
+
+Checking Operations Done Once
+Machine 1/2
+OK
+Machine 2/2
+OK
+
+Checking Profit
+Error = Found cost 280.0, expected 0.0
+ERROR
+
+Running New KTNS
+TODO
+
+Checking Magazine Size
+Machine 1/2
+Error = Job 6 Operation 0 | Magazine size = 8
+Error = Job 0 Operation 0 | Magazine size = 8
+Error = Job 4 Operation 0 | Magazine size = 8
+Error = Job 0 Operation 1 | Magazine size = 5
+Error = Job 2 Operation 0 | Magazine size = 8
+Error = Job 2 Operation 1 | Magazine size = 8
+ERRORSIZE
+Machine 2/2
+Error = Job 5 Operation 0 | Magazine size = 7
+Error = Job 1 Operation 0 | Magazine size = 7
+Error = Job 3 Operation 0 | Magazine size = 7
+Error = Job 3 Operation 1 | Magazine size = 7
+ERRORSIZE
+
+echo "\n"
 
 
-make[1]: Leaving directory '/home/mateus/WSL/IC/SSP'
-make runPT
-make[1]: Entering directory '/home/mateus/WSL/IC/SSP'
-./src/out/mainCpp \
-	"./input/Exemplo/Jobs.csv" \
-	"./input/Exemplo/ToolSets.csv" \
-	"./output/Modelo" \
-	--TEMP_INIT 0.1 \
-	--TEMP_FIM 5 \
-	--N_REPLICAS 11 \
-	--MCL 500 \
-	--PTL 600 \
-	--PASSO_GATILHO 10 \
-	--TEMP_DIST 3 \
-	--TYPE_UPDATE 1 \
-	--INIT_SOL_TYPE 0 \
-	--TEMP_UPDATE 3500 \
-	--PTL_TEMP_UPDATE_PROPORTION 3 \
-	--DIFERENT_TOOLSETS_MODE 0 \
-	--MODELO 1 \
-
-Set parameter Username
-Set parameter LicenseID to value 2637114
-Academic license - for non-commercial use only - expires 2026-03-16
-Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Ubuntu 22.04.5 LTS")
-
-CPU model: AMD Ryzen 5 3600 6-Core Processor, instruction set [SSE2|AVX|AVX2]
-Thread count: 6 physical cores, 12 logical processors, using up to 12 threads
-
-Optimize a model with 4547 rows, 900 columns and 17897 nonzeros
-Model fingerprint: 0xa15b31ee
-Variable types: 30 continuous, 870 integer (860 binary)
-Coefficient statistics:
-  Matrix range     [1e-05, 9e+04]
-  Objective range  [1e+00, 6e+01]
-  Bounds range     [1e+00, 2e+01]
-  RHS range        [3e-02, 9e+04]
-Presolve removed 2388 rows and 533 columns
-Presolve time: 0.05s
-Presolved: 2159 rows, 367 columns, 14966 nonzeros
-Variable types: 20 continuous, 347 integer (337 binary)
-
-Root relaxation: objective 3.000000e+02, 205 iterations, 0.01 seconds (0.01 work units)
-
-    Nodes    |    Current Node    |     Objective Bounds      |     Work
- Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
-
-     0     0  300.00000    0   41          -  300.00000      -     -    0s
-H    0     0                     200.0000000  300.00000  50.0%     -    0s
-     0     0  300.00000    0   91  200.00000  300.00000  50.0%     -    0s
-H    0     0                     230.0000000  300.00000  30.4%     -    0s
-H    0     0                     240.0000000  300.00000  25.0%     -    0s
-     0     0  300.00000    0   73  240.00000  300.00000  25.0%     -    0s
-H    0     0                     250.0000000  300.00000  20.0%     -    0s
-H    0     0                     260.0000000  300.00000  15.4%     -    0s
-     0     0  300.00000    0   25  260.00000  300.00000  15.4%     -    0s
-H    0     0                     270.0000000  300.00000  11.1%     -    0s
-     0     0  300.00000    0   85  270.00000  300.00000  11.1%     -    0s
-     0     0  300.00000    0   29  270.00000  300.00000  11.1%     -    0s
-     0     0  300.00000    0   62  270.00000  300.00000  11.1%     -    0s
-     0     0  300.00000    0   48  270.00000  300.00000  11.1%     -    0s
-     0     0  300.00000    0   54  270.00000  300.00000  11.1%     -    0s
-     0     0  300.00000    0   33  270.00000  300.00000  11.1%     -    0s
-     0     0  300.00000    0   70  270.00000  300.00000  11.1%     -    0s
-H    0     0                     280.0000000  300.00000  7.14%     -    0s
-     0     0  300.00000    0   33  280.00000  300.00000  7.14%     -    0s
-     0     0  300.00000    0   22  280.00000  300.00000  7.14%     -    0s
-     0     2  300.00000    0   22  280.00000  300.00000  7.14%     -    0s
-  2284  1052  290.00000   21   25  280.00000  290.00000  3.57%  77.9    5s
-  2363  1108  290.00000   26   92  280.00000  290.00000  3.57%  97.3   10s
-
-Cutting planes:
-  Gomory: 6
-  Lift-and-project: 2
-  Cover: 11
-  Implied bound: 2
-  Clique: 1
-  MIR: 7
-  Flow cover: 13
-  GUB cover: 6
-  Zero half: 59
-  RLT: 26
-  Relax-and-lift: 2
-  BQP: 11
-
-Explored 2609 nodes (254149 simplex iterations) in 10.37 seconds (13.08 work units)
-Thread count was 12 (of 12 available processors)
-
-Solution count 7: 280 270 260 ... 200
-
-Optimal solution found (tolerance 1.00e-04)
-Best objective 2.800000000000e+02, best bound 2.800000000000e+02, gap 0.0000%
-
---- Variable Values ---
-Erro numero: 10005
-Unable to retrieve attribute 'ObjVal'
-make[1]: Leaving directory '/home/mateus/WSL/IC/SSP'

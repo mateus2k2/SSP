@@ -1,5 +1,3 @@
-// TODO: conjunto de ferramenta esta errodo 
-
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -55,11 +53,14 @@ map<pair<int, int>, GRBVar> l;                  // l(jk)
 map<pair<int, int>, GRBVar> delta;         // δ(jk)
 map<tuple<int, int, int>, GRBVar> lambda;  // λ(t)(jk)
 
+// Obj
+GRBLinExpr obj = 0;
+
 // -------------------------------------------------
 // FUNÇÕES
 // -------------------------------------------------
 
-void SSP::convertModelData(string folderOutput, GRBModel model) {
+void SSP::convertModelData(string& folderOutput, GRBModel& model) {
     fstream solutionReportFile;
     string filename = folderOutput + "/report.txt";
     solutionReportFile.open(filename, ios::out);
@@ -68,7 +69,7 @@ void SSP::convertModelData(string folderOutput, GRBModel model) {
         exit(1);
     }
 
-    cout << "\n--- Variable Values ---\n";
+    // cout << "\n--- Variable Values ---\n";
 
     // // Print s(jk)
     // cout << "\ns(jk):\n";
@@ -139,7 +140,7 @@ void SSP::convertModelData(string folderOutput, GRBModel model) {
     sort(operationsSorted.begin(), operationsSorted.end(), [&](const pair<int, int>& a, const pair<int, int>& b) { return s[a].get(GRB_DoubleAttr_X) < s[b].get(GRB_DoubleAttr_X); });
 
     // convert
-    solutionReportFile << "arquivoJobs" << ";" << "arquivoTools" << endl;
+    solutionReportFile << inputJobsFile << ";" << inputToolsetsFile << endl;
     // convert H to days
 
     solutionReportFile << (H/60/24) << ";" << tU << ";" << 1440 << endl;
@@ -168,11 +169,13 @@ void SSP::convertModelData(string folderOutput, GRBModel model) {
             vector<int> toolsUsed;
             for (int t : toolsModel) {
                 if (y[{t, j, k}].get(GRB_DoubleAttr_X) > 0.5) {
-                    toolsUsed.push_back(t);
+                    // t na verdade é a ferramenta do toolset normalizado + 1
+                    // pegar a ferramenta equivalente pelo map usando (t-1)
+                    toolsUsed.push_back(ferramentNormalizadaXFerramentaReal[t-1]);
                 }
             }
 
-            solutionReportFile << j << ";" << k << ";" << start << ";" << end << ";" << priority << ";";
+            solutionReportFile << (j-1) << ";" << (k-1) << ";" << start << ";" << end << ";" << priority << ";";
             for (size_t i = 0; i < toolsUsed.size(); ++i) {
                 solutionReportFile << toolsUsed[i];
                 solutionReportFile << ",";
@@ -181,19 +184,16 @@ void SSP::convertModelData(string folderOutput, GRBModel model) {
         }
     }
 
-    // END
-    // fineshedJobsCount: 613
-    // switchs: 2649
-    // switchsInstances: 270
-    // unfineshedPriorityCount: 167
-    // Final Solution: 8031
-    // Time: 3723799
-    // PTL: 596
-    // MCMC: 492
-    // Best Initial: -1687
-    // Mean Initial: -945
+    // GET THE OBJECTIVE VALUE
+    int objValue = model.get(GRB_DoubleAttr_ObjVal);
+    double runtime = model.get(GRB_DoubleAttr_Runtime);
     solutionReportFile << "END" << endl;
-    solutionReportFile << "Final Solution " << model.get(GRB_DoubleAttr_ObjVal) << endl;
+    solutionReportFile << "Final Solution: " << objValue << endl;
+    solutionReportFile << "fineshedJobsCount: " << "0" << endl;
+    solutionReportFile << "switchs: " << "0" << endl;
+    solutionReportFile << "switchsInstances: " << "0" << endl;
+    solutionReportFile << "unfineshedPriorityCount: " << "0" << endl;
+    solutionReportFile << "Time: " << runtime << endl;
 }
 
 void SSP::loadModelData() {
@@ -537,8 +537,6 @@ int SSP::modelo(string folderOutput) {
         // OBJs
         // -------------------------------------------------
 
-        GRBLinExpr obj = 0;
-
         // + r * sum(alpha)
         for (auto [j, k] : operationsModel) {
             obj += r * alpha[{j, k}];
@@ -571,17 +569,17 @@ int SSP::modelo(string folderOutput) {
         model.write(folderOutput + "/testModel.lp");  // Escreve o modelo em um arquivo
         model.optimize();                             // Resolve o modelo
 
-        int status = model.get(GRB_IntAttr_Status);  // Verifica o status do modelo
-        if (status == GRB_UNBOUNDED) {
-            cout << "O modelo nao pode ser resolvido porque e ilimitado" << endl;
-            return 0;
-        }
-        if (status == GRB_INFEASIBLE) {
-            cout << "O modelo nao pode ser resolvido porque e inviavel. Verifique o arquivo InfeasibilityCheck.ilp" << endl;
-            model.computeIIS();
-            model.write(folderOutput + "/InfeasibilityCheck.ilp");
-            return 0;
-        }
+        // int status = model.get(GRB_IntAttr_Status);  // Verifica o status do modelo
+        // if (status == GRB_UNBOUNDED) {
+        //     cout << "O modelo nao pode ser resolvido porque e ilimitado" << endl;
+        //     return 0;
+        // }
+        // if (status == GRB_INFEASIBLE) {
+        //     cout << "O modelo nao pode ser resolvido porque e inviavel. Verifique o arquivo InfeasibilityCheck.ilp" << endl;
+        //     model.computeIIS();
+        //     model.write(folderOutput + "/InfeasibilityCheck.ilp");
+        //     return 0;
+        // }
 
         model.write(folderOutput + "/modelSolution.sol");
         convertModelData(folderOutput, model);

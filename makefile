@@ -85,10 +85,14 @@ PTGo:
 # Meus python
 # --------------------------------------------------------
 
-# TODO
-analisyFolder:
+analiseFolder:
 	clear
 	python ./scripts/reportAnalises.py ./output/TCC2V2/ 6
+	echo "\n"
+
+analiseFile:
+	clear
+	python ./scripts/reportAnalises.py ./output/Modelo/report.txt 0
 	echo "\n"
 
 # --------------------------------------------------------

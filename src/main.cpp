@@ -148,6 +148,7 @@ int main(int argc, char* argv[]) {
         exit(1);
     }
 
+    prob->setInputFiles(filenameJobs, filenameTools);
     prob->loadInstanceParans(filenameJobs);
     if (instance_report) prob->printDataReport();
     if (diferent_toolset_mode == 0 && !modelo) prob->groupJobs();

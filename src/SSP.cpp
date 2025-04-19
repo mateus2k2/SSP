@@ -33,3 +33,7 @@ void SSP::setParans(int capacityMagazine1, int numberMachines1, int planingHoriz
 	if (initSolType1 == 1) this->constructionFunc = std::bind(&SSP::rand, this);
 }
 
+void SSP::setInputFiles(string filenameJobs, string filenameTools){
+	this->inputJobsFile = filenameJobs;
+	this->inputToolsetsFile = filenameTools;
+}

@@ -23,6 +23,9 @@ def parseMachineSection(machine_section):
     return operationsObj
 
 def to_camel_case(s):
+    # If the string contains no separators, return it as-is
+    if not re.search(r'[\s_-]', s):
+        return s
     words = re.split(r'[\s_-]+', s)
     return words[0].lower() + ''.join(word.capitalize() for word in words[1:])
 

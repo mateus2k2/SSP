@@ -126,8 +126,8 @@ def checkProfit(machines, endInfo, jobs, planejamento):
 
     error = False
 
-    cost = endInfo['cost']
-    conta = (30 * endInfo['fineshedPriorityCount']) - (1 * endInfo['switchs']) - (10 * endInfo['switchsInstances']) - (30 * endInfo['unfinesedPriorityCount'])
+    cost = endInfo['finalSolution']
+    conta = (30 * endInfo['fineshedJobsCount']) - (1 * endInfo['switchs']) - (10 * endInfo['switchsInstances']) - (30 * endInfo['unfineshedPriorityCount'])
 
     if (cost != conta):
         print(f"Error = Found cost {cost}, expected {conta}")
