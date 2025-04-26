@@ -85,7 +85,7 @@ class SSP: public Problem<solSSP>{
 		double evaluateReportKTNS(solSSP &sol, string filenameJobs, string filenameTools, fstream& solutionReportFile);
 		solSSP postProcessDifferent(solSSP &sol);
 		
-		int modelo(string filenameoutput);
+		int modelo(string filenameoutput, int timeLimit);
 		void loadModelData();
 		void convertModelData(string& folderOutput, GRBModel& model);
 };

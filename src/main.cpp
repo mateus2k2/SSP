@@ -51,6 +51,7 @@ int main(int argc, char* argv[]) {
 
     // modelo
     int modelo = 0;
+    int timeLimit = 0;
 	
 	// Instance file name
 	string filenameJobs = arguments[0];
@@ -98,6 +99,8 @@ int main(int argc, char* argv[]) {
             passoGatilho = stoi(arguments[i+1]);
         else if(arguments[i]== "--MODELO")
             modelo = stoi(arguments[i+1]);
+        else if(arguments[i]== "--TIME_LIMIT")
+            timeLimit = stoi(arguments[i+1]);
     }
 	tempUp = PTL/ptlTempUpProportion;
 
@@ -155,7 +158,7 @@ int main(int argc, char* argv[]) {
     // ------------------------------------------------------------------------------
 
     if(modelo){ 
-        prob->modelo(filenameoutput);
+        prob->modelo(filenameoutput, timeLimit);
         return 0;
     }
 

@@ -17,13 +17,14 @@ using namespace std;
 // -------------------------------------------------
 // DEFINIÇÃO DOS PARAMS
 // -------------------------------------------------
-double r;   // recompensa por operação concluída
-double cp;  // custo por operação perdida (em priorityOperations)
-double cf;  // custo por troca supervisionada
-double cv;  // custo por ferramenta trocada
-int H;      // Horizonte de agendamento
-int tU;     // Duração do turno não supervisionado
-int TC;     // Capacidade total de ferramentas
+double r;      // recompensa por operação concluída
+double cp;     // custo por operação perdida (em priorityOperations)
+double cf;     // custo por troca supervisionada
+double cv;     // custo por ferramenta trocada
+double Hm;     // Horizonte de agendamento em minutos
+double Hd;     // Horizonte de agendamento em dias
+double tU;     // Duração do turno não supervisionado
+double TC;     // Capacidade total de ferramentas
 
 // -------------------------------------------------
 // DEFINIÇÃO DOS SETS
@@ -67,9 +68,11 @@ GRBLinExpr obj = 0;
 // -------------------------------------------------
 
 void printLoaded() {
+    return;
     printf("\n--- Loaded Data ---\n");
 
-    cout << "H: " << H << endl;
+    cout << "Hm: " << Hm << endl;
+    cout << "Hd: " << Hd << endl;
     cout << "tU: " << tU << endl;
     cout << "TC: " << TC << endl;
 
@@ -130,6 +133,7 @@ void printLoaded() {
 }
 
 void printsVars() {
+    return;
     cout << "\n--- Variable Values ---\n";
 
     // Print s(jk)
@@ -211,7 +215,7 @@ void SSP::convertModelData(string& folderOutput, GRBModel& model) {
     sort(operationsSorted.begin(), operationsSorted.end(), [&](const pair<int, int>& a, const pair<int, int>& b) { return s[a].get(GRB_DoubleAttr_X) < s[b].get(GRB_DoubleAttr_X); });
 
     solutionReportFile << inputJobsFile << ";" << inputToolsetsFile << endl;
-    solutionReportFile << (H / 60 / 24) << ";" << tU << ";" << 1440 << endl;
+    solutionReportFile << Hd << ";" << tU << ";" << 1440 << endl;
 
     for (int m : machinesModel) {
         solutionReportFile << "Machine: " << m - 1 << endl;
@@ -223,7 +227,6 @@ void SSP::convertModelData(string& folderOutput, GRBModel& model) {
 
             double start = s[{j, k}].get(GRB_DoubleAttr_X);
             double end = e[{j, k}].get(GRB_DoubleAttr_X);
-            cout << "TESTE: " << "(" << j << "," << k << ")" << start << ", " << end << endl;
 
             int priority = 0;
             if (priorityOperations.count({j, k})) {
@@ -310,8 +313,9 @@ void SSP::loadModelData() {
     cp = 30;
     cf = 10;
     cv = 1;
-    H = planingHorizon * 24 * 60;  // converte de dias para minutos
-    tU = unsupervised;             // ja esta em minutos
+    Hm = planingHorizon * 24 * 60;  // converte de dias para minutos
+    Hd = planingHorizon;            // em dias
+    tU = unsupervised;              // ja esta em minutos
     TC = capacityMagazine;
 
     for (auto job : originalJobs) {
@@ -344,8 +348,7 @@ void SSP::loadModelData() {
     // exit(0);
 }
 
-
-int SSP::modelo(string folderOutput) {
+int SSP::modelo(string folderOutput, int timeLimit) {
     loadModelData();
 
     try {
@@ -383,11 +386,11 @@ int SSP::modelo(string folderOutput) {
         // RESTRICTIONS
         // -------------------------------------------------
 
-        int L = 0;
+        double L = 0;
         for (auto [j, k] : operationsModel) {
             L += processingTimes[{j, k}];
         }
-        L += ceil((double)H * tU / 24.0);
+        L += ceil(Hm * (tU / (24 * 60)));
 
         // (2) Cada operação pode ser seguida por no máximo uma outra operação
         for (auto [j, k] : operationsModel) {
@@ -504,8 +507,8 @@ int SSP::modelo(string folderOutput) {
         // (10) Restrição para definir se uma operação foi concluída dentro do horizonte H
         const double eps = 1e-5;
         for (auto [j, k] : operationsModel) {
-            model.addConstr(alpha[{j, k}] >= (H - e[{j, k}]) / (double)L + eps, "alpha_lb_" + to_string(j) + "_" + to_string(k));
-            model.addConstr(alpha[{j, k}] <= 1 - (e[{j, k}] - H) / (double)L, "alpha_ub_" + to_string(j) + "_" + to_string(k));
+            model.addConstr(alpha[{j, k}] >= (Hm - e[{j, k}]) / L + eps, "alpha_lb_" + to_string(j) + "_" + to_string(k));
+            model.addConstr(alpha[{j, k}] <= 1 - (e[{j, k}] - Hm) / L, "alpha_ub_" + to_string(j) + "_" + to_string(k));
         }
 
         // (11) Restrição: soma das ferramentas presentes no início da operação não pode ultrapassar T_C
@@ -567,12 +570,12 @@ int SSP::modelo(string folderOutput) {
         map<pair<int, int>, GRBVar> q;
 
         for (auto [j, k] : operationsModel) {
-            h[{j, k}] = model.addVar(0.0, 24.0, 0.0, GRB_CONTINUOUS, "h_" + to_string(j) + "_" + to_string(k));
+            h[{j, k}] = model.addVar(0.0, (24*60), 0.0, GRB_CONTINUOUS, "h_" + to_string(j) + "_" + to_string(k));
             q[{j, k}] = model.addVar(0.0, GRB_INFINITY, 0.0, GRB_INTEGER, "q_" + to_string(j) + "_" + to_string(k));
 
-            model.addConstr(s[{j, k}] == 24 * q[{j, k}] + h[{j, k}], "mod_reconstruction_" + to_string(j) + "_" + to_string(k));
+            model.addConstr(s[{j, k}] == (24*60) * q[{j, k}] + h[{j, k}], "mod_reconstruction_" + to_string(j) + "_" + to_string(k));
 
-            double denom = 24.0 - tU;
+            double denom = (24*60) - tU;
             model.addConstr(l[{j, k}] <= 2 - h[{j, k}] / denom, "supervised_tool_switch_" + to_string(j) + "_" + to_string(k));
         }
 
@@ -611,13 +614,11 @@ int SSP::modelo(string folderOutput) {
 
         // finalizadas
         for (auto [j, k] : operationsModel) {
-            // obj += r * alpha[{j, k}];
             obj += (r * alpha[{j, k}]) * (agrupados[{j, k}] ? 2 : 1);
         }
 
         // nao finalizadas
         for (auto [j, k] : priorityOperations) {
-            // obj += -cp * (1 - alpha[{j, k}]);
             obj += (-cp * (1 - alpha[{j, k}])) * (agrupados[{j, k}] ? 2 : 1);
         }
 
@@ -639,11 +640,14 @@ int SSP::modelo(string folderOutput) {
         // SOLVING AND OUTPUT
         // -------------------------------------------------
 
-        model.update();                               // Atualiza o conteúdo do modelo
-        model.write(folderOutput + "/testModel.lp");  // Escreve o modelo em um arquivo
-        model.optimize();                             // Resolve o modelo
+        model.update();                                         // Atualiza o conteúdo do modelo
+        if (timeLimit > 0) {
+            model.set(GRB_DoubleParam_TimeLimit, timeLimit*60); // 5 minutes
+        }
+        model.write(folderOutput + "/model.lp");                // Escreve o modelo em um arquivo
+        model.optimize();                                       // Resolve o modelo
 
-        int status = model.get(GRB_IntAttr_Status);  // Verifica o status do modelo
+        int status = model.get(GRB_IntAttr_Status);             // Verifica o status do modelo
         if (status == GRB_UNBOUNDED) {
             cout << "O modelo nao pode ser resolvido porque e ilimitado" << endl;
             return 0;
@@ -653,6 +657,9 @@ int SSP::modelo(string folderOutput) {
             model.computeIIS();
             model.write(folderOutput + "/InfeasibilityCheck.ilp");
             return 0;
+        }
+        if (status == GRB_TIME_LIMIT) {
+            cout << "Optimization stopped due to time limit." << std::endl;
         }
 
         model.write(folderOutput + "/modelSolution.sol");
