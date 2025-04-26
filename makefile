@@ -72,7 +72,8 @@ runModelo:
 		"./input/Exemplo/Jobs.csv" \
 		"./input/Exemplo/ToolSets.csv" \
 		"./output/Modelo" \
-		--DIFERENT_TOOLSETS_MODE 0 \
+		--DIFERENT_TOOLSETS_MODE 1 \
+		--INSTANCE_REPORT 1 \
 		--MODELO 1 \
 		
 

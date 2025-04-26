@@ -67,7 +67,8 @@ GRBLinExpr obj = 0;
 // -------------------------------------------------
 
 void printLoaded() {
-    // print all variables
+    printf("\n--- Loaded Data ---\n");
+
     cout << "H: " << H << endl;
     cout << "tU: " << tU << endl;
     cout << "TC: " << TC << endl;
@@ -103,6 +104,11 @@ void printLoaded() {
             cout << t << " ";
         }
         cout << endl;
+    }
+
+    cout << "processingTimes: " << endl;
+    for (auto [jk, time] : processingTimes) {
+        cout << "(" << jk.first << "," << jk.second << ") -> " << time << " " << endl;
     }
 
     cout << "priorityOperations: ";
@@ -217,6 +223,7 @@ void SSP::convertModelData(string& folderOutput, GRBModel& model) {
 
             double start = s[{j, k}].get(GRB_DoubleAttr_X);
             double end = e[{j, k}].get(GRB_DoubleAttr_X);
+            cout << "TESTE: " << "(" << j << "," << k << ")" << start << ", " << end << endl;
 
             int priority = 0;
             if (priorityOperations.count({j, k})) {
@@ -245,9 +252,9 @@ void SSP::convertModelData(string& folderOutput, GRBModel& model) {
             Job job = fullData[{j, k}];
             for (int i = 0; i < loops; ++i) {
                 if (isGrouped && i == 0) {
-                    writeJobDetails(j-1, k-1, start, start + job.processingTimes[0], priority, toolsUsed);
+                    writeJobDetails(j-1, 0, start, start + job.processingTimes[0], priority, toolsUsed);
                 } else if (isGrouped && i == 1) {
-                    writeJobDetails(j-1, k-1, start + job.processingTimes[0], end, priority, toolsUsed);
+                    writeJobDetails(j-1, 1, start + job.processingTimes[0], end, priority, toolsUsed);
                 } else {
                     writeJobDetails(j-1, k-1, start, end, priority, toolsUsed);
                 }
@@ -258,14 +265,16 @@ void SSP::convertModelData(string& folderOutput, GRBModel& model) {
     int fineshedJobsCount = 0;
     for (auto [j, k] : operationsModel) {
         if (alpha[{j, k}].get(GRB_DoubleAttr_X) > 0.5) {
-            fineshedJobsCount++;
+            // fineshedJobsCount++;
+            fineshedJobsCount += agrupados[{j, k}] ? 2 : 1; 
         }
     }
 
     int unfineshedPriorityCount = 0;
     for (auto [j, k] : priorityOperations) {
         if (alpha[{j, k}].get(GRB_DoubleAttr_X) < 0.5) {
-            unfineshedPriorityCount++;
+            // unfineshedPriorityCount++;
+            unfineshedPriorityCount += agrupados[{j, k}] ? 2 : 1;
         }
     }
 
@@ -332,8 +341,9 @@ void SSP::loadModelData() {
     }
 
     printLoaded();
-    exit(0);
+    // exit(0);
 }
+
 
 int SSP::modelo(string folderOutput) {
     loadModelData();
@@ -599,24 +609,24 @@ int SSP::modelo(string folderOutput) {
         // OBJs
         // -------------------------------------------------
 
-        // finalizadas = + r * sum(alpha)
+        // finalizadas
         for (auto [j, k] : operationsModel) {
-            obj += r * alpha[{j, k}];
-            // obj += (r * alpha[{j, k}]) * (agrupados[{j, k}] ? 2 : 1);
+            // obj += r * alpha[{j, k}];
+            obj += (r * alpha[{j, k}]) * (agrupados[{j, k}] ? 2 : 1);
         }
 
-        // nao finalizadas = - c(processingTimes) * sum(1 - alpha) para operações em priorityOperations
+        // nao finalizadas
         for (auto [j, k] : priorityOperations) {
-            obj += -cp * (1 - alpha[{j, k}]);
-            // obj += (cp * (1 - alpha[{j, k}])) * (agrupados[{j, k}] ? 2 : 1);
+            // obj += -cp * (1 - alpha[{j, k}]);
+            obj += (-cp * (1 - alpha[{j, k}])) * (agrupados[{j, k}] ? 2 : 1);
         }
 
-        // instancias de troca de ferramentas - c(f) * sum(delta)
+        // instancias de troca de ferramentas
         for (auto [j, k] : operationsModel) {
             obj += -cf * delta[{j, k}];
         }
 
-        // troca de ferramentas = - c(v) * sum(lambda)
+        // troca de ferramentas
         for (auto [j, k] : operationsModel) {
             for (int t : toolsModel) {
                 obj += -cv * lambda[{t, j, k}];

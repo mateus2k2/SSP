@@ -1,51 +1,55 @@
-make compile
-make[1]: Entering directory '/home/mateus/WSL/IC/SSP'
 clear
-[H[2J[3Jg++ -DDEBUG  -DRANDSEED ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -m64 -g -o src/out/mainCpp -I/opt/gurobi1201/linux64/include -L/opt/gurobi1201/linux64/lib -lgurobi_c++ -lgurobi120 -lm -Wno-unused-result -lpthread  -march=native -lstdc++ -lfmt
-echo "\n" 
+[H[2J[3Jpython ./scripts/reportAnalises.py ./output/Modelo/report.txt 0
+---Validating ./output/Modelo/report.txt---
+{'finalSolution': 280.0, 'fineshedJobsCount': 10.0, 'switchs': 0.0, 'switchsInstances': 2.0, 'unfineshedPriorityCount': 0.0, 'Time': 9.22409}
+Checking Magazine
+Machine 1/2
+OK
+Machine 2/2
+OK
+
+Checking Unsupervised Switchs
+Machine 1/2
+Error = Unsupervised Switch in Machine 1/2 | Job 2 Operation 0 | {8, 9, 10, 11, 12, 13}
+ERROR
+Machine 2/2
+OK
+
+Checking Switchs
+Error = Found 2 switchInstances and 9 toolSwitchs, expected 2.0 switchInstances and 0.0 toolSwitchs
+ERROR
+
+Checking Unfinished Jobs
+TODO
+
+Checking Operations Done Once
+Machine 1/2
+OK
+Machine 2/2
+OK
+
+Checking Profit
+OK
+
+Running New KTNS
+TODO
+
+Checking Magazine Size
+Machine 1/2
+Error = Job 6 Operation 0 | Magazine size = 8
+Error = Job 0 Operation 0 | Magazine size = 8
+Error = Job 4 Operation 0 | Magazine size = 8
+Error = Job 0 Operation 1 | Magazine size = 5
+Error = Job 2 Operation 0 | Magazine size = 8
+Error = Job 2 Operation 1 | Magazine size = 8
+ERRORSIZE
+Machine 2/2
+Error = Job 5 Operation 0 | Magazine size = 7
+Error = Job 1 Operation 0 | Magazine size = 7
+Error = Job 3 Operation 0 | Magazine size = 7
+Error = Job 3 Operation 1 | Magazine size = 7
+ERRORSIZE
+
+echo "\n"
 
 
-make[1]: Leaving directory '/home/mateus/WSL/IC/SSP'
-make runModelo
-make[1]: Entering directory '/home/mateus/WSL/IC/SSP'
-./src/out/mainCpp \
-	"./input/Exemplo/Jobs.csv" \
-	"./input/Exemplo/ToolSets.csv" \
-	"./output/Modelo" \
-	--DIFERENT_TOOLSETS_MODE 0 \
-	--MODELO 1 \
-	
-H: 2880
-tU: 720
-TC: 8
-operationsModel: (1,1) (2,1) (3,1) (4,1) (5,1) (6,1) (7,1) 
-machinesModel: 1 2 
-toolsModel: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 
-jobOperationsCount: (1,1) (2,1) (3,1) (4,1) (5,1) (6,1) (7,1) 
-requiredTools: 
-(1,1) -> 1 2 3 4 5 
-(2,1) -> 6 7 8 9 10 11 12 
-(3,1) -> 4 5 13 14 15 16 6 7 
-(4,1) -> 6 7 8 9 10 11 12 
-(5,1) -> 5 17 18 
-(6,1) -> 9 10 11 12 19 20 
-(7,1) -> 1 2 3 4 5 
-priorityOperations: (1,1) (4,1) (7,1) 
-agrupados: 
-(1,1) -> 1 
-(2,1) -> 0 
-(3,1) -> 1 
-(4,1) -> 1 
-(5,1) -> 0 
-(6,1) -> 0 
-(7,1) -> 0 
-fullData: 
-(1,1) -> (0,0) 
-(2,1) -> (1,0) 
-(3,1) -> (2,0) 
-(4,1) -> (3,0) 
-(5,1) -> (4,0) 
-(6,1) -> (5,0) 
-(7,1) -> (6,0) 
-
-make[1]: Leaving directory '/home/mateus/WSL/IC/SSP'
