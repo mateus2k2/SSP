@@ -101,8 +101,7 @@ int main(int argc, char* argv[]) {
     }
 	tempUp = PTL/ptlTempUpProportion;
 
-	SSP* prob = new SSP(filenameJobs,filenameTools);
-	prob->setParans(capacityMagazine, numberMachines, planingHorizon, unsupervised, uType, initSolType, diferent_toolset_mode);
+	SSP* prob = new SSP(filenameJobs,filenameTools,diferent_toolset_mode);
 
     // ------------------------------------------------------------------------------
     // TEST
@@ -138,7 +137,7 @@ int main(int argc, char* argv[]) {
     // prob->evaluateReportKTNS(finalSolution, filenameJobs, filenameTools, filenameoutput, 0, true);
 
     // ------------------------------------------------------------------------------
-    // DATA LOADIDNG
+    // DATA LOADIDNG AND PRE PROCESSING
     // ------------------------------------------------------------------------------
 
     fstream solutionReportFile;
@@ -148,15 +147,13 @@ int main(int argc, char* argv[]) {
         exit(1);
     }
 
-    prob->setInputFiles(filenameJobs, filenameTools);
-    prob->loadInstanceParans(filenameJobs);
     if (instance_report) prob->printDataReport();
-    if (diferent_toolset_mode == 0 && !modelo) prob->groupJobs();
+    if (diferent_toolset_mode == 0) prob->groupJobs();
 
     // ------------------------------------------------------------------------------
     // MODELO
     // ------------------------------------------------------------------------------
-    
+
     if(modelo){ 
         prob->modelo(filenameoutput);
         return 0;
@@ -166,6 +163,7 @@ int main(int argc, char* argv[]) {
     // SSP
     // ------------------------------------------------------------------------------
 
+	prob->setParans(capacityMagazine, numberMachines, planingHorizon, unsupervised, uType, initSolType);
     PT<solSSP> algo(tempIni, tempfim, tempN, MCL, PTL, passoGatilho, tempD, uType, tempUp);
     ExecTime et;
     solSSP sol = algo.start(thN, prob);

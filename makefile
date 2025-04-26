@@ -37,24 +37,21 @@ else
 	RAND_MACRO =
 endif
 
-debugCompilePT:
+debugCompile:
 	clear 
 	g++ $(DEBUG_MACRO) $(GATILHO_MACRO) $(RAND_MACRO) src/*.cpp -std=c++2a -Wshadow -pg -Wall -m64 -g -o src/out/mainCppDebug -I${GUROBI_HOME}/include -L${GUROBI_HOME}/lib -lgurobi_c++ -lgurobi120 -lm -Wno-unused-result -lpthread -g -march=native -lstdc++ $(USE_FTM)
 	echo "\n" 
 	clear
 
-compilePT:
+compile:
 	clear
 	g++ $(DEBUG_MACRO) $(GATILHO_MACRO) $(RAND_MACRO) ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -m64 -g -o src/out/mainCpp -I${GUROBI_HOME}/include -L${GUROBI_HOME}/lib -lgurobi_c++ -lgurobi120 -lm -Wno-unused-result -lpthread $(FAST_COMPILE_MACRO) -march=native -lstdc++ $(USE_FTM)
 	echo "\n" 
 
-# "./input/MyInstancesSameToolSets/n=212,p=0.75,r=0.4,t=1390,v8.csv" \
-# "./input/Processed/ToolSetInt.csv" \
-
 runPT:
 	./src/out/mainCpp \
-		"./input/Exemplo/Jobs.csv" \
-		"./input/Exemplo/ToolSets.csv" \
+		"./input/MyInstancesSameToolSets/n=212,p=0.75,r=0.4,t=1390,v8.csv" \
+		"./input/Processed/ToolSetInt.csv" \
 		"./output/Modelo" \
 		--TEMP_INIT 0.1 \
 		--TEMP_FIM 5 \
@@ -68,17 +65,23 @@ runPT:
 		--TEMP_UPDATE 3500 \
 		--PTL_TEMP_UPDATE_PROPORTION 3 \
 		--DIFERENT_TOOLSETS_MODE 0 \
-		--MODELO 1 \
+		--MODELO 0 \
 
 runModelo:
-	./src/out/mainCpp "./input/MyInstancesSameToolSets/n=212,p=0.75,r=0.4,t=1390,v8.csv" "./input/Processed/ToolSetInt.csv" "./output/Modelo" 
+	./src/out/mainCpp \
+		"./input/Exemplo/Jobs.csv" \
+		"./input/Exemplo/ToolSets.csv" \
+		"./output/Modelo" \
+		--DIFERENT_TOOLSETS_MODE 0 \
+		--MODELO 1 \
+		
 
-modeloGo:
-	make compilePT
+goModelo:
+	make compile
 	make runModelo
 
-PTGo:
-	make compilePT
+goPT:
+	make compile
 	make runPT
 
 # --------------------------------------------------------

@@ -5,20 +5,23 @@
 #include <fmt/core.h>
 #endif
 
-SSP::SSP(std::string filenameJobs, std::string filenameTools){
+SSP::SSP(std::string filenameJobs, std::string filenameTools, int diferent_toolset_mode_){
     laodToolSet(filenameTools);
     laodInstance(filenameJobs);
+    loadInstanceParans(filenameJobs);
+	this->diferent_toolset_mode = diferent_toolset_mode_;
+	this->inputJobsFile = filenameJobs;
+	this->inputToolsetsFile = filenameTools;
 }
 
 SSP::~SSP(){	
 }
 
-void SSP::setParans(int capacityMagazine1, int numberMachines1, int planingHorizon1, int unsupervised1, int movementType1, int initSolType1, int diferent_toolset_mode1){
+void SSP::setParans(int capacityMagazine1, int numberMachines1, int planingHorizon1, int unsupervised1, int movementType1, int initSolType1){
 	this->capacityMagazine = capacityMagazine1;
 	this->numberMachines = numberMachines1;
 	this->planingHorizon = planingHorizon1;
 	this->unsupervised = unsupervised1;
-	this->diferent_toolset_mode = diferent_toolset_mode1;
 
 	// two_opt = 0
 	// two_swap = 1
@@ -31,9 +34,4 @@ void SSP::setParans(int capacityMagazine1, int numberMachines1, int planingHoriz
 	// randPriority = 1
 	if (initSolType1 == 0) this->constructionFunc = std::bind(&SSP::randPriority, this);
 	if (initSolType1 == 1) this->constructionFunc = std::bind(&SSP::rand, this);
-}
-
-void SSP::setInputFiles(string filenameJobs, string filenameTools){
-	this->inputJobsFile = filenameJobs;
-	this->inputToolsetsFile = filenameTools;
 }

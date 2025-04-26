@@ -11,11 +11,8 @@
 
 using namespace std;
 
-
-// TODOS
-// mod
-// passar vars pra inteiro
-// fazer restrição 23 
+// https://docs.gurobi.com/projects/optimizer/en/current/reference/cpp/var.html
+// agrupar reentrantes e duplicar bonus de finalizacao e prejuizo de atraso
 
 // -------------------------------------------------
 // DEFINIÇÃO DOS PARAMS
@@ -38,6 +35,9 @@ map<int, int> jobOperationsCount;                // job → número de operaçõ
 map<pair<int, int>, vector<int>> requiredTools;  // (j,k) → lista de ferramentas requeridas
 set<pair<int, int>> priorityOperations;          // subconjunto de operações penalizadas se não concluídas
 map<pair<int, int>, int> processingTimes;        // (j,k) → tempo de processamento
+
+map<pair<int, int>, bool> agrupados;  // (j,k) → tempo de processamento
+map<pair<int, int>, Job> fullData;    // mapea o job e operação para o job completo
 
 // -------------------------------------------------
 // DEFINIÇÃO DAS VARS
@@ -66,15 +66,64 @@ GRBLinExpr obj = 0;
 // FUNÇÕES
 // -------------------------------------------------
 
-void SSP::convertModelData(string& folderOutput, GRBModel& model) {
-    fstream solutionReportFile;
-    string filename = folderOutput + "/report.txt";
-    solutionReportFile.open(filename, ios::out);
-    if (!solutionReportFile.is_open()) {
-        cerr << "Error: Could not open solution report file: " << filename << endl;
-        exit(1);
+void printLoaded() {
+    // print all variables
+    cout << "H: " << H << endl;
+    cout << "tU: " << tU << endl;
+    cout << "TC: " << TC << endl;
+
+    cout << "operationsModel: ";
+    for (auto op : operationsModel) {
+        cout << "(" << op.first << "," << op.second << ") ";
+    }
+    cout << endl;
+
+    cout << "machinesModel: ";
+    for (auto m : machinesModel) {
+        cout << m << " ";
+    }
+    cout << endl;
+
+    cout << "toolsModel: ";
+    for (auto t : toolsModel) {
+        cout << t << " ";
+    }
+    cout << endl;
+
+    cout << "jobOperationsCount: ";
+    for (auto [j, k] : jobOperationsCount) {
+        cout << "(" << j << "," << k << ") ";
+    }
+    cout << endl;
+
+    cout << "requiredTools: " << endl;
+    for (auto [jk, tools] : requiredTools) {
+        cout << "(" << jk.first << "," << jk.second << ") -> ";
+        for (int t : tools) {
+            cout << t << " ";
+        }
+        cout << endl;
     }
 
+    cout << "priorityOperations: ";
+    for (auto [j, k] : priorityOperations) {
+        cout << "(" << j << "," << k << ") ";
+    }
+    cout << endl;
+
+    cout << "agrupados: " << endl;
+    for (auto [jk, isGrouped] : agrupados) {
+        cout << "(" << jk.first << "," << jk.second << ") -> " << isGrouped << " " << endl;
+    }
+
+    cout << "fullData: " << endl;
+    for (auto [jk, job] : fullData) {
+        cout << "(" << jk.first << "," << jk.second << ") -> (" << job.indexJob << "," << job.indexOperation << ") " << endl;
+    }
+    cout << endl;
+}
+
+void printsVars() {
     cout << "\n--- Variable Values ---\n";
 
     // Print s(jk)
@@ -136,15 +185,27 @@ void SSP::convertModelData(string& folderOutput, GRBModel& model) {
     for (const auto& [tjk, var] : lambda) {
         cout << "lambda(" << get<0>(tjk) << "," << get<1>(tjk) << "," << get<2>(tjk) << ") = " << var.get(GRB_DoubleAttr_X) << endl;
     }
+}
+
+void SSP::convertModelData(string& folderOutput, GRBModel& model) {
+    fstream solutionReportFile;
+    string filename = folderOutput + "/report.txt";
+    solutionReportFile.open(filename, ios::out);
+    if (!solutionReportFile.is_open()) {
+        cerr << "Error: Could not open solution report file: " << filename << endl;
+        exit(1);
+    }
+
+    printsVars();
 
     vector<pair<int, int>> operationsSorted;
     for (const auto& [j, k] : operationsModel) {
         operationsSorted.push_back({j, k});
     }
     sort(operationsSorted.begin(), operationsSorted.end(), [&](const pair<int, int>& a, const pair<int, int>& b) { return s[a].get(GRB_DoubleAttr_X) < s[b].get(GRB_DoubleAttr_X); });
-    
+
     solutionReportFile << inputJobsFile << ";" << inputToolsetsFile << endl;
-    solutionReportFile << (H/60/24) << ";" << tU << ";" << 1440 << endl;
+    solutionReportFile << (H / 60 / 24) << ";" << tU << ";" << 1440 << endl;
 
     for (int m : machinesModel) {
         solutionReportFile << "Machine: " << m - 1 << endl;
@@ -167,16 +228,30 @@ void SSP::convertModelData(string& folderOutput, GRBModel& model) {
             vector<int> toolsUsed;
             for (int t : toolsModel) {
                 if (y[{t, j, k}].get(GRB_DoubleAttr_X) > 0.5) {
-                    toolsUsed.push_back(ferramentNormalizadaXFerramentaReal[t-1]);
+                    toolsUsed.push_back(ferramentNormalizadaXFerramentaReal[t - 1]);
                 }
             }
 
-            solutionReportFile << (j-1) << ";" << (k-1) << ";" << start << ";" << end << ";" << priority << ";";
-            for (size_t i = 0; i < toolsUsed.size(); ++i) {
-                solutionReportFile << toolsUsed[i];
-                solutionReportFile << ",";
+            auto writeJobDetails = [&](int task_, int operation_, int start_, int end_, int priority_, vector<int> toolsUsed_) {
+                solutionReportFile << task_ << ";" << operation_ << ";" << start_ << ";" << end_ << ";" << priority_ << ";";
+                for (int t : toolsUsed_) {
+                    solutionReportFile << t << ",";
+                }
+                solutionReportFile << "\n";
+            };
+
+            int loops = agrupados[{j, k}] ? 2 : 1;
+            int isGrouped = agrupados[{j, k}];
+            Job job = fullData[{j, k}];
+            for (int i = 0; i < loops; ++i) {
+                if (isGrouped && i == 0) {
+                    writeJobDetails(j-1, k-1, start, start + job.processingTimes[0], priority, toolsUsed);
+                } else if (isGrouped && i == 1) {
+                    writeJobDetails(j-1, k-1, start + job.processingTimes[0], end, priority, toolsUsed);
+                } else {
+                    writeJobDetails(j-1, k-1, start, end, priority, toolsUsed);
+                }
             }
-            solutionReportFile << endl;
         }
     }
 
@@ -231,8 +306,8 @@ void SSP::loadModelData() {
     TC = capacityMagazine;
 
     for (auto job : originalJobs) {
-        int jobIndex = job.indexJob+1;
-        int operationIndex = job.indexOperation+1;
+        int jobIndex = job.indexJob + 1;
+        int operationIndex = job.indexOperation + 1;
         operationsModel.push_back({jobIndex, operationIndex});
         jobOperationsCount[jobIndex] = operationIndex;
         processingTimes[{jobIndex, operationIndex}] = job.processingTime;
@@ -243,6 +318,9 @@ void SSP::loadModelData() {
             incrementedTools.push_back(tool + 1);
         }
         requiredTools[{jobIndex, operationIndex}] = incrementedTools;
+
+        agrupados[{jobIndex, operationIndex}] = job.isGrouped;
+        fullData[{jobIndex, operationIndex}] = job;
     }
 
     for (int i = 0; i < numberMachines; i++) {
@@ -253,51 +331,8 @@ void SSP::loadModelData() {
         toolsModel.push_back(i + 1);
     }
 
-    // print all variables
-    // cout << "H: " << H << endl;
-    // cout << "tU: " << tU << endl;
-    // cout << "TC: " << TC << endl;
-
-    // cout << "operationsModel: ";
-    // for (auto op : operationsModel) {
-    //     cout << "(" << op.first << "," << op.second << ") ";
-    // }
-    // cout << endl;
-
-    // cout << "machinesModel: ";
-    // for (auto m : machinesModel) {
-    //     cout << m << " ";
-    // }
-    // cout << endl;
-
-    // cout << "toolsModel: ";
-    // for (auto t : toolsModel) {
-    //     cout << t << " ";
-    // }
-    // cout << endl;
-
-    // cout << "jobOperationsCount: ";
-    // for (auto [j, k] : jobOperationsCount) {
-    //     cout << "(" << j << "," << k << ") ";
-    // }
-    // cout << endl;
-
-    // cout << "requiredTools: " << endl;
-    // for (auto [jk, tools] : requiredTools) {
-    //     cout << "(" << jk.first << "," << jk.second << ") -> ";
-    //     for (int t : tools) {
-    //         cout << t << " ";
-    //     }
-    //     cout << endl;
-    // }
-
-    // cout << "priorityOperations: ";
-    // for (auto [j, k] : priorityOperations) {
-    //     cout << "(" << j << "," << k << ") ";
-    // }
-    // cout << endl;
-
-    // exit(0);
+    printLoaded();
+    exit(0);
 }
 
 int SSP::modelo(string folderOutput) {
@@ -534,10 +569,14 @@ int SSP::modelo(string folderOutput) {
         // (25)-(27) Linearização de delta(jk) = alpha(jk) * l(jk)
         for (auto [j, k] : operationsModel) {
             model.addConstr(delta[{j, k}] <= alpha[{j, k}], "delta_le_alpha_" + to_string(j) + "_" + to_string(k));
-
             model.addConstr(delta[{j, k}] <= l[{j, k}], "delta_le_l_" + to_string(j) + "_" + to_string(k));
-
             model.addConstr(delta[{j, k}] >= alpha[{j, k}] + l[{j, k}] - 1, "delta_ge_sum_minus1_" + to_string(j) + "_" + to_string(k));
+
+            for (int t : toolsModel) {
+                model.addConstr(lambda[{t, j, k}] <= alpha[{j, k}], "lambda_le_alpha_" + to_string(t) + "_" + to_string(j) + "_" + to_string(k));
+                model.addConstr(lambda[{t, j, k}] <= z[{t, j, k}], "lambda_le_l_" + to_string(t) + "_" + to_string(j) + "_" + to_string(k));
+                model.addConstr(lambda[{t, j, k}] >= alpha[{j, k}] + z[{t, j, k}] - 1, "lambda_ge_sum_minus1_" + to_string(t) + "_" + to_string(j) + "_" + to_string(k));
+            }
         }
 
         // (28) otimizacao da troca de ferramentas
@@ -560,22 +599,24 @@ int SSP::modelo(string folderOutput) {
         // OBJs
         // -------------------------------------------------
 
-        // + r * sum(alpha)
+        // finalizadas = + r * sum(alpha)
         for (auto [j, k] : operationsModel) {
             obj += r * alpha[{j, k}];
+            // obj += (r * alpha[{j, k}]) * (agrupados[{j, k}] ? 2 : 1);
         }
 
-        // - c(processingTimes) * sum(1 - alpha) para operações em priorityOperations
+        // nao finalizadas = - c(processingTimes) * sum(1 - alpha) para operações em priorityOperations
         for (auto [j, k] : priorityOperations) {
             obj += -cp * (1 - alpha[{j, k}]);
+            // obj += (cp * (1 - alpha[{j, k}])) * (agrupados[{j, k}] ? 2 : 1);
         }
 
-        // - c(f) * sum(delta)
+        // instancias de troca de ferramentas - c(f) * sum(delta)
         for (auto [j, k] : operationsModel) {
             obj += -cf * delta[{j, k}];
         }
 
-        // - c(v) * sum(lambda)
+        // troca de ferramentas = - c(v) * sum(lambda)
         for (auto [j, k] : operationsModel) {
             for (int t : toolsModel) {
                 obj += -cv * lambda[{t, j, k}];

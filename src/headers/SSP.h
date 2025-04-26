@@ -62,15 +62,14 @@ class SSP: public Problem<solSSP>{
     	std::function<solSSP()> constructionFunc;
 		
 	public:
-		SSP(std::string filenameJobs, std::string filenameTools);
+		SSP(std::string filenameJobs, std::string filenameTools, int diferent_toolset_mode);
 		~SSP();
 
 		int laodInstance(string filename);
 		int laodToolSet(string filename);
 		int loadInstanceParans(string filename);
 		void printDataReport();
-		void setParans(int capacityMagazine, int numberMachines, int planingHorizon, int unsupervised, int movementType, int initSolType, int diferent_toolset_mode);
-		void setInputFiles(string filenameJobs, string filenameTools);
+		void setParans(int capacityMagazine, int numberMachines, int planingHorizon, int unsupervised, int movementType, int initSolType);
 
 		solSSP construction();
 		solSSP randPriority();
