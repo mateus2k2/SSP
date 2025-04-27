@@ -1,58 +1,731 @@
+make compile
+make[1]: Entering directory '/home/mateus/WSL/IC/SSP'
 clear
-[H[2J[3Jpython ./scripts/reportAnalises.py ./output/Modelo/report.txt 0
----Validating ./output/Modelo/report.txt---
-{'finalSolution': 322.0, 'fineshedJobsCount': 12.0, 'switchs': 8.0, 'switchsInstances': 3.0, 'unfineshedPriorityCount': 0.0, 'Time': 60.0354}
-Checking Magazine
-Machine 1/2
-Error = Job 3 Operation 1 ToolSet 3 not found in magazine = {4, 5, 8, 9, 10, 11, 12, 13}
-Error = Job 9 Operation 1 ToolSet 4 not found in magazine = {6, 7}
-ERROR
-Machine 2/2
-Error = Job 5 Operation 1 ToolSet 4 not found in magazine = {6, 7}
-ERROR
-
-Checking Unsupervised Switchs
-Machine 1/2
-OK
-Machine 2/2
-OK
-
-Checking Switchs
-OK
-
-Checking Unfinished Jobs
-TODO
-
-Checking Operations Done Once
-Machine 1/2
-OK
-Machine 2/2
-OK
-
-Checking Profit
-OK
-
-Running New KTNS
-TODO
-
-Checking Magazine Size
-Machine 1/2
-Error = Job 2 Operation 0 | Magazine size = 8
-Error = Job 3 Operation 0 | Magazine size = 7
-Error = Job 3 Operation 1 | Magazine size = 7
-Error = Job 6 Operation 0 | Magazine size = 7
-Error = Job 9 Operation 0 | Magazine size = 6
-Error = Job 9 Operation 1 | Magazine size = 6
-Error = Job 8 Operation 0 | Magazine size = 6
-ERRORSIZE
-Machine 2/2
-Error = Job 1 Operation 0 | Magazine size = 8
-Error = Job 4 Operation 0 | Magazine size = 8
-Error = Job 4 Operation 1 | Magazine size = 8
-Error = Job 5 Operation 0 | Magazine size = 8
-Error = Job 5 Operation 1 | Magazine size = 8
-ERRORSIZE
-
-echo "\n"
+[H[2J[3Jg++ -DDEBUG  -DRANDSEED ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -m64 -g -o src/out/mainCpp -I/opt/gurobi1201/linux64/include -L/opt/gurobi1201/linux64/lib -lgurobi_c++ -lgurobi120 -lm -Wno-unused-result -lpthread  -march=native -lstdc++ -lfmt
+echo "\n" 
 
 
+make[1]: Leaving directory '/home/mateus/WSL/IC/SSP'
+make runModelo
+make[1]: Entering directory '/home/mateus/WSL/IC/SSP'
+./src/out/mainCpp \
+	"./input/Exemplo/Jobs.csv" \
+	"./input/Exemplo/ToolSets.csv" \
+	"./output/Modelo" \
+	--DIFERENT_TOOLSETS_MODE 0 \
+	--INSTANCE_REPORT 0 \
+	--TIME_LIMIT 5 \
+	--MODELO 1 \
+	
+
+--- Loaded Data ---
+Hm: 2880
+Hd: 2
+tU: 720
+TC: 8
+operationsModel: (1,1) (2,1) (3,1) (4,1) (5,1) (6,1) (7,1) 
+machinesModel: 1 2 
+toolsModel: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 
+jobOperationsCount: (1,1) (2,1) (3,1) (4,1) (5,1) (6,1) (7,1) 
+requiredTools: 
+(1,1) -> 1 2 3 4 5 
+(2,1) -> 6 7 8 9 10 11 12 
+(3,1) -> 4 5 13 14 15 16 6 7 
+(4,1) -> 6 7 8 9 10 11 12 
+(5,1) -> 5 17 18 
+(6,1) -> 9 10 11 12 19 20 
+(7,1) -> 1 2 3 4 5 
+processingTimes: 
+(1,1) -> 480 
+(2,1) -> 420 
+(3,1) -> 840 
+(4,1) -> 780 
+(5,1) -> 360 
+(6,1) -> 600 
+(7,1) -> 300 
+priorityOperations: (1,1) (4,1) (7,1) 
+agrupados: 
+(1,1) -> 1 
+(2,1) -> 0 
+(3,1) -> 1 
+(4,1) -> 1 
+(5,1) -> 0 
+(6,1) -> 0 
+(7,1) -> 0 
+fullData: 
+(1,1) -> (0,0) 
+(2,1) -> (1,0) 
+(3,1) -> (2,0) 
+(4,1) -> (3,0) 
+(5,1) -> (4,0) 
+(6,1) -> (5,0) 
+(7,1) -> (6,0) 
+
+Set parameter Username
+Set parameter LicenseID to value 2637114
+Academic license - for non-commercial use only - expires 2026-03-16
+Set parameter TimeLimit to value 300
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Ubuntu 22.04.5 LTS")
+
+CPU model: AMD Ryzen 5 3600 6-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 6 physical cores, 12 logical processors, using up to 12 threads
+
+Non-default parameters:
+TimeLimit  300
+
+Optimize a model with 2655 rows, 588 columns and 9645 nonzeros
+Model fingerprint: 0x19648d1e
+Variable types: 21 continuous, 567 integer (560 binary)
+Coefficient statistics:
+  Matrix range     [2e-04, 5e+03]
+  Objective range  [1e+00, 1e+02]
+  Bounds range     [1e+00, 1e+03]
+  RHS range        [6e-01, 5e+03]
+Presolve removed 1044 rows and 68 columns
+Presolve time: 0.01s
+Presolved: 1611 rows, 520 columns, 5895 nonzeros
+Variable types: 14 continuous, 506 integer (499 binary)
+
+Root relaxation: objective 3.000000e+02, 316 iterations, 0.01 seconds (0.01 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  300.00000    0   19          -  300.00000      -     -    0s
+H    0     0                      56.0000000  300.00000   436%     -    0s
+     0     0  300.00000    0   76   56.00000  300.00000   436%     -    0s
+H    0     0                      96.0000000  300.00000   212%     -    0s
+     0     0  300.00000    0   68   96.00000  300.00000   212%     -    0s
+     0     0  300.00000    0   35   96.00000  300.00000   212%     -    0s
+     0     0  300.00000    0   29   96.00000  300.00000   212%     -    0s
+     0     0  300.00000    0   53   96.00000  300.00000   212%     -    0s
+H    0     0                     246.0000000  300.00000  22.0%     -    0s
+     0     0  300.00000    0   49  246.00000  300.00000  22.0%     -    0s
+     0     0  300.00000    0   65  246.00000  300.00000  22.0%     -    0s
+     0     0  300.00000    0   42  246.00000  300.00000  22.0%     -    0s
+H    0     0                     247.0000000  300.00000  21.5%     -    0s
+H    0     0                     248.0000000  300.00000  21.0%     -    0s
+H    0     2                     249.0000000  300.00000  20.5%     -    0s
+     0     2  300.00000    0   41  249.00000  300.00000  20.5%     -    0s
+H  161   141                     259.0000000  300.00000  15.8%  72.9    0s
+H  176   148                     262.0000000  300.00000  14.5%  69.7    0s
+H  199   157                     263.0000000  300.00000  14.1%  67.6    0s
+H  367   214                     273.0000000  300.00000  9.89%  53.5    0s
+H  373   216                     274.0000000  300.00000  9.49%  53.8    0s
+
+Cutting planes:
+  Gomory: 2
+  Cover: 1
+  Implied bound: 1
+  Clique: 2
+  MIR: 5
+  Inf proof: 3
+  Zero half: 4
+  RLT: 15
+  Relax-and-lift: 1
+  BQP: 19
+
+Explored 9261 nodes (514505 simplex iterations) in 4.14 seconds (5.55 work units)
+Thread count was 12 (of 12 available processors)
+
+Solution count 10: 274 273 263 ... 96
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 2.740000000000e+02, best bound 2.740000000000e+02, gap 0.0000%
+
+--- Variable Values ---
+
+s(jk):
+s(1,1) = 2400
+s(2,1) = 1380
+s(3,1) = 0
+s(4,1) = 600
+s(5,1) = 2040
+s(6,1) = 0
+s(7,1) = 1440
+
+e(jk):
+e(1,1) = 2880
+e(2,1) = 1800
+e(3,1) = 840
+e(4,1) = 1380
+e(5,1) = 2400
+e(6,1) = 600
+e(7,1) = 1740
+
+alpha(jk):
+alpha(1,1) = 1
+alpha(2,1) = 1
+alpha(3,1) = 1
+alpha(4,1) = 1
+alpha(5,1) = 1
+alpha(6,1) = 1
+alpha(7,1) = 1
+
+l(jk):
+l(1,1) = -0
+l(2,1) = -0
+l(3,1) = -0
+l(4,1) = 1
+l(5,1) = -0
+l(6,1) = -0
+l(7,1) = 1
+
+delta(jk):
+delta(1,1) = -0
+delta(2,1) = -0
+delta(3,1) = -0
+delta(4,1) = 1
+delta(5,1) = -0
+delta(6,1) = -0
+delta(7,1) = 1
+
+beta(m,j,k):
+betaVar(1,1,1) = 1
+betaVar(1,2,1) = -0
+betaVar(1,3,1) = 1
+betaVar(1,4,1) = -0
+betaVar(1,5,1) = 1
+betaVar(1,6,1) = -0
+betaVar(1,7,1) = 1
+betaVar(2,1,1) = 0
+betaVar(2,2,1) = 1
+betaVar(2,3,1) = 0
+betaVar(2,4,1) = 1
+betaVar(2,5,1) = 0
+betaVar(2,6,1) = 1
+betaVar(2,7,1) = 0
+
+x(m,j,k,j',k'):
+x(1,1,1,2,1) = -0
+x(1,1,1,3,1) = -0
+x(1,1,1,4,1) = -0
+x(1,1,1,5,1) = 1
+x(1,1,1,6,1) = 0
+x(1,1,1,7,1) = -0
+x(1,2,1,1,1) = -0
+x(1,2,1,3,1) = -0
+x(1,2,1,4,1) = -0
+x(1,2,1,5,1) = 0
+x(1,2,1,6,1) = -0
+x(1,2,1,7,1) = -0
+x(1,3,1,1,1) = -0
+x(1,3,1,2,1) = -0
+x(1,3,1,4,1) = -0
+x(1,3,1,5,1) = -0
+x(1,3,1,6,1) = 0
+x(1,3,1,7,1) = -0
+x(1,4,1,1,1) = -0
+x(1,4,1,2,1) = -0
+x(1,4,1,3,1) = -0
+x(1,4,1,5,1) = 0
+x(1,4,1,6,1) = -0
+x(1,4,1,7,1) = -0
+x(1,5,1,1,1) = -0
+x(1,5,1,2,1) = -0
+x(1,5,1,3,1) = -0
+x(1,5,1,4,1) = -0
+x(1,5,1,6,1) = -0
+x(1,5,1,7,1) = 1
+x(1,6,1,1,1) = 0
+x(1,6,1,2,1) = -0
+x(1,6,1,3,1) = -0
+x(1,6,1,4,1) = -0
+x(1,6,1,5,1) = -0
+x(1,6,1,7,1) = -0
+x(1,7,1,1,1) = -0
+x(1,7,1,2,1) = -0
+x(1,7,1,3,1) = 1
+x(1,7,1,4,1) = -0
+x(1,7,1,5,1) = -0
+x(1,7,1,6,1) = -0
+x(2,1,1,2,1) = -0
+x(2,1,1,3,1) = -0
+x(2,1,1,4,1) = -0
+x(2,1,1,5,1) = -0
+x(2,1,1,6,1) = 0
+x(2,1,1,7,1) = -0
+x(2,2,1,1,1) = -0
+x(2,2,1,3,1) = -0
+x(2,2,1,4,1) = 1
+x(2,2,1,5,1) = -0
+x(2,2,1,6,1) = 0
+x(2,2,1,7,1) = -0
+x(2,3,1,1,1) = 0
+x(2,3,1,2,1) = -0
+x(2,3,1,4,1) = -0
+x(2,3,1,5,1) = -0
+x(2,3,1,6,1) = 0
+x(2,3,1,7,1) = 0
+x(2,4,1,1,1) = -0
+x(2,4,1,2,1) = -0
+x(2,4,1,3,1) = -0
+x(2,4,1,5,1) = -0
+x(2,4,1,6,1) = 1
+x(2,4,1,7,1) = -0
+x(2,5,1,1,1) = -0
+x(2,5,1,2,1) = -0
+x(2,5,1,3,1) = -0
+x(2,5,1,4,1) = -0
+x(2,5,1,6,1) = -0
+x(2,5,1,7,1) = -0
+x(2,6,1,1,1) = -0
+x(2,6,1,2,1) = -0
+x(2,6,1,3,1) = -0
+x(2,6,1,4,1) = 0
+x(2,6,1,5,1) = -0
+x(2,6,1,7,1) = -0
+x(2,7,1,1,1) = -0
+x(2,7,1,2,1) = -0
+x(2,7,1,3,1) = -0
+x(2,7,1,4,1) = -0
+x(2,7,1,5,1) = -0
+x(2,7,1,6,1) = -0
+
+y(t,j,k):
+y(1,1,1) = 1
+y(1,2,1) = -0
+y(1,3,1) = 0
+y(1,4,1) = -0
+y(1,5,1) = 1
+y(1,6,1) = -0
+y(1,7,1) = 1
+y(2,1,1) = 1
+y(2,2,1) = -0
+y(2,3,1) = 0
+y(2,4,1) = -0
+y(2,5,1) = 1
+y(2,6,1) = -0
+y(2,7,1) = 1
+y(3,1,1) = 1
+y(3,2,1) = -0
+y(3,3,1) = 0
+y(3,4,1) = 0
+y(3,5,1) = 1
+y(3,6,1) = -0
+y(3,7,1) = 1
+y(4,1,1) = 1
+y(4,2,1) = 0
+y(4,3,1) = 1
+y(4,4,1) = -0
+y(4,5,1) = 1
+y(4,6,1) = -0
+y(4,7,1) = 1
+y(5,1,1) = 1
+y(5,2,1) = -0
+y(5,3,1) = 1
+y(5,4,1) = -0
+y(5,5,1) = 1
+y(5,6,1) = -0
+y(5,7,1) = 1
+y(6,1,1) = -0
+y(6,2,1) = 1
+y(6,3,1) = 1
+y(6,4,1) = 1
+y(6,5,1) = -0
+y(6,6,1) = 1
+y(6,7,1) = -0
+y(7,1,1) = -0
+y(7,2,1) = 1
+y(7,3,1) = 1
+y(7,4,1) = 1
+y(7,5,1) = -0
+y(7,6,1) = 1
+y(7,7,1) = -0
+y(8,1,1) = -0
+y(8,2,1) = 1
+y(8,3,1) = 0
+y(8,4,1) = 1
+y(8,5,1) = 0
+y(8,6,1) = -0
+y(8,7,1) = -0
+y(9,1,1) = 0
+y(9,2,1) = 1
+y(9,3,1) = 0
+y(9,4,1) = 1
+y(9,5,1) = 0
+y(9,6,1) = 1
+y(9,7,1) = -0
+y(10,1,1) = 0
+y(10,2,1) = 1
+y(10,3,1) = 0
+y(10,4,1) = 1
+y(10,5,1) = 0
+y(10,6,1) = 1
+y(10,7,1) = -0
+y(11,1,1) = 0
+y(11,2,1) = 1
+y(11,3,1) = 0
+y(11,4,1) = 1
+y(11,5,1) = 0
+y(11,6,1) = 1
+y(11,7,1) = -0
+y(12,1,1) = 0
+y(12,2,1) = 1
+y(12,3,1) = 0
+y(12,4,1) = 1
+y(12,5,1) = 0
+y(12,6,1) = 1
+y(12,7,1) = -0
+y(13,1,1) = -0
+y(13,2,1) = -0
+y(13,3,1) = 1
+y(13,4,1) = -0
+y(13,5,1) = -0
+y(13,6,1) = -0
+y(13,7,1) = -0
+y(14,1,1) = -0
+y(14,2,1) = 0
+y(14,3,1) = 1
+y(14,4,1) = -0
+y(14,5,1) = -0
+y(14,6,1) = -0
+y(14,7,1) = -0
+y(15,1,1) = -0
+y(15,2,1) = -0
+y(15,3,1) = 1
+y(15,4,1) = -0
+y(15,5,1) = -0
+y(15,6,1) = -0
+y(15,7,1) = -0
+y(16,1,1) = -0
+y(16,2,1) = -0
+y(16,3,1) = 1
+y(16,4,1) = 0
+y(16,5,1) = -0
+y(16,6,1) = -0
+y(16,7,1) = -0
+y(17,1,1) = -0
+y(17,2,1) = 0
+y(17,3,1) = 0
+y(17,4,1) = -0
+y(17,5,1) = 1
+y(17,6,1) = -0
+y(17,7,1) = 1
+y(18,1,1) = -0
+y(18,2,1) = -0
+y(18,3,1) = 0
+y(18,4,1) = -0
+y(18,5,1) = 1
+y(18,6,1) = -0
+y(18,7,1) = 1
+y(19,1,1) = -0
+y(19,2,1) = -0
+y(19,3,1) = 0
+y(19,4,1) = -0
+y(19,5,1) = -0
+y(19,6,1) = 1
+y(19,7,1) = -0
+y(20,1,1) = 0
+y(20,2,1) = -0
+y(20,3,1) = 0
+y(20,4,1) = -0
+y(20,5,1) = -0
+y(20,6,1) = 1
+y(20,7,1) = -0
+y(21,1,1) = -0
+y(21,2,1) = 0
+y(21,3,1) = 0
+y(21,4,1) = -0
+y(21,5,1) = -0
+y(21,6,1) = -0
+y(21,7,1) = -0
+
+z(t,j,k):
+z(1,1,1) = -0
+z(1,2,1) = -0
+z(1,3,1) = -0
+z(1,4,1) = -0
+z(1,5,1) = -0
+z(1,6,1) = -0
+z(1,7,1) = 1
+z(2,1,1) = -0
+z(2,2,1) = -0
+z(2,3,1) = -0
+z(2,4,1) = -0
+z(2,5,1) = -0
+z(2,6,1) = -0
+z(2,7,1) = 1
+z(3,1,1) = -0
+z(3,2,1) = -0
+z(3,3,1) = -0
+z(3,4,1) = -0
+z(3,5,1) = -0
+z(3,6,1) = -0
+z(3,7,1) = 1
+z(4,1,1) = -0
+z(4,2,1) = -0
+z(4,3,1) = -0
+z(4,4,1) = -0
+z(4,5,1) = -0
+z(4,6,1) = -0
+z(4,7,1) = -0
+z(5,1,1) = -0
+z(5,2,1) = -0
+z(5,3,1) = -0
+z(5,4,1) = -0
+z(5,5,1) = -0
+z(5,6,1) = -0
+z(5,7,1) = -0
+z(6,1,1) = -0
+z(6,2,1) = -0
+z(6,3,1) = -0
+z(6,4,1) = -0
+z(6,5,1) = -0
+z(6,6,1) = -0
+z(6,7,1) = -0
+z(7,1,1) = -0
+z(7,2,1) = -0
+z(7,3,1) = -0
+z(7,4,1) = -0
+z(7,5,1) = -0
+z(7,6,1) = -0
+z(7,7,1) = -0
+z(8,1,1) = -0
+z(8,2,1) = -0
+z(8,3,1) = -0
+z(8,4,1) = 1
+z(8,5,1) = -0
+z(8,6,1) = -0
+z(8,7,1) = -0
+z(9,1,1) = 0
+z(9,2,1) = -0
+z(9,3,1) = -0
+z(9,4,1) = -0
+z(9,5,1) = -0
+z(9,6,1) = -0
+z(9,7,1) = 0
+z(10,1,1) = -0
+z(10,2,1) = -0
+z(10,3,1) = -0
+z(10,4,1) = -0
+z(10,5,1) = -0
+z(10,6,1) = -0
+z(10,7,1) = 0
+z(11,1,1) = -0
+z(11,2,1) = -0
+z(11,3,1) = -0
+z(11,4,1) = -0
+z(11,5,1) = -0
+z(11,6,1) = -0
+z(11,7,1) = -0
+z(12,1,1) = -0
+z(12,2,1) = -0
+z(12,3,1) = -0
+z(12,4,1) = -0
+z(12,5,1) = -0
+z(12,6,1) = -0
+z(12,7,1) = -0
+z(13,1,1) = -0
+z(13,2,1) = -0
+z(13,3,1) = -0
+z(13,4,1) = -0
+z(13,5,1) = -0
+z(13,6,1) = -0
+z(13,7,1) = -0
+z(14,1,1) = -0
+z(14,2,1) = -0
+z(14,3,1) = -0
+z(14,4,1) = -0
+z(14,5,1) = -0
+z(14,6,1) = -0
+z(14,7,1) = -0
+z(15,1,1) = -0
+z(15,2,1) = -0
+z(15,3,1) = -0
+z(15,4,1) = -0
+z(15,5,1) = -0
+z(15,6,1) = -0
+z(15,7,1) = -0
+z(16,1,1) = -0
+z(16,2,1) = -0
+z(16,3,1) = -0
+z(16,4,1) = -0
+z(16,5,1) = -0
+z(16,6,1) = -0
+z(16,7,1) = -0
+z(17,1,1) = -0
+z(17,2,1) = -0
+z(17,3,1) = -0
+z(17,4,1) = -0
+z(17,5,1) = -0
+z(17,6,1) = -0
+z(17,7,1) = 1
+z(18,1,1) = -0
+z(18,2,1) = -0
+z(18,3,1) = -0
+z(18,4,1) = -0
+z(18,5,1) = -0
+z(18,6,1) = -0
+z(18,7,1) = 1
+z(19,1,1) = -0
+z(19,2,1) = -0
+z(19,3,1) = -0
+z(19,4,1) = -0
+z(19,5,1) = -0
+z(19,6,1) = -0
+z(19,7,1) = -0
+z(20,1,1) = -0
+z(20,2,1) = -0
+z(20,3,1) = -0
+z(20,4,1) = -0
+z(20,5,1) = -0
+z(20,6,1) = -0
+z(20,7,1) = 0
+z(21,1,1) = 0
+z(21,2,1) = -0
+z(21,3,1) = -0
+z(21,4,1) = -0
+z(21,5,1) = -0
+z(21,6,1) = -0
+z(21,7,1) = -0
+
+lambda(t,j,k):
+lambda(1,1,1) = -0
+lambda(1,2,1) = -0
+lambda(1,3,1) = -0
+lambda(1,4,1) = -0
+lambda(1,5,1) = -0
+lambda(1,6,1) = -0
+lambda(1,7,1) = 1
+lambda(2,1,1) = -0
+lambda(2,2,1) = -0
+lambda(2,3,1) = -0
+lambda(2,4,1) = -0
+lambda(2,5,1) = 0
+lambda(2,6,1) = 0
+lambda(2,7,1) = 1
+lambda(3,1,1) = -0
+lambda(3,2,1) = -0
+lambda(3,3,1) = 0
+lambda(3,4,1) = -0
+lambda(3,5,1) = 0
+lambda(3,6,1) = -0
+lambda(3,7,1) = 1
+lambda(4,1,1) = -0
+lambda(4,2,1) = -0
+lambda(4,3,1) = -0
+lambda(4,4,1) = -0
+lambda(4,5,1) = -0
+lambda(4,6,1) = -0
+lambda(4,7,1) = -0
+lambda(5,1,1) = -0
+lambda(5,2,1) = -0
+lambda(5,3,1) = -0
+lambda(5,4,1) = -0
+lambda(5,5,1) = -0
+lambda(5,6,1) = -0
+lambda(5,7,1) = -0
+lambda(6,1,1) = -0
+lambda(6,2,1) = 0
+lambda(6,3,1) = -0
+lambda(6,4,1) = -0
+lambda(6,5,1) = -0
+lambda(6,6,1) = 0
+lambda(6,7,1) = -0
+lambda(7,1,1) = -0
+lambda(7,2,1) = -0
+lambda(7,3,1) = 0
+lambda(7,4,1) = -0
+lambda(7,5,1) = -0
+lambda(7,6,1) = -0
+lambda(7,7,1) = -0
+lambda(8,1,1) = -0
+lambda(8,2,1) = -0
+lambda(8,3,1) = 0
+lambda(8,4,1) = 1
+lambda(8,5,1) = -0
+lambda(8,6,1) = 0
+lambda(8,7,1) = -0
+lambda(9,1,1) = 0
+lambda(9,2,1) = -0
+lambda(9,3,1) = -0
+lambda(9,4,1) = -0
+lambda(9,5,1) = -0
+lambda(9,6,1) = -0
+lambda(9,7,1) = 0
+lambda(10,1,1) = -0
+lambda(10,2,1) = -0
+lambda(10,3,1) = -0
+lambda(10,4,1) = -0
+lambda(10,5,1) = -0
+lambda(10,6,1) = -0
+lambda(10,7,1) = 0
+lambda(11,1,1) = -0
+lambda(11,2,1) = 0
+lambda(11,3,1) = -0
+lambda(11,4,1) = -0
+lambda(11,5,1) = -0
+lambda(11,6,1) = -0
+lambda(11,7,1) = -0
+lambda(12,1,1) = -0
+lambda(12,2,1) = -0
+lambda(12,3,1) = -0
+lambda(12,4,1) = -0
+lambda(12,5,1) = -0
+lambda(12,6,1) = -0
+lambda(12,7,1) = -0
+lambda(13,1,1) = -0
+lambda(13,2,1) = -0
+lambda(13,3,1) = 0
+lambda(13,4,1) = -0
+lambda(13,5,1) = -0
+lambda(13,6,1) = -0
+lambda(13,7,1) = -0
+lambda(14,1,1) = -0
+lambda(14,2,1) = -0
+lambda(14,3,1) = -0
+lambda(14,4,1) = -0
+lambda(14,5,1) = 0
+lambda(14,6,1) = -0
+lambda(14,7,1) = -0
+lambda(15,1,1) = -0
+lambda(15,2,1) = 0
+lambda(15,3,1) = -0
+lambda(15,4,1) = -0
+lambda(15,5,1) = -0
+lambda(15,6,1) = -0
+lambda(15,7,1) = -0
+lambda(16,1,1) = -0
+lambda(16,2,1) = -0
+lambda(16,3,1) = -0
+lambda(16,4,1) = -0
+lambda(16,5,1) = 0
+lambda(16,6,1) = -0
+lambda(16,7,1) = -0
+lambda(17,1,1) = -0
+lambda(17,2,1) = 0
+lambda(17,3,1) = -0
+lambda(17,4,1) = -0
+lambda(17,5,1) = -0
+lambda(17,6,1) = -0
+lambda(17,7,1) = 1
+lambda(18,1,1) = -0
+lambda(18,2,1) = -0
+lambda(18,3,1) = -0
+lambda(18,4,1) = -0
+lambda(18,5,1) = -0
+lambda(18,6,1) = -0
+lambda(18,7,1) = 1
+lambda(19,1,1) = -0
+lambda(19,2,1) = -0
+lambda(19,3,1) = -0
+lambda(19,4,1) = -0
+lambda(19,5,1) = 0
+lambda(19,6,1) = -0
+lambda(19,7,1) = -0
+lambda(20,1,1) = -0
+lambda(20,2,1) = -0
+lambda(20,3,1) = -0
+lambda(20,4,1) = -0
+lambda(20,5,1) = -0
+lambda(20,6,1) = 0
+lambda(20,7,1) = 0
+lambda(21,1,1) = 0
+lambda(21,2,1) = -0
+lambda(21,3,1) = 0
+lambda(21,4,1) = -0
+lambda(21,5,1) = -0
+lambda(21,6,1) = 0
+lambda(21,7,1) = -0
+make[1]: Leaving directory '/home/mateus/WSL/IC/SSP'

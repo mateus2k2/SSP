@@ -70,7 +70,7 @@ GRBLinExpr obj = 0;
 // -------------------------------------------------
 
 void printLoaded() {
-    return;
+    // return;
     printf("\n--- Loaded Data ---\n");
 
     cout << "Hm: " << Hm << endl;
@@ -135,7 +135,7 @@ void printLoaded() {
 }
 
 void printsVars() {
-    return;
+    // return;
     cout << "\n--- Variable Values ---\n";
 
     // Print s(jk)
@@ -516,10 +516,9 @@ int SSP::modelo(string folderOutput, int timeLimit) {
         }
 
         // (10) Restrição para definir se uma operação foi concluída dentro do horizonte H
-        // const double eps = 1e-5;
+        const double eps = 1e-5;
         for (auto [j, k] : operationsModel) {
-            // model.addConstr(alpha[{j, k}] >= (Hm - e[{j, k}]) / L + eps, "alpha_lb_" + to_string(j) + "_" + to_string(k));
-            model.addConstr(alpha[{j, k}] >= (Hm - e[{j, k}]) / L, "alpha_lb_" + to_string(j) + "_" + to_string(k));
+            model.addConstr(alpha[{j, k}] >= (Hm - e[{j, k}]) / L + eps, "alpha_lb_" + to_string(j) + "_" + to_string(k));
             model.addConstr(alpha[{j, k}] <= 1 - (e[{j, k}] - Hm) / L, "alpha_ub_" + to_string(j) + "_" + to_string(k));
         }
 

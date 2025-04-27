@@ -75,12 +75,12 @@ runPT:
 
 runModelo:
 	./src/out/mainCpp \
-		"./input/ExemploMod/Jobs.csv" \
-		"./input/ExemploMod/ToolSets.csv" \
+		"./input/Exemplo/Jobs.csv" \
+		"./input/Exemplo/ToolSets.csv" \
 		"./output/Modelo" \
 		--DIFERENT_TOOLSETS_MODE 0 \
 		--INSTANCE_REPORT 0 \
-		--TIME_LIMIT 1 \
+		--TIME_LIMIT 5 \
 		--MODELO 1 \
 		
 
