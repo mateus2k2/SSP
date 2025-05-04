@@ -11,8 +11,11 @@
 
 using namespace std;
 
-// https://docs.gurobi.com/projects/optimizer/en/current/reference/cpp/var.html
-// agrupar reentrantes e duplicar bonus de finalizacao e prejuizo de atraso
+// testar retirar as restrições 2 3 5 6 e 9 = Cortar?
+// Fazer novas instancias 15 20 25 = Sub conjuntos das maiores 
+// Salvar o best bound e best obj
+// Practitioner heuristic 
+// https://www.cpubenchmark.net/cpu_list.php  Core i5- 7300U, @ 2.60 GHz CPU
 
 // -------------------------------------------------
 // DEFINIÇÃO DAS CONTANTES
@@ -670,7 +673,7 @@ int SSP::modelo(string folderOutput, int timeLimit) {
             return 0;
         }
         if (status == GRB_TIME_LIMIT) {
-            cout << "Optimization stopped due to time limit." << std::endl;
+            cout << "Optimization stopped due to time limit." << std::endl; // salvar o best bound aqui
         }
 
         model.write(folderOutput + "/modelSolution.sol");

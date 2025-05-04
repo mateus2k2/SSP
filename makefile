@@ -75,8 +75,8 @@ runPT:
 
 runModelo:
 	./src/out/mainCpp \
-		"./input/Exemplo/Jobs.csv" \
-		"./input/Exemplo/ToolSets.csv" \
+		"./input/ExemploMod/Jobs.csv" \
+		"./input/ExemploMod/ToolSets.csv" \
 		"./output/Modelo" \
 		--DIFERENT_TOOLSETS_MODE 0 \
 		--INSTANCE_REPORT 0 \
