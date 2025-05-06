@@ -52,6 +52,9 @@ int main(int argc, char* argv[]) {
     // modelo
     int modelo = 0;
     int timeLimit = 0;
+
+    // practitioner
+    int practitioner = 0;
 	
 	// Instance file name
 	string filenameJobs = arguments[0];
@@ -101,6 +104,8 @@ int main(int argc, char* argv[]) {
             modelo = stoi(arguments[i+1]);
         else if(arguments[i]== "--TIME_LIMIT")
             timeLimit = stoi(arguments[i+1]);
+        else if(arguments[i]== "--PRACTITIONER")
+            practitioner = stoi(arguments[i+1]);
     }
 	tempUp = PTL/ptlTempUpProportion;
 
@@ -112,28 +117,6 @@ int main(int argc, char* argv[]) {
 
     // prob->loadInstanceParans(filenameJobs);
     // solSSP sol = prob->randPriority();
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
-    // sol = prob->neighbor(sol);
     // sol = prob->neighbor(sol);
     // prob->evaluateReportKTNS(sol, filenameJobs, filenameTools, filenameoutput, 0, false);
     // solSSP finalSolution = prob->ajustFinalSolution(sol);
@@ -159,6 +142,11 @@ int main(int argc, char* argv[]) {
 
     if(modelo){ 
         prob->modelo(filenameoutput, timeLimit);
+        return 0;
+    }
+
+    if(practitioner){
+        prob->practitioner(filenameoutput);
         return 0;
     }
 

@@ -11,11 +11,12 @@
 
 using namespace std;
 
-// testar retirar as restrições 2 3 5 6 e 9 = Cortar?
-// Fazer novas instancias 15 20 25 = Sub conjuntos das maiores 
-// Salvar o best bound e best obj
-// Practitioner heuristic 
-// https://www.cpubenchmark.net/cpu_list.php  Core i5- 7300U, @ 2.60 GHz CPU
+// ADNDAMENTO = Fazer novas instancias 15 20 25 = Sub conjuntos das maiores 
+// ADNDAMENTO = Practitioner heuristic 
+// QUEBRANDO = Testar retirar as restrições 2 3 5 6 e 9 = Cortar?
+// FEITO = Retirar autores do artigo
+// FEITO = Salvar o best bound e best obj
+// FEITO = https://www.cpubenchmark.net/cpu_list.php  Core i5- 7300U, @ 2.60 GHz CPU
 
 // -------------------------------------------------
 // DEFINIÇÃO DAS CONTANTES
@@ -307,9 +308,11 @@ void SSP::convertModelData(string& folderOutput, GRBModel& model) {
         }
     }
 
+    int bestBound = model.get(GRB_DoubleAttr_ObjBound);
     int objValue = model.get(GRB_DoubleAttr_ObjVal);
     double runtime = model.get(GRB_DoubleAttr_Runtime);
     solutionReportFile << "END" << endl;
+    solutionReportFile << "Best Bound: " << bestBound << endl;
     solutionReportFile << "Final Solution: " << objValue << endl;
     solutionReportFile << "fineshedJobsCount: " << fineshedJobsCount << endl;
     solutionReportFile << "switchs: " << switchs << endl;

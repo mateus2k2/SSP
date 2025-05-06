@@ -88,6 +88,8 @@ class SSP: public Problem<solSSP>{
 		int modelo(string filenameoutput, int timeLimit);
 		void loadModelData();
 		void convertModelData(string& folderOutput, GRBModel& model);
+
+		int practitioner(string filenameoutput);
 };
 
 #endif 

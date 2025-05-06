@@ -67,22 +67,36 @@ runPT:
 		--DIFERENT_TOOLSETS_MODE 0 \
 		--MODELO 0 \
 
+runModelo:
+	./src/out/mainCpp \
+		"./input/Exemplo/Jobs.csv" \
+		"./input/Exemplo/ToolSets.csv" \
+		"./output/Modelo" \
+		--DIFERENT_TOOLSETS_MODE 0 \
+		--INSTANCE_REPORT 0 \
+		--TIME_LIMIT 5 \
+		--MODELO 1 \
+
+runPractitioner:
+	./src/out/mainCpp \
+		"./input/Exemplo/Jobs.csv" \
+		"./input/Exemplo/ToolSets.csv" \
+		"./output/Practitioner/practitioner.txt" \
+		--DIFERENT_TOOLSETS_MODE 0 \
+		--INSTANCE_REPORT 0 \
+		--PRACTITIONER 1 \
+
+
 # "./input/Exemplo/Jobs.csv" \
 # "./input/Exemplo/ToolSets.csv" \
 
 # "./input/MyInstancesSameToolSets/n=212,p=0.75,r=0.4,t=1390,v8.csv" \
 # "./input/Processed/ToolSetInt.csv" \
 
-runModelo:
-	./src/out/mainCpp \
-		"./input/ExemploMod/Jobs.csv" \
-		"./input/ExemploMod/ToolSets.csv" \
-		"./output/Modelo" \
-		--DIFERENT_TOOLSETS_MODE 0 \
-		--INSTANCE_REPORT 0 \
-		--TIME_LIMIT 5 \
-		--MODELO 1 \
-		
+
+goPractitioner:
+	make compile
+	make runPractitioner
 
 goModelo:
 	make compile
