@@ -13,10 +13,10 @@ using namespace std;
 
 // ADNDAMENTO = Fazer novas instancias 15 20 25 = Sub conjuntos das maiores 
 // ADNDAMENTO = Practitioner heuristic 
-// QUEBRANDO = Testar retirar as restrições 2 3 5 6 e 9 = Cortar?
 // FEITO = Retirar autores do artigo
 // FEITO = Salvar o best bound e best obj
 // FEITO = https://www.cpubenchmark.net/cpu_list.php  Core i5- 7300U, @ 2.60 GHz CPU
+// QUEBRANDO = Testar retirar as restrições 2 3 5 6 e 9 = Cortar?
 
 // -------------------------------------------------
 // DEFINIÇÃO DAS CONTANTES

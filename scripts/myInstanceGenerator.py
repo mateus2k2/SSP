@@ -9,6 +9,94 @@ from uteis.ProcessingTimeGenerator import ProcessingTimeGenerator
 geradorProcessingTime = ProcessingTimeGenerator()
 
 # ------------------------------------------------------------------------------------------------
+# REFACTORY
+# ------------------------------------------------------------------------------------------------
+
+def createSmallerInstances():
+    baseInstance = '/home/mateus/WSL/IC/SSP/input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv'
+    baseInstance = pd.read_csv(baseInstance, delimiter=';')
+    baseInstance = baseInstance.to_dict(orient='records')
+
+    baseInstanceUnicJobs = []
+    for item in baseInstance:
+        if item['Operation'] == 0:
+            baseInstanceUnicJobs.append(item)
+
+
+    # print(len(baseInstanceUnicJobs))
+    # shuffle the list
+    newInstancesSizes = [15, 20, 25]
+    reentrantRatio = 0.5
+
+    priorityLevels = [0.25, 0.5, 0.75]
+    for priorityLevel in priorityLevels:
+        instanciesToCreate = []
+        random.shuffle(baseInstanceUnicJobs)
+        for size in newInstancesSizes:
+            toMakeReentrant = int(size/(1+reentrantRatio))
+            toMakeReentrant = int(toMakeReentrant/2)
+            for i in range(0, toMakeReentrant):
+                instanciesToCreate.append({
+                    "Job": i,
+                    "Operation": 0,
+                    "Processing Time": baseInstanceUnicJobs[i]['Processing Time'],
+                    "ToolSet": baseInstanceUnicJobs[i]['ToolSet'],
+                    "Priority": 0,
+                    "Reentrant": True,
+                })
+            for i in range(toMakeReentrant*2, size):
+                instanciesToCreate.append({
+                    "Job": i,
+                    "Operation": 0,
+                    "Processing Time": baseInstanceUnicJobs[i]['Processing Time'],
+                    "ToolSet": baseInstanceUnicJobs[i]['ToolSet'],
+                    "Priority": 0,
+                    "Reentrant": False,
+                })
+            # shuffle the list
+            random.shuffle(instanciesToCreate)
+            numberOfPriority = int(size * priorityLevel)
+            for i in range(0, len(instanciesToCreate)):
+                if numberOfPriority <= 0: break
+                if instanciesToCreate[i]['Reentrant']:
+                    instanciesToCreate[i]['Priority'] = 1
+                    numberOfPriority -= 2
+                else:
+                    instanciesToCreate[i]['Priority'] = 1
+                    numberOfPriority -= 1
+            folderToSave = f"/home/mateus/WSL/IC/SSP/input/MyInstancesSameToolSets/Test"
+            fileName = f"n={size},p={priorityLevel},r=0.5,t=0,v0.csv"
+            csv_file = open(f"{folderToSave}/{fileName}", 'w', newline='')
+            fields = ["Job","Operation","ToolSet","Processing Time","Priority"]
+            csv_writer = csv.DictWriter(csv_file, fieldnames=fields, delimiter=';')
+            csv_writer.writeheader()
+            for i, item in enumerate(instanciesToCreate):
+                csv_writer.writerow({
+                    "Job": i,
+                    "Operation": 0,
+                    "ToolSet": item['ToolSet'],
+                    "Processing Time": item['Processing Time'],
+                    "Priority": item['Priority'],
+                })
+                if item['Reentrant'] == True:
+                    csv_writer.writerow({
+                        "Job": i,
+                        "Operation": 1,
+                        "ToolSet": item['ToolSet'],
+                        "Processing Time": item['Processing Time'],
+                        "Priority": item['Priority'],
+                    })
+
+            csv_file.close()
+            # create a .dat file with the same name 
+
+            dat_file = open(f"{folderToSave}/{fileName.replace('.csv', '.dat')}", 'w')
+            dat_file.write("CAPACITY 80\n")
+            dat_file.write("MACHINES 2\n")
+            dat_file.write("DAYS 2\n")
+            dat_file.write("UNSUPERVISED_MINUTS 720\n")
+
+# ------------------------------------------------------------------------------------------------
 # REFACTORY PARA TER TOOLSET UNICOS PARA CADA OPERACAO
 # ------------------------------------------------------------------------------------------------
 
@@ -327,7 +415,9 @@ def makeInstaceExtra():
 # instances = makeInstaceExtra()
 # saveInstances(instances)
 
-refactory()
+# refactory()
+
+createSmallerInstances()
 
 # toolUnusedMap = ld.loadToolSet("./input/UnusedToolSetsClean.csv")
 # toolSetIndex = list(toolUnusedMap.keys())

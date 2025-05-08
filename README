@@ -23,3 +23,7 @@ make runPT
 
 ./scripts/runAuto.sh ./output/PTL100DiferentAjustado diferent > out
 ./scripts/runMultiple.sh ./output/TCC2V2 same > out
+
+
+Φi  total processing time of operations that are grouped into family 𝐹i
+𝛹m denote the set of families and their total processing time allocated to machine 𝑚, respectively

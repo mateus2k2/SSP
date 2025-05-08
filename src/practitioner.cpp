@@ -16,6 +16,7 @@ struct Operation {
     int processingTime;
     int toolSet;
     bool isPriority;
+    vector<int> tools; // List of tools required for this operation
 };
 
 struct Family {
@@ -67,8 +68,8 @@ void allocateOperationsToMachines(
         minIt->totalWorkload += fam.totalProcTime;
     }
 
-    // Balancing workloads
-    while (true) {
+    bool balancing = true;
+    while (balancing) {
         auto maxIt = max_element(machines.begin(), machines.end(), [](const Machine &a, const Machine &b) {
             return a.totalWorkload < b.totalWorkload;
         });
@@ -76,49 +77,119 @@ void allocateOperationsToMachines(
             return a.totalWorkload < b.totalWorkload;
         });
 
-        int diff = maxIt->totalWorkload - minIt->totalWorkload;
-        if (diff <= B1 || minIt->totalWorkload >= B2) break;
+        int w_max = maxIt->totalWorkload;
+        int w_min = minIt->totalWorkload;
 
-        auto it = min_element(maxIt->assignedFamilies.begin(), maxIt->assignedFamilies.end(), [](const Family &a, const Family &b) {
-            return a.totalProcTime < b.totalProcTime;
-        });
+        if ((w_max - w_min) <= B1 || w_min >= B2) {
+            balancing = false;
+        } else {
+            // Find the family with the smallest processing time in maxIt
+            auto famIt = min_element(maxIt->assignedFamilies.begin(), maxIt->assignedFamilies.end(), [](const Family &a, const Family &b) {
+                return a.totalProcTime < b.totalProcTime;
+            });
 
-        if (it != maxIt->assignedFamilies.end()) {
-            minIt->assignedFamilies.push_back(*it);
-            minIt->totalWorkload += it->totalProcTime;
-            maxIt->totalWorkload -= it->totalProcTime;
-            maxIt->assignedFamilies.erase(it);
-        } else break;
+            if (famIt != maxIt->assignedFamilies.end()) {
+                // Move family to the start of the array
+                minIt->assignedFamilies.insert(minIt->assignedFamilies.begin(), *famIt);
+                minIt->totalWorkload += famIt->totalProcTime;
+
+                maxIt->totalWorkload -= famIt->totalProcTime;
+                maxIt->assignedFamilies.erase(famIt);
+            } else {
+                balancing = false;
+            }
+        }
     }
 }
 
 // Phase 2: Schedule Creation
-void createSchedules(const vector<Machine> &machines) {
-    for (int i = 0; i < machines.size(); ++i) {
-        cout << "Machine " << i+1 << " schedule:\n";
-        vector<Operation> sequence;
-        for (const auto &fam : machines[i].assignedFamilies) {
-            for (const auto &op : fam.operations) {
-                if (op.isPriority)
-                    sequence.insert(sequence.begin(), op); // insert early
-                else
-                    sequence.push_back(op);
+void createSchedules(const vector<Machine>& machines) {
+    for (size_t m = 0; m < machines.size(); ++m) {
+        const auto& machine = machines[m];
+        vector<Operation> schedule;
+
+        // Helper lambda to compute tool similarity
+        auto toolSimilarity = [](const Operation& a, const Operation& b) {
+            set<int> setA(a.tools.begin(), a.tools.end());
+            int common = 0;
+            for (int tool : b.tools) {
+                if (setA.count(tool)) ++common;
+            }
+            return common;
+        };
+
+        // First insert PRIORITY operations
+        for (const auto& fam : machine.assignedFamilies) {
+            for (const auto& op : fam.operations) {
+                if (!op.isPriority) continue;
+
+                int bestScore = -1;
+                auto bestIt = schedule.end();
+
+                for (auto it = schedule.begin(); it != schedule.end(); ++it) {
+                    int sim = toolSimilarity(op, *it);
+                    if (sim > bestScore) {
+                        bestScore = sim;
+                        bestIt = it + 1;
+                    }
+                }
+
+                if (bestScore > 0 && bestIt != schedule.end()) {
+                    schedule.insert(bestIt, op);
+                } else {
+                    schedule.push_back(op);
+                }
             }
         }
 
-        for (const auto &op : sequence) {
-            cout << "  Job " << op.jobId << " - Op " << op.opId
-                 << " (Tool: " << op.toolSet << ", Time: " << op.processingTime << ")\n";
+        // Then insert NON-PRIORITY operations
+        for (const auto& fam : machine.assignedFamilies) {
+            for (const auto& op : fam.operations) {
+                if (op.isPriority) continue;
+
+                int bestScore = -1;
+                auto bestIt = schedule.end();
+
+                for (auto it = schedule.begin(); it != schedule.end(); ++it) {
+                    int sim = toolSimilarity(op, *it);
+                    if (sim > bestScore) {
+                        bestScore = sim;
+                        bestIt = it + 1;
+                    }
+                }
+
+                if (bestScore > 0 && bestIt != schedule.end()) {
+                    schedule.insert(bestIt, op);
+                } else {
+                    schedule.push_back(op);
+                }
+            }
         }
+
+        // Output
+        cout << "Schedule for Machine " << m + 1 << ":\n";
+        for (const auto& op : schedule) {
+            cout << "  Job " << op.jobId << ", Op " << op.opId
+                 << ", ToolSet " << op.toolSet
+                 << ", Priority: " << (op.isPriority ? "Yes" : "No") << "\n";
+        }
+        cout << endl;
     }
 }
 
+
 int SSP:: practitioner(string filenameoutput){
     vector<Operation> operations = {
-        {1, 1, 5, 1, true}, {1, 2, 4, 1, true}, {7, 1, 6, 1, true},
-        {2, 1, 9, 2, false}, {4, 1, 10, 2, true}, {4, 2, 12, 2, true},
-        {3, 1, 8, 3, false}, {3, 2, 7, 3, false},
-        {5, 1, 6, 4, false}, {6, 1, 6, 5, false}
+        {0,0,3,1,true, {1,1,2,3,4,5}},
+        {0,1,5,1,true, {1,1,2,3,4,5}},
+        {1,0,7,2,false, {2,12,13,14,15,16,17,18}},
+        {2,0,6,3,false, {3,4,5,8,9,10,11,12,13}},
+        {2,1,8,3,false, {3,4,5,8,9,10,11,12,13}},
+        {3,0,4,2,true, {2,12,13,14,15,16,17,18}},
+        {3,1,9,2,true, {2,12,13,14,15,16,17,18}},
+        {4,0,6,4,false, {4,5,6,7}},
+        {5,0,10,5,false, {5,15,16,17,18,19,20}},
+        {6,0,5,1,true, {1,1,2,3,4,5}}
     };
 
     vector<Machine> machines;
