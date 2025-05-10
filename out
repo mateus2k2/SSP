@@ -1,7 +1,7 @@
 clear
 [H[2J[3Jpython ./scripts/reportAnalises.py ./output/Modelo/report.txt 0
 ---Validating ./output/Modelo/report.txt---
-{'bestBound': 274.0, 'finalSolution': 274.0, 'fineshedJobsCount': 10.0, 'switchs': 6.0, 'switchsInstances': 2.0, 'unfineshedPriorityCount': 0.0, 'Time': 3.63811}
+{'bestBound': 274.0, 'finalSolution': 274.0, 'fineshedJobsCount': 10.0, 'switchs': 6.0, 'switchsInstances': 2.0, 'unfineshedPriorityCount': 0.0, 'Time': 3.95658}
 Checking Magazine
 Machine 1/2
 OK

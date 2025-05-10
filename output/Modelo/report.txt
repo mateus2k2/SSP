@@ -19,4 +19,4 @@ fineshedJobsCount: 10
 switchs: 6
 switchsInstances: 2
 unfineshedPriorityCount: 0
-Time: 3.63811
+Time: 3.95658

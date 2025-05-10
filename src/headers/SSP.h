@@ -83,13 +83,16 @@ class SSP: public Problem<solSSP>{
 		void groupJobs();
 		double evaluate(solSSP& s);
 		double evaluateReportKTNS(solSSP &sol, string filenameJobs, string filenameTools, fstream& solutionReportFile);
+		tuple<int, int, int, int> evaluateReportKTNSMachine(vector<int> s, fstream& solutionReportFile, int machine);
 		solSSP postProcessDifferent(solSSP &sol);
 		
 		int modelo(string filenameoutput, int timeLimit);
 		void loadModelData();
 		void convertModelData(string& folderOutput, GRBModel& model);
 
-		int practitioner(string filenameoutput);
+		int practitioner(fstream& solutionReportFile, int condition);
+		void reportDataPractitioner(fstream& solutionReportFile, string filenameJobs, string filenameTools);
+		void allocateOperationsToMachines(int numMachines);
 };
 
 #endif 

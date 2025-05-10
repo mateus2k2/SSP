@@ -2,27 +2,18 @@
 
 using namespace std;
 
+#include <algorithm>
 #include <iostream>
-#include <vector>
+#include <limits>
 #include <map>
 #include <set>
-#include <algorithm>
-#include <limits>
+#include <vector>
 using namespace std;
-
-struct Operation {
-    int jobId;
-    int opId;
-    int processingTime;
-    int toolSet;
-    bool isPriority;
-    vector<int> tools; // List of tools required for this operation
-};
 
 struct Family {
     int toolSet;
-    vector<Operation> operations;
     int totalProcTime;
+    vector<Job> operations;
 };
 
 struct Machine {
@@ -30,52 +21,79 @@ struct Machine {
     int totalWorkload = 0;
 };
 
-// Constants (example values)
-const int H = 48; // time horizon
-const float B1 = 0.1f * H;  // max allowed workload difference
-const float B2 = 0.8f * H;  // min workload per machine
+struct AlocatedMachine {
+    vector<Job> operations;
+};
 
-// Comparator for sorting by processing time
-bool compareByTotalProcTime(const Family &a, const Family &b) {
-    return a.totalProcTime < b.totalProcTime;
+int H;
+int U;
+float B1;
+float B2;
+vector<Machine> machines;
+vector<AlocatedMachine> alocatedMachines;
+
+int intersectionSize(const std::vector<int>& a, const std::vector<int>& b) {
+    std::unordered_map<int, int> countA;
+    for (int num : a) {
+        countA[num]++;
+    }
+
+    int intersectionCount = 0;
+    for (int num : b) {
+        if (countA[num] > 0) {
+            intersectionCount++;
+            countA[num]--;
+        }
+    }
+
+    return intersectionCount;
 }
 
-// Phase 1: Grouping and Allocation
-void allocateOperationsToMachines(
-    vector<Operation> &operations,
-    int numMachines,
-    vector<Machine> &machines
-) {
+int differenceSize(const std::vector<int>& a, const std::vector<int>& b) {
+    std::unordered_map<int, int> countB;
+    for (int num : b) {
+        countB[num]++;
+    }
+
+    int diffCount = 0;
+    for (int num : a) {
+        if (countB[num] > 0) {
+            countB[num]--;
+        } else {
+            diffCount++;
+        }
+    }
+
+    return diffCount;
+}
+
+bool compareByTotalProcTime(const Family& a, const Family& b) { return a.totalProcTime < b.totalProcTime; }
+
+void SSP::allocateOperationsToMachines(int numMachines) {
     map<int, Family> families;
-    for (const auto &op : operations) {
-        families[op.toolSet].toolSet = op.toolSet;
-        families[op.toolSet].operations.push_back(op);
-        families[op.toolSet].totalProcTime += op.processingTime;
+    for (const auto& op : originalJobs) {
+        families[op.toolSetNormalized.indexToolSet].toolSet = op.toolSetNormalized.indexToolSet;
+        families[op.toolSetNormalized.indexToolSet].operations.push_back(op);
+        families[op.toolSetNormalized.indexToolSet].totalProcTime += op.processingTime;
     }
 
     vector<Family> sortedFamilies;
-    for (const auto &p : families) {
+    for (const auto& p : families) {
         sortedFamilies.push_back(p.second);
     }
     sort(sortedFamilies.begin(), sortedFamilies.end(), compareByTotalProcTime);
 
     machines.resize(numMachines);
-    for (const auto &fam : sortedFamilies) {
-        auto minIt = min_element(machines.begin(), machines.end(), [](const Machine &a, const Machine &b) {
-            return a.totalWorkload < b.totalWorkload;
-        });
+    for (const auto& fam : sortedFamilies) {
+        auto minIt = min_element(machines.begin(), machines.end(), [](const Machine& a, const Machine& b) { return a.totalWorkload < b.totalWorkload; });
         minIt->assignedFamilies.push_back(fam);
         minIt->totalWorkload += fam.totalProcTime;
     }
 
     bool balancing = true;
     while (balancing) {
-        auto maxIt = max_element(machines.begin(), machines.end(), [](const Machine &a, const Machine &b) {
-            return a.totalWorkload < b.totalWorkload;
-        });
-        auto minIt = min_element(machines.begin(), machines.end(), [](const Machine &a, const Machine &b) {
-            return a.totalWorkload < b.totalWorkload;
-        });
+        auto maxIt = max_element(machines.begin(), machines.end(), [](const Machine& a, const Machine& b) { return a.totalWorkload < b.totalWorkload; });
+        auto minIt = min_element(machines.begin(), machines.end(), [](const Machine& a, const Machine& b) { return a.totalWorkload < b.totalWorkload; });
 
         int w_max = maxIt->totalWorkload;
         int w_min = minIt->totalWorkload;
@@ -84,9 +102,7 @@ void allocateOperationsToMachines(
             balancing = false;
         } else {
             // Find the family with the smallest processing time in maxIt
-            auto famIt = min_element(maxIt->assignedFamilies.begin(), maxIt->assignedFamilies.end(), [](const Family &a, const Family &b) {
-                return a.totalProcTime < b.totalProcTime;
-            });
+            auto famIt = min_element(maxIt->assignedFamilies.begin(), maxIt->assignedFamilies.end(), [](const Family& a, const Family& b) { return a.totalProcTime < b.totalProcTime; });
 
             if (famIt != maxIt->assignedFamilies.end()) {
                 // Move family to the start of the array
@@ -102,98 +118,116 @@ void allocateOperationsToMachines(
     }
 }
 
-// Phase 2: Schedule Creation
-void createSchedules(const vector<Machine>& machines) {
-    for (size_t m = 0; m < machines.size(); ++m) {
-        const auto& machine = machines[m];
-        vector<Operation> schedule;
-
-        // Helper lambda to compute tool similarity
-        auto toolSimilarity = [](const Operation& a, const Operation& b) {
-            set<int> setA(a.tools.begin(), a.tools.end());
-            int common = 0;
-            for (int tool : b.tools) {
-                if (setA.count(tool)) ++common;
+void createSchedules(int condition) {
+    // for (size_t i = 0; i < machines.size(); i++) {
+    //     alocatedMachines.push_back(AlocatedMachine());
+    //     for (size_t j = 0; j < machines[i].assignedFamilies.size(); j++) {
+    //         Family& family = machines[i].assignedFamilies[j];
+    //         for (const auto& job : family.operations) {
+    //             alocatedMachines[i].operations.push_back(job);
+    //         }
+    //     }
+    // }
+    // return;
+    
+    // prioritarios primeiro
+    for (size_t i = 0; i < machines.size(); i++) {
+        alocatedMachines.push_back(AlocatedMachine());
+        for (size_t j = 0; j < machines[i].assignedFamilies.size(); j++) {
+            Family& family = machines[i].assignedFamilies[j];
+            for (const auto& job : family.operations) {
+                if (job.priority) alocatedMachines[i].operations.push_back(job);
             }
-            return common;
-        };
+        }
+    }
 
-        // First insert PRIORITY operations
-        for (const auto& fam : machine.assignedFamilies) {
-            for (const auto& op : fam.operations) {
-                if (!op.isPriority) continue;
+    // depois mais similares em sequencia
+    for (size_t i = 0; i < machines.size(); i++) {
+        for (size_t j = 0; j < machines[i].assignedFamilies.size(); j++) {
+            Family& family = machines[i].assignedFamilies[j];
+            for (const auto& jobCurrant : family.operations) {
+                if (!jobCurrant.priority) {
+                    int bestIndex = -1;
+                    int bestIntersection = -numeric_limits<int>::max();
+                    int bestDiference = numeric_limits<int>::max();
+                    for (const auto& jobTesting : alocatedMachines[i].operations) {
+                        vector<int> previusTools = jobTesting.toolSetNormalized.tools;
+                        vector<int> currentTools = jobCurrant.toolSetNormalized.tools;
 
-                int bestScore = -1;
-                auto bestIt = schedule.end();
+                        // interceçao entre os toolsets
+                        if (condition == 0) {
+                            int intersection = intersectionSize(previusTools, currentTools);
+                            if (intersection > bestIntersection) {
+                                bestIntersection = intersection;
+                                bestIndex = jobTesting.indexJob;
+                            }
+                        }
 
-                for (auto it = schedule.begin(); it != schedule.end(); ++it) {
-                    int sim = toolSimilarity(op, *it);
-                    if (sim > bestScore) {
-                        bestScore = sim;
-                        bestIt = it + 1;
+                        // Menor diferença
+                        if (condition == 1) {
+                            int diference = differenceSize(previusTools, currentTools);
+                            if (diference < bestDiference) {
+                                bestDiference = diference;
+                                bestIndex = jobTesting.indexJob;
+                            }
+                        }
+                    }
+                    cout << "Best index: " << bestIndex << " i: "  << i << endl;
+                    if (bestIndex != -1) {
+                        auto it = find_if(alocatedMachines[i].operations.begin(), alocatedMachines[i].operations.end(), [&](const Job& job) { return job.indexJob == bestIndex; });
+                        int index = distance(alocatedMachines[i].operations.begin(), it);
+                        alocatedMachines[i].operations.insert(alocatedMachines[i].operations.begin() + index + 1, jobCurrant);
+                    }
+                    else{
+                        alocatedMachines[i].operations.push_back(jobCurrant);
                     }
                 }
-
-                if (bestScore > 0 && bestIt != schedule.end()) {
-                    schedule.insert(bestIt, op);
-                } else {
-                    schedule.push_back(op);
-                }
             }
         }
-
-        // Then insert NON-PRIORITY operations
-        for (const auto& fam : machine.assignedFamilies) {
-            for (const auto& op : fam.operations) {
-                if (op.isPriority) continue;
-
-                int bestScore = -1;
-                auto bestIt = schedule.end();
-
-                for (auto it = schedule.begin(); it != schedule.end(); ++it) {
-                    int sim = toolSimilarity(op, *it);
-                    if (sim > bestScore) {
-                        bestScore = sim;
-                        bestIt = it + 1;
-                    }
-                }
-
-                if (bestScore > 0 && bestIt != schedule.end()) {
-                    schedule.insert(bestIt, op);
-                } else {
-                    schedule.push_back(op);
-                }
-            }
-        }
-
-        // Output
-        cout << "Schedule for Machine " << m + 1 << ":\n";
-        for (const auto& op : schedule) {
-            cout << "  Job " << op.jobId << ", Op " << op.opId
-                 << ", ToolSet " << op.toolSet
-                 << ", Priority: " << (op.isPriority ? "Yes" : "No") << "\n";
-        }
-        cout << endl;
     }
 }
 
+void SSP::reportDataPractitioner(fstream& solutionReportFile, string filenameJobs, string filenameTools) {
+    solutionReportFile << filenameJobs << ";" << filenameTools << endl;
+    solutionReportFile << H << ";" << U << ";" << DAY << endl;
 
-int SSP:: practitioner(string filenameoutput){
-    vector<Operation> operations = {
-        {0,0,3,1,true, {1,1,2,3,4,5}},
-        {0,1,5,1,true, {1,1,2,3,4,5}},
-        {1,0,7,2,false, {2,12,13,14,15,16,17,18}},
-        {2,0,6,3,false, {3,4,5,8,9,10,11,12,13}},
-        {2,1,8,3,false, {3,4,5,8,9,10,11,12,13}},
-        {3,0,4,2,true, {2,12,13,14,15,16,17,18}},
-        {3,1,9,2,true, {2,12,13,14,15,16,17,18}},
-        {4,0,6,4,false, {4,5,6,7}},
-        {5,0,10,5,false, {5,15,16,17,18,19,20}},
-        {6,0,5,1,true, {1,1,2,3,4,5}}
-    };
+    int fineshedJobsCountTotal = 0;
+    int switchsTotal = 0;
+    int switchsInstancesTotal = 0;
+    int unfineshedPriorityCountTotal = 0;
 
-    vector<Machine> machines;
-    allocateOperationsToMachines(operations, 2, machines);
-    createSchedules(machines);
+    for (size_t i = 0; i < alocatedMachines.size(); i++) {
+        vector<int> jobsInMachine;
+        for (const auto& machineJob : alocatedMachines[i].operations) {
+            auto it = find_if(originalJobs.begin(), originalJobs.end(), [&](const Job& job) { return job.indexJob == machineJob.indexJob && job.indexOperation == machineJob.indexOperation; });
+            int index = distance(originalJobs.begin(), it);
+            jobsInMachine.push_back(index);
+        }
+        auto [fineshedJobsCount, switchs, switchsInstances, unfineshedPriorityCount] = evaluateReportKTNSMachine(jobsInMachine, solutionReportFile, i);
+        fineshedJobsCountTotal += fineshedJobsCount;
+        switchsTotal += switchs;
+        switchsInstancesTotal += switchsInstances;
+        unfineshedPriorityCountTotal += unfineshedPriorityCount;
+    }
+
+    int cost = (PROFITYFINISHED * fineshedJobsCountTotal) - (COSTSWITCH * switchsTotal) - (COSTSWITCHINSTANCE * switchsInstancesTotal) - (COSTPRIORITY * unfineshedPriorityCountTotal);
+
+    solutionReportFile << "END" << endl;
+    solutionReportFile << "fineshedJobsCount: " << fineshedJobsCountTotal << endl;
+    solutionReportFile << "switchs: " << switchsTotal << endl;
+    solutionReportFile << "switchsInstances: " << switchsInstancesTotal << endl;
+    solutionReportFile << "unfineshedPriorityCount: " << unfineshedPriorityCountTotal << endl;
+    solutionReportFile << "cost: " << cost << endl;
+}
+
+int SSP::practitioner(fstream& solutionReportFile, int condition) {
+    H = planingHorizon;
+    U = unsupervised;
+    B1 = 0.1f * H;
+    B2 = 0.8f * H;
+
+    allocateOperationsToMachines(2);
+    createSchedules(condition);
+    reportDataPractitioner(solutionReportFile, inputJobsFile, inputToolsetsFile);
     return 0;
 }

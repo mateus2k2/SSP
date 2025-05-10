@@ -11,12 +11,10 @@
 
 using namespace std;
 
-// ADNDAMENTO = Fazer novas instancias 15 20 25 = Sub conjuntos das maiores 
-// ADNDAMENTO = Practitioner heuristic 
-// FEITO = Retirar autores do artigo
-// FEITO = Salvar o best bound e best obj
-// FEITO = https://www.cpubenchmark.net/cpu_list.php  Core i5- 7300U, @ 2.60 GHz CPU
-// QUEBRANDO = Testar retirar as restrições 2 3 5 6 e 9 = Cortar?
+// Practitioner heuristic 
+// Ajustar horizonte das instanica
+// Testar retirar as restrições 2 3 5 6 e 9
+// ESCREVER
 
 // -------------------------------------------------
 // DEFINIÇÃO DAS CONTANTES
@@ -508,18 +506,18 @@ int SSP::modelo(string folderOutput, int timeLimit) {
         }
 
         // (9) Restrição de precedência entre operações do mesmo job
-        for (const auto& [job, numOps] : jobOperationsCount) {
-            if (numOps <= 1) continue;
+        // for (const auto& [job, numOps] : jobOperationsCount) {
+        //     if (numOps <= 1) continue;
 
-            for (int k = 1; k < numOps; ++k) {
-                pair<int, int> op_curr = {job, k};
-                pair<int, int> op_next = {job, k + 1};
+        //     for (int k = 1; k < numOps; ++k) {
+        //         pair<int, int> op_curr = {job, k};
+        //         pair<int, int> op_next = {job, k + 1};
 
-                if (e.count(op_curr) && s.count(op_next)) {
-                    model.addConstr(e[op_curr] <= s[op_next], "precedence_job_" + to_string(job) + "_op_" + to_string(k));
-                }
-            }
-        }
+        //         if (e.count(op_curr) && s.count(op_next)) {
+        //             model.addConstr(e[op_curr] <= s[op_next], "precedence_job_" + to_string(job) + "_op_" + to_string(k));
+        //         }
+        //     }
+        // }
 
         // (10) Restrição para definir se uma operação foi concluída dentro do horizonte H
         const double eps = 1e-5;

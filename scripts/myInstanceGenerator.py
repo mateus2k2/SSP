@@ -25,7 +25,7 @@ def createSmallerInstances():
 
     # print(len(baseInstanceUnicJobs))
     # shuffle the list
-    newInstancesSizes = [15, 20, 25]
+    newInstancesSizes = [15]
     reentrantRatio = 0.5
 
     priorityLevels = [0.25, 0.5, 0.75]
@@ -33,8 +33,9 @@ def createSmallerInstances():
         instanciesToCreate = []
         random.shuffle(baseInstanceUnicJobs)
         for size in newInstancesSizes:
-            toMakeReentrant = int(size/(1+reentrantRatio))
-            toMakeReentrant = int(toMakeReentrant/2)
+            # toMakeReentrant = int(size/(1+reentrantRatio))
+            # toMakeReentrant = int(toMakeReentrant/2)
+            toMakeReentrant = 2
             for i in range(0, toMakeReentrant):
                 instanciesToCreate.append({
                     "Job": i,
@@ -66,7 +67,7 @@ def createSmallerInstances():
                     numberOfPriority -= 1
             folderToSave = f"/home/mateus/WSL/IC/SSP/input/MyInstancesSameToolSets/Test"
             fileName = f"n={size},p={priorityLevel},r=0.5,t=0,v0.csv"
-            csv_file = open(f"{folderToSave}/{fileName}", 'w', newline='')
+            csv_file = open(f"{folderToSave}/{fileName}", 'w+', newline='')
             fields = ["Job","Operation","ToolSet","Processing Time","Priority"]
             csv_writer = csv.DictWriter(csv_file, fieldnames=fields, delimiter=';')
             csv_writer.writeheader()

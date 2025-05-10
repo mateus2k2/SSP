@@ -55,6 +55,7 @@ int main(int argc, char* argv[]) {
 
     // practitioner
     int practitioner = 0;
+    int sequenceBy = 0;
 	
 	// Instance file name
 	string filenameJobs = arguments[0];
@@ -106,6 +107,9 @@ int main(int argc, char* argv[]) {
             timeLimit = stoi(arguments[i+1]);
         else if(arguments[i]== "--PRACTITIONER")
             practitioner = stoi(arguments[i+1]);
+        else if(arguments[i]== "--SEQUENCE_BY")
+            sequenceBy = stoi(arguments[i+1]);
+            
     }
 	tempUp = PTL/ptlTempUpProportion;
 
@@ -146,7 +150,7 @@ int main(int argc, char* argv[]) {
     }
 
     if(practitioner){
-        prob->practitioner(filenameoutput);
+        prob->practitioner(solutionReportFile, sequenceBy);
         return 0;
     }
 
