@@ -7,6 +7,28 @@
 
 solSSP SSP::neighbor(solSSP sol) { return neighborFunc(sol); }
 
+solSSP SSP::total_rand(solSSP sol) {
+    solSSP ss;
+    std::random_device rnd_device;
+    #if defined(RANDSEED)
+        std::mt19937 mersenne_engine{rnd_device()};
+    #else
+        std::mt19937 mersenne_engine{42};
+    #endif
+
+    for (int i = 0; i < numberJobs; i++) {
+        ss.sol.push_back(i);
+    }
+
+    std::shuffle(begin(ss.sol), end(ss.sol), mersenne_engine);
+
+    ss.evalSol = evaluate(ss);
+    ss.Nup = false;
+    ss.Ndown = false;
+
+    return ss;
+}
+
 // 2-opt
 solSSP SSP::two_opt(solSSP sol) {
     solSSP s;

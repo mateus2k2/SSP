@@ -80,6 +80,7 @@ class SSP: public Problem<solSSP>{
 		solSSP two_opt(solSSP sol);
 		solSSP two_swap(solSSP sol);
 		solSSP insertion(solSSP sol);
+		solSSP total_rand(solSSP sol);
 
 		void groupJobs();
 		double evaluate(solSSP& s);

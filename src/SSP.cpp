@@ -24,6 +24,7 @@ void SSP::setParans(int movementType1, int initSolType1){
 	if (movementType1 == 0) this->neighborFunc = std::bind(&SSP::two_opt, this, std::placeholders::_1);
 	if (movementType1 == 1) this->neighborFunc = std::bind(&SSP::two_swap, this, std::placeholders::_1);
 	if (movementType1 == 2) this->neighborFunc = std::bind(&SSP::insertion, this, std::placeholders::_1);
+	if (movementType1 == 3) this->neighborFunc = std::bind(&SSP::total_rand, this, std::placeholders::_1);
 
 	// rand = 0
 	// randPriority = 1
