@@ -15,4 +15,8 @@ https://support.gurobi.com/hc/en-us/articles/360039499751-How-do-I-use-CMake-to-
 https://stackoverflow.com/questions/46779850/cannot-compile-gurobi-examples-in-version-7-5-1
 g++ marco.cpp -std=c++98 -m64 -g -o marco.out -I$GUROBI_HOME/include -L$GUROBI_HOME/lib -lgurobi_c++ -lgurobi120 -lm
 
+PC
 grbgetkey b3a435b4-5af3-46fa-bc0c-17ea96efcf6c --input wsl2-hostinfo.txt
+
+ABSTERGO
+grbgetkey e24939a9-c86f-4d6c-8cf9-aab98b99fafa
