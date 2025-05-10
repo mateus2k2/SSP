@@ -98,5 +98,6 @@ double SSP::evaluate(solSSP& s) {
 
     int cost = (PROFITYFINISHED * fineshedJobsCount) - (COSTSWITCH * switchs) - (COSTSWITCHINSTANCE * switchsInstances) - (COSTPRIORITY * unfineshedPriorityCount);
 
+    cout << "Cost: " << cost << endl;
     return (-1) * cost;
 }

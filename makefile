@@ -69,11 +69,11 @@ runPT:
 		--TEMP_FIM 5 \
 		--N_REPLICAS 11 \
 		--MCL 500 \
-		--PTL 600 \
+		--PTL 10 \
 		--PASSO_GATILHO 10 \
 		--TEMP_DIST 3 \
 		--TYPE_UPDATE 1 \
-		--INIT_SOL_TYPE 0 \
+		--INIT_SOL_TYPE 1 \
 		--TEMP_UPDATE 3500 \
 		--PTL_TEMP_UPDATE_PROPORTION 3 \
 		--DIFERENT_TOOLSETS_MODE 0 \
@@ -124,7 +124,7 @@ goPT:
 
 validarFile:
 	clear
-	python ./scripts/reportAnalises.py ./output/Modelo/MyInstancesSameToolSets/n=15,p=0.5,r=0.5,t=0,v0.csv 0
+	python ./scripts/reportAnalises.py ./output/Exemplo/pequena.txt 0
 	echo "\n"
 
 tabelaResultadosModelo:

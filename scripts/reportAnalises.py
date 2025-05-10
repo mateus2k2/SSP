@@ -114,16 +114,16 @@ def verificarPares(files):
 
     return 0
 
+# ---------------------------------------------------------------------------------------------------
+# ANALISES
+# ---------------------------------------------------------------------------------------------------
+
 def totalUnfinishedJobs(machines, planejamento):
     jobs = ld.loadJobs(planejamento['jobsFileName'])
     total = len(jobs)
     for machine in machines:
         total -= len(machine)
     return total
-
-# ---------------------------------------------------------------------------------------------------
-# ANALISES
-# ---------------------------------------------------------------------------------------------------
 
 def getFileParans(file):
     # n=600,p=0.25,r=0.5,t=3096,v6.csv
@@ -137,12 +137,13 @@ def getFileParans(file):
 def tabelaResultados(files):
     for index, report in enumerate(files):
         planejamento, machines, endInfo = rp.parseReport(report)
+        totalUnfineshed = totalUnfinishedJobs(machines, planejamento)
         instancename = report.split('/')[-1]
         print((
             # f'{instancename} '
             f'{endInfo["fineshedJobsCount"]} '
             f'{endInfo["unfineshedPriorityCount"]} '
-            f'{endInfo["totalUnfineshed"]} '
+            f'{totalUnfineshed} '
             f'{endInfo["switchsInstances"]} '
             f'{endInfo["switchs"]} '
             f'{endInfo["finalSolution"]} '
