@@ -31,6 +31,18 @@ typedef struct{
     vector<int> processingTimes;
 }Job;
 
+struct Family {
+    int toolSet;
+    int totalProcTime;
+    vector<Job> operations;
+};
+
+struct Machine {
+    vector<Job> operations;
+    vector<Family> assignedFamilies;
+    int totalWorkload = 0;
+};
+
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // DEFINIÇÕES DO PLOBLEMA
 // ------------------------------------------------------------------------------------------------------------------------------------------------------

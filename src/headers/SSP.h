@@ -42,6 +42,7 @@ class SSP: public Problem<solSSP>{
 		int numberTools;
 		int numberToolsReal;
 		int numberJobs;
+		int numberJobsUngrouped;
 		int numberOfPriorityJobs;
 		int capacityMagazine;
 		int diferent_toolset_mode;
@@ -90,9 +91,10 @@ class SSP: public Problem<solSSP>{
 		void loadModelData();
 		void convertModelData(string& folderOutput, GRBModel& model);
 
-		int practitioner(fstream& solutionReportFile, int condition);
+		vector<Machine> practitioner(fstream& solutionReportFile, int condition);
 		void reportDataPractitioner(fstream& solutionReportFile, string filenameJobs, string filenameTools);
 		void allocateOperationsToMachines(int numMachines);
+		void createSchedules(int condition);
 };
 
 #endif 

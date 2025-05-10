@@ -72,7 +72,7 @@ GRBLinExpr obj = 0;
 // -------------------------------------------------
 
 void printLoaded() {
-    // return;
+    return;
     printf("\n--- Loaded Data ---\n");
 
     cout << "Hm: " << Hm << endl;
@@ -137,7 +137,7 @@ void printLoaded() {
 }
 
 void printsVars() {
-    // return;
+    return;
     cout << "\n--- Variable Values ---\n";
 
     // Print s(jk)
@@ -205,9 +205,8 @@ void printsVars() {
 // LOAD AND SAVE
 // -------------------------------------------------
 
-void SSP::convertModelData(string& folderOutput, GRBModel& model) {
+void SSP::convertModelData(string& filename, GRBModel& model) {
     fstream solutionReportFile;
-    string filename = folderOutput + "/report.txt";
     solutionReportFile.open(filename, ios::out);
     if (!solutionReportFile.is_open()) {
         cerr << "Error: Could not open solution report file: " << filename << endl;
@@ -363,8 +362,20 @@ void SSP::loadModelData() {
 // MODELO
 // -------------------------------------------------
 
-int SSP::modelo(string folderOutput, int timeLimit) {
+int SSP::modelo(string fileOutputPath, int timeLimit) {
     loadModelData();
+    // Find last slash and dot
+    size_t slashPos = fileOutputPath.find_last_of('/');
+    size_t dotPos = fileOutputPath.find_last_of('.');
+
+    // Extract folder and file
+    std::string folder = fileOutputPath.substr(0, slashPos);
+    std::string file = fileOutputPath.substr(slashPos + 1, dotPos - slashPos - 1);
+
+    string outputModel = "./" + folder + "/" + file + ".lp";
+    string outputSolution = "./" + folder + "/" + file + ".sol";
+    string outputReport = "./" + folder + "/" + file + ".csv";
+    string outputInfisible = "./" + folder + "/" + file + ".inf";
 
     try {
         GRBEnv env = GRBEnv();
@@ -506,18 +517,18 @@ int SSP::modelo(string folderOutput, int timeLimit) {
         }
 
         // (9) Restrição de precedência entre operações do mesmo job
-        // for (const auto& [job, numOps] : jobOperationsCount) {
-        //     if (numOps <= 1) continue;
+        for (const auto& [job, numOps] : jobOperationsCount) {
+            if (numOps <= 1) continue;
 
-        //     for (int k = 1; k < numOps; ++k) {
-        //         pair<int, int> op_curr = {job, k};
-        //         pair<int, int> op_next = {job, k + 1};
+            for (int k = 1; k < numOps; ++k) {
+                pair<int, int> op_curr = {job, k};
+                pair<int, int> op_next = {job, k + 1};
 
-        //         if (e.count(op_curr) && s.count(op_next)) {
-        //             model.addConstr(e[op_curr] <= s[op_next], "precedence_job_" + to_string(job) + "_op_" + to_string(k));
-        //         }
-        //     }
-        // }
+                if (e.count(op_curr) && s.count(op_next)) {
+                    model.addConstr(e[op_curr] <= s[op_next], "precedence_job_" + to_string(job) + "_op_" + to_string(k));
+                }
+            }
+        }
 
         // (10) Restrição para definir se uma operação foi concluída dentro do horizonte H
         const double eps = 1e-5;
@@ -659,7 +670,7 @@ int SSP::modelo(string folderOutput, int timeLimit) {
         if (timeLimit > 0) {
             model.set(GRB_DoubleParam_TimeLimit, timeLimit*60); // 5 minutes
         }
-        model.write(folderOutput + "/model.lp");                // Escreve o modelo em um arquivo
+        model.write(outputModel);                               // Escreve o modelo em um arquivo
         model.optimize();                                       // Resolve o modelo
 
         int status = model.get(GRB_IntAttr_Status);             // Verifica o status do modelo
@@ -670,15 +681,15 @@ int SSP::modelo(string folderOutput, int timeLimit) {
         if (status == GRB_INFEASIBLE) {
             cout << "O modelo nao pode ser resolvido porque e inviavel. Verifique o arquivo InfeasibilityCheck.ilp" << endl;
             model.computeIIS();
-            model.write(folderOutput + "/InfeasibilityCheck.ilp");
+            model.write(outputInfisible);               
             return 0;
         }
         if (status == GRB_TIME_LIMIT) {
             cout << "Optimization stopped due to time limit." << std::endl; // salvar o best bound aqui
         }
 
-        model.write(folderOutput + "/modelSolution.sol");
-        convertModelData(folderOutput, model);
+        model.write(outputSolution);  
+        convertModelData(outputReport, model);
 
     } catch (GRBException error) {
         cout << "Erro numero: " << error.getErrorCode() << endl;

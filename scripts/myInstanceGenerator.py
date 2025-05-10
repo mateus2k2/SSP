@@ -25,7 +25,7 @@ def createSmallerInstances():
 
     # print(len(baseInstanceUnicJobs))
     # shuffle the list
-    newInstancesSizes = [15]
+    newInstancesSizes = [25]
     reentrantRatio = 0.5
 
     priorityLevels = [0.25, 0.5, 0.75]
@@ -33,9 +33,9 @@ def createSmallerInstances():
         instanciesToCreate = []
         random.shuffle(baseInstanceUnicJobs)
         for size in newInstancesSizes:
-            # toMakeReentrant = int(size/(1+reentrantRatio))
-            # toMakeReentrant = int(toMakeReentrant/2)
-            toMakeReentrant = 2
+            toMakeReentrant = int(size/(1+reentrantRatio))
+            toMakeReentrant = int(toMakeReentrant/2)
+            if size == 15: toMakeReentrant = 2
             for i in range(0, toMakeReentrant):
                 instanciesToCreate.append({
                     "Job": i,

@@ -1,12 +1,15 @@
+# ./scripts/runAuto.sh ./output/TESTE same PT 9
+
 outputFolder=${1:-"./output/Exemplo"}
 runMode=${2:-"both"}
-compileVar=${3:-"1"}
+type=${3:-"PT"}
+head=${4:-"9999"}
 
 [ ! -d "$outputFolder" ] && mkdir -p "$outputFolder"
 [ ! -d "$outputFolder/MyInstancesSameToolSets" ] && mkdir -p "$outputFolder/MyInstancesSameToolSets"
 [ ! -d "$outputFolder/MyInstancesDiferentToolSets" ] && mkdir -p "$outputFolder/MyInstancesDiferentToolSets"
 
-make compilePT DEBUG_MODE=0 GATILHO_MODE=0 FAST_COMPILE_MODE=0
+make compile DEBUG_MODE=0 GATILHO_MODE=0 FAST_COMPILE_MODE=0
 
 run_instances() {
     local instancesFolder=$1
@@ -15,27 +18,13 @@ run_instances() {
 
     echo "RODANDO INSTANCIAS DE $instancesFolder"
     local counter=1
-    for entry in $(ls -v "$instancesFolder"/*.csv)
+    for entry in $(ls -v "$instancesFolder"/*.csv | head -n $head);
     do
         filename=$(basename "$entry")
         local timestamp=$(TZ="America/Sao_Paulo" date "+%Y-%m-%d %H:%M:%S.%3N")
         echo "$timestamp - $counter ./src/out/mainCpp $instancesFolder/$filename $toolSetsFile $outputFolder/$filename"
-        ./src/out/mainCpp "$instancesFolder/$filename" "$toolSetsFile" "$outputFolder/$filename" \
-            --TEMP_INIT 0.1 \
-            --TEMP_FIM 5 \
-            --N_REPLICAS 11 \
-            --MCL 500 \
-            --PTL 600 \
-		    --PASSO_GATILHO 10 \
-            --TEMP_DIST 3 \
-            --TYPE_UPDATE 1 \
-            --INIT_SOL_TYPE 0 \
-            --TEMP_UPDATE 3500 \
-            --PTL_TEMP_UPDATE_PROPORTION 3 \
-            --DIFERENT_TOOLSETS_MODE $instanceMode
+        ./src/out/mainCpp "$instancesFolder/$filename" "$toolSetsFile" "$outputFolder/$filename" --DIFERENT_TOLSETS_MODE $instanceMode ${extraArgs}
         counter=$((counter+1))
-
-        # --TEMP_INIT 0.1 --TEMP_FIM 5 --MCL 500 --TEMP_DIST 3 --TYPE_UPDATE 1 --INIT_SOL_TYPE 0 --PTL_TEMP_UPDATE_PROPORTION 3
 
         # stringToSend="$counter - Instância $instancesFolder/$filename finalizada"
         # wget --header="Content-Type: application/json" \
@@ -47,6 +36,40 @@ run_instances() {
 }
 
 toolSetsFile=./input/Processed/ToolSetInt.csv
+extraArgs=""
+
+if [ "$type" = "PT" ]
+then
+    extraArgs=" \
+        --TEMP_INIT 0.1 \
+        --TEMP_FIM 5 \
+        --N_REPLICAS 11 \
+        --MCL 500 \
+        --PTL 600 \
+        --PASSO_GATILHO 10 \
+        --TEMP_DIST 3 \
+        --TYPE_UPDATE 1 \
+        --INIT_SOL_TYPE 0 \
+        --TEMP_UPDATE 3500 \
+        --PTL_TEMP_UPDATE_PROPORTION 3 \
+    "
+elif [ "$type" = "modelo" ]
+then
+    extraArgs="\
+        --DIFERENT_TOOLSETS_MODE 0 \
+        --INSTANCE_REPORT 0 \
+        --TIME_LIMIT 60 \
+        --MODELO 1 \
+    "
+elif [ "$type" = "practitioner" ]
+then
+    extraArgs="\
+        --DIFERENT_TOOLSETS_MODE 0 \
+        --INSTANCE_REPORT 0 \
+        --PRACTITIONER 1 \
+        --SEQUENCE_BY 1 \
+    "
+fi
 
 if [ "$runMode" = "both" ] 
 then

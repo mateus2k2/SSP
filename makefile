@@ -2,7 +2,19 @@
 # Meus Codigos cpp
 # --------------------------------------------------------
 
-# make DEBUG_MODE=0 GATILHO_MODE=0 FAST_COMPILE_MODE=0 RAND_MODE=1 PTGo
+# make DEBUG_MODE=0 GATILHO_MODE=0 FAST_COMPILE_MODE=0 RAND_MODE=1 goModelo
+
+# PT
+# ./scripts/runMultiple.sh ./output/SBPOPequenas same PT 9
+# make tabelaResultadosPT > out 
+
+# Modelo
+# ./scripts/runAuto.sh ./output/Modelo same modelo 9999
+# make tabelaResultadosModelo > out
+
+# Practitioner
+# ./scripts/runAuto.sh ./output/PractitionerTeste same practitioner 9999
+# make tabelaResultadosPractitioner > out
 
 OUTPUT = src/out/mainCpp
 
@@ -50,9 +62,9 @@ compile:
 
 runPT:
 	./src/out/mainCpp \
-		"./input/MyInstancesSameToolSets/n=212,p=0.75,r=0.4,t=1390,v8.csv" \
+		"./input/MyInstancesSameToolSets/n=15,p=0.5,r=0.5,t=0,v0.csv" \
 		"./input/Processed/ToolSetInt.csv" \
-		"./output/Modelo" \
+		"./output/Exemplo/pequena.txt" \
 		--TEMP_INIT 0.1 \
 		--TEMP_FIM 5 \
 		--N_REPLICAS 11 \
@@ -65,13 +77,12 @@ runPT:
 		--TEMP_UPDATE 3500 \
 		--PTL_TEMP_UPDATE_PROPORTION 3 \
 		--DIFERENT_TOOLSETS_MODE 0 \
-		--MODELO 0 \
 
 runModelo:
 	./src/out/mainCpp \
 		"./input/Exemplo/Jobs.csv" \
 		"./input/Exemplo/ToolSets.csv" \
-		"./output/Modelo" \
+		"./output/Modelo/Exemplo.csv" \
 		--DIFERENT_TOOLSETS_MODE 0 \
 		--INSTANCE_REPORT 0 \
 		--TIME_LIMIT 5 \
@@ -85,6 +96,7 @@ runPractitioner:
 		--DIFERENT_TOOLSETS_MODE 0 \
 		--INSTANCE_REPORT 0 \
 		--PRACTITIONER 1 \
+		--SEQUENCE_BY 1 \
 
 
 # "./input/Exemplo/Jobs.csv" \
@@ -110,14 +122,19 @@ goPT:
 # Meus python
 # --------------------------------------------------------
 
-analiseFolder:
+tabelaResultadosModelo:
 	clear
-	python ./scripts/reportAnalises.py ./output/TCC2V2/ 6
+	python ./scripts/reportAnalises.py ./output/Modelo/MyInstancesSameToolSets/ 2
 	echo "\n"
 
-analiseFile:
+tabelaResultadosPractitioner:
 	clear
-	python ./scripts/reportAnalises.py ./output/Modelo/report.txt 0
+	python ./scripts/reportAnalises.py ./output/Practitioner/MyInstancesSameToolSets/ 2
+	echo "\n"
+
+tabelaResultadosPT:
+	clear
+	python ./scripts/reportAnalises.py ./output/SBPOPequenas/ 3
 	echo "\n"
 
 # --------------------------------------------------------

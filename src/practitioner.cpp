@@ -1,36 +1,20 @@
-#include "headers/SSP.h"
-
-using namespace std;
-
 #include <algorithm>
 #include <iostream>
 #include <limits>
 #include <map>
 #include <set>
 #include <vector>
+
+#include "headers/SSP.h"
+// #include "../../PTAPI/include/ExecTime.h"
+
 using namespace std;
-
-struct Family {
-    int toolSet;
-    int totalProcTime;
-    vector<Job> operations;
-};
-
-struct Machine {
-    vector<Family> assignedFamilies;
-    int totalWorkload = 0;
-};
-
-struct AlocatedMachine {
-    vector<Job> operations;
-};
 
 int H;
 int U;
 float B1;
 float B2;
 vector<Machine> machines;
-vector<AlocatedMachine> alocatedMachines;
 
 int intersectionSize(const std::vector<int>& a, const std::vector<int>& b) {
     std::unordered_map<int, int> countA;
@@ -101,11 +85,9 @@ void SSP::allocateOperationsToMachines(int numMachines) {
         if ((w_max - w_min) <= B1 || w_min >= B2) {
             balancing = false;
         } else {
-            // Find the family with the smallest processing time in maxIt
             auto famIt = min_element(maxIt->assignedFamilies.begin(), maxIt->assignedFamilies.end(), [](const Family& a, const Family& b) { return a.totalProcTime < b.totalProcTime; });
 
             if (famIt != maxIt->assignedFamilies.end()) {
-                // Move family to the start of the array
                 minIt->assignedFamilies.insert(minIt->assignedFamilies.begin(), *famIt);
                 minIt->totalWorkload += famIt->totalProcTime;
 
@@ -118,7 +100,7 @@ void SSP::allocateOperationsToMachines(int numMachines) {
     }
 }
 
-void createSchedules(int condition) {
+void SSP::createSchedules(int condition) {
     // for (size_t i = 0; i < machines.size(); i++) {
     //     alocatedMachines.push_back(AlocatedMachine());
     //     for (size_t j = 0; j < machines[i].assignedFamilies.size(); j++) {
@@ -132,11 +114,10 @@ void createSchedules(int condition) {
     
     // prioritarios primeiro
     for (size_t i = 0; i < machines.size(); i++) {
-        alocatedMachines.push_back(AlocatedMachine());
         for (size_t j = 0; j < machines[i].assignedFamilies.size(); j++) {
             Family& family = machines[i].assignedFamilies[j];
             for (const auto& job : family.operations) {
-                if (job.priority) alocatedMachines[i].operations.push_back(job);
+                if (job.priority) machines[i].operations.push_back(job);
             }
         }
     }
@@ -150,7 +131,7 @@ void createSchedules(int condition) {
                     int bestIndex = -1;
                     int bestIntersection = -numeric_limits<int>::max();
                     int bestDiference = numeric_limits<int>::max();
-                    for (const auto& jobTesting : alocatedMachines[i].operations) {
+                    for (const auto& jobTesting : machines[i].operations) {
                         vector<int> previusTools = jobTesting.toolSetNormalized.tools;
                         vector<int> currentTools = jobCurrant.toolSetNormalized.tools;
 
@@ -172,14 +153,13 @@ void createSchedules(int condition) {
                             }
                         }
                     }
-                    cout << "Best index: " << bestIndex << " i: "  << i << endl;
                     if (bestIndex != -1) {
-                        auto it = find_if(alocatedMachines[i].operations.begin(), alocatedMachines[i].operations.end(), [&](const Job& job) { return job.indexJob == bestIndex; });
-                        int index = distance(alocatedMachines[i].operations.begin(), it);
-                        alocatedMachines[i].operations.insert(alocatedMachines[i].operations.begin() + index + 1, jobCurrant);
+                        auto it = find_if(machines[i].operations.begin(), machines[i].operations.end(), [&](const Job& job) { return job.indexJob == bestIndex; });
+                        int index = distance(machines[i].operations.begin(), it);
+                        machines[i].operations.insert(machines[i].operations.begin() + index + 1, jobCurrant);
                     }
                     else{
-                        alocatedMachines[i].operations.push_back(jobCurrant);
+                        machines[i].operations.push_back(jobCurrant);
                     }
                 }
             }
@@ -195,10 +175,11 @@ void SSP::reportDataPractitioner(fstream& solutionReportFile, string filenameJob
     int switchsTotal = 0;
     int switchsInstancesTotal = 0;
     int unfineshedPriorityCountTotal = 0;
+    int totalUnfineshed = numberJobsUngrouped;
 
-    for (size_t i = 0; i < alocatedMachines.size(); i++) {
+    for (size_t i = 0; i < machines.size(); i++) {
         vector<int> jobsInMachine;
-        for (const auto& machineJob : alocatedMachines[i].operations) {
+        for (const auto& machineJob : machines[i].operations) {
             auto it = find_if(originalJobs.begin(), originalJobs.end(), [&](const Job& job) { return job.indexJob == machineJob.indexJob && job.indexOperation == machineJob.indexOperation; });
             int index = distance(originalJobs.begin(), it);
             jobsInMachine.push_back(index);
@@ -208,6 +189,7 @@ void SSP::reportDataPractitioner(fstream& solutionReportFile, string filenameJob
         switchsTotal += switchs;
         switchsInstancesTotal += switchsInstances;
         unfineshedPriorityCountTotal += unfineshedPriorityCount;
+        totalUnfineshed -= fineshedJobsCount;
     }
 
     int cost = (PROFITYFINISHED * fineshedJobsCountTotal) - (COSTSWITCH * switchsTotal) - (COSTSWITCHINSTANCE * switchsInstancesTotal) - (COSTPRIORITY * unfineshedPriorityCountTotal);
@@ -217,10 +199,13 @@ void SSP::reportDataPractitioner(fstream& solutionReportFile, string filenameJob
     solutionReportFile << "switchs: " << switchsTotal << endl;
     solutionReportFile << "switchsInstances: " << switchsInstancesTotal << endl;
     solutionReportFile << "unfineshedPriorityCount: " << unfineshedPriorityCountTotal << endl;
-    solutionReportFile << "cost: " << cost << endl;
+    solutionReportFile << "finalSolution: " << cost << endl;
+    solutionReportFile << "totalUnfineshed: " << totalUnfineshed << endl;
 }
 
-int SSP::practitioner(fstream& solutionReportFile, int condition) {
+vector<Machine> SSP::practitioner(fstream& solutionReportFile, int condition) {
+    // ExecTime et;
+    auto start = std::chrono::high_resolution_clock::now();
     H = planingHorizon;
     U = unsupervised;
     B1 = 0.1f * H;
@@ -229,5 +214,11 @@ int SSP::practitioner(fstream& solutionReportFile, int condition) {
     allocateOperationsToMachines(2);
     createSchedules(condition);
     reportDataPractitioner(solutionReportFile, inputJobsFile, inputToolsetsFile);
-    return 0;
+    
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    
+    solutionReportFile << "Time: " << duration.count() << endl;
+    
+    return machines;
 }

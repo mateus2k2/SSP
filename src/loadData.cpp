@@ -200,6 +200,7 @@ int SSP::loadInstanceParans(string filename) {
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 void SSP::groupJobs() {
+    numberJobsUngrouped = originalJobs.size();
     std::vector<int> indicesToDelete;
 
     for (size_t i = 0; i < originalJobs.size(); ++i) {

@@ -1,53 +1,57 @@
 clear
-[H[2J[3Jpython ./scripts/reportAnalises.py ./output/Modelo/report.txt 0
----Validating ./output/Modelo/report.txt---
-{'bestBound': 274.0, 'finalSolution': 274.0, 'fineshedJobsCount': 10.0, 'switchs': 6.0, 'switchsInstances': 2.0, 'unfineshedPriorityCount': 0.0, 'Time': 3.95658}
-Checking Magazine
-Machine 1/2
-OK
-Machine 2/2
-OK
-
-Checking Unsupervised Switchs
-Machine 1/2
-OK
-Machine 2/2
-OK
-
-Checking Switchs
-OK
-
-Checking Unfinished Jobs
-TODO
-
-Checking Operations Done Once
-Machine 1/2
-OK
-Machine 2/2
-OK
-
-Checking Profit
-OK
-
-Running New KTNS
-TODO
-
-Checking Magazine Size
-Machine 1/2
-Error = Job 2 Operation 0 | Magazine size = 8
-Error = Job 2 Operation 1 | Magazine size = 8
-Error = Job 6 Operation 0 | Magazine size = 7
-Error = Job 4 Operation 0 | Magazine size = 7
-Error = Job 0 Operation 0 | Magazine size = 5
-Error = Job 0 Operation 1 | Magazine size = 5
-ERRORSIZE
-Machine 2/2
-Error = Job 5 Operation 0 | Magazine size = 8
-Error = Job 3 Operation 0 | Magazine size = 7
-Error = Job 3 Operation 1 | Magazine size = 7
-Error = Job 1 Operation 0 | Magazine size = 7
-ERRORSIZE
-
-echo "\n"
+[H[2J[3Jg++   -DRANDSEED ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -m64 -g -o src/out/mainCpp -I/opt/gurobi1201/linux64/include -L/opt/gurobi1201/linux64/lib -lgurobi_c++ -lgurobi120 -lm -Wno-unused-result -lpthread -O3 -march=native -lstdc++ 
+echo "\n" 
 
 
+RODANDO INSTANCIAS DE ./input/MyInstancesSameToolSets
+2025-05-10 12:48:47.766 - 1 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=15,p=0.5,r=0.5,t=0,v0.csv ./input/Processed/ToolSetInt.csv ./output/Modelo/MyInstancesSameToolSets/n=15,p=0.5,r=0.5,t=0,v0.csv
+Set parameter Username
+Set parameter LicenseID to value 2637114
+Academic license - for non-commercial use only - expires 2026-03-16
+Set parameter TimeLimit to value 3600
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Ubuntu 22.04.5 LTS")
+
+CPU model: AMD Ryzen 5 3600 6-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 6 physical cores, 12 logical processors, using up to 12 threads
+
+Non-default parameters:
+TimeLimit  3600
+
+Optimize a model with 107041 rows, 11778 columns and 408235 nonzeros
+Model fingerprint: 0xbe1272f4
+Variable types: 39 continuous, 11739 integer (11726 binary)
+Coefficient statistics:
+  Matrix range     [4e-04, 3e+03]
+  Objective range  [1e+00, 1e+02]
+  Bounds range     [1e+00, 1e+03]
+  RHS range        [1e+00, 3e+03]
+Presolve removed 15903 rows and 347 columns
+Presolve time: 0.81s
+Presolved: 91138 rows, 11431 columns, 353708 nonzeros
+Variable types: 26 continuous, 11405 integer (11392 binary)
+
+Deterministic concurrent LP optimizer: primal and dual simplex (primal and dual model)
+Showing primal log only...
+
+Root relaxation presolved: 91125 rows, 11444 columns, 353695 nonzeros
+
+
+Use crossover to convert LP symmetric solution to basic solution...
+Concurrent spin time: 0.03s
+
+Solved with dual simplex
+
+Root relaxation: objective 4.500000e+02, 1130 iterations, 0.40 seconds (0.27 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  450.00000    0  717          -  450.00000      -     -    7s
+H    0     0                    -3162.000000  450.00000   114%     -    9s
+     0     0  450.00000    0  806 -3162.0000  450.00000   114%     -   10s
+     0     0  450.00000    0  657 -3162.0000  450.00000   114%     -   11s
+     0     0  450.00000    0  767 -3162.0000  450.00000   114%     -   21s
+H    0     0                    -2624.000000  450.00000   117%     -   21s
+H    0     0                    -2623.000000  450.00000   117%     -   21s
+H    0     0                     109.0000000  450.00000   313%     -   21s
+     0     0  450.00000    0  660  109.00000  450.00000   313%     -   22s
