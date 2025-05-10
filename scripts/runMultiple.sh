@@ -2,11 +2,11 @@
 
 outputFolder=${1:-"./output/Multiplos"}
 runMode=${2:-"both"}
-type=${3:-"PT"} # modelo practitioner
-head=${4:-"9999"} # quantas instâncias rodar
+type=${3:-"PT"}
+head=${4:-"9999"}
 
 for i in $(seq 1 10)
 do
     echo "Running $i"
-    ./scripts/runAuto.sh $outputFolder/$i $runMode
+    ./scripts/runAuto.sh $outputFolder/$i $runMode $type $head
 done

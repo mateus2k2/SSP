@@ -70,7 +70,7 @@ class SSP: public Problem<solSSP>{
 		int laodToolSet(string filename);
 		int loadInstanceParans(string filename);
 		void printDataReport();
-		void setParans(int capacityMagazine, int numberMachines, int planingHorizon, int unsupervised, int movementType, int initSolType);
+		void setParans(int movementType, int initSolType);
 
 		solSSP construction();
 		solSSP randPriority();

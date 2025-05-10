@@ -211,7 +211,7 @@ vector<Machine> SSP::practitioner(fstream& solutionReportFile, int condition) {
     B1 = 0.1f * H;
     B2 = 0.8f * H;
 
-    allocateOperationsToMachines(2);
+    allocateOperationsToMachines(numberMachines);
     createSchedules(condition);
     reportDataPractitioner(solutionReportFile, inputJobsFile, inputToolsetsFile);
     

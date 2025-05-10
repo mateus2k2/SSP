@@ -55,7 +55,7 @@ def checkUnsupervisedSwitchs(machines, toolSets, jobs, planejamento):
 
             curTime = operation['start']
 
-            if curTime%timeScale >= unsupervisedStart:
+            if curTime%timeScale > unsupervisedStart:
                 if len(set(operation['magazine']) - set(machine[j-1]['magazine'])):
                     print(f"Error = Unsupervised Switch in Machine {i+1}/{len(machines)} | Job {operation['job']} Operation {operation['operation']} | {set(curToolSet) - set(lastToolSet)}")
                     error = True

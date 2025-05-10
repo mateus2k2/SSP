@@ -2,7 +2,7 @@
 # Meus Codigos cpp
 # --------------------------------------------------------
 
-# make DEBUG_MODE=0 GATILHO_MODE=0 FAST_COMPILE_MODE=0 RAND_MODE=1 goModelo
+# make DEBUG_MODE=0 GATILHO_MODE=0 FAST_COMPILE_MODE=0 RAND_MODE=1 goPT
 
 # PT
 # ./scripts/runMultiple.sh ./output/SBPOPequenas same PT 9
@@ -13,7 +13,7 @@
 # make tabelaResultadosModelo > out
 
 # Practitioner
-# ./scripts/runAuto.sh ./output/PractitionerTeste same practitioner 9999
+# ./scripts/runAuto.sh ./output/Practitioner same practitioner 9999
 # make tabelaResultadosPractitioner > out
 
 OUTPUT = src/out/mainCpp
@@ -121,6 +121,11 @@ goPT:
 # --------------------------------------------------------
 # Meus python
 # --------------------------------------------------------
+
+validarFile:
+	clear
+	python ./scripts/reportAnalises.py ./output/Modelo/MyInstancesSameToolSets/n=15,p=0.5,r=0.5,t=0,v0.csv 0
+	echo "\n"
 
 tabelaResultadosModelo:
 	clear

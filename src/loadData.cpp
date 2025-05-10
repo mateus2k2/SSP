@@ -179,6 +179,7 @@ int SSP::loadInstanceParans(string filename) {
             std::string key = line.substr(0, spacePos);
             std::string value = line.substr(spacePos + 1);
 
+
             if (key == "CAPACITY") {
                 capacityMagazine = std::stoi(value);
             } else if (key == "MACHINES") {

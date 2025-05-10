@@ -44,10 +44,10 @@ int main(int argc, char* argv[]) {
 	vector<string> arguments(argv + 1, argv + argc);	
 
     //problem varibles
-	int capacityMagazine       = 8;
-    int numberMachines         = 2;
-    int planingHorizon         = 2;
-    int unsupervised           = 0.5*DAY;
+	// int capacityMagazine       = 8;
+    // int numberMachines         = 2;
+    // int planingHorizon         = 2;
+    // int unsupervised           = 0.5*DAY;
 	int diferent_toolset_mode  = 0;
 	int instance_report        = 0;
 
@@ -89,14 +89,14 @@ int main(int argc, char* argv[]) {
 			initSolType = stoi(arguments[i+1]);
 		else if(arguments[i]== "--PTL_TEMP_UPDATE_PROPORTION")
 			ptlTempUpProportion = stoi(arguments[i+1]);
-		else if(arguments[i]== "--CAPACITY")
-			capacityMagazine = stoi(arguments[i+1]);
-		else if(arguments[i]== "--MACHINES")
-			numberMachines = stoi(arguments[i+1]);
-		else if(arguments[i]== "--DAYS")
-			planingHorizon = stoi(arguments[i+1]);
-		else if(arguments[i]== "--UNSUPERVISED_MINUTS")
-			unsupervised = stoi(arguments[i+1]);
+		// else if(arguments[i]== "--CAPACITY")
+		// 	capacityMagazine = stoi(arguments[i+1]);
+		// else if(arguments[i]== "--MACHINES")
+		// 	numberMachines = stoi(arguments[i+1]);
+		// else if(arguments[i]== "--DAYS")
+		// 	planingHorizon = stoi(arguments[i+1]);
+		// else if(arguments[i]== "--UNSUPERVISED_MINUTS")
+		// 	unsupervised = stoi(arguments[i+1]);
 		else if(arguments[i]== "--INSTANCE_REPORT")
 			instance_report = stoi(arguments[i+1]);
 		else if(arguments[i]== "--DIFERENT_TOOLSETS_MODE")
@@ -160,7 +160,7 @@ int main(int argc, char* argv[]) {
     // SSP
     // ------------------------------------------------------------------------------
 
-	prob->setParans(capacityMagazine, numberMachines, planingHorizon, unsupervised, uType, initSolType);
+	prob->setParans(uType, initSolType);
     PT<solSSP> algo(tempIni, tempfim, tempN, MCL, PTL, passoGatilho, tempD, uType, tempUp);
     ExecTime et;
     solSSP sol = algo.start(thN, prob);

@@ -17,12 +17,7 @@ SSP::SSP(std::string filenameJobs, std::string filenameTools, int diferent_tools
 SSP::~SSP(){	
 }
 
-void SSP::setParans(int capacityMagazine1, int numberMachines1, int planingHorizon1, int unsupervised1, int movementType1, int initSolType1){
-	this->capacityMagazine = capacityMagazine1;
-	this->numberMachines = numberMachines1;
-	this->planingHorizon = planingHorizon1;
-	this->unsupervised = unsupervised1;
-
+void SSP::setParans(int movementType1, int initSolType1){
 	// two_opt = 0
 	// two_swap = 1
 	// insertion = 2
