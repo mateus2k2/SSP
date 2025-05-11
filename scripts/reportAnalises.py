@@ -135,20 +135,33 @@ def getFileParans(file):
     return n, p, r, t
 
 def tabelaResultados(files):
+    modoPlanilha = True
+    separator = '&'
     for index, report in enumerate(files):
         planejamento, machines, endInfo = rp.parseReport(report)
         totalUnfineshed = totalUnfinishedJobs(machines, planejamento)
+
         instancename = report.split('/')[-1]
-        print((
-            # f'{instancename} '
-            f'{endInfo["fineshedJobsCount"]} '
-            f'{endInfo["unfineshedPriorityCount"]} '
-            f'{totalUnfineshed} '
-            f'{endInfo["switchsInstances"]} '
-            f'{endInfo["switchs"]} '
-            f'{endInfo["finalSolution"]} '
-            f'{endInfo["Time"]} '
-        ).replace('.', ','))
+        instancenameClear = instancename.split(",t=")[0]
+        timeInSeconds = endInfo['Time'] / 1000
+
+        endPrint = ''
+        if index == len(files) - 1: endPrint = ' \\\\ \\hline'
+        else : endPrint = ' \\\\'
+        outputTeste = ((
+            f'{index+1}-{instancenameClear} {separator}'
+            f'{endInfo["fineshedJobsCount"]:,.2f} {separator}'
+            f'{endInfo["unfineshedPriorityCount"]:,.2f} {separator}'
+            f'{totalUnfineshed:,.2f} {separator}'
+            f'{endInfo["switchsInstances"]:,.2f} {separator}'
+            f'{endInfo["switchs"]:,.2f} {separator}'
+            f'{endInfo["finalSolution"]:,.2f} {separator}'
+            f'{timeInSeconds:,.2f}'
+            f'{endPrint}'
+        ).replace('.', ',').replace(',00', ''))
+        if(modoPlanilha): outputTeste = outputTeste.replace('&', ';').replace('\\\\', '').replace('\\hline', '')
+        print(outputTeste)
+        if((index+1) % 3 == 0 and not(index == len(files) - 1) and not modoPlanilha): print("\\hline")
 
 def tabelaResultadosMultiplos(listDirs, subDir = 'MyInstancesSameToolSets', totalPTL = 600):
     filesList = []
@@ -189,37 +202,43 @@ def tabelaResultadosMultiplos(listDirs, subDir = 'MyInstancesSameToolSets', tota
             BestInitialAcc[file] = BestInitialAcc.get(file, []) + [endInfo['bestInitial']]
             MeanInitialAcc[file] = MeanInitialAcc.get(file, []) + [endInfo['meanInitial']]
 
+    modoPlanilha = False
+    separator = '&'
+
     # TABELA 1
-    separator = ';'
     for index, file in enumerate(filesList): 
+        instancenameClear = file.split(",t=")[0]
         endPrint = ''
-        # if index == len(filesList) - 1: endPrint = ' \\\\ \\hline'
-        # else : endPrint = ' \\\\'
-        print((
-            f'{file} {separator} '
+        if index == len(filesList) - 1: endPrint = ' \\\\ \\hline'
+        else : endPrint = ' \\\\'
+        outputTeste = ((
+            f'{index+1}-{instancenameClear} {separator} '
             f'{statistics.mean(fineshedJobsCountAcc[file]):,.2f} {separator} '
             f'{statistics.mean(unfineshedPriorityCountAcc[file]):,.2f} {separator} '
             f'{statistics.mean(totalUnfinishedJobsCountAcc[file]):,.2f} {separator} '
             f'{statistics.mean(switchsInstancesAcc[file]):,.2f} {separator} '
             f'{statistics.mean(switchsAcc[file]):,.2f}'
             f'{endPrint}'
-        ).replace('.', ','))
-        # if(index % 3 == 0): print("\\hline")
+        ).replace('.', ',').replace(',00', ''))
+        if(modoPlanilha): outputTeste = outputTeste.replace('&', ';').replace('\\\\', '').replace('\\hline', '')
+        print(outputTeste)
+        if((index+1) % 3 == 0 and not(index == len(files) - 1) and not modoPlanilha): print("\\hline")
     
     # TABELA 2
     print()
     for index, file in enumerate(filesList): 
         gap = (max(FinalSolutionAcc[file]) - statistics.mean(BestInitialAcc[file]))/max(FinalSolutionAcc[file]) * 100
         stdPercent = statistics.stdev(FinalSolutionAcc[file])/statistics.mean(FinalSolutionAcc[file]) * 100
+        instancenameClear = file.split(",t=")[0]
         
         endPrint = ''
-        # if index == len(filesList) - 1: endPrint = ' \\\\ \\hline'
-        # else : endPrint = ' \\\\'
-        print((
-            f'{file} {separator} '
+        if index == len(filesList) - 1: endPrint = ' \\\\ \\hline'
+        else : endPrint = ' \\\\'
+        outputTeste = ((
+            f'{index+1}-{instancenameClear} {separator} '
             f'{statistics.mean(BestInitialAcc[file]):.2f} {separator} '
-            f'{max(BestInitialAcc[file]):.2f} {separator} '
-            f'{statistics.mean(MeanInitialAcc[file]):.2f} {separator} '
+            # f'{max(BestInitialAcc[file]):.2f} {separator} '
+            # f'{statistics.mean(MeanInitialAcc[file]):.2f} {separator} '
             f'{max(FinalSolutionAcc[file]):.2f} {separator} '
             f'{statistics.mean(FinalSolutionAcc[file]):.2f} {separator} '
             f'{(stdPercent):.2f} {separator} '
@@ -227,10 +246,10 @@ def tabelaResultadosMultiplos(listDirs, subDir = 'MyInstancesSameToolSets', tota
             f'{(statistics.mean(PTLAcc[file])/totalPTL)*100:.2f} {separator} '
             f'{(gap):.2f}'
             f'{endPrint}'
-        ).replace('.', ','))
-        # if(index % 3 == 0): print("\\hline")
-
-
+        ).replace('.', ',').replace(',00', ''))
+        if(modoPlanilha): outputTeste = outputTeste.replace('&', ';').replace('\\\\', '').replace('\\hline', '')
+        print(outputTeste)
+        if((index+1) % 3 == 0 and not(index == len(files) - 1) and not modoPlanilha): print("\\hline")
 
 
     # OUTROS
