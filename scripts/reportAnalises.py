@@ -135,7 +135,7 @@ def getFileParans(file):
     return n, p, r, t
 
 def tabelaResultados(files):
-    modoPlanilha = True
+    modoPlanilha = False
     separator = '&'
     for index, report in enumerate(files):
         planejamento, machines, endInfo = rp.parseReport(report)
@@ -312,7 +312,7 @@ def main():
     else:
         files = os.listdir(folderName)
         files = natsorted(files) 
-        fileWithPath = [f"{folderName}/{file}" for file in files]
+        fileWithPath = [f"{folderName}/{file}" for file in files if file.endswith(".csv")]
 
     if option == '1': validarPasta(fileWithPath)  
     if option == '2': tabelaResultados(fileWithPath)

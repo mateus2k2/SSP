@@ -79,6 +79,7 @@ def checkSwitchs(machines, endInfo, toolSets, jobs):
                 toolSwitchs += 0
             else:
                 numberOfSwitchs = len(set(operation['magazine']) - set(machine[j-1]['magazine']))
+                # print(f"Machine {i+1}/{len(machines)} | Job {operation['job']} Operation {operation['operation']} | Switchs = {numberOfSwitchs} | Magazine = {set(operation['magazine'])} - {set(machine[j-1]['magazine'])}")
                 toolSwitchs += numberOfSwitchs
                 if numberOfSwitchs > 0: switchInstance += 1
         

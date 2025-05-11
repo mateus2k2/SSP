@@ -12,6 +12,19 @@ geradorProcessingTime = ProcessingTimeGenerator()
 # REFACTORY
 # ------------------------------------------------------------------------------------------------
 
+def creackTools():
+    baseInstance = '/home/mateus/WSL/IC/SSP/input/MyInstancesSameToolSets/n=25,p=0.5,r=0.5,t=0,v0.csv'
+    baseInstance = pd.read_csv(baseInstance, delimiter=';')
+    baseInstance = baseInstance.to_dict(orient='records')
+
+    toolSetList = ld.loadToolSet("/home/mateus/WSL/IC/SSP/input/Processed/ToolSetInt.csv")
+    tools = set()
+    for item in baseInstance:
+        curTools = toolSetList[item['ToolSet']]
+        tools = tools.union(set(curTools))
+
+    print(f"Total de ferramentas: {len(tools)}")
+
 def createSmallerInstances():
     baseInstance = '/home/mateus/WSL/IC/SSP/input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv'
     baseInstance = pd.read_csv(baseInstance, delimiter=';')
@@ -418,7 +431,8 @@ def makeInstaceExtra():
 
 # refactory()
 
-createSmallerInstances()
+# createSmallerInstances()
+creackTools()
 
 # toolUnusedMap = ld.loadToolSet("./input/UnusedToolSetsClean.csv")
 # toolSetIndex = list(toolUnusedMap.keys())
