@@ -127,19 +127,19 @@ validarFile:
 	python ./scripts/reportAnalises.py ./output/Modelo/MyInstancesSameToolSets/n=15,p=0.25,r=0.5,t=0,v0.csv 0
 	echo "\n"
 
-tabelaResultadosModelo:
-	clear
-	python ./scripts/reportAnalises.py ./output/Modelo/MyInstancesSameToolSets 2
-	echo "\n"
-
 tabelaResultadosPractitioner:
 	clear
 	python ./scripts/reportAnalises.py ./output/Practitioner/MyInstancesSameToolSets/ 2
 	echo "\n"
 
+tabelaResultadosModelo:
+	clear
+	python ./scripts/reportAnalises.py ./output/Modelo/MyInstancesSameToolSets 3
+	echo "\n"
+
 tabelaResultadosPT:
 	clear
-	python ./scripts/reportAnalises.py ./output/SBPOPequenas/ 3
+	python ./scripts/reportAnalises.py ./output/SBPOPequenas/ 4
 	echo "\n"
 
 # --------------------------------------------------------

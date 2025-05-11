@@ -134,7 +134,7 @@ def getFileParans(file):
     t = int(parans[3].split('=')[1])
     return n, p, r, t
 
-def tabelaResultados(files):
+def tabelaResultadosPractitioner(files):
     modoPlanilha = False
     separator = '&'
     for index, report in enumerate(files):
@@ -162,6 +162,36 @@ def tabelaResultados(files):
         if(modoPlanilha): outputTeste = outputTeste.replace('&', ';').replace('\\\\', '').replace('\\hline', '')
         print(outputTeste)
         if((index+1) % 3 == 0 and not(index == len(files) - 1) and not modoPlanilha): print("\\hline")
+
+def tabelaResultadosModelo(files):
+    modoPlanilha = False
+    separator = '&'
+    for index, report in enumerate(files):
+        planejamento, machines, endInfo = rp.parseReport(report)
+        totalUnfineshed = totalUnfinishedJobs(machines, planejamento)
+
+        instancename = report.split('/')[-1]
+        instancenameClear = instancename.split(",t=")[0]
+
+        endPrint = ''
+        if index == len(files) - 1: endPrint = ' \\\\ \\hline'
+        else : endPrint = ' \\\\'
+        outputTeste = ((
+            f'{index+1}-{instancenameClear} {separator}'
+            f'{endInfo["fineshedJobsCount"]:,.2f} {separator}'
+            f'{endInfo["unfineshedPriorityCount"]:,.2f} {separator}'
+            f'{totalUnfineshed:,.2f} {separator}'
+            f'{endInfo["switchsInstances"]:,.2f} {separator}'
+            f'{endInfo["switchs"]:,.2f} {separator}'
+            f'{endInfo["bestBound"]:,.2f} {separator}'
+            f'{endInfo["finalSolution"]:,.2f} {separator}'
+            f'{endInfo['Time']}'
+            f'{endPrint}'
+        ).replace('.', ',').replace(',00', ''))
+        if(modoPlanilha): outputTeste = outputTeste.replace('&', ';').replace('\\\\', '').replace('\\hline', '')
+        print(outputTeste)
+        if((index+1) % 3 == 0 and not(index == len(files) - 1) and not modoPlanilha): print("\\hline")
+
 
 def tabelaResultadosMultiplos(listDirs, subDir = 'MyInstancesSameToolSets', totalPTL = 600):
     filesList = []
@@ -315,8 +345,9 @@ def main():
         fileWithPath = [f"{folderName}/{file}" for file in files if file.endswith(".csv")]
 
     if option == '1': validarPasta(fileWithPath)  
-    if option == '2': tabelaResultados(fileWithPath)
-    if option == '3': tabelaResultadosMultiplos(fileWithPath)
+    if option == '2': tabelaResultadosPractitioner(fileWithPath)
+    if option == '3': tabelaResultadosModelo(fileWithPath)
+    if option == '4': tabelaResultadosMultiplos(fileWithPath)
 
 def mainCollection():
     pass
