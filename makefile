@@ -139,7 +139,12 @@ tabelaResultadosModelo:
 
 tabelaResultadosPT:
 	clear
-	python ./scripts/reportAnalises.py ./output/SBPOPequenas/ 4
+	python ./scripts/reportAnalises.py ./output/TCC2V2 4
+	echo "\n"
+
+tabelaResultadosComparativa:
+	clear
+	python ./scripts/reportAnalises.py ./output/TCC2V2 5
 	echo "\n"
 
 # --------------------------------------------------------

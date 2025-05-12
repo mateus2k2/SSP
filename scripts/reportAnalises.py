@@ -136,27 +136,34 @@ def getFileParans(file):
 
 def tabelaResultadosPractitioner(files):
     modoPlanilha = False
-    separator = '&'
+    separador = '&'
     for index, report in enumerate(files):
         planejamento, machines, endInfo = rp.parseReport(report)
         totalUnfineshed = totalUnfinishedJobs(machines, planejamento)
 
         instancename = report.split('/')[-1]
         instancenameClear = instancename.split(",t=")[0]
+        componentesDoNome = instancenameClear.split(',')
+        totalTarefas = int(componentesDoNome[0].split('=')[1])
+        taxaPrioridade = float(componentesDoNome[1].split('=')[1])
+        taxaReentrancia = float(componentesDoNome[2].split('=')[1])
+
         timeInSeconds = endInfo['Time'] / 1000
 
         endPrint = ''
         if index == len(files) - 1: endPrint = ' \\\\ \\hline'
         else : endPrint = ' \\\\'
         outputTeste = ((
-            f'{index+1}-{instancenameClear} {separator}'
-            f'{endInfo["fineshedJobsCount"]:,.2f} {separator}'
-            f'{endInfo["unfineshedPriorityCount"]:,.2f} {separator}'
-            f'{totalUnfineshed:,.2f} {separator}'
-            f'{endInfo["switchsInstances"]:,.2f} {separator}'
-            f'{endInfo["switchs"]:,.2f} {separator}'
-            f'{endInfo["finalSolution"]:,.2f} {separator}'
-            f'{timeInSeconds:,.2f}'
+            f'{totalTarefas} {separador} ' # n
+            f'{taxaPrioridade} {separador} ' # p
+            f'{taxaReentrancia} {separador} ' # r   
+            f'{endInfo["fineshedJobsCount"]:,.2f} {separador}'
+            f'{endInfo["unfineshedPriorityCount"]:,.2f} {separador}'
+            f'{totalUnfineshed:,.2f} {separador}'
+            f'{endInfo["switchsInstances"]:,.2f} {separador}'
+            f'{endInfo["switchs"]:,.2f} {separador}'
+            f'{endInfo["finalSolution"]:,.2f}'
+            # f'{timeInSeconds:,.2f}'
             f'{endPrint}'
         ).replace('.', ',').replace(',00', ''))
         if(modoPlanilha): outputTeste = outputTeste.replace('&', ';').replace('\\\\', '').replace('\\hline', '')
@@ -165,26 +172,32 @@ def tabelaResultadosPractitioner(files):
 
 def tabelaResultadosModelo(files):
     modoPlanilha = False
-    separator = '&'
+    separador = '&'
     for index, report in enumerate(files):
         planejamento, machines, endInfo = rp.parseReport(report)
         totalUnfineshed = totalUnfinishedJobs(machines, planejamento)
 
         instancename = report.split('/')[-1]
         instancenameClear = instancename.split(",t=")[0]
+        componentesDoNome = instancenameClear.split(',')
+        totalTarefas = int(componentesDoNome[0].split('=')[1])
+        taxaPrioridade = float(componentesDoNome[1].split('=')[1])
+        taxaReentrancia = float(componentesDoNome[2].split('=')[1])
 
         endPrint = ''
         if index == len(files) - 1: endPrint = ' \\\\ \\hline'
         else : endPrint = ' \\\\'
         outputTeste = ((
-            f'{index+1}-{instancenameClear} {separator}'
-            f'{endInfo["fineshedJobsCount"]:,.2f} {separator}'
-            f'{endInfo["unfineshedPriorityCount"]:,.2f} {separator}'
-            f'{totalUnfineshed:,.2f} {separator}'
-            f'{endInfo["switchsInstances"]:,.2f} {separator}'
-            f'{endInfo["switchs"]:,.2f} {separator}'
-            f'{endInfo["bestBound"]:,.2f} {separator}'
-            f'{endInfo["finalSolution"]:,.2f} {separator}'
+            f'{totalTarefas} {separador} ' # n
+            f'{taxaPrioridade} {separador} ' # p
+            f'{taxaReentrancia} {separador} ' # r
+            f'{endInfo["fineshedJobsCount"]:,.2f} {separador}'
+            f'{endInfo["unfineshedPriorityCount"]:,.2f} {separador}'
+            f'{totalUnfineshed:,.2f} {separador}'
+            f'{endInfo["switchsInstances"]:,.2f} {separador}'
+            f'{endInfo["switchs"]:,.2f} {separador}'
+            f'{endInfo["bestBound"]:,.2f} {separador}'
+            f'{endInfo["finalSolution"]:,.2f} {separador}'
             f'{endInfo['Time']}'
             f'{endPrint}'
         ).replace('.', ',').replace(',00', ''))
@@ -192,12 +205,11 @@ def tabelaResultadosModelo(files):
         print(outputTeste)
         if((index+1) % 3 == 0 and not(index == len(files) - 1) and not modoPlanilha): print("\\hline")
 
-
-def tabelaResultadosMultiplos(listDirs, subDir = 'MyInstancesSameToolSets', totalPTL = 600):
+def tabelaResultadosPT(listDirs, subDir = 'MyInstancesSameToolSets', totalPTL = 600):
     filesList = []
 
     fineshedJobsCountAcc = {}
-    switchsAcc = {} 
+    switchsAcc = {}
     switchsInstancesAcc = {} 
     unfineshedPriorityCountAcc = {}
     totalUnfinishedJobsCountAcc = {} 
@@ -233,23 +245,30 @@ def tabelaResultadosMultiplos(listDirs, subDir = 'MyInstancesSameToolSets', tota
             MeanInitialAcc[file] = MeanInitialAcc.get(file, []) + [endInfo['meanInitial']]
 
     modoPlanilha = False
-    separator = '&'
+    separador = '&'
 
     # TABELA 1
     for index, file in enumerate(filesList): 
         instancenameClear = file.split(",t=")[0]
+        componentesDoNome = instancenameClear.split(',')
+        totalTarefas = int(componentesDoNome[0].split('=')[1])
+        taxaPrioridade = float(componentesDoNome[1].split('=')[1])
+        taxaReentrancia = float(componentesDoNome[2].split('=')[1])
+
         endPrint = ''
         if index == len(filesList) - 1: endPrint = ' \\\\ \\hline'
         else : endPrint = ' \\\\'
         outputTeste = ((
-            f'{index+1}-{instancenameClear} {separator} '
-            f'{statistics.mean(fineshedJobsCountAcc[file]):,.2f} {separator} '
-            f'{statistics.mean(unfineshedPriorityCountAcc[file]):,.2f} {separator} '
-            f'{statistics.mean(totalUnfinishedJobsCountAcc[file]):,.2f} {separator} '
-            f'{statistics.mean(switchsInstancesAcc[file]):,.2f} {separator} '
+            f'{totalTarefas} {separador} ' # n
+            f'{taxaPrioridade} {separador} ' # p
+            f'{taxaReentrancia} {separador} ' # r
+            f'{statistics.mean(fineshedJobsCountAcc[file]):,.2f} {separador} '
+            f'{statistics.mean(unfineshedPriorityCountAcc[file]):,.2f} {separador} '
+            f'{statistics.mean(totalUnfinishedJobsCountAcc[file]):,.2f} {separador} '
+            f'{statistics.mean(switchsInstancesAcc[file]):,.2f} {separador} '
             f'{statistics.mean(switchsAcc[file]):,.2f}'
             f'{endPrint}'
-        ).replace('.', ',').replace(',00', ''))
+        ).replace('.', ',').replace('', ''))
         if(modoPlanilha): outputTeste = outputTeste.replace('&', ';').replace('\\\\', '').replace('\\hline', '')
         print(outputTeste)
         if((index+1) % 3 == 0 and not(index == len(files) - 1) and not modoPlanilha): print("\\hline")
@@ -260,23 +279,29 @@ def tabelaResultadosMultiplos(listDirs, subDir = 'MyInstancesSameToolSets', tota
         gap = (max(FinalSolutionAcc[file]) - statistics.mean(BestInitialAcc[file]))/max(FinalSolutionAcc[file]) * 100
         stdPercent = statistics.stdev(FinalSolutionAcc[file])/statistics.mean(FinalSolutionAcc[file]) * 100
         instancenameClear = file.split(",t=")[0]
-        
+        componentesDoNome = instancenameClear.split(',')
+        totalTarefas = int(componentesDoNome[0].split('=')[1])
+        taxaPrioridade = float(componentesDoNome[1].split('=')[1])
+        taxaReentrancia = float(componentesDoNome[2].split('=')[1])
+
         endPrint = ''
         if index == len(filesList) - 1: endPrint = ' \\\\ \\hline'
         else : endPrint = ' \\\\'
         outputTeste = ((
-            f'{index+1}-{instancenameClear} {separator} '
-            f'{statistics.mean(BestInitialAcc[file]):.2f} {separator} '
-            # f'{max(BestInitialAcc[file]):.2f} {separator} '
-            # f'{statistics.mean(MeanInitialAcc[file]):.2f} {separator} '
-            f'{max(FinalSolutionAcc[file]):.2f} {separator} '
-            f'{statistics.mean(FinalSolutionAcc[file]):.2f} {separator} '
-            f'{(stdPercent):.2f} {separator} '
-            f'{statistics.mean(TimeAcc[file]):.2f} {separator} '
-            f'{(statistics.mean(PTLAcc[file])/totalPTL)*100:.2f} {separator} '
+            f'{totalTarefas} {separador} ' # n
+            f'{taxaPrioridade} {separador} ' # p
+            f'{taxaReentrancia} {separador} ' # r
+            f'{statistics.mean(BestInitialAcc[file]):.2f} {separador} '
+            # f'{max(BestInitialAcc[file]):.2f} {separador} '
+            # f'{statistics.mean(MeanInitialAcc[file]):.2f} {separador} '
+            f'{max(FinalSolutionAcc[file]):.2f} {separador} '
+            f'{statistics.mean(FinalSolutionAcc[file]):.2f} {separador} '
+            f'{(stdPercent):.2f} {separador} '
+            f'{statistics.mean(TimeAcc[file]):.2f} {separador} '
+            f'{(statistics.mean(PTLAcc[file])/totalPTL)*100:.2f} {separador} '
             f'{(gap):.2f}'
             f'{endPrint}'
-        ).replace('.', ',').replace(',00', ''))
+        ).replace('.', ',').replace('', ''))
         if(modoPlanilha): outputTeste = outputTeste.replace('&', ';').replace('\\\\', '').replace('\\hline', '')
         print(outputTeste)
         if((index+1) % 3 == 0 and not(index == len(files) - 1) and not modoPlanilha): print("\\hline")
@@ -327,6 +352,107 @@ def tabelaResultadosMultiplos(listDirs, subDir = 'MyInstancesSameToolSets', tota
     #     print(gap)     
     # print("mean ", statistics.mean(acc))
 
+def tabelaResultadosComparativa(listDirs, subDir = 'MyInstancesSameToolSets', totalPTL = 600):
+    filesList = []
+
+    fineshedJobsCountAcc = {}
+    switchsAcc = {} 
+    switchsInstancesAcc = {} 
+    unfineshedPriorityCountAcc = {}
+    totalUnfinishedJobsCountAcc = {} 
+    FinalSolutionAcc = {}  
+    TimeAcc = {} 
+    PTLAcc = {} 
+    MCMCAcc = {} 
+    BestInitialAcc = {} 
+    MeanInitialAcc = {}
+
+    # iterate over each directory and get the list of files inside it
+    for dir in listDirs:
+        files = os.listdir(f'{dir}/{subDir}')
+        files = natsorted(files)
+        for file in files:
+            if file not in filesList: filesList.append(file)
+
+            planejamento, machines, endInfo = rp.parseReport(f'{dir}/{subDir}/{file}')
+            totalUnfinishedJobsCount = totalUnfinishedJobs(machines, planejamento)
+            # print(endInfo)
+            # exit(1)
+
+            fineshedJobsCountAcc[file] = fineshedJobsCountAcc.get(file, []) + [endInfo['fineshedJobsCount']]
+            totalUnfinishedJobsCountAcc[file] = totalUnfinishedJobsCountAcc.get(file, []) + [totalUnfinishedJobsCount]
+            switchsAcc[file] = switchsAcc.get(file, []) + [endInfo['switchs']]
+            switchsInstancesAcc[file] = switchsInstancesAcc.get(file, []) + [endInfo['switchsInstances']]
+            unfineshedPriorityCountAcc[file] = unfineshedPriorityCountAcc.get(file, []) + [endInfo['unfineshedPriorityCount']]
+            FinalSolutionAcc[file] = FinalSolutionAcc.get(file, []) + [endInfo['finalSolution']]
+            TimeAcc[file] = TimeAcc.get(file, []) + [endInfo['Time']/1000]
+            PTLAcc[file] = PTLAcc.get(file, []) + [endInfo['PTL']]
+            MCMCAcc[file] = MCMCAcc.get(file, []) + [endInfo['MCMC']]
+            BestInitialAcc[file] = BestInitialAcc.get(file, []) + [endInfo['bestInitial']]
+            MeanInitialAcc[file] = MeanInitialAcc.get(file, []) + [endInfo['meanInitial']]
+
+    modoPlanilha = False
+    separador = '&'
+
+    folderNamePH = './output/Practitioner/MyInstancesSameToolSets/'
+    filesPH = os.listdir(folderNamePH)
+    filesPH = natsorted(filesPH) 
+    fileWithPathPH = [f"{folderNamePH}/{file}" for file in filesPH if file.endswith(".csv")]
+
+    folderNameModelo = './output/Modelo/MyInstancesSameToolSets/'
+    filesModelo = os.listdir(folderNameModelo)
+    filesModelo = natsorted(filesModelo) 
+    fileWithPathModelo = [f"{folderNameModelo}/{file}" for file in filesModelo if file.endswith(".csv")]
+
+    # print(len(fileWithPathPH))
+    # print(len(filesList))
+    # exit(1)
+    for index, file in enumerate(filesList): 
+        sStar = max(FinalSolutionAcc[file])
+        s = statistics.mean(FinalSolutionAcc[file])
+        gapPT = (sStar - s)/sStar * 100
+
+        instancenameClear = file.split(",t=")[0]
+        componentesDoNome = instancenameClear.split(',')
+        totalTarefas = int(componentesDoNome[0].split('=')[1])
+        taxaPrioridade = float(componentesDoNome[1].split('=')[1])
+        taxaReentrancia = float(componentesDoNome[2].split('=')[1])
+        
+        planejamentoPH, machinesPH, endInfoPH = rp.parseReport(fileWithPathPH[index])
+        resultadoPH = endInfoPH["finalSolution"]
+        gapPTPH = (s - resultadoPH)/s * 100
+
+        gapPTModelo = "-"
+        resultadoModelo = "-"
+        if(index <= len(fileWithPathModelo) - 1):
+            planejamentoModelo, machinesModelo, endInfoModelo = rp.parseReport(fileWithPathModelo[index])
+            resultadoModelo = endInfoModelo["finalSolution"]
+            gapPTModelo = (s - resultadoModelo)/s * 100
+            gapPTModelo = f'{gapPTModelo:.2f}'
+            resultadoModelo = f'{resultadoModelo:.2f}'
+
+        endPrint = ''
+        if index == len(filesList) - 1: endPrint = ' \\\\ \\hline'
+        else : endPrint = ' \\\\'
+        outputTeste = ((
+            f'{totalTarefas} {separador} ' # n
+            f'{taxaPrioridade} {separador} ' # p
+            f'{taxaReentrancia} {separador} ' # r          
+            f'{sStar:.2f} {separador} ' # S* PT
+            f'{s:.2f} {separador} ' # S PT  
+            f'{gapPT:.2f} {separador}' # gap entre S* e S
+            f'{resultadoPH:.2f} {separador} ' # S PH
+            f'{gapPTPH:.2f} {separador}' # gap entre SPT e SPH
+            f'{resultadoModelo} {separador} ' # S Modelo
+            f'{gapPTModelo}' # gap entre SPT e SModelo
+            f'{endPrint}'
+        ).replace('.', ',').replace(',00', ''))
+        if(modoPlanilha): outputTeste = outputTeste.replace('&', ';').replace('\\\\', '').replace('\\hline', '')
+        print(outputTeste)
+        if((index+1) % 3 == 0 and not(index == len(files) - 1) and not modoPlanilha): print("\\hline")
+
+
+
 # ---------------------------------------------------------------------------------------------------
 # MAIN
 # ---------------------------------------------------------------------------------------------------
@@ -339,7 +465,11 @@ def main():
     if(option == '0'):
         fileWithPath = [folderName]
         option = '1'
-    else:
+    elif(option == '4' or option == '5'):
+        files = os.listdir(folderName)
+        files = natsorted(files) 
+        fileWithPath = [f"{folderName}/{file}" for file in files]
+    else: 
         files = os.listdir(folderName)
         files = natsorted(files) 
         fileWithPath = [f"{folderName}/{file}" for file in files if file.endswith(".csv")]
@@ -347,7 +477,8 @@ def main():
     if option == '1': validarPasta(fileWithPath)  
     if option == '2': tabelaResultadosPractitioner(fileWithPath)
     if option == '3': tabelaResultadosModelo(fileWithPath)
-    if option == '4': tabelaResultadosMultiplos(fileWithPath)
+    if option == '4': tabelaResultadosPT(fileWithPath)
+    if option == '5': tabelaResultadosComparativa(fileWithPath)
 
 def mainCollection():
     pass
