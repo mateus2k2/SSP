@@ -118,17 +118,6 @@ int main(int argc, char* argv[]) {
 	SSP* prob = new SSP(filenameJobs,filenameTools,diferent_toolset_mode);
 
     // ------------------------------------------------------------------------------
-    // TEST
-    // ------------------------------------------------------------------------------
-
-    // prob->loadInstanceParans(filenameJobs);
-    // solSSP sol = prob->randPriority();
-    // sol = prob->neighbor(sol);
-    // prob->evaluateReportKTNS(sol, filenameJobs, filenameTools, filenameoutput, 0, false);
-    // solSSP finalSolution = prob->ajustFinalSolution(sol);
-    // prob->evaluateReportKTNS(finalSolution, filenameJobs, filenameTools, filenameoutput, 0, true);
-
-    // ------------------------------------------------------------------------------
     // DATA LOADIDNG AND PRE PROCESSING
     // ------------------------------------------------------------------------------
 
@@ -155,6 +144,20 @@ int main(int argc, char* argv[]) {
         prob->practitioner(solutionReportFile, sequenceBy);
         return 0;
     }
+
+    // ------------------------------------------------------------------------------
+    // TEST
+    // ------------------------------------------------------------------------------
+
+	// prob->setParans(uType, initSolType);
+    // solSSP solTeste = prob->randPriority();
+    // PT<solSSP> algoTeste(tempIni, tempfim, tempN, MCL, PTL, passoGatilho, tempD, uType, tempUp);
+    // solTeste = prob->neighbor(solTeste);
+    // double eval1 = prob->evaluate(solTeste);
+    // cout << "Avalicação do KTNS : " << eval1 << endl;
+    // double eval2 = prob->evaluateReportKTNS(solTeste, filenameJobs, filenameTools, solutionReportFile);
+    // cout << "Avalicação do KTNS Report : " << eval2  << endl;
+    // return 0;
 
     // ------------------------------------------------------------------------------
     // SSP

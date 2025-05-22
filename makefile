@@ -60,9 +60,10 @@ compile:
 	g++ $(DEBUG_MACRO) $(GATILHO_MACRO) $(RAND_MACRO) ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -m64 -g -o src/out/mainCpp -I${GUROBI_HOME}/include -L${GUROBI_HOME}/lib -lgurobi_c++ -lgurobi120 -lm -Wno-unused-result -lpthread $(FAST_COMPILE_MACRO) -march=native -lstdc++ $(USE_FTM)
 	echo "\n" 
 
+
 runPT:
 	./src/out/mainCpp \
-		"./input/MyInstancesSameToolSets/n=15,p=0.5,r=0.5,t=0,v0.csv" \
+		"./input/MyInstancesSameToolSets/n=212,p=0.75,r=0.4,t=1390,v8.csv" \
 		"./input/Processed/ToolSetInt.csv" \
 		"./output/Exemplo/pt.csv" \
 		--TEMP_INIT 0.1 \
@@ -72,7 +73,7 @@ runPT:
 		--PTL 100 \
 		--PASSO_GATILHO 10 \
 		--TEMP_DIST 3 \
-		--TYPE_UPDATE 0 \
+		--TYPE_UPDATE 1 \
 		--INIT_SOL_TYPE 1 \
 		--TEMP_UPDATE 3500 \
 		--PTL_TEMP_UPDATE_PROPORTION 3 \
@@ -99,11 +100,12 @@ runPractitioner:
 		--SEQUENCE_BY 1 \
 
 
-# "./input/Exemplo/Jobs.csv" \
-# "./input/Exemplo/ToolSets.csv" \
+# "./input/Exemplo/Jobs.csv" 
+# "./input/Exemplo/ToolSets.csv" 
 
-# "./input/MyInstancesSameToolSets/n=212,p=0.75,r=0.4,t=1390,v8.csv" \
-# "./input/Processed/ToolSetInt.csv" \
+# "./input/MyInstancesSameToolSets/n=15,p=0.5,r=0.5,t=0,v0.csv" 
+# "./input/MyInstancesSameToolSets/n=212,p=0.75,r=0.4,t=1390,v8.csv" 
+# "./input/Processed/ToolSetInt.csv" 
 
 
 goPractitioner:
