@@ -29,3 +29,6 @@ Rodar o PT na tesla - 20 replicas
 Rodar o modelo - 2 a 3 horas
 Heristica de divisão de jobs - Verificar o impacto. Não em todas as instancias
 Diferent toolset
+
+tmux new -s pt
+tmux attach -t pt

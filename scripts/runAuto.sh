@@ -9,6 +9,7 @@ head=${4:-"9999"}
 [ ! -d "$outputFolder/MyInstancesSameToolSets" ] && mkdir -p "$outputFolder/MyInstancesSameToolSets"
 [ ! -d "$outputFolder/MyInstancesDiferentToolSets" ] && mkdir -p "$outputFolder/MyInstancesDiferentToolSets"
 
+# make compile TESLA_MODE=1 GUROBI_VERSION=91 DEBUG_MODE=0 GATILHO_MODE=0 FAST_COMPILE_MODE=0 RAND_MODE=1
 make compile DEBUG_MODE=0 GATILHO_MODE=0 FAST_COMPILE_MODE=0
 
 run_instances() {

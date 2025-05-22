@@ -6,15 +6,15 @@
 # make DEBUG_MODE=0 GATILHO_MODE=0 FAST_COMPILE_MODE=0 RAND_MODE=1 goPT
 
 # PT
-# ./scripts/runMultiple.sh ./output/SBPOPequenas same PT 9
+# ./scripts/runMultiple.sh ./output/SBPOPequenas same PT 9 > out
 # make tabelaResultadosPT > out 
 
 # Modelo
-# ./scripts/runAuto.sh ./output/Modelo same modelo 9999
+# ./scripts/runAuto.sh ./output/Modelo same modelo 9999 > out
 # make tabelaResultadosModelo > out
 
 # Practitioner
-# ./scripts/runAuto.sh ./output/Practitioner same practitioner 9999
+# ./scripts/runAuto.sh ./output/Practitioner same practitioner 9999 > out
 # make tabelaResultadosPractitioner > out
 
 OUTPUT = src/out/mainCpp
