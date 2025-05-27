@@ -2,23 +2,19 @@
 # Meus Codigos cpp
 # --------------------------------------------------------
 
-# make TESLA_MODE=1 GUROBI_VERSION=91 DEBUG_MODE=0 GATILHO_MODE=0 FAST_COMPILE_MODE=0 RAND_MODE=1 goPT
-# make DEBUG_MODE=0 GATILHO_MODE=0 FAST_COMPILE_MODE=0 RAND_MODE=1 goPT
-
 # PT
-# ./scripts/runMultiple.sh ./output/SBPOPequenas same PT 9 > out
+# ./scripts/runMultiple.sh ./output/TeslaPT same PT 9999 tesla /home/marco/mateus/Gurobi/gurobi.lic > out
 # make tabelaResultadosPT > out 
 
 # Modelo
-# ./scripts/runAuto.sh ./output/Modelo same modelo 9999 > out
+# ./scripts/runMultiple.sh ./output/TeslaModelo same modelo 9999 tesla /home/marco/mateus/Gurobi/gurobi.lic > out
 # make tabelaResultadosModelo > out
 
 # Practitioner
-# ./scripts/runAuto.sh ./output/Practitioner same practitioner 9999 > out
+# ./scripts/runMultiple.sh ./output/Practitioner same practitioner 9999 tesla /home/marco/mateus/Gurobi/gurobi.lic > out
 # make tabelaResultadosPractitioner > out
 
-OUTPUT = src/out/mainCpp
-
+GRB_LICENSE_FILE=
 DEBUG_MODE=1
 GATILHO_MODE=0
 FAST_COMPILE_MODE=1
@@ -59,7 +55,6 @@ else
 	TESLA_MACRO =
 endif
 
-
 debugCompile:
 	clear 
 	g++ $(DEBUG_MACRO) $(GATILHO_MACRO) $(RAND_MACRO) ${TESLA_MACRO} src/*.cpp -std=c++2a -Wshadow -pg -Wall -m64 -g -o src/out/mainCppDebug -I${GUROBI_HOME}/include -L${GUROBI_HOME}/lib -lgurobi_c++ -lgurobi${GUROBI_VERSION} -lm -Wno-unused-result -lpthread -g -march=native -lstdc++ $(USE_FTM)
@@ -71,6 +66,11 @@ compile:
 	g++ $(DEBUG_MACRO) $(GATILHO_MACRO) $(RAND_MACRO) ${TESLA_MACRO} ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -m64 -g -o src/out/mainCpp -I${GUROBI_HOME}/include -L${GUROBI_HOME}/lib -lgurobi_c++ -lgurobi${GUROBI_VERSION} -lm -Wno-unused-result -lpthread $(FAST_COMPILE_MACRO) -march=native -lstdc++ $(USE_FTM)
 	echo "\n" 
 
+teslaCompile:
+	make TESLA_MODE=1 GUROBI_VERSION=91 DEBUG_MODE=0 GATILHO_MODE=0 FAST_COMPILE_MODE=0 RAND_MODE=1 compile
+
+normalCompile:
+	make DEBUG_MODE=0 GATILHO_MODE=0 FAST_COMPILE_MODE=0 RAND_MODE=1 compile
 
 runPT:
 	./src/out/mainCpp \

@@ -4,13 +4,25 @@ outputFolder=${1:-"./output/Exemplo"}
 runMode=${2:-"both"}
 type=${3:-"PT"}
 head=${4:-"9999"}
+env=${5:-"normal"}
+licenseFile=${6:-""}
 
 [ ! -d "$outputFolder" ] && mkdir -p "$outputFolder"
 [ ! -d "$outputFolder/MyInstancesSameToolSets" ] && mkdir -p "$outputFolder/MyInstancesSameToolSets"
 [ ! -d "$outputFolder/MyInstancesDiferentToolSets" ] && mkdir -p "$outputFolder/MyInstancesDiferentToolSets"
 
-# make compile TESLA_MODE=1 GUROBI_VERSION=91 DEBUG_MODE=0 GATILHO_MODE=0 FAST_COMPILE_MODE=0 RAND_MODE=1
-make compile DEBUG_MODE=0 GATILHO_MODE=0 FAST_COMPILE_MODE=0
+# if licenseFile is provided set the environment variable
+if [ -n "$licenseFile" ]; then
+    export GRB_LICENSE_FILE="$licenseFile"
+fi
+
+if [ "$env" = "normal" ]
+then
+    make normalCompile
+elif [ "$env" = "tesla" ]
+then
+    make teslaCompile
+fi
 
 run_instances() {
     local instancesFolder=$1
@@ -59,7 +71,7 @@ then
     extraArgs="\
         --DIFERENT_TOOLSETS_MODE 0 \
         --INSTANCE_REPORT 0 \
-        --TIME_LIMIT 60 \
+        --TIME_LIMIT 120 \
         --MODELO 1 \
     "
 elif [ "$type" = "practitioner" ]
