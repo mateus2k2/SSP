@@ -7,8 +7,49 @@ git rm -r /home/mateus/WSL/IC/SSP/input/raw/KTNS
 git rm -r --cached /home/mateus/WSL/IC/SSP/input/raw/KTNS/SolList/Files/*
 git lfs track "/input/raw/KTNS/*"
 
-gdb src/out/mainCppDebug 
+------------------------------------------------
+DEBUG
+------------------------------------------------
+
+gdb src/out/mainCppDebug
 run "./input/MyInstancesSameToolSets/n=15,p=0.5,r=0.5,t=0,v0.csv"  "./input/Processed/ToolSetInt.csv"  "./output/Exemplo/pt.csv"  --TEMP_INIT 0.1  --TEMP_FIM 5  --N_REPLICAS 11  --MCL 500  --PTL 100  --PASSO_GATILHO 10  --TEMP_DIST 3  --TYPE_UPDATE 0  --INIT_SOL_TYPE 1  --TEMP_UPDATE 3500  --PTL_TEMP_UPDATE_PROPORTION 3  --DIFERENT_TOOLSETS_MODE 0
 
-python ./scripts/reportAnalises.py ./output/TeslaPT 4 > out
-python ./scripts/reportAnalises.py ./output/TestaModeloSame 3 > out 
+------------------------------------------------
+DADOS
+------------------------------------------------
+
+screen
+Ctrl+A, then D
+screen -ls
+screen -r [session_id]
+screen -X -S session_name_or_id quit
+
+screen -r 1058641.pts-0.abstergo
+screen -r 149791.pts-0.ecorp
+
+tmux new -s pt
+tmux attach -t pt
+detach shortcut: Ctrl+B, then D
+
+------------------------------------------------
+DADOS
+------------------------------------------------
+
+lscpu
+lsb_release -a
+
+/home/mateus/R/x86_64-pc-linux-gnu-library/4.1/irace/bin/irace
+
+./src/out/mainCppDebug ./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv ./input/Processed/ToolSetInt.csv ./output/Exemplo/output1.txt --TEMP_INIT 0.2 --TEMP_FIM 1 --N_REPLICAS 16 --MCL 400 --PTL 100 --TEMP_DIST 1 --TYPE_UPDATE 2 --TEMP_UPDATE 35000 --CAPACITY 80 --MACHINES 2 --DAYS 2 --UNSUPERVISED_MINUTS 720 --RESULT_REPORT 1 --INSTANCE_REPORT 1
+gprof ./src/out/mainCppDebug gmon.out > analysis.txt
+
+ssh-copy-id username@server_address
+
+------------------------------------------------
+DADOS
+------------------------------------------------
+
+sshuttle -r mateus@200.239.132.108:4096 0.0.0.0/0
+sshuttle -r marco@200.239.139.180:9229 0.0.0.0/0
+sudo docker run --rm -it --network host --name=firefox -p 5800:5800 -v /docker/appdata/firefox:/config:rw jlesage/firefox
+curl ifconfig.me
