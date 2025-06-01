@@ -12,6 +12,36 @@ geradorProcessingTime = ProcessingTimeGenerator()
 # REFACTORY
 # ------------------------------------------------------------------------------------------------
 
+def makeSmallDiff():
+    baseInstance = "/home/mateus/WSL/IC/SSP/input/MyInstancesDiferentToolSets/n=75,p=0.24,r=0.5,t=112,v0.csv"
+    outputFolder = "/home/mateus/WSL/IC/SSP/input/MyInstancesDiferentToolSets/new"
+    baseFolder = "/home/mateus/WSL/IC/SSP/input/MyInstancesDiferentToolSets"
+    # take the 9 first .csv files in the folder
+    files = os.listdir(baseFolder)
+    files = [f"{baseFolder}/{file}" for file in files if file.endswith('.csv')]
+    files = sorted(files, key=lambda x: int(x.split('=')[1].split(',')[0]))
+    files = files[:9]
+
+    baseInstance = pd.read_csv(baseInstance, delimiter=';')
+    baseInstance = baseInstance.to_dict(orient='records')
+    for file in files:
+        print(f"Processing file: {file}")
+        curInstance = pd.read_csv(file, delimiter=';')
+        curInstance = curInstance.to_dict(orient='records')
+        fileName = file.split('/')[-1]
+        newInstancesCSV = open(f"{outputFolder}/{fileName}", 'w+', newline='')
+        fields = ["Job","Operation","ToolSet","Processing Time","Priority"]
+        newInstances = csv.DictWriter(newInstancesCSV, fieldnames=fields, delimiter=';')
+        newInstances.writeheader()
+        for index, item in enumerate(curInstance):
+            newInstances.writerow({
+                "Job": item['Job'],
+                "Operation": item['Operation'],
+                "Processing Time": item['Processing Time'],
+                "ToolSet": baseInstance[index]['ToolSet'],
+                "Priority": item['Priority'],
+            })
+
 def creackTools():
     baseInstance = '/home/mateus/WSL/IC/SSP/input/MyInstancesSameToolSets/n=25,p=0.5,r=0.5,t=0,v0.csv'
     baseInstance = pd.read_csv(baseInstance, delimiter=';')
@@ -432,7 +462,8 @@ def makeInstaceExtra():
 # refactory()
 
 # createSmallerInstances()
-creackTools()
+# creackTools()
+makeSmallDiff()
 
 # toolUnusedMap = ld.loadToolSet("./input/UnusedToolSetsClean.csv")
 # toolSetIndex = list(toolUnusedMap.keys())

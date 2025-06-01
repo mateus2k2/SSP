@@ -36,7 +36,7 @@ run_instances() {
         filename=$(basename "$entry")
         local timestamp=$(TZ="America/Sao_Paulo" date "+%Y-%m-%d %H:%M:%S.%3N")
         echo "$timestamp - $counter ./src/out/mainCpp $instancesFolder/$filename $toolSetsFile $outputFolder/$filename"
-        ./src/out/mainCpp "$instancesFolder/$filename" "$toolSetsFile" "$outputFolder/$filename" --DIFERENT_TOLSETS_MODE $instanceMode ${extraArgs}
+        ./src/out/mainCpp "$instancesFolder/$filename" "$toolSetsFile" "$outputFolder/$filename" --DIFERENT_TOOLSETS_MODE $instanceMode ${extraArgs}
         counter=$((counter+1))
 
         # stringToSend="$counter - Instância $instancesFolder/$filename finalizada"
@@ -69,7 +69,6 @@ then
 elif [ "$type" = "modelo" ]
 then
     extraArgs="\
-        --DIFERENT_TOOLSETS_MODE 0 \
         --INSTANCE_REPORT 0 \
         --TIME_LIMIT 120 \
         --MODELO 1 \
@@ -77,7 +76,6 @@ then
 elif [ "$type" = "practitioner" ]
 then
     extraArgs="\
-        --DIFERENT_TOOLSETS_MODE 0 \
         --INSTANCE_REPORT 0 \
         --PRACTITIONER 1 \
         --SEQUENCE_BY 1 \

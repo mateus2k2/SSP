@@ -7,21 +7,8 @@ git rm -r /home/mateus/WSL/IC/SSP/input/raw/KTNS
 git rm -r --cached /home/mateus/WSL/IC/SSP/input/raw/KTNS/SolList/Files/*
 git lfs track "/input/raw/KTNS/*"
 
-https://www.gdbgui.com/installation/
-https://stackoverflow.com/questions/2876357/determine-the-line-of-code-that-causes-a-segmentation-fault
 gdb src/out/mainCppDebug 
 run "./input/MyInstancesSameToolSets/n=15,p=0.5,r=0.5,t=0,v0.csv"  "./input/Processed/ToolSetInt.csv"  "./output/Exemplo/pt.csv"  --TEMP_INIT 0.1  --TEMP_FIM 5  --N_REPLICAS 11  --MCL 500  --PTL 100  --PASSO_GATILHO 10  --TEMP_DIST 3  --TYPE_UPDATE 0  --INIT_SOL_TYPE 1  --TEMP_UPDATE 3500  --PTL_TEMP_UPDATE_PROPORTION 3  --DIFERENT_TOOLSETS_MODE 0
 
-curl -X POST "https://api.telegram.org/bot8094164826:AAF_tYz1mWAB-site3dt1iFJUMPeAQxH148/sendMessage" \
-     -H "Content-Type: application/json" \
-     -d '{"chat_id": "336418081", "text": "Hello, this is a message from my bot!"}'
-
-"git.enabled": false
-
-make realPTGo DEBUG_MODE=0 GATILHO_MODE=0 FAST_COMPILE_MODE=1
-make runPT
-
-./scripts/runAuto.sh ./output/PTL100DiferentAjustado diferent > out
-./scripts/runMultiple.sh ./output/TCC2V2 same > out
-
-
+python ./scripts/reportAnalises.py ./output/TeslaPT 4 > out
+python ./scripts/reportAnalises.py ./output/TestaModeloSame 3 > out 

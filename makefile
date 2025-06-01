@@ -7,11 +7,11 @@
 # make tabelaResultadosPT > out 
 
 # Modelo
-# ./scripts/runMultiple.sh ./output/TeslaModelo same modelo 9999 tesla /home/marco/mateus/Gurobi/gurobi.lic > out
+# ./scripts/runAuto.sh ./output/TeslaModelo same modelo 9999 tesla /home/marco/mateus/Gurobi/gurobi.lic > out
 # make tabelaResultadosModelo > out
 
 # Practitioner
-# ./scripts/runMultiple.sh ./output/Practitioner same practitioner 9999 tesla /home/marco/mateus/Gurobi/gurobi.lic > out
+# ./scripts/runAuto.sh ./output/Practitioner same practitioner 9999 tesla /home/marco/mateus/Gurobi/gurobi.lic > out
 # make tabelaResultadosPractitioner > out
 
 GRB_LICENSE_FILE=
@@ -137,7 +137,7 @@ goPT:
 
 validarFile:
 	clear
-	python ./scripts/reportAnalises.py ./output/Modelo/MyInstancesSameToolSets/n=15,p=0.25,r=0.5,t=0,v0.csv 0
+	python ./scripts/reportAnalises.py ./output/TeslaPT/1/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv 0
 	echo "\n"
 
 tabelaResultadosPractitioner:
