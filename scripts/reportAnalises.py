@@ -277,7 +277,8 @@ def tabelaResultadosPT(listDirs, subDir = 'MyInstancesSameToolSets', totalPTL = 
     print()
     for index, file in enumerate(filesList): 
         gap = (max(FinalSolutionAcc[file]) - statistics.mean(BestInitialAcc[file]))/max(FinalSolutionAcc[file]) * 100
-        stdPercent = statistics.stdev(FinalSolutionAcc[file])/statistics.mean(FinalSolutionAcc[file]) * 100
+        stdPercent = 0
+        if(len(FinalSolutionAcc[file])>1): stdPercent = statistics.stdev(FinalSolutionAcc[file])/statistics.mean(FinalSolutionAcc[file]) * 100
         instancenameClear = file.split(",t=")[0]
         componentesDoNome = instancenameClear.split(',')
         totalTarefas = int(componentesDoNome[0].split('=')[1])
