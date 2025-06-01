@@ -84,6 +84,8 @@ int SSP::laodInstance(string filename) {
         normalizedToolSets[thisJob.indexToolSet] = tmpToolSet;
         thisJob.toolSetNormalized = normalizedToolSets[thisJob.indexToolSet];
     }
+    numberJobsUngrouped = originalJobs.size();
+    numberJobs = originalJobs.size();
 
     file.close();
 
@@ -201,7 +203,6 @@ int SSP::loadInstanceParans(string filename) {
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 void SSP::groupJobs() {
-    numberJobsUngrouped = originalJobs.size();
     std::vector<int> indicesToDelete;
 
     for (size_t i = 0; i < originalJobs.size(); ++i) {

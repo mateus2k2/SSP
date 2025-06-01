@@ -24,8 +24,14 @@ def makeSmallDiff():
 
     baseInstance = pd.read_csv(baseInstance, delimiter=';')
     baseInstance = baseInstance.to_dict(orient='records')
+    toolSets = set()
+    for item in baseInstance:
+        toolSets.add(item['ToolSet'])
+    toolSets = list(toolSets)
+
     for file in files:
         print(f"Processing file: {file}")
+
         curInstance = pd.read_csv(file, delimiter=';')
         curInstance = curInstance.to_dict(orient='records')
         fileName = file.split('/')[-1]
@@ -33,14 +39,29 @@ def makeSmallDiff():
         fields = ["Job","Operation","ToolSet","Processing Time","Priority"]
         newInstances = csv.DictWriter(newInstancesCSV, fieldnames=fields, delimiter=';')
         newInstances.writeheader()
+
+        avalibleToolSets = toolSets.copy()
+        for item in curInstance:
+            if item['ToolSet'] in avalibleToolSets:
+                avalibleToolSets.remove(item['ToolSet'])
+
         for index, item in enumerate(curInstance):
-            newInstances.writerow({
-                "Job": item['Job'],
-                "Operation": item['Operation'],
-                "Processing Time": item['Processing Time'],
-                "ToolSet": baseInstance[index]['ToolSet'],
-                "Priority": item['Priority'],
-            })
+            if(item['Operation'] == 0):
+                newInstances.writerow({
+                    "Job": item['Job'],
+                    "Operation": item['Operation'],
+                    "Processing Time": item['Processing Time'],
+                    "ToolSet": item['ToolSet'],
+                    "Priority": item['Priority'],
+                })
+            else:
+                newInstances.writerow({
+                    "Job": item['Job'],
+                    "Operation": item['Operation'],
+                    "Processing Time": item['Processing Time'],
+                    "ToolSet": avalibleToolSets[index],
+                    "Priority": item['Priority'],
+                })
 
 def creackTools():
     baseInstance = '/home/mateus/WSL/IC/SSP/input/MyInstancesSameToolSets/n=25,p=0.5,r=0.5,t=0,v0.csv'

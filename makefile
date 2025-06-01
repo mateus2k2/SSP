@@ -102,10 +102,10 @@ runModelo:
 
 runPractitioner:
 	./src/out/mainCpp \
-		"./input/Exemplo/Jobs.csv" \
-		"./input/Exemplo/ToolSets.csv" \
+		"./input/MyInstancesDiferentToolSets/n=15,p=0.5,r=0.5,t=0,v0.csv" \
+		"./input/Processed/ToolSetInt.csv" \
 		"./output/Practitioner/practitioner.txt" \
-		--DIFERENT_TOOLSETS_MODE 0 \
+		--DIFERENT_TOOLSETS_MODE 1 \
 		--INSTANCE_REPORT 0 \
 		--PRACTITIONER 1 \
 		--SEQUENCE_BY 1 \
@@ -120,15 +120,15 @@ runPractitioner:
 
 
 goPractitioner:
-	make compile
+	make normalCompile
 	make runPractitioner
 
 goModelo:
-	make compile
+	make normalCompile
 	make runModelo
 
 goPT:
-	make compile
+	make normalCompile
 	make runPT
 
 # --------------------------------------------------------
