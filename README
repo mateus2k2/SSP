@@ -31,8 +31,6 @@ tmux new -s pt
 tmux attach -t pt
 detach shortcut: Ctrl+B, then D
 
-/home/marco/R/x86_64-redhat-linux-gnu-library/3.6/irace/bin/irace
-
 ------------------------------------------------
 DADOS
 ------------------------------------------------
@@ -41,6 +39,7 @@ lscpu
 lsb_release -a
 
 /home/mateus/R/x86_64-pc-linux-gnu-library/4.1/irace/bin/irace
+/home/marco/R/x86_64-redhat-linux-gnu-library/3.6/irace/bin/irace
 
 ./src/out/mainCppDebug ./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv ./input/Processed/ToolSetInt.csv ./output/Exemplo/output1.txt --TEMP_INIT 0.2 --TEMP_FIM 1 --N_REPLICAS 16 --MCL 400 --PTL 100 --TEMP_DIST 1 --TYPE_UPDATE 2 --TEMP_UPDATE 35000 --CAPACITY 80 --MACHINES 2 --DAYS 2 --UNSUPERVISED_MINUTS 720 --RESULT_REPORT 1 --INSTANCE_REPORT 1
 gprof ./src/out/mainCppDebug gmon.out > analysis.txt

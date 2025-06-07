@@ -30,7 +30,7 @@
 # ----------------------------------------------------------------
 # 1:                  2:                               3:        4:                                      5:
 tempInit              "--TEMP_INIT "                   c         (0.01, 0.1, 0.2) 
-tempFim               "--TEMP_FIM "                    c         (0.5, 1, 5)       
+tempFim               "--TEMP_FIM "                    c         (0.5, 1, 5, 10, 20, 50)       
 mcl                   "--MCL "                         c         (200,300,400,500)       
 tempDist              "--TEMP_DIST "                   c         (1,2,3,4)           
 movimentType          "--TYPE_UPDATE "                 c         (0,1,2)       
