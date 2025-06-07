@@ -31,6 +31,8 @@ tmux new -s pt
 tmux attach -t pt
 detach shortcut: Ctrl+B, then D
 
+/home/marco/R/x86_64-redhat-linux-gnu-library/3.6/irace/bin/irace
+
 ------------------------------------------------
 DADOS
 ------------------------------------------------

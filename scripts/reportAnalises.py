@@ -205,7 +205,7 @@ def tabelaResultadosModelo(files):
         print(outputTeste)
         if((index+1) % 3 == 0 and not(index == len(files) - 1) and not modoPlanilha): print("\\hline")
 
-def tabelaResultadosPT(listDirs, subDir = 'MyInstancesSameToolSets', totalPTL = 600):
+def tabelaResultadosPT(listDirs, subDir = 'MyInstancesSameToolSets', totalPTL = 1200):
     filesList = []
 
     fineshedJobsCountAcc = {}
@@ -353,7 +353,7 @@ def tabelaResultadosPT(listDirs, subDir = 'MyInstancesSameToolSets', totalPTL = 
     #     print(gap)     
     # print("mean ", statistics.mean(acc))
 
-def tabelaResultadosComparativa(listDirs, subDir = 'MyInstancesSameToolSets', totalPTL = 600):
+def tabelaResultadosComparativa(listDirs, subDir = 'MyInstancesSameToolSets', totalPTL = 1200):
     filesList = []
 
     fineshedJobsCountAcc = {}
@@ -451,8 +451,6 @@ def tabelaResultadosComparativa(listDirs, subDir = 'MyInstancesSameToolSets', to
         if(modoPlanilha): outputTeste = outputTeste.replace('&', ';').replace('\\\\', '').replace('\\hline', '')
         print(outputTeste)
         if((index+1) % 3 == 0 and not(index == len(files) - 1) and not modoPlanilha): print("\\hline")
-
-
 
 # ---------------------------------------------------------------------------------------------------
 # MAIN
