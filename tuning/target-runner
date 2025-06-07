@@ -36,7 +36,7 @@ CONFIG_PARAMS=$*
 # EDIT THIS: Path to your executable
 EXE=./../src/out/mainCpp
 # EDIT THIS: Specify how parameters are given to your executable
-EXE_PARAMS="$INSTANCE ./../input/Processed/ToolSetInt.csv ./../output/Exemplo/none.txt --N_REPLICAS 11 --PTL 15000 --DIFERENT_TOOLSETS_MODE 0 --PRINT_TIME 0 TEMP_UPDATE 3500 ${CONFIG_PARAMS}"
+EXE_PARAMS="$INSTANCE ./../input/Processed/ToolSetInt.csv ./../output/Exemplo/none.txt --N_REPLICAS 20 --PTL 600 --DIFERENT_TOOLSETS_MODE 0 --PRINT_TIME 0 TEMP_UPDATE 3500 ${CONFIG_PARAMS}"
 
 if [ ! -x "$(command -v ${EXE})" ]; then
     error "${EXE}: not found or not executable (pwd: $(pwd))"
@@ -50,6 +50,11 @@ fi
 # These files are saved in execDir. Saving them in /tmp may be faster. 
 STDOUT=c${CONFIG_ID}-${INSTANCE_ID}-${SEED}.stdout
 STDERR=c${CONFIG_ID}-${INSTANCE_ID}-${SEED}.stderr
+
+TIMEZONE="America/Sao_Paulo"
+export TZ=$TIMEZONE
+TIME=$(date "+%Y-%m-%d %H:%M:%S")
+echo "$TIME | $EXE ${EXE_PARAMS}" >> runs.log
 
 # # Otherwise, save the output to a file, and parse the result from it.  (If
 # # you wish to ignore segmentation faults you can use '{}' around the
@@ -79,9 +84,6 @@ echo "$COST"
 # Comment the following line if you wish to preserve temporary files
 rm -f "${STDOUT}" "${STDERR}"
 
-TIMEZONE="America/Sao_Paulo"
-export TZ=$TIMEZONE
-TIME=$(date "+%Y-%m-%d %H:%M:%S")
-echo "$TIME | $COST | $EXE ${EXE_PARAMS}" >> runs.log
+echo "$COST" >> runs.log
 
 exit 0
