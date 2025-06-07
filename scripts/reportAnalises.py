@@ -62,7 +62,7 @@ def verificarPrecedencia(files):
                 job = estado['job']
                 if estado['operation'] == 1: 
                     if not (job in FimOperacao0) or estado['start'] < FimOperacao0[job]: 
-                        # print(f'Precedencia quebrada para a instancia {index + 1} no job {job}')
+                        print(f'Precedencia quebrada para a instancia {index + 1} no job {job}')
                         quantidadePrecedenciaQuebradaPorInstancia[index] += 1
 
     return quantidadePrecedenciaQuebradaPorInstancia
@@ -460,14 +460,16 @@ def main():
     folderName = sys.argv[1]
     option = sys.argv[2]
 
+    singleFile = ""
     fileWithPath = []
     if(option == '0'):
-        fileWithPath = [folderName]
         option = '1'
     elif(option == '4' or option == '5'):
         files = os.listdir(folderName)
         files = natsorted(files) 
         fileWithPath = [f"{folderName}/{file}" for file in files]
+    elif(option == '6'):
+        fileWithPath = [folderName]
     else: 
         files = os.listdir(folderName)
         files = natsorted(files) 
@@ -478,6 +480,9 @@ def main():
     if option == '3': tabelaResultadosModelo(fileWithPath)
     if option == '4': tabelaResultadosPT(fileWithPath)
     if option == '5': tabelaResultadosComparativa(fileWithPath)
+    if option == '6': 
+        verificarPrecedencia(fileWithPath)
+        verificarPrecedenciaAsSingleMachine(fileWithPath)
 
 def mainCollection():
     pass

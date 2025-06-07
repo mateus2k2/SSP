@@ -54,3 +54,9 @@ sshuttle -r mateus@200.239.132.108:4096 0.0.0.0/0
 sshuttle -r marco@200.239.139.180:9229 0.0.0.0/0
 sudo docker run --rm -it --network host --name=firefox -p 5800:5800 -v /docker/appdata/firefox:/config:rw jlesage/firefox
 curl ifconfig.me
+
+------------------------------------------------
+RODAR
+------------------------------------------------
+
+python ./scripts/reportAnalises.py ./output/Exemplo/pt.csv 6

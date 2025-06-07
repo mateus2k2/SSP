@@ -72,6 +72,24 @@ teslaCompile:
 normalCompile:
 	make DEBUG_MODE=0 GATILHO_MODE=0 FAST_COMPILE_MODE=0 RAND_MODE=1 compile
 
+runPTDiff:
+	./src/out/mainCpp \
+		"./input/MyInstancesSameToolSets/n=15,p=0.5,r=0.5,t=0,v0.csv" \
+		"./input/Processed/ToolSetInt.csv" \
+		"./output/Exemplo/pt.csv" \
+		--TEMP_INIT 0.1 \
+		--TEMP_FIM 5 \
+		--N_REPLICAS 11 \
+		--MCL 500 \
+		--PTL 100 \
+		--PASSO_GATILHO 10 \
+		--TEMP_DIST 3 \
+		--TYPE_UPDATE 1 \
+		--INIT_SOL_TYPE 1 \
+		--TEMP_UPDATE 3500 \
+		--PTL_TEMP_UPDATE_PROPORTION 3 \
+		--DIFERENT_TOOLSETS_MODE 1 \
+
 runPT:
 	./src/out/mainCpp \
 		"./input/MyInstancesSameToolSets/n=212,p=0.75,r=0.4,t=1390,v8.csv" \
@@ -129,7 +147,7 @@ goModelo:
 
 goPT:
 	make normalCompile
-	make runPT
+	make runPTDiff
 
 # --------------------------------------------------------
 # Meus python
