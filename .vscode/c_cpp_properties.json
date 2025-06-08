@@ -14,7 +14,8 @@
             "cppStandard": "gnu++17",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/opt/gurobi1201/linux64/include"
+                "/opt/gurobi1201/linux64/include",
+                "${workspaceFolder}/../PTAPI/include"
             ]
         }
     ],

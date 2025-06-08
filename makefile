@@ -14,33 +14,25 @@
 # ./scripts/runAuto.sh ./output/Practitioner same practitioner 9999 tesla /home/marco/mateus/Gurobi/gurobi.lic > out
 # make tabelaResultadosPractitioner > out
 
-GRB_LICENSE_FILE=
-DEBUG_MODE=1
+PRINT_MODE=0
+DEBUG_MODE=0
 GATILHO_MODE=0
-FAST_COMPILE_MODE=1
 RAND_MODE=1
 TESLA_MODE=0
-
 GUROBI_VERSION=120
 
 ifeq ($(DEBUG_MODE), 1)
     USE_FTM = -lfmt
-    DEBUG_MACRO = -DDEBUG
+	DEBUG_MACRO_OPTS = -g
 else
     USE_FTM =
-    DEBUG_MACRO =
+	DEBUG_MACRO_OPTS =
 endif
 
-ifeq ($(GATILHO_MODE), 1)
-	GATILHO_MACRO = -DGATILHO
+ifeq ($(PRINT_MODE), 1)
+    PRINT_MACRO = -DDEBUG
 else
-	GATILHO_MACRO =
-endif
-
-ifeq ($(FAST_COMPILE_MODE), 1)
-	FAST_COMPILE_MACRO = 
-else
-	FAST_COMPILE_MACRO = -O3
+    PRINT_MACRO =
 endif
 
 ifeq ($(RAND_MODE), 1)
@@ -49,28 +41,60 @@ else
 	RAND_MACRO =
 endif
 
+ifeq ($(GATILHO_MODE), 1)
+	GATILHO_MACRO = -DGATILHO
+else
+	GATILHO_MACRO =
+endif
+
 ifeq ($(TESLA_MODE), 1)
 	TESLA_MACRO = -D_GLIBCXX_USE_CXX11_ABI=0
 else
 	TESLA_MACRO =
 endif
 
-debugCompile:
-	clear 
-	g++ $(DEBUG_MACRO) $(GATILHO_MACRO) $(RAND_MACRO) ${TESLA_MACRO} src/*.cpp -std=c++2a -Wshadow -pg -Wall -m64 -g -o src/out/mainCppDebug -I${GUROBI_HOME}/include -L${GUROBI_HOME}/lib -lgurobi_c++ -lgurobi${GUROBI_VERSION} -lm -Wno-unused-result -lpthread -g -march=native -lstdc++ $(USE_FTM)
-	echo "\n" 
-	clear
+# --------------------------------------------------------
+# COMPILACAO CPP
+# --------------------------------------------------------
 
-compile:
-	clear
-	g++ $(DEBUG_MACRO) $(GATILHO_MACRO) $(RAND_MACRO) ${TESLA_MACRO} ../PTAPI/include/*.h src/*.cpp -std=c++2a -Wshadow -Wall -m64 -g -o src/out/mainCpp -I${GUROBI_HOME}/include -L${GUROBI_HOME}/lib -lgurobi_c++ -lgurobi${GUROBI_VERSION} -lm -Wno-unused-result -lpthread $(FAST_COMPILE_MACRO) -march=native -lstdc++ $(USE_FTM)
-	echo "\n" 
+PTAPI_HOME := ../PTAPI
+SRC_DIR := src
+OBJ_DIR := build
+BIN_DIR := $(SRC_DIR)/out
+EXEC := $(BIN_DIR)/mainCpp
+
+CPP_FILES := $(wildcard $(SRC_DIR)/*.cpp)
+OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(CPP_FILES))
+
+CXX := g++
+CXXFLAGS := -std=c++2a -Wall -Wshadow -m64 -march=native $(DEBUG_MACRO) ${PRINT_MACRO} $(GATILHO_MACRO) $(RAND_MACRO) $(TESLA_MACRO)
+LDFLAGS := -L${GUROBI_HOME}/lib -lgurobi_c++ -lgurobi${GUROBI_VERSION} -lpthread ${DEBUG_MACRO_OPTS} -lm -lstdc++ $(USE_FTM)
+INCLUDES := -I${GUROBI_HOME}/include -I$(PTAPI_HOME)/include
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	@mkdir -p $(OBJ_DIR)
+	$(CXX) $(CXXFLAGS) -O3 -c $< -o $@ $(INCLUDES)
+
+compile: $(OBJ_FILES)
+	@mkdir -p $(BIN_DIR)
+	$(CXX) $^ -o $(EXEC) $(LDFLAGS)
+	@echo "Compilado com sucesso em $(EXEC)"
 
 teslaCompile:
-	make TESLA_MODE=1 GUROBI_VERSION=91 DEBUG_MODE=0 GATILHO_MODE=0 FAST_COMPILE_MODE=0 RAND_MODE=1 compile
+	make TESLA_MODE=1 GUROBI_VERSION=91 DEBUG_MODE=0 GATILHO_MODE=0 RAND_MODE=1 compile
 
 normalCompile:
-	make DEBUG_MODE=0 GATILHO_MODE=0 FAST_COMPILE_MODE=0 RAND_MODE=1 compile
+	make -j$(nproc) DEBUG_MODE=0 GATILHO_MODE=0 RAND_MODE=1 compile
+
+devCompile:
+	make -j$(nproc) DEBUG_MODE=1 GATILHO_MODE=0 RAND_MODE=1 compile
+
+clean:
+	rm -rf $(OBJ_DIR) $(BIN_DIR)/mainCpp
+
+# --------------------------------------------------------
+# RUN CPP
+# --------------------------------------------------------
 
 runPTDiff:
 	./src/out/mainCpp \
@@ -129,24 +153,16 @@ runPractitioner:
 		--SEQUENCE_BY 1 \
 
 
-# "./input/Exemplo/Jobs.csv" 
-# "./input/Exemplo/ToolSets.csv" 
-
-# "./input/MyInstancesSameToolSets/n=15,p=0.5,r=0.5,t=0,v0.csv" 
-# "./input/MyInstancesSameToolSets/n=212,p=0.75,r=0.4,t=1390,v8.csv" 
-# "./input/Processed/ToolSetInt.csv" 
-
-
 goPractitioner:
-	make normalCompile
+	make devCompile
 	make runPractitioner
 
 goModelo:
-	make normalCompile
+	make devCompile
 	make runModelo
 
 goPT:
-	make normalCompile
+	make devCompile
 	make runPTDiff
 
 # --------------------------------------------------------
@@ -186,5 +202,4 @@ m ?= update
 
 git:
 	clear && git add . && git commit -m "$(m)" && git push origin master
-
 

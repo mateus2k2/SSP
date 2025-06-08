@@ -94,9 +94,9 @@ solSSP SSP::two_swap(solSSP sol) {
     #endif
     std::uniform_int_distribution<int> dist {0, (numberJobs-1)};
 
-    int countErros = 0;
-    int validSwap1 = false;
-    int validSwap2 = false;
+    // int countErros = 0;
+    // int validSwap1 = false;
+    // int validSwap2 = false;
 
     if(diferent_toolset_mode == 1) {
         do {

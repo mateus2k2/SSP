@@ -18,8 +18,8 @@
 #include <fmt/ranges.h>
 #endif
 
-#include "../../PTAPI/include/ExecTime.h"
-#include "../../PTAPI/include/PT.h"
+#include "ExecTime.h"
+#include "PT.h"
 
 using namespace std;
 
@@ -149,15 +149,21 @@ int main(int argc, char* argv[]) {
     // TEST
     // ------------------------------------------------------------------------------
 
-	// prob->setParans(uType, initSolType);
-    // solSSP solTeste = prob->randPriority();
+	prob->setParans(uType, initSolType);
+    solSSP solTeste = prob->randPriority();
+    cout << "SolTeste: " << endl;
+    for (long unsigned int i = 0; i < solTeste.sol.size(); i++) {
+        cout << solTeste.sol[i] << " ==== " << solTeste.releaseDates[solTeste.sol[i]] << " " << solTeste.dueDates[solTeste.sol[i]] << " " << endl;
+    }
+    prob->evaluateReportKTNS(solTeste, filenameJobs, filenameTools, solutionReportFile);
+    
     // PT<solSSP> algoTeste(tempIni, tempfim, tempN, MCL, PTL, passoGatilho, tempD, uType, tempUp);
     // solTeste = prob->neighbor(solTeste);
     // double eval1 = prob->evaluate(solTeste);
     // cout << "Avalicação do KTNS : " << eval1 << endl;
     // double eval2 = prob->evaluateReportKTNS(solTeste, filenameJobs, filenameTools, solutionReportFile);
     // cout << "Avalicação do KTNS Report : " << eval2  << endl;
-    // return 0;
+    return 0;
 
     // ------------------------------------------------------------------------------
     // SSP
