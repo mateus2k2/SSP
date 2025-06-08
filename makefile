@@ -74,6 +74,8 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -O3 -c $< -o $@ $(INCLUDES)
 
 compile: $(OBJ_FILES)
+	@echo "Compilando..."
+	@clear
 	@mkdir -p $(BIN_DIR)
 	$(CXX) $^ -o $(EXEC) $(LDFLAGS)
 	@echo "Compilado com sucesso em $(EXEC)"
@@ -88,7 +90,7 @@ normalCompile:
 	make -j$(nproc) DEBUG_MODE=0 GATILHO_MODE=0 RAND_MODE=1 compile
 
 devCompile:
-	make -j$(nproc) DEBUG_MODE=1 GATILHO_MODE=0 RAND_MODE=1 compile
+	make -j$(nproc) DEBUG_MODE=1 GATILHO_MODE=0 RAND_MODE=0 compile
 
 clean:
 	rm -rf $(OBJ_DIR) $(BIN_DIR)/mainCpp
