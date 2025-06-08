@@ -153,7 +153,7 @@ int main(int argc, char* argv[]) {
     solSSP solTeste = prob->randPriority();
     cout << "SolTeste: " << endl;
     for (long unsigned int i = 0; i < solTeste.sol.size(); i++) {
-        cout << solTeste.sol[i] << " ==== " << solTeste.releaseDates[solTeste.sol[i]] << " " << solTeste.dueDates[solTeste.sol[i]] << " " << endl;
+        cout << solTeste.sol[i] << " === " << solTeste.releaseDates[solTeste.sol[i]] << " " << solTeste.dueDates[solTeste.sol[i]] << " " << endl;
     }
     prob->evaluateReportKTNS(solTeste, filenameJobs, filenameTools, solutionReportFile);
     

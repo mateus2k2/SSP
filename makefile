@@ -22,11 +22,9 @@ TESLA_MODE=0
 GUROBI_VERSION=120
 
 ifeq ($(DEBUG_MODE), 1)
-    USE_FTM = -lfmt
-	DEBUG_MACRO_OPTS = -g
+    USE_FMT = -lfmt
 else
-    USE_FTM =
-	DEBUG_MACRO_OPTS =
+    USE_FMT =
 endif
 
 ifeq ($(PRINT_MODE), 1)
@@ -68,7 +66,7 @@ OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(CPP_FILES))
 
 CXX := g++
 CXXFLAGS := -std=c++2a -Wall -Wshadow -m64 -march=native $(DEBUG_MACRO) ${PRINT_MACRO} $(GATILHO_MACRO) $(RAND_MACRO) $(TESLA_MACRO)
-LDFLAGS := -L${GUROBI_HOME}/lib -lgurobi_c++ -lgurobi${GUROBI_VERSION} -lpthread ${DEBUG_MACRO_OPTS} -lm -lstdc++ $(USE_FTM)
+LDFLAGS := -L${GUROBI_HOME}/lib -lgurobi_c++ -lgurobi${GUROBI_VERSION} -lpthread ${DEBUG_MACRO_OPTS} -lm -lstdc++ $(USE_FMT)
 INCLUDES := -I${GUROBI_HOME}/include -I$(PTAPI_HOME)/include
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
@@ -79,6 +77,9 @@ compile: $(OBJ_FILES)
 	@mkdir -p $(BIN_DIR)
 	$(CXX) $^ -o $(EXEC) $(LDFLAGS)
 	@echo "Compilado com sucesso em $(EXEC)"
+
+debug:
+	make -j$(nproc) DEBUG_MACRO_OPTS=-g compile
 
 teslaCompile:
 	make TESLA_MODE=1 GUROBI_VERSION=91 DEBUG_MODE=0 GATILHO_MODE=0 RAND_MODE=1 compile

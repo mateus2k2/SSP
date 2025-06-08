@@ -5,3 +5,7 @@ src/out/*
 *.stdout
 
 none.txt
+
+build/*
+./build/*
+./build/*.o

@@ -60,6 +60,3 @@ RODAR
 ------------------------------------------------
 
 python ./scripts/reportAnalises.py ./output/Exemplo/pt.csv 6
-
-
-42
