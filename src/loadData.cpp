@@ -254,7 +254,8 @@ void SSP::groupJobs() {
         mapJobsToOriginalIndex[jobKey] = i;
     }
 
-    numberJobs = originalJobs.size();
+    // numberJobs = originalJobs.size();
+    numberJobs = groupedJobs.size();
 
 }
 

@@ -43,22 +43,17 @@ solSSP SSP::two_opt(solSSP sol) {
     #endif
     std::uniform_int_distribution<int> dist{0, (numberJobs - 1)};
 
-    if(diferent_toolset_mode == 1){ 
-        
-    }
-    else{
-        do {
-            first = dist(mersenne_engine);
-            last = dist(mersenne_engine);
-        } while (first == last);
+    do {
+        first = dist(mersenne_engine);
+        last = dist(mersenne_engine);
+    } while (first == last);
 
-        if (first > last) std::swap(first, last);
+    if (first > last) std::swap(first, last);
 
-        while (first < last) {
-            std::swap(s.sol[first], s.sol[last]);
-            first++;
-            last--;
-        }
+    while (first < last) {
+        std::swap(s.sol[first], s.sol[last]);
+        first++;
+        last--;
     }
 
     s.Nup = sol.Nup;
@@ -83,18 +78,11 @@ solSSP SSP::two_swap(solSSP sol) {
     #endif
     std::uniform_int_distribution<int> dist {0, (numberJobs-1)};
 
-    if(diferent_toolset_mode == 1) {
-        do {
-            first = dist(mersenne_engine);
-            last = dist(mersenne_engine);
-        } while (first == last);
-    }
-    else{
-        do {
-            first = dist(mersenne_engine);
-            last = dist(mersenne_engine);
-        } while (first == last);
-    }
+    do {
+        first = dist(mersenne_engine);
+        last = dist(mersenne_engine);
+    } while (first == last);
+    
 
     std::swap(s.sol[first], s.sol[last]);
     s.Nup = sol.Nup;
@@ -116,27 +104,22 @@ solSSP SSP::insertion(solSSP sol) {
         std::mt19937 mersenne_engine{42};
     #endif
     std::uniform_int_distribution<int> dist{0, (numberJobs - 1)};
+    
+    // Seleciona duas posições distintas
+    do {
+        from = dist(mersenne_engine);
+        to = dist(mersenne_engine);
+    } while (from == to);
 
-    if(diferent_toolset_mode == 1){ 
-       
+    // Remove o elemento da posição `from`
+    auto element = s.sol[from];
+    s.sol.erase(s.sol.begin() + from);
+
+    // Insere o elemento na posição `to`
+    if (to > from) {
+        to--;  // Ajusta a posição devido à remoção
     }
-    else{
-        // Seleciona duas posições distintas
-        do {
-            from = dist(mersenne_engine);
-            to = dist(mersenne_engine);
-        } while (from == to);
-
-        // Remove o elemento da posição `from`
-        auto element = s.sol[from];
-        s.sol.erase(s.sol.begin() + from);
-
-        // Insere o elemento na posição `to`
-        if (to > from) {
-            to--;  // Ajusta a posição devido à remoção
-        }
-        s.sol.insert(s.sol.begin() + to, element);
-    }
+    s.sol.insert(s.sol.begin() + to, element);
 
     // Copia os dados auxiliares
     s.Nup = sol.Nup;
