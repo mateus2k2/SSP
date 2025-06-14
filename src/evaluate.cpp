@@ -24,7 +24,9 @@ double SSP::evaluate(solSSP& s) {
     int unfineshedPriorityCountTotal = 0;
     int totalUnfineshed = numberJobsUngrouped;
 
-    vector<vector<int>> machines = splitSolutionIntoMachines(s.sol, numberMachines);
+    solSSP sol = expandSolution(s);
+
+    vector<vector<int>> machines = splitSolutionIntoMachines(sol.sol, numberMachines);
     for (size_t i = 0; i < machines.size(); i++) {
         auto [fineshedJobsCount, switchs, switchsInstances, unfineshedPriorityCount] = KTNS(machines[i]);
         fineshedJobsCountTotal += fineshedJobsCount;

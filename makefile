@@ -101,6 +101,24 @@ clean:
 # RUN CPP
 # --------------------------------------------------------
 
+runPTDiffBig:
+	./src/out/mainCpp \
+		"./input/MyInstancesDiferentToolSets/n=75,p=0.24,r=0.5,t=112,v0.csv" \
+		"./input/Processed/ToolSetInt.csv" \
+		"./output/Exemplo/pt.csv" \
+		--TEMP_INIT 0.1 \
+		--TEMP_FIM 5 \
+		--N_REPLICAS 11 \
+		--MCL 500 \
+		--PTL 100 \
+		--PASSO_GATILHO 10 \
+		--TEMP_DIST 3 \
+		--TYPE_UPDATE 1 \
+		--INIT_SOL_TYPE 1 \
+		--TEMP_UPDATE 3500 \
+		--PTL_TEMP_UPDATE_PROPORTION 3 \
+		--DIFERENT_TOOLSETS_MODE 1 \
+
 runPTDiff:
 	./src/out/mainCpp \
 		"./input/MyInstancesSameToolSets/n=15,p=0.5,r=0.5,t=0,v0.csv" \
@@ -168,7 +186,7 @@ goModelo:
 
 goPT:
 	make devCompile
-	make runPTDiff
+	make runPTDiffBig
 
 # --------------------------------------------------------
 # Meus python

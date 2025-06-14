@@ -59,6 +59,8 @@ class SSP: public Problem<solSSP>{
 		map<int, ToolSet> originalToolSets;
 		map<int, ToolSet> normalizedToolSets;
 		vector<Job> groupedJobs;
+		solSSP expandSolution(solSSP& s);
+		std::map<std::tuple<int, int>, int>  mapJobsToOriginalIndex;
 
 		std::function<solSSP(solSSP)> neighborFunc;
     	std::function<solSSP()> constructionFunc;
@@ -84,14 +86,13 @@ class SSP: public Problem<solSSP>{
 		solSSP total_rand(solSSP sol);
 
 		void groupJobs();
-		double evaluate(solSSP& s);
-		double evaluateReportKTNS(solSSP &sol, string filenameJobs, string filenameTools, fstream& solutionReportFile);
-		tuple<int, int, int, int> evaluateReportKTNSMachine(vector<int> s, fstream& solutionReportFile, int machine);
-		solSSP postProcessDifferent(solSSP &sol);
 		vector<vector<int>> splitSolutionIntoMachines(const vector<int>& input, size_t n);
+		
+		double evaluate(solSSP& s);
+		double evaluateReport(solSSP &sol, string filenameJobs, string filenameTools, fstream& solutionReportFile);
+		tuple<int, int, int, int> KTNSReport(vector<int> s, fstream& solutionReportFile, int machine);
 		tuple<int, int, int, int> KTNS(vector<int> s);
 		
-
 		int modelo(string filenameoutput, int timeLimit);
 		void loadModelData();
 		void convertModelData(string& folderOutput, GRBModel& model);

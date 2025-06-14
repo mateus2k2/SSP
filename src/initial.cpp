@@ -15,12 +15,26 @@ solSSP SSP::rand() {
 #else
     std::mt19937 mersenne_engine{42};
 #endif
+    std::vector<int> solIndexes;
 
-    for (int i = 0; i < numberJobs; i++) {
-        ss.sol.push_back(i);
+    for (size_t i = 0; i < groupedJobs.size(); i++) {
+        solIndexes.push_back(i);
     }
 
-    std::shuffle(begin(ss.sol), end(ss.sol), mersenne_engine);
+    std::shuffle(begin(solIndexes), end(solIndexes), mersenne_engine);
+
+    for (size_t i = 0; i < solIndexes.size(); ++i) {
+        Job job = groupedJobs[solIndexes[i]];
+        // Find the original job index
+        auto indexOperation1 = mapJobsToOriginalIndex.find(std::make_tuple(job.indexJob, 0));
+        auto indexOperation2 = mapJobsToOriginalIndex.find(std::make_tuple(job.indexJob, 1));
+        if(indexOperation1 != mapJobsToOriginalIndex.end()) {
+            ss.sol.push_back(indexOperation1->second);
+        }
+        if(indexOperation2 != mapJobsToOriginalIndex.end()) {
+            ss.sol.push_back(indexOperation2->second);
+        }
+    }
 
     ss.evalSol = evaluate(ss);
     ss.Nup = false;
@@ -42,18 +56,11 @@ solSSP SSP::randPriority() {
     std::vector<int> priorityJobIndices;
     std::vector<int> nonPriorityJobIndices;
 
-    std::map<std::tuple<int, int>, int>  jobsMap;
-    for (size_t i = 0; i < originalJobs.size(); ++i) {
-        int indexJob = originalJobs[i].indexJob;
-        int indexOperation = originalJobs[i].indexOperation;
-        std::tuple<int, int> jobKey = std::make_tuple(indexJob, indexOperation);
-        jobsMap[jobKey] = i;
-    }
-
     for (size_t i = 0; i < groupedJobs.size(); ++i) {
         if (groupedJobs[i].priority) {
             priorityJobIndices.push_back(i);
-        } else {
+        } 
+        else {
             nonPriorityJobIndices.push_back(i);
         }
     }
@@ -62,29 +69,31 @@ solSSP SSP::randPriority() {
     std::shuffle(begin(nonPriorityJobIndices), end(nonPriorityJobIndices), mersenne_engine);
 
     for (size_t i = 0; i < priorityJobIndices.size(); ++i) {
-        Job job = groupedJobs[priorityJobIndices[i]];
-        // Find the original job index
-        auto indexOperation1 = jobsMap.find(std::make_tuple(job.indexJob, 0));
-        auto indexOperation2 = jobsMap.find(std::make_tuple(job.indexJob, 1));
-        if(indexOperation1 != jobsMap.end()) {
-            ss.sol.push_back(indexOperation1->second);
-        }
-        if(indexOperation2 != jobsMap.end()) {
-            ss.sol.push_back(indexOperation2->second);
-        }
+        // Job job = groupedJobs[priorityJobIndices[i]];
+        // // Find the original job index
+        // auto indexOperation1 = mapJobsToOriginalIndex.find(std::make_tuple(job.indexJob, 0));
+        // auto indexOperation2 = mapJobsToOriginalIndex.find(std::make_tuple(job.indexJob, 1));
+        // if(indexOperation1 != mapJobsToOriginalIndex.end()) {
+        //     ss.sol.push_back(indexOperation1->second);
+        // }
+        // if(indexOperation2 != mapJobsToOriginalIndex.end()) {
+        //     ss.sol.push_back(indexOperation2->second);
+        // }
+        ss.sol.push_back(priorityJobIndices[i]);
     }
 
     for (size_t i = 0; i < nonPriorityJobIndices.size(); ++i) {
-        Job job = groupedJobs[nonPriorityJobIndices[i]];
-        // Find the original job index
-        auto indexOperation1 = jobsMap.find(std::make_tuple(job.indexJob, 0));
-        auto indexOperation2 = jobsMap.find(std::make_tuple(job.indexJob, 1));
-        if(indexOperation1 != jobsMap.end()) {
-            ss.sol.push_back(indexOperation1->second);
-        }
-        if(indexOperation2 != jobsMap.end()) {
-            ss.sol.push_back(indexOperation2->second);
-        }
+        // Job job = groupedJobs[nonPriorityJobIndices[i]];
+        // // Find the original job index
+        // auto indexOperation1 = mapJobsToOriginalIndex.find(std::make_tuple(job.indexJob, 0));
+        // auto indexOperation2 = mapJobsToOriginalIndex.find(std::make_tuple(job.indexJob, 1));
+        // if(indexOperation1 != mapJobsToOriginalIndex.end()) {
+        //     ss.sol.push_back(indexOperation1->second);
+        // }
+        // if(indexOperation2 != mapJobsToOriginalIndex.end()) {
+        //     ss.sol.push_back(indexOperation2->second);
+        // }
+        ss.sol.push_back(nonPriorityJobIndices[i]);
     }
 
 

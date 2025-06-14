@@ -84,7 +84,10 @@ solSSP SSP::two_swap(solSSP sol) {
     std::uniform_int_distribution<int> dist {0, (numberJobs-1)};
 
     if(diferent_toolset_mode == 1) {
-        
+        do {
+            first = dist(mersenne_engine);
+            last = dist(mersenne_engine);
+        } while (first == last);
     }
     else{
         do {

@@ -150,8 +150,15 @@ int main(int argc, char* argv[]) {
 
 	prob->setParans(uType, initSolType);
     solSSP solTeste = prob->randPriority();
-    prob->evaluateReportKTNS(solTeste, filenameJobs, filenameTools, solutionReportFile);
+    prob->evaluateReport(solTeste, filenameJobs, filenameTools, solutionReportFile);
     
+    // solutionReportFile << "Final Solution: " << 0 << endl;
+    // solutionReportFile << "Time: " << 0 << endl;
+    // solutionReportFile << "PTL: " << 0 << endl;
+    // solutionReportFile << "MCMC: " << 0 << endl;
+    // solutionReportFile << "Best Initial: " << 0 << endl;
+    // solutionReportFile << "Mean Initial: " << 0 << endl;
+
     // PT<solSSP> algoTeste(tempIni, tempfim, tempN, MCL, PTL, passoGatilho, tempD, uType, tempUp);
     // solTeste = prob->neighbor(solTeste);
     // double eval1 = prob->evaluate(solTeste);
@@ -170,8 +177,7 @@ int main(int argc, char* argv[]) {
     solSSP sol = algo.start(thN, prob);
     solSSP finalSolution = sol;
 
-    if (diferent_toolset_mode == 1) finalSolution = prob->postProcessDifferent(sol);
-    double cost = prob->evaluateReportKTNS(finalSolution, filenameJobs, filenameTools, solutionReportFile);
+    double cost = prob->evaluateReport(finalSolution, filenameJobs, filenameTools, solutionReportFile);
 
     solSSP initFromBest = algo.getInitFromBest();
     vector<solSSP> initAll = algo.getInitAll();

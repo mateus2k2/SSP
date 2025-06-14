@@ -55,6 +55,7 @@ int SSP::laodInstance(string filename) {
 
         tmpJob.toolSet = originalToolSets[tmpJob.indexToolSet];
         tmpJob.isGrouped = false;
+        tmpJob.isReentrant = false;
 
         originalJobs.push_back(tmpJob);
     }
@@ -225,35 +226,32 @@ void SSP::groupJobs() {
             for (size_t j = 0; j < originalJobs.size(); ++j) {
                 auto &otherJob = originalJobs[j];
                 if (otherJob.indexOperation == 1 && otherJob.indexJob == thisJob.indexJob) {
-                    thisJob.isGrouped = true;
                     thisJob.processingTimes.push_back(otherJob.processingTime);
                     thisJob.processingTimes.push_back(thisJob.processingTime);
                     thisJob.toolSets.push_back(otherJob.toolSet);
                     thisJob.toolSets.push_back(thisJob.toolSet);
                     thisJob.processingTime = otherJob.processingTime + thisJob.processingTime;
                     
-                    if(diferent_toolset_mode == 0) indicesToDelete.push_back(j);
+                    if(diferent_toolset_mode == 0) {
+                        thisJob.isGrouped = true;
+                        indicesToDelete.push_back(j);
+                    }
                 }
             }
             groupedJobs.push_back(thisJob);
         }
     }
 
-    for (auto &thisJob : groupedJobs) {
-        fmt::print("Job: {}, Operation: {}, ProcessingTime: {}, Priority: {}, ToolSet Tools: {}, isGrouped: {}, ProcessingTimes: {}\n",
-            thisJob.indexJob,
-            thisJob.indexOperation,
-            thisJob.processingTime,
-            thisJob.priority,
-            fmt::join(thisJob.toolSet.tools, " "),
-            thisJob.isGrouped,
-            fmt::join(thisJob.processingTimes, " ")
-        );
-    }
-
     std::sort(indicesToDelete.rbegin(), indicesToDelete.rend());
     for (int index : indicesToDelete) {
         originalJobs.erase(originalJobs.begin() + index);
+    }
+
+    for (size_t i = 0; i < originalJobs.size(); ++i) {
+        int indexJob = originalJobs[i].indexJob;
+        int indexOperation = originalJobs[i].indexOperation;
+        std::tuple<int, int> jobKey = std::make_tuple(indexJob, indexOperation);
+        mapJobsToOriginalIndex[jobKey] = i;
     }
 
     numberJobs = originalJobs.size();
