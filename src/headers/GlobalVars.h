@@ -28,7 +28,9 @@ typedef struct{
     ToolSet toolSetNormalized;
 
     bool isGrouped;
+    bool isReentrant;
     vector<int> processingTimes;
+    vector<ToolSet> toolSets;
 }Job;
 
 struct Family {

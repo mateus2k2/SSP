@@ -1,6 +1,6 @@
 #include "headers/SSP.h"
 
-#ifdef DEBUG
+#ifdef FMT
 #include <fmt/ranges.h>
 #include <fmt/core.h>
 #endif

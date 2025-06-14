@@ -9,7 +9,7 @@
 
 #include "headers/GlobalVars.h"
 
-#ifdef DEBUG
+#ifdef FMT
 #include <fmt/core.h>
 #include <fmt/ranges.h>
 #endif
@@ -59,6 +59,20 @@ int SSP::laodInstance(string filename) {
         originalJobs.push_back(tmpJob);
     }
 
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+    
+    // iterate and mark the jobs with operation 1 as reentrant. find the respective job with operation 0 and mark it as reentrant too.
+    for (auto &thisJob : originalJobs) {
+        if (thisJob.indexOperation == 1) {
+            for (auto &otherJob : originalJobs) {
+                if (otherJob.indexOperation == 0 && otherJob.indexJob == thisJob.indexJob) {
+                    thisJob.isReentrant = true;
+                    otherJob.isReentrant = true;
+                }
+            }
+        }
+    }
+    
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     // iterate over all the toolSets in the originalJobs
@@ -204,7 +218,7 @@ int SSP::loadInstanceParans(string filename) {
 
 void SSP::groupJobs() {
     std::vector<int> indicesToDelete;
-
+    
     for (size_t i = 0; i < originalJobs.size(); ++i) {
         auto &thisJob = originalJobs[i];
         if (thisJob.indexOperation == 0) {
@@ -214,12 +228,27 @@ void SSP::groupJobs() {
                     thisJob.isGrouped = true;
                     thisJob.processingTimes.push_back(otherJob.processingTime);
                     thisJob.processingTimes.push_back(thisJob.processingTime);
+                    thisJob.toolSets.push_back(otherJob.toolSet);
+                    thisJob.toolSets.push_back(thisJob.toolSet);
                     thisJob.processingTime = otherJob.processingTime + thisJob.processingTime;
-
-                    indicesToDelete.push_back(j);
+                    
+                    if(diferent_toolset_mode == 0) indicesToDelete.push_back(j);
                 }
             }
+            groupedJobs.push_back(thisJob);
         }
+    }
+
+    for (auto &thisJob : groupedJobs) {
+        fmt::print("Job: {}, Operation: {}, ProcessingTime: {}, Priority: {}, ToolSet Tools: {}, isGrouped: {}, ProcessingTimes: {}\n",
+            thisJob.indexJob,
+            thisJob.indexOperation,
+            thisJob.processingTime,
+            thisJob.priority,
+            fmt::join(thisJob.toolSet.tools, " "),
+            thisJob.isGrouped,
+            fmt::join(thisJob.processingTimes, " ")
+        );
     }
 
     std::sort(indicesToDelete.rbegin(), indicesToDelete.rend());
@@ -235,7 +264,7 @@ void SSP::groupJobs() {
 // LOAD PRINTS
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 void SSP::printDataReport() {
-#ifdef DEBUG
+#ifdef FMT
     fmt::print("\n------------------------------------------------------------------------------------------------------------------------------------------\n");
     fmt::print("DATA REPORT\n");
     fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n\n");

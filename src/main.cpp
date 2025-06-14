@@ -13,7 +13,7 @@
 #include "headers/GlobalVars.h"
 #include "headers/SSP.h"
 
-#ifdef DEBUG
+#ifdef FMT
 #include <fmt/core.h>
 #include <fmt/ranges.h>
 #endif
@@ -127,9 +127,8 @@ int main(int argc, char* argv[]) {
         cerr << "Error: Could not open solution report file: " << filenameoutput << endl;
         exit(1);
     }
-
     if (instance_report) prob->printDataReport();
-    if (diferent_toolset_mode == 0) prob->groupJobs();
+    prob->groupJobs();
 
     // ------------------------------------------------------------------------------
     // MODELO
@@ -151,10 +150,6 @@ int main(int argc, char* argv[]) {
 
 	prob->setParans(uType, initSolType);
     solSSP solTeste = prob->randPriority();
-    cout << "SolTeste: " << endl;
-    for (long unsigned int i = 0; i < solTeste.sol.size(); i++) {
-        cout << solTeste.sol[i] << " === " << solTeste.releaseDates[solTeste.sol[i]] << " " << solTeste.dueDates[solTeste.sol[i]] << " " << endl;
-    }
     prob->evaluateReportKTNS(solTeste, filenameJobs, filenameTools, solutionReportFile);
     
     // PT<solSSP> algoTeste(tempIni, tempfim, tempN, MCL, PTL, passoGatilho, tempD, uType, tempUp);

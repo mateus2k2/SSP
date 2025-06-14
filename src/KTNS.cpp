@@ -10,7 +10,7 @@
 #include "headers/GlobalVars.h"
 #include "headers/SSP.h"
 
-#ifdef DEBUG
+#ifdef FMT
 #include <fmt/core.h>
 #include <fmt/ranges.h>
 #endif

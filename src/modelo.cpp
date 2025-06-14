@@ -11,11 +11,6 @@
 
 using namespace std;
 
-// Practitioner heuristic 
-// Ajustar horizonte das instanica
-// Testar retirar as restrições 2 3 5 6 e 9
-// ESCREVER
-
 // -------------------------------------------------
 // DEFINIÇÃO DAS CONTANTES
 // -------------------------------------------------

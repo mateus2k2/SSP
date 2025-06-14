@@ -3,7 +3,7 @@
         {
             "name": "Linux",
             "defines": [
-                "DEBUG",
+                "FMT",
                 "GATILHO",
                 "DIFERENT_TOOLSETS_MODE",
                 "RANDSEED"

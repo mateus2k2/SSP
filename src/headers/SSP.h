@@ -58,6 +58,7 @@ class SSP: public Problem<solSSP>{
 		vector<Job> originalJobs;
 		map<int, ToolSet> originalToolSets;
 		map<int, ToolSet> normalizedToolSets;
+		vector<Job> groupedJobs;
 
 		std::function<solSSP(solSSP)> neighborFunc;
     	std::function<solSSP()> constructionFunc;
