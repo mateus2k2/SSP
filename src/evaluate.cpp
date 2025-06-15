@@ -6,6 +6,7 @@
 #include <string>
 #include <thread>
 #include <vector>
+#include <numeric>
 
 #include "headers/GlobalVars.h"
 #include "headers/SSP.h"
@@ -97,10 +98,13 @@ tuple<int, int, int, int> SSP::KTNS(vector<int> s) {
         // TIME VERIFICATIONS
         // ---------------------------------------------------------------------------
 
+        int processingTimeSum = originalJobs[s[jL]].processingTime;
+        if((originalJobs[s[jL]].isReentrant && !originalJobs[s[jL]].isGrouped) && originalJobs[s[jL]].indexOperation == 0) processingTimeSum = std::accumulate(originalJobs[s[jL]].processingTimes.begin(), originalJobs[s[jL]].processingTimes.end(), 0);
+
         fimJob = inicioJob + originalJobs[s[jL]].processingTime;
 
-        if (((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) ||                                               // verificar se estou em um periodo semsupervisao e houve troca de ferramenta
-            (inicioJob % (planingHorizon * DAY) + (originalJobs[s[jL]].processingTime) > (planingHorizon * DAY))) {  // verificar se o job excede o horizonte de planejamento unico (iria extender de uma maquina para outra)
+        if (((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) ||                       // verificar se estou em um periodo semsupervisao e houve troca de ferramenta
+            (inicioJob % (planingHorizon * DAY) + (processingTimeSum) > (planingHorizon * DAY))) {  // verificar se o job excede o horizonte de planejamento unico (iria extender de uma maquina para outra)
             inicioJob += DAY - (inicioJob % DAY);
             fimJob = inicioJob + originalJobs[s[jL]].processingTime;
         }

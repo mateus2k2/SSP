@@ -92,7 +92,7 @@ normalCompile:
 	make -j$(nproc) FMT_MODE=0 GATILHO_MODE=0 RAND_MODE=1 compile
 
 devCompile:
-	make -j$(nproc) FMT_MODE=1 GATILHO_MODE=0 RAND_MODE=0 compile
+	make -j$(nproc) FMT_MODE=1 GATILHO_MODE=0 RAND_MODE=1 compile
 
 clean:
 	rm -rf $(OBJ_DIR) $(BIN_DIR)/mainCpp
@@ -110,11 +110,11 @@ runPTDiffBig:
 		--TEMP_FIM 5 \
 		--N_REPLICAS 11 \
 		--MCL 500 \
-		--PTL 100 \
+		--PTL 600 \
 		--PASSO_GATILHO 10 \
 		--TEMP_DIST 3 \
 		--TYPE_UPDATE 1 \
-		--INIT_SOL_TYPE 1 \
+		--INIT_SOL_TYPE 0 \
 		--TEMP_UPDATE 3500 \
 		--PTL_TEMP_UPDATE_PROPORTION 3 \
 		--DIFERENT_TOOLSETS_MODE 1 \
@@ -128,32 +128,33 @@ runPTDiff:
 		--TEMP_FIM 5 \
 		--N_REPLICAS 11 \
 		--MCL 500 \
-		--PTL 100 \
+		--PTL 1200 \
 		--PASSO_GATILHO 10 \
 		--TEMP_DIST 3 \
 		--TYPE_UPDATE 1 \
-		--INIT_SOL_TYPE 1 \
+		--INIT_SOL_TYPE 0 \
 		--TEMP_UPDATE 3500 \
 		--PTL_TEMP_UPDATE_PROPORTION 3 \
 		--DIFERENT_TOOLSETS_MODE 1 \
 
 runPT:
 	./src/out/mainCpp \
-		"./input/MyInstancesSameToolSets/n=212,p=0.75,r=0.4,t=1390,v8.csv" \
+		"./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv" \
 		"./input/Processed/ToolSetInt.csv" \
 		"./output/Exemplo/pt.csv" \
-		--TEMP_INIT 0.1 \
-		--TEMP_FIM 5 \
-		--N_REPLICAS 11 \
-		--MCL 500 \
-		--PTL 100 \
-		--PASSO_GATILHO 10 \
-		--TEMP_DIST 3 \
-		--TYPE_UPDATE 1 \
-		--INIT_SOL_TYPE 1 \
-		--TEMP_UPDATE 3500 \
 		--PTL_TEMP_UPDATE_PROPORTION 3 \
 		--DIFERENT_TOOLSETS_MODE 0 \
+		--TEMP_INIT 0.1 \
+        --TEMP_FIM 5 \
+        --N_REPLICAS 11 \
+        --MCL 500 \
+        --PTL 600 \
+        --PASSO_GATILHO 10 \
+        --TEMP_DIST 3 \
+        --TYPE_UPDATE 1 \
+        --INIT_SOL_TYPE 0 \
+        --TEMP_UPDATE 3500 \
+        --PTL_TEMP_UPDATE_PROPORTION 3 \
 
 runModelo:
 	./src/out/mainCpp \

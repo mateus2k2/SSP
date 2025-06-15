@@ -10,13 +10,14 @@ solSSP SSP::construction() { return constructionFunc(); }
 solSSP SSP::rand() {
     solSSP ss;
     std::random_device rnd_device;
-#if defined(RANDSEED)
-    std::mt19937 mersenne_engine{rnd_device()};
-#else
-    std::mt19937 mersenne_engine{42};
-#endif
+    #if defined(RANDSEED)
+        std::mt19937 mersenne_engine{rnd_device()};
+    #else
+        std::mt19937 mersenne_engine{42};
+    #endif
     std::vector<int> solIndexes;
 
+    // for (size_t i = 0; i < originalJobs.size(); i++) {
     for (size_t i = 0; i < groupedJobs.size(); i++) {
         solIndexes.push_back(i);
     }
@@ -24,16 +25,7 @@ solSSP SSP::rand() {
     std::shuffle(begin(solIndexes), end(solIndexes), mersenne_engine);
 
     for (size_t i = 0; i < solIndexes.size(); ++i) {
-        Job job = groupedJobs[solIndexes[i]];
-        // Find the original job index
-        auto indexOperation1 = mapJobsToOriginalIndex.find(std::make_tuple(job.indexJob, 0));
-        auto indexOperation2 = mapJobsToOriginalIndex.find(std::make_tuple(job.indexJob, 1));
-        if(indexOperation1 != mapJobsToOriginalIndex.end()) {
-            ss.sol.push_back(indexOperation1->second);
-        }
-        if(indexOperation2 != mapJobsToOriginalIndex.end()) {
-            ss.sol.push_back(indexOperation2->second);
-        }
+        ss.sol.push_back(solIndexes[i]);
     }
 
     ss.evalSol = evaluate(ss);
@@ -52,12 +44,12 @@ solSSP SSP::randPriority() {
         std::mt19937 mersenne_engine{42};
     #endif
 
-    // put the priority jobs first
     std::vector<int> priorityJobIndices;
     std::vector<int> nonPriorityJobIndices;
 
+    // for (size_t i = 0; i < originalJobs.size(); ++i) {
     for (size_t i = 0; i < groupedJobs.size(); ++i) {
-        if (groupedJobs[i].priority) {
+        if (originalJobs[i].priority) {
             priorityJobIndices.push_back(i);
         } 
         else {
@@ -69,30 +61,10 @@ solSSP SSP::randPriority() {
     std::shuffle(begin(nonPriorityJobIndices), end(nonPriorityJobIndices), mersenne_engine);
 
     for (size_t i = 0; i < priorityJobIndices.size(); ++i) {
-        // Job job = groupedJobs[priorityJobIndices[i]];
-        // // Find the original job index
-        // auto indexOperation1 = mapJobsToOriginalIndex.find(std::make_tuple(job.indexJob, 0));
-        // auto indexOperation2 = mapJobsToOriginalIndex.find(std::make_tuple(job.indexJob, 1));
-        // if(indexOperation1 != mapJobsToOriginalIndex.end()) {
-        //     ss.sol.push_back(indexOperation1->second);
-        // }
-        // if(indexOperation2 != mapJobsToOriginalIndex.end()) {
-        //     ss.sol.push_back(indexOperation2->second);
-        // }
         ss.sol.push_back(priorityJobIndices[i]);
     }
 
     for (size_t i = 0; i < nonPriorityJobIndices.size(); ++i) {
-        // Job job = groupedJobs[nonPriorityJobIndices[i]];
-        // // Find the original job index
-        // auto indexOperation1 = mapJobsToOriginalIndex.find(std::make_tuple(job.indexJob, 0));
-        // auto indexOperation2 = mapJobsToOriginalIndex.find(std::make_tuple(job.indexJob, 1));
-        // if(indexOperation1 != mapJobsToOriginalIndex.end()) {
-        //     ss.sol.push_back(indexOperation1->second);
-        // }
-        // if(indexOperation2 != mapJobsToOriginalIndex.end()) {
-        //     ss.sol.push_back(indexOperation2->second);
-        // }
         ss.sol.push_back(nonPriorityJobIndices[i]);
     }
 
@@ -100,6 +72,9 @@ solSSP SSP::randPriority() {
     ss.evalSol = evaluate(ss);
     ss.Nup = false;
     ss.Ndown = false;
+
+    // cout << "Agrupados: " << groupedJobs.size() << endl;
+    // cout << "Original: " << originalJobs.size() << endl;
 
     return ss;
 }

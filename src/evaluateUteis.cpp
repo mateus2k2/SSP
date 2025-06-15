@@ -6,18 +6,19 @@
 #endif
 
 solSSP SSP::expandSolution(solSSP& s) {
+    // return s;
     solSSP expandedSol;
 
     for (size_t i = 0; i < s.sol.size(); ++i) {
         Job jobGrouped = groupedJobs[s.sol[i]];
         // find the original job index
-        auto indexOperation = mapJobsToOriginalIndex.find(std::make_tuple(jobGrouped.indexJob, 0));
-        if (indexOperation != mapJobsToOriginalIndex.end()) {
-            expandedSol.sol.push_back(indexOperation->second);
+        auto indexOperation1 = mapJobsToOriginalIndex.find(std::make_tuple(jobGrouped.indexJob, 0));
+        if (indexOperation1 != mapJobsToOriginalIndex.end()) {
+            expandedSol.sol.push_back(indexOperation1->second);
         }
-        indexOperation = mapJobsToOriginalIndex.find(std::make_tuple(jobGrouped.indexJob, 1));
-        if (indexOperation != mapJobsToOriginalIndex.end()) {
-            expandedSol.sol.push_back(indexOperation->second);
+        auto indexOperation2 = mapJobsToOriginalIndex.find(std::make_tuple(jobGrouped.indexJob, 1));
+        if (indexOperation2 != mapJobsToOriginalIndex.end()) {
+            expandedSol.sol.push_back(indexOperation2->second);
         }
         // Copy the evaluation value
         expandedSol.evalSol = s.evalSol;
@@ -141,11 +142,14 @@ tuple<int, int, int, int>  SSP::KTNSReport(vector<int> s, fstream& solutionRepor
         // ---------------------------------------------------------------------------
         // TIME VERIFICATIONS
         // ---------------------------------------------------------------------------
+        
+        int processingTimeSum = originalJobs[s[jL]].processingTime;
+        if((originalJobs[s[jL]].isReentrant && !originalJobs[s[jL]].isGrouped) && originalJobs[s[jL]].indexOperation == 0) processingTimeSum = std::accumulate(originalJobs[s[jL]].processingTimes.begin(), originalJobs[s[jL]].processingTimes.end(), 0);
 
         fimJob = inicioJob + originalJobs[s[jL]].processingTime;
 
-        if (((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) ||                                           // verificar se estou em um periodo sem supervisao e houve troca de ferramenta
-            (inicioJob % (planingHorizon * DAY) + (originalJobs[s[jL]].processingTime) > (planingHorizon * DAY))) {  // verificar se o job excede o horizonte de planejamento unico (iria extender de uma maquina para outra)
+        if (((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) ||                          // verificar se estou em um periodo sem supervisao e houve troca de ferramenta
+            (inicioJob % (planingHorizon * DAY) + (processingTimeSum) > (planingHorizon * DAY))) {  // verificar se o job excede o horizonte de planejamento unico (iria extender de uma maquina para outra)
             inicioJob += DAY - (inicioJob % DAY);
             fimJob = inicioJob + originalJobs[s[jL]].processingTime;
         }
