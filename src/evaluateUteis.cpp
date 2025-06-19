@@ -119,7 +119,7 @@ tuple<int, int, int, int, int>  SSP::KTNSReport(vector<int> s, int startIndex, f
         fimJob = inicioJob + originalJobs[s[jL]].processingTime;
 
         if (((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) ||                          // verificar se estou em um periodo sem supervisao e houve troca de ferramenta
-            (inicioJob % (planingHorizon * DAY) + (processingTimeSum) > (planingHorizon * DAY))) {  // verificar se o job excede o horizonte de planejamento unico (iria extender de uma maquina para outra)
+            (inicioJob % (planingHorizon * DAY) + (processingTimeSum) > (planingHorizon * DAY))) {  // verificar se o job excede o horizonte de planejamento
             inicioJob += DAY - (inicioJob % DAY);
             fimJob = inicioJob + originalJobs[s[jL]].processingTime;
         }
@@ -130,11 +130,12 @@ tuple<int, int, int, int, int>  SSP::KTNSReport(vector<int> s, int startIndex, f
             isFirstJobOfMachine = 0;
 
         if (fimJob > extendedPlaningHorizon) {
-            cout << "Job " << originalJobs[s[jL]].indexJob << " exceeds the planning horizon." << endl;
-            cout << "Current job end time: " << fimJob << ", Planning horizon: " << extendedPlaningHorizon << endl;
-            cout << "Job processing time: " << originalJobs[s[jL]].processingTime << endl;
-            cout << "Job index: " << jL << endl;
-            cout << "Job start time: " << inicioJob << endl;
+            // cout << "Job " << originalJobs[s[jL]].indexJob << " exceeds the planning horizon." << endl;
+            // cout << "Trocas: " << currantSwitchs << endl;
+            // cout << "Current job end time: " << fimJob << ", Planning horizon: " << extendedPlaningHorizon << endl;
+            // cout << "Job processing time: " << originalJobs[s[jL]].processingTime << endl;
+            // cout << "Job index: " << jL << endl;
+            // cout << "Job start time: " << inicioJob << endl;
             break;
         }
 

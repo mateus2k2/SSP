@@ -128,7 +128,7 @@ runPTDiff:
 		--TEMP_FIM 5 \
 		--N_REPLICAS 11 \
 		--MCL 500 \
-		--PTL 1200 \
+		--PTL 100 \
 		--PASSO_GATILHO 10 \
 		--TEMP_DIST 3 \
 		--TYPE_UPDATE 1 \
@@ -187,7 +187,7 @@ goModelo:
 
 goPT:
 	make devCompile
-	make runPT
+	make runPTDiff
 
 # --------------------------------------------------------
 # Meus python
