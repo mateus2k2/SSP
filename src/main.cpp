@@ -148,16 +148,16 @@ int main(int argc, char* argv[]) {
     // TEST
     // ------------------------------------------------------------------------------
 
-	// prob->setParans(uType, initSolType);
-    // solSSP solTeste = prob->randPriority();
-    // prob->evaluateReport(solTeste, filenameJobs, filenameTools, solutionReportFile);
+	prob->setParans(uType, initSolType);
+    solSSP solTeste = prob->randPriority();
+    double resultado = prob->evaluateReport(solTeste, filenameJobs, filenameTools, solutionReportFile);
     
-    // solutionReportFile << "Final Solution: " << 0 << endl;
-    // solutionReportFile << "Time: " << 0 << endl;
-    // solutionReportFile << "PTL: " << 0 << endl;
-    // solutionReportFile << "MCMC: " << 0 << endl;
-    // solutionReportFile << "Best Initial: " << 0 << endl;
-    // solutionReportFile << "Mean Initial: " << 0 << endl;
+    solutionReportFile << "Final Solution: " << resultado << endl;
+    solutionReportFile << "Time: " << 0 << endl;
+    solutionReportFile << "PTL: " << 0 << endl;
+    solutionReportFile << "MCMC: " << 0 << endl;
+    solutionReportFile << "Best Initial: " << 0 << endl;
+    solutionReportFile << "Mean Initial: " << 0 << endl;
 
     // PT<solSSP> algoTeste(tempIni, tempfim, tempN, MCL, PTL, passoGatilho, tempD, uType, tempUp);
     // solTeste = prob->neighbor(solTeste);
@@ -165,7 +165,7 @@ int main(int argc, char* argv[]) {
     // cout << "Avalicação do KTNS : " << eval1 << endl;
     // double eval2 = prob->evaluateReportKTNS(solTeste, filenameJobs, filenameTools, solutionReportFile);
     // cout << "Avalicação do KTNS Report : " << eval2  << endl;
-    // return 0;
+    return 0;
 
     // ------------------------------------------------------------------------------
     // SSP

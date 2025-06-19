@@ -86,12 +86,10 @@ class SSP: public Problem<solSSP>{
 		solSSP total_rand(solSSP sol);
 
 		void groupJobs();
-		vector<vector<int>> splitSolutionIntoMachines(const vector<int>& input, size_t n);
-		
 		double evaluate(solSSP& s);
 		double evaluateReport(solSSP &sol, string filenameJobs, string filenameTools, fstream& solutionReportFile);
-		tuple<int, int, int, int> KTNSReport(vector<int> s, fstream& solutionReportFile, int machine);
-		tuple<int, int, int, int> KTNS(vector<int> s);
+		tuple<int, int, int, int, int> KTNSReport(vector<int> s, int startIndex, fstream& solutionReportFile, int machine);
+		tuple<int, int, int, int, int> KTNS(vector<int> s, int startIndex);
 		
 		int modelo(string filenameoutput, int timeLimit);
 		void loadModelData();

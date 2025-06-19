@@ -6,12 +6,10 @@
 #endif
 
 solSSP SSP::expandSolution(solSSP& s) {
-    // return s;
     solSSP expandedSol;
 
     for (size_t i = 0; i < s.sol.size(); ++i) {
         Job jobGrouped = groupedJobs[s.sol[i]];
-        // find the original job index
         auto indexOperation1 = mapJobsToOriginalIndex.find(std::make_tuple(jobGrouped.indexJob, 0));
         if (indexOperation1 != mapJobsToOriginalIndex.end()) {
             expandedSol.sol.push_back(indexOperation1->second);
@@ -20,33 +18,10 @@ solSSP SSP::expandSolution(solSSP& s) {
         if (indexOperation2 != mapJobsToOriginalIndex.end()) {
             expandedSol.sol.push_back(indexOperation2->second);
         }
-        // Copy the evaluation value
         expandedSol.evalSol = s.evalSol;
     }
 
     return expandedSol;
-}
-
-vector<vector<int>> SSP::splitSolutionIntoMachines(const vector<int>& input, size_t n) {
-    if (n <= 0) {
-        throw invalid_argument("Number of parts must be greater than 0.");
-    }
-
-    size_t totalSize = input.size();
-    size_t baseSize = totalSize / n;
-    size_t remainder = totalSize % n;
-
-    vector<vector<int>> result;
-    auto it = input.begin();
-
-    for (size_t i = 0; i < n; ++i) {
-        size_t currentSize = baseSize + (i < remainder ? 1 : 0);
-        vector<int> part(it, it + currentSize);
-        result.push_back(move(part));
-        it += currentSize;
-    }
-
-    return result;
 }
 
 double SSP::evaluateReport(solSSP& solution, string filenameJobs, string filenameTools, fstream& solutionReportFile) {
@@ -56,19 +31,20 @@ double SSP::evaluateReport(solSSP& solution, string filenameJobs, string filenam
     int fineshedJobsCountTotal = 0;
     int switchsTotal = 0;
     int switchsInstancesTotal = 0;
-    int unfineshedPriorityCountTotal = 0;
+    int unfineshedPriorityCountTotal = numberOfPriorityJobs;
     int totalUnfineshed = numberJobsUngrouped;
 
     solSSP sol = expandSolution(solution);
 
-    vector<vector<int>> machines = splitSolutionIntoMachines(sol.sol, numberMachines);
-    for (size_t i = 0; i < machines.size(); i++) {
-        auto [fineshedJobsCount, switchs, switchsInstances, unfineshedPriorityCount] = KTNSReport(machines[i], solutionReportFile, i);
-        fineshedJobsCountTotal += fineshedJobsCount;
+    int startIndex = 0;
+    for (int i = 0; i < numberMachines; i++) {
+        auto [fineshedJobsCount, switchs, switchsInstances, fineshedPriorityCount, curStartIndex] = KTNSReport(sol.sol, startIndex, solutionReportFile, i);
+        startIndex = curStartIndex;
         switchsTotal += switchs;
         switchsInstancesTotal += switchsInstances;
-        unfineshedPriorityCountTotal += unfineshedPriorityCount;
+        unfineshedPriorityCountTotal -= fineshedPriorityCount;
         totalUnfineshed -= fineshedJobsCount;
+        fineshedJobsCountTotal += fineshedJobsCount;
     }
 
     solutionReportFile << "END" << endl;
@@ -83,7 +59,7 @@ double SSP::evaluateReport(solSSP& solution, string filenameJobs, string filenam
     return cost;
 }
 
-tuple<int, int, int, int>  SSP::KTNSReport(vector<int> s, fstream& solutionReportFile, int machine) {
+tuple<int, int, int, int, int>  SSP::KTNSReport(vector<int> s, int startIndex, fstream& solutionReportFile, int machine) {
     vector<bool> magazineL(numberToolsReal, true);
     unsigned int switchs = 0;
     int numberJobsSol = s.size();
@@ -92,13 +68,7 @@ tuple<int, int, int, int>  SSP::KTNSReport(vector<int> s, fstream& solutionRepor
     int switchsInstances = 0;
     int currantSwitchs = 0;
     int fineshedJobsCount = 0;
-    int unfineshedPriorityCount = 0;
-
-    for (int i = 0; i < numberJobsSol; ++i) {
-        if (originalJobs[s[i]].priority) {
-            unfineshedPriorityCount += originalJobs[s[i]].isGrouped ? 2 : 1;
-        }
-    }
+    int fineshedPriorityCount = 0;
 
     int inicioJob = 0;
     int fimJob = 0;
@@ -107,7 +77,7 @@ tuple<int, int, int, int>  SSP::KTNSReport(vector<int> s, fstream& solutionRepor
 
     solutionReportFile << "Machine: " << machine << std::endl;
 
-    for (jL = 0; jL < numberJobsSol; ++jL) {
+    for (jL = startIndex; jL < numberJobsSol; ++jL) {
         // ---------------------------------------------------------------------------
         // switchs
         // ---------------------------------------------------------------------------
@@ -159,7 +129,14 @@ tuple<int, int, int, int>  SSP::KTNSReport(vector<int> s, fstream& solutionRepor
         else
             isFirstJobOfMachine = 0;
 
-        if (fimJob > extendedPlaningHorizon) break;
+        if (fimJob > extendedPlaningHorizon) {
+            cout << "Job " << originalJobs[s[jL]].indexJob << " exceeds the planning horizon." << endl;
+            cout << "Current job end time: " << fimJob << ", Planning horizon: " << extendedPlaningHorizon << endl;
+            cout << "Job processing time: " << originalJobs[s[jL]].processingTime << endl;
+            cout << "Job index: " << jL << endl;
+            cout << "Job start time: " << inicioJob << endl;
+            break;
+        }
 
         inicioJob = fimJob;
 
@@ -172,7 +149,7 @@ tuple<int, int, int, int>  SSP::KTNSReport(vector<int> s, fstream& solutionRepor
         if (currantSwitchs > 0) ++switchsInstances;
 
         fineshedJobsCount += originalJobs[s[jL]].isGrouped ? 2 : 1;
-        if (originalJobs[s[jL]].priority) unfineshedPriorityCount -= originalJobs[s[jL]].isGrouped ? 2 : 1;
+        if (originalJobs[s[jL]].priority) fineshedPriorityCount += originalJobs[s[jL]].isGrouped ? 2 : 1;
 
         // ---------------------------------------------------------------------------
         // PRINTS
@@ -206,5 +183,5 @@ tuple<int, int, int, int>  SSP::KTNSReport(vector<int> s, fstream& solutionRepor
         }
     }
 
-    return {fineshedJobsCount, switchs, switchsInstances, unfineshedPriorityCount};
+    return {fineshedJobsCount, switchs, switchsInstances, fineshedPriorityCount, jL};
 }

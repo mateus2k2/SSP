@@ -460,9 +460,9 @@ def main():
     folderName = sys.argv[1]
     option = sys.argv[2]
 
-    singleFile = ""
     fileWithPath = []
     if(option == '0'):
+        fileWithPath = [folderName]
         option = '1'
     elif(option == '4' or option == '5'):
         files = os.listdir(folderName)

@@ -22,26 +22,26 @@ double SSP::evaluate(solSSP& s) {
     int fineshedJobsCountTotal = 0;
     int switchsTotal = 0;
     int switchsInstancesTotal = 0;
-    int unfineshedPriorityCountTotal = 0;
+    int unFineshedPriorityCountTotal = numberOfPriorityJobs;
     int totalUnfineshed = numberJobsUngrouped;
 
     solSSP sol = expandSolution(s);
 
-    vector<vector<int>> machines = splitSolutionIntoMachines(sol.sol, numberMachines);
-    for (size_t i = 0; i < machines.size(); i++) {
-        auto [fineshedJobsCount, switchs, switchsInstances, unfineshedPriorityCount] = KTNS(machines[i]);
-        fineshedJobsCountTotal += fineshedJobsCount;
+    int startIndex = 0;
+    for (int i = 0; i < numberMachines; i++) {
+        auto [fineshedJobsCount, switchs, switchsInstances, fineshedPriorityCount, curStartIndex] = KTNS(sol.sol, startIndex);
+        startIndex = curStartIndex;
         switchsTotal += switchs;
         switchsInstancesTotal += switchsInstances;
-        unfineshedPriorityCountTotal += unfineshedPriorityCount;
+        unFineshedPriorityCountTotal -= fineshedPriorityCount;
         totalUnfineshed -= fineshedJobsCount;
+        fineshedJobsCountTotal += fineshedJobsCount;
     }
 
-    return -((PROFITYFINISHED * fineshedJobsCountTotal) - (COSTSWITCH * switchsTotal) - (COSTSWITCHINSTANCE * switchsInstancesTotal) - (COSTPRIORITY * unfineshedPriorityCountTotal));
+    return -((PROFITYFINISHED * fineshedJobsCountTotal) - (COSTSWITCH * switchsTotal) - (COSTSWITCHINSTANCE * switchsInstancesTotal) - (COSTPRIORITY * unFineshedPriorityCountTotal));
 }
 
-tuple<int, int, int, int> SSP::KTNS(vector<int> s) {
-    int currNumberJobs = s.size();
+tuple<int, int, int, int, int> SSP::KTNS(vector<int> s, int startIndex) {
     vector<bool> magazineL(numberTools, true);
     unsigned int switchs = 0;
     int jL;
@@ -49,20 +49,14 @@ tuple<int, int, int, int> SSP::KTNS(vector<int> s) {
     int switchsInstances = 0;
     int currantSwitchs = 0;
     int fineshedJobsCount = 0;
-    int unfineshedPriorityCount = 0;
-
-    for (int i = 0; i < currNumberJobs; ++i) {
-        if (originalJobs[s[i]].priority) {
-            unfineshedPriorityCount += originalJobs[s[i]].isGrouped ? 2 : 1;
-        }
-    }
+    int fineshedPriorityCount = 0;
 
     int inicioJob = 0;
     int fimJob = 0;
     int isFirstJobOfMachine = 1;
     int extendedPlaningHorizon = (planingHorizon * 1) * DAY;
 
-    for (jL = 0; jL < currNumberJobs; ++jL) {
+    for (jL = startIndex; jL < numberJobs; ++jL) {
         // ---------------------------------------------------------------------------
         // switchs
         // ---------------------------------------------------------------------------
@@ -72,7 +66,7 @@ tuple<int, int, int, int> SSP::KTNS(vector<int> s) {
         int left = jL;
         int cmL = 0;
 
-        while ((cmL < capacityMagazine) && (left < currNumberJobs)) {
+        while ((cmL < capacityMagazine) && (left < numberJobs)) {
             for (auto it = originalJobs[s[left]].toolSetNormalized.tools.begin(); ((it != originalJobs[s[left]].toolSetNormalized.tools.end()) && (cmL < capacityMagazine)); ++it) {
                 if ((magazineL[*it]) && (!magazineCL[*it])) {
                     magazineCL[*it] = true;
@@ -103,7 +97,7 @@ tuple<int, int, int, int> SSP::KTNS(vector<int> s) {
 
         fimJob = inicioJob + originalJobs[s[jL]].processingTime;
 
-        if (((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) ||                       // verificar se estou em um periodo semsupervisao e houve troca de ferramenta
+        if (((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) ||                          // verificar se estou em um periodo semsupervisao e houve troca de ferramenta
             (inicioJob % (planingHorizon * DAY) + (processingTimeSum) > (planingHorizon * DAY))) {  // verificar se o job excede o horizonte de planejamento unico (iria extender de uma maquina para outra)
             inicioJob += DAY - (inicioJob % DAY);
             fimJob = inicioJob + originalJobs[s[jL]].processingTime;
@@ -126,9 +120,9 @@ tuple<int, int, int, int> SSP::KTNS(vector<int> s) {
         switchs += currantSwitchs;
         if (currantSwitchs > 0) ++switchsInstances;
         fineshedJobsCount += originalJobs[s[jL]].isGrouped ? 2 : 1;
-        if (originalJobs[s[jL]].priority) unfineshedPriorityCount -= originalJobs[s[jL]].isGrouped ? 2 : 1;
+        if (originalJobs[s[jL]].priority) fineshedPriorityCount += originalJobs[s[jL]].isGrouped ? 2 : 1;
     }
 
-    return {fineshedJobsCount, switchs, switchsInstances, unfineshedPriorityCount};
+    return {fineshedJobsCount, switchs, switchsInstances, fineshedPriorityCount, jL};
 }
 

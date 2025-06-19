@@ -121,7 +121,7 @@ runPTDiffBig:
 
 runPTDiff:
 	./src/out/mainCpp \
-		"./input/MyInstancesSameToolSets/n=15,p=0.5,r=0.5,t=0,v0.csv" \
+		"./input/MyInstancesDiferentToolSets/n=75,p=0.24,r=0.5,t=112,v0.csv" \
 		"./input/Processed/ToolSetInt.csv" \
 		"./output/Exemplo/pt.csv" \
 		--TEMP_INIT 0.1 \
@@ -148,7 +148,7 @@ runPT:
         --TEMP_FIM 5 \
         --N_REPLICAS 11 \
         --MCL 500 \
-        --PTL 600 \
+        --PTL 100 \
         --PASSO_GATILHO 10 \
         --TEMP_DIST 3 \
         --TYPE_UPDATE 1 \
@@ -187,7 +187,7 @@ goModelo:
 
 goPT:
 	make devCompile
-	make runPTDiffBig
+	make runPT
 
 # --------------------------------------------------------
 # Meus python
@@ -195,7 +195,7 @@ goPT:
 
 validarFile:
 	clear
-	python ./scripts/reportAnalises.py ./output/TeslaPT/1/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv 0
+	python ./scripts/reportAnalises.py ./output/Exemplo/pt.csv 0
 	echo "\n"
 
 tabelaResultadosPractitioner:

@@ -184,7 +184,7 @@ void SSP::reportDataPractitioner(fstream& solutionReportFile, string filenameJob
             int index = distance(originalJobs.begin(), it);
             jobsInMachine.push_back(index);
         }
-        auto [fineshedJobsCount, switchs, switchsInstances, unfineshedPriorityCount] = KTNSReport(jobsInMachine, solutionReportFile, i);
+        auto [fineshedJobsCount, switchs, switchsInstances, unfineshedPriorityCount, lastJob] = KTNSReport(jobsInMachine, 0, solutionReportFile, i);
         fineshedJobsCountTotal += fineshedJobsCount;
         switchsTotal += switchs;
         switchsInstancesTotal += switchsInstances;
