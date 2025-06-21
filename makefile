@@ -121,7 +121,7 @@ runPTDiffBig:
 
 runPTDiff:
 	./src/out/mainCpp \
-		"./input/MyInstancesDiferentToolSets/n=75,p=0.24,r=0.5,t=112,v0.csv" \
+		"./input/MyInstancesDiferentToolSets/n=499,p=0.25,r=0.5,t=748,v0.csv" \
 		"./input/Processed/ToolSetInt.csv" \
 		"./output/Exemplo/pt.csv" \
 		--TEMP_INIT 0.1 \

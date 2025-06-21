@@ -53,8 +53,6 @@ tuple<int, int, int, int, int> SSP::KTNS(vector<int> s, int startIndex) {
 
     int inicioJob = 0;
     int fimJob = 0;
-    int isFirstJobOfMachine = 1;
-    int extendedPlaningHorizon = (planingHorizon * 1) * DAY;
 
     for (jL = startIndex; jL < numberJobs; ++jL) {
         // ---------------------------------------------------------------------------
@@ -103,12 +101,7 @@ tuple<int, int, int, int, int> SSP::KTNS(vector<int> s, int startIndex) {
             fimJob = inicioJob + originalJobs[s[jL]].processingTime;
         }
 
-        if ((inicioJob % (planingHorizon * DAY) == 0))
-            isFirstJobOfMachine = 1;
-        else
-            isFirstJobOfMachine = 0;
-
-        if (fimJob > extendedPlaningHorizon) break;
+        if (fimJob > (planingHorizon * DAY)) break;
 
         inicioJob = fimJob;
 
@@ -116,7 +109,6 @@ tuple<int, int, int, int, int> SSP::KTNS(vector<int> s, int startIndex) {
         // COSTS
         // ---------------------------------------------------------------------------
 
-        if (isFirstJobOfMachine) currantSwitchs = 0;
         switchs += currantSwitchs;
         if (currantSwitchs > 0) ++switchsInstances;
         fineshedJobsCount += originalJobs[s[jL]].isGrouped ? 2 : 1;

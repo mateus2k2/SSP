@@ -72,8 +72,6 @@ tuple<int, int, int, int, int>  SSP::KTNSReport(vector<int> s, int startIndex, f
 
     int inicioJob = 0;
     int fimJob = 0;
-    int extendedPlaningHorizon = (planingHorizon * 1) * DAY;
-    int isFirstJobOfMachine = 1;
 
     solutionReportFile << "Machine: " << machine << std::endl;
 
@@ -118,21 +116,16 @@ tuple<int, int, int, int, int>  SSP::KTNSReport(vector<int> s, int startIndex, f
 
         fimJob = inicioJob + originalJobs[s[jL]].processingTime;
 
-        if (((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) ||                          // verificar se estou em um periodo sem supervisao e houve troca de ferramenta
-            (inicioJob % (planingHorizon * DAY) + (processingTimeSum) > (planingHorizon * DAY))) {  // verificar se o job excede o horizonte de planejamento
+        if (((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) ||                         // verificar se estou em um periodo sem supervisao e houve troca de ferramenta
+            (inicioJob % (planingHorizon * DAY) + (processingTimeSum) > (planingHorizon * DAY))) { // verificar se o job excede o horizonte de planejamento
             inicioJob += DAY - (inicioJob % DAY);
             fimJob = inicioJob + originalJobs[s[jL]].processingTime;
         }
 
-        if ((inicioJob % (planingHorizon * DAY) == 0))
-            isFirstJobOfMachine = 1;
-        else
-            isFirstJobOfMachine = 0;
-
-        if (fimJob > extendedPlaningHorizon) {
+        if (fimJob > (planingHorizon * DAY)) {
             // cout << "Job " << originalJobs[s[jL]].indexJob << " exceeds the planning horizon." << endl;
             // cout << "Trocas: " << currantSwitchs << endl;
-            // cout << "Current job end time: " << fimJob << ", Planning horizon: " << extendedPlaningHorizon << endl;
+            // cout << "Current job end time: " << fimJob << ", Planning horizon: " << (planingHorizon * DAY) << endl;
             // cout << "Job processing time: " << originalJobs[s[jL]].processingTime << endl;
             // cout << "Job index: " << jL << endl;
             // cout << "Job start time: " << inicioJob << endl;
@@ -145,7 +138,6 @@ tuple<int, int, int, int, int>  SSP::KTNSReport(vector<int> s, int startIndex, f
         // COSTS
         // ---------------------------------------------------------------------------
 
-        if (isFirstJobOfMachine) currantSwitchs = 0;
         switchs += currantSwitchs;
         if (currantSwitchs > 0) ++switchsInstances;
 
