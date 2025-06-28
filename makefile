@@ -78,7 +78,6 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 
 compile: $(OBJ_FILES)
 	@echo "Compilando..."
-	@clear
 	@mkdir -p $(BIN_DIR)
 	$(CXX) $^ -o $(EXEC) $(LDFLAGS)
 	@echo "Compilado com sucesso em $(EXEC)"

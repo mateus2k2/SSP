@@ -20,10 +20,14 @@
 using namespace std;
 
 #define MAXBIT 200
-extern vector<bitset<MAXBIT>> bitMatrix;
-extern unsigned n;  // tarefas
-const unsigned m;   // number of machines
-extern std::vector<int> ferramentasJob;
+vector<bitset<MAXBIT>> bitMatrix;
+unsigned n;  // tarefas
+unsigned m;   // number of machines
+std::vector<unsigned> tempoTroca;
+vector<unsigned> capacidade;  // capacidade do magazine
+std::vector<int> ferramentasJob;
+std::vector<std::vector<int>> matrixFerramentas;
+unsigned t;  // ferramentas
 
 void SSP::oneBlockGrouping(solSSP& s) {
     // matrix
@@ -35,18 +39,17 @@ void SSP::oneBlockGrouping(solSSP& s) {
 // UTEIS
 // ------------------------------------------------------------------------------------------------
 
-int deltaBitwise(int a, int b, int c) { return (~bitMatrix[a] & bitMatrix[b] & ~bitMatrix[c] | bitMatrix[a] & ~bitMatrix[b] & bitMatrix[c]).count(); }
+int deltaBitwise(int a, int b, int c) { return ((~bitMatrix[a] & bitMatrix[b] & ~bitMatrix[c]) | (bitMatrix[a] & ~bitMatrix[b] & bitMatrix[c])).count(); }
 
 int deltaShift(int i, int j) { return -deltaBitwise(i - 1, i, i + 1) + deltaBitwise(j - 1, i, j); }
 
 long KTNS(const vector<int> processos, int maquina, bool debug = false) { return 0; }
 
 double completionTime(std::vector<std::vector<unsigned>> tProcessamento, std::vector<int>& tarefas, int maquina) {
-    extern std::vector<unsigned> tempoTroca;
-    extern vector<unsigned> c;  // capacidade do magazine
+    
     double tPr = 0;
     for (std::vector<int>::const_iterator i = tarefas.begin(); i != tarefas.end(); ++i) {
-        if (ferramentasJob[*i] > c[maquina]) return 1000000;  // inválido
+        if ((int)ferramentasJob[*i] > (int)capacidade[maquina]) return 1000000;  // inválido
         tPr += tProcessamento[maquina][*i];
     }
     long nTrocas = KTNS(tarefas, maquina);
@@ -104,7 +107,7 @@ void ONB_noCritical(std::vector<std::vector<int>>& maquinas, std::vector<std::pa
             }
 
             std::vector<int> linhas;
-            for (int i = 0; i < t; ++i) linhas.push_back(i);
+            for (unsigned int i = 0; i < t; ++i) linhas.push_back(i);
             unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
             shuffle(linhas.begin(), linhas.end(), std::default_random_engine(seed));
 
@@ -221,7 +224,7 @@ void ONB(std::vector<std::vector<int>>& maquinas, std::vector<std::pair<double, 
         }
 
         std::vector<int> linhas;
-        for (int i = 0; i < t; ++i) linhas.push_back(i);
+        for (unsigned int i = 0; i < t; ++i) linhas.push_back(i);
         unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
         shuffle(linhas.begin(), linhas.end(), std::default_random_engine(seed));
 

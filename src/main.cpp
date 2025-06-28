@@ -189,7 +189,7 @@ int main(int argc, char* argv[]) {
     solSSP sol = algo.start(thN, prob);
     solSSP finalSolution = sol;
 
-    double cost = prob->evaluateReport(finalSolution, filenameJobs, filenameTools, solutionReportFile);
+    double cost = prob->evaluateReport(finalSolution, solutionReportFile);
 
     solSSP initFromBest = algo.getInitFromBest();
     vector<solSSP> initAll = algo.getInitAll();
