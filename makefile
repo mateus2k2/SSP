@@ -20,6 +20,7 @@ GATILHO_MODE=0
 RAND_MODE=1
 TESLA_MODE=0
 GUROBI_VERSION=120
+OPTIMIZATION=-O3
 
 ifeq ($(FMT_MODE), 1)
     USE_FMT = -lfmt
@@ -67,13 +68,13 @@ CPP_FILES := $(wildcard $(SRC_DIR)/*.cpp)
 OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(CPP_FILES))
 
 CXX := g++
-CXXFLAGS := -std=c++2a -Wall -Wshadow -m64 -march=native $(FMT_MACRO) ${PRINT_MACRO} $(GATILHO_MACRO) $(RAND_MACRO) $(TESLA_MACRO)
+CXXFLAGS := -std=c++2a -Wall -Wshadow -m64 -march=native $(DEBUG_MACRO_OPTS) $(FMT_MACRO) ${PRINT_MACRO} $(GATILHO_MACRO) $(RAND_MACRO) $(TESLA_MACRO)
 LDFLAGS := -L${GUROBI_HOME}/lib -lgurobi_c++ -lgurobi${GUROBI_VERSION} -lpthread ${DEBUG_MACRO_OPTS} -lm -lstdc++ $(USE_FMT)
 INCLUDES := -I${GUROBI_HOME}/include -I$(PTAPI_HOME)/include
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@mkdir -p $(OBJ_DIR)
-	$(CXX) $(CXXFLAGS) -O3 -c $< -o $@ $(INCLUDES)
+	$(CXX) $(CXXFLAGS) ${OPTIMIZATION} -c $< -o $@ $(INCLUDES)
 
 compile: $(OBJ_FILES)
 	@echo "Compilando..."
@@ -83,7 +84,8 @@ compile: $(OBJ_FILES)
 	@echo "Compilado com sucesso em $(EXEC)"
 
 debug:
-	make -j$(nproc) DEBUG_MACRO_OPTS=-g compile
+	make clean
+	make -j$(nproc) DEBUG_MACRO_OPTS=-g OPTIMIZATION=-O0 compile
 
 teslaCompile:
 	make TESLA_MODE=1 GUROBI_VERSION=91 FMT_MODE=0 GATILHO_MODE=0 RAND_MODE=1 compile
@@ -121,7 +123,7 @@ runPTDiffBig:
 
 runPTDiff:
 	./src/out/mainCpp \
-		"./input/MyInstancesDiferentToolSets/n=499,p=0.25,r=0.5,t=748,v0.csv" \
+		"./input/MyInstancesDiferentToolSets/n=75,p=0.24,r=0.5,t=112,v0.csv" \
 		"./input/Processed/ToolSetInt.csv" \
 		"./output/Exemplo/pt.csv" \
 		--TEMP_INIT 0.1 \
@@ -187,7 +189,7 @@ goModelo:
 
 goPT:
 	make devCompile
-	make runPTDiff
+	make runPT
 
 # --------------------------------------------------------
 # Meus python
@@ -217,6 +219,8 @@ tabelaResultadosComparativa:
 	clear
 	python ./scripts/reportAnalises.py ./output/TCC2V2 5
 	echo "\n"
+
+# python ./scripts/reportAnalises.py ./output/Exemplo/pt.csv 7
 
 # --------------------------------------------------------
 # Update Git

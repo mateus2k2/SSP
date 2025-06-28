@@ -147,17 +147,19 @@ int main(int argc, char* argv[]) {
     // ------------------------------------------------------------------------------
     // TEST
     // ------------------------------------------------------------------------------
-
-	// prob->setParans(uType, initSolType);
-    // solSSP solTeste = prob->randPriority();
-    // double resultado = prob->evaluateReport(solTeste, filenameJobs, filenameTools, solutionReportFile);
+    cout << "Running test..." << endl;
+	prob->setParans(uType, initSolType);
+    solSSP solTeste = prob->randPriority();
+    return 0;
+    double resultado = prob->evaluateReport(solTeste, filenameJobs, filenameTools, solutionReportFile);
     
-    // solutionReportFile << "Final Solution: " << resultado << endl;
-    // solutionReportFile << "Time: " << 0 << endl;
-    // solutionReportFile << "PTL: " << 0 << endl;
-    // solutionReportFile << "MCMC: " << 0 << endl;
-    // solutionReportFile << "Best Initial: " << 0 << endl;
-    // solutionReportFile << "Mean Initial: " << 0 << endl;
+    solutionReportFile << "Final Solution: " << 0 << endl;
+    solutionReportFile << "Time: " << 0 << endl;
+    solutionReportFile << "PTL: " << 0 << endl;
+    solutionReportFile << "MCMC: " << 0 << endl;
+    solutionReportFile << "Best Initial: " << 0 << endl;
+    solutionReportFile << "Mean Initial: " << 0 << endl;
+    return 0;
 
     // PT<solSSP> algoTeste(tempIni, tempfim, tempN, MCL, PTL, passoGatilho, tempD, uType, tempUp);
     // solTeste = prob->neighbor(solTeste);

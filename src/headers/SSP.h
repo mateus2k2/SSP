@@ -86,6 +86,7 @@ class SSP: public Problem<solSSP>{
 		solSSP total_rand(solSSP sol);
 
 		void groupJobs();
+		vector<vector<int>> splitSolutionIntoMachines(const vector<int>& input, size_t n);
 		double evaluate(solSSP& s);
 		double evaluateReport(solSSP &sol, string filenameJobs, string filenameTools, fstream& solutionReportFile);
 		tuple<int, int, int, int, int> KTNSReport(vector<int> s, int startIndex, fstream& solutionReportFile, int machine);

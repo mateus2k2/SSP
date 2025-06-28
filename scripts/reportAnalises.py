@@ -452,6 +452,36 @@ def tabelaResultadosComparativa(listDirs, subDir = 'MyInstancesSameToolSets', to
         print(outputTeste)
         if((index+1) % 3 == 0 and not(index == len(files) - 1) and not modoPlanilha): print("\\hline")
 
+def lookupJob(job, operations, jobFile):
+    for jobData in jobFile:
+        if jobData['Job'] == job and jobData['Operation'] == operations:
+            return jobData
+
+def analiseKTNS(file):
+    print(f"---Analysing {file}---")
+    planejamento, machines, endInfo = rp.parseReport(file)
+    toolSets = ld.loadToolSet(planejamento['toolSetFileName'])
+    jobs = ld.loadJobs(planejamento['jobsFileName'])
+
+    for i, machine in enumerate(machines):
+        for j, estado in enumerate(machine):
+            currMagazine = estado['magazine']
+
+            # iterate over the future jobs
+            for k in range(j, len(machine)):
+                nextEstado = machine[k]
+                nextJob = lookupJob(nextEstado['job'], nextEstado['operation'], jobs)
+                nextToolSet = toolSets[nextJob['ToolSet']]
+
+                # remove the nextToolSet from the currMagazine
+                currMagazine = [tool for tool in currMagazine if tool not in nextToolSet]
+                # print(f"Tamanho {len(currMagazine)}")
+
+            print(f"Magazine no processamento do job: {estado['job']}, operation: {estado['operation']}, depois de retirar as ferramentas por nenhum job subsequente na maquina: {len(currMagazine)}")
+        break
+
+
+
 # ---------------------------------------------------------------------------------------------------
 # MAIN
 # ---------------------------------------------------------------------------------------------------
@@ -470,6 +500,8 @@ def main():
         fileWithPath = [f"{folderName}/{file}" for file in files]
     elif(option == '6'):
         fileWithPath = [folderName]
+    elif(option == '7'):
+        fileWithPath = folderName
     else: 
         files = os.listdir(folderName)
         files = natsorted(files) 
@@ -483,6 +515,8 @@ def main():
     if option == '6': 
         verificarPrecedencia(fileWithPath)
         verificarPrecedenciaAsSingleMachine(fileWithPath)
+    if option == '7': 
+        analiseKTNS(fileWithPath)
 
 def mainCollection():
     pass

@@ -24,6 +24,28 @@ solSSP SSP::expandSolution(solSSP& s) {
     return expandedSol;
 }
 
+vector<vector<int>> SSP::splitSolutionIntoMachines(const vector<int>& input, size_t n) {
+    if (n <= 0) {
+        throw invalid_argument("Number of parts must be greater than 0.");
+    }
+
+    size_t totalSize = input.size();
+    size_t baseSize = totalSize / n;
+    size_t remainder = totalSize % n;
+
+    vector<vector<int>> result;
+    auto it = input.begin();
+
+    for (size_t i = 0; i < n; ++i) {
+        size_t currentSize = baseSize + (i < remainder ? 1 : 0);
+        vector<int> part(it, it + currentSize);
+        result.push_back(move(part));
+        it += currentSize;
+    }
+
+    return result;
+}
+
 double SSP::evaluateReport(solSSP& solution, string filenameJobs, string filenameTools, fstream& solutionReportFile) {
     solutionReportFile << filenameJobs << ";" << filenameTools << endl;
     solutionReportFile << planingHorizon << ";" << unsupervised << ";" << DAY << endl;
@@ -36,15 +58,25 @@ double SSP::evaluateReport(solSSP& solution, string filenameJobs, string filenam
 
     solSSP sol = expandSolution(solution);
 
-    int startIndex = 0;
-    for (int i = 0; i < numberMachines; i++) {
-        auto [fineshedJobsCount, switchs, switchsInstances, fineshedPriorityCount, curStartIndex] = KTNSReport(sol.sol, startIndex, solutionReportFile, i);
-        startIndex = curStartIndex;
+    // int startIndex = 0;
+    // for (int i = 0; i < numberMachines; i++) {
+    //     auto [fineshedJobsCount, switchs, switchsInstances, fineshedPriorityCount, curStartIndex] = KTNSReport(sol.sol, startIndex, solutionReportFile, i);
+    //     startIndex = curStartIndex;
+    //     switchsTotal += switchs;
+    //     switchsInstancesTotal += switchsInstances;
+    //     unfineshedPriorityCountTotal -= fineshedPriorityCount;
+    //     totalUnfineshed -= fineshedJobsCount;
+    //     fineshedJobsCountTotal += fineshedJobsCount;
+    // }
+    vector<vector<int>> machines = splitSolutionIntoMachines(sol.sol, numberMachines);
+    for (size_t i = 0; i < machines.size(); i++) {
+        cout << "Machine: " << i << endl;
+        auto [fineshedJobsCount, switchs, switchsInstances, fineshedPriorityCount, _] = KTNSReport(machines[i], 0, solutionReportFile, i);
+        fineshedJobsCountTotal += fineshedJobsCount;
         switchsTotal += switchs;
         switchsInstancesTotal += switchsInstances;
         unfineshedPriorityCountTotal -= fineshedPriorityCount;
         totalUnfineshed -= fineshedJobsCount;
-        fineshedJobsCountTotal += fineshedJobsCount;
     }
 
     solutionReportFile << "END" << endl;
@@ -106,6 +138,13 @@ tuple<int, int, int, int, int>  SSP::KTNSReport(vector<int> s, int startIndex, f
             }
         }
         magazineL = magazineCL;
+
+        // ---------------------------------------------------------------------------
+        // ANALISES
+        // ---------------------------------------------------------------------------
+
+
+
 
         // ---------------------------------------------------------------------------
         // TIME VERIFICATIONS

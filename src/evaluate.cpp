@@ -27,15 +27,26 @@ double SSP::evaluate(solSSP& s) {
 
     solSSP sol = expandSolution(s);
 
-    int startIndex = 0;
-    for (int i = 0; i < numberMachines; i++) {
-        auto [fineshedJobsCount, switchs, switchsInstances, fineshedPriorityCount, curStartIndex] = KTNS(sol.sol, startIndex);
-        startIndex = curStartIndex;
+    // int startIndex = 0;
+    // for (int i = 0; i < numberMachines; i++) {
+    //     auto [fineshedJobsCount, switchs, switchsInstances, fineshedPriorityCount, curStartIndex] = KTNS(sol.sol, startIndex);
+    //     startIndex = curStartIndex;
+    //     switchsTotal += switchs;
+    //     switchsInstancesTotal += switchsInstances;
+    //     unFineshedPriorityCountTotal -= fineshedPriorityCount;
+    //     totalUnfineshed -= fineshedJobsCount;
+    //     fineshedJobsCountTotal += fineshedJobsCount;
+    // }
+    vector<vector<int>> machines = splitSolutionIntoMachines(sol.sol, numberMachines);
+    cout << "Number of machines: " << machines.size() << endl;
+    for (size_t i = 0; i < machines.size(); i++) {
+        cout << "Machine size: " << machines[i].size() << endl;
+        auto [fineshedJobsCount, switchs, switchsInstances, fineshedPriorityCount, trash] = KTNS(machines[i], 0);
+        fineshedJobsCountTotal += fineshedJobsCount;
         switchsTotal += switchs;
         switchsInstancesTotal += switchsInstances;
         unFineshedPriorityCountTotal -= fineshedPriorityCount;
         totalUnfineshed -= fineshedJobsCount;
-        fineshedJobsCountTotal += fineshedJobsCount;
     }
 
     return -((PROFITYFINISHED * fineshedJobsCountTotal) - (COSTSWITCH * switchsTotal) - (COSTSWITCHINSTANCE * switchsInstancesTotal) - (COSTPRIORITY * unFineshedPriorityCountTotal));
@@ -55,6 +66,7 @@ tuple<int, int, int, int, int> SSP::KTNS(vector<int> s, int startIndex) {
     int fimJob = 0;
 
     for (jL = startIndex; jL < numberJobs; ++jL) {
+        cout << "Job: " << jL << " - " << originalJobs[s[jL]].indexJob << endl;
         // ---------------------------------------------------------------------------
         // switchs
         // ---------------------------------------------------------------------------
