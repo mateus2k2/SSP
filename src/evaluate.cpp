@@ -104,6 +104,7 @@ tuple<int, int, int, int, int> SSP::KTNS(vector<int> s, int startIndex) {
         // ---------------------------------------------------------------------------
 
         int processingTimeSum = originalJobs[s[jL]].processingTime;
+        // if((originalJobs[s[jL]].isReentrant && !originalJobs[s[jL]].isGrouped) && originalJobs[s[jL]].indexOperation == 0) processingTimeSum = originalJobs[s[jL]].processingTimes[0] + originalJobs[s[jL]].processingTimes[1];
         if((originalJobs[s[jL]].isReentrant && !originalJobs[s[jL]].isGrouped) && originalJobs[s[jL]].indexOperation == 0) processingTimeSum = std::accumulate(originalJobs[s[jL]].processingTimes.begin(), originalJobs[s[jL]].processingTimes.end(), 0);
 
         fimJob = inicioJob + originalJobs[s[jL]].processingTime;

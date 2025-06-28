@@ -46,8 +46,8 @@ vector<vector<int>> SSP::splitSolutionIntoMachines(const vector<int>& input, siz
     return result;
 }
 
-double SSP::evaluateReport(solSSP& solution, string filenameJobs, string filenameTools, fstream& solutionReportFile) {
-    solutionReportFile << filenameJobs << ";" << filenameTools << endl;
+double SSP::evaluateReport(solSSP& solution, fstream& solutionReportFile) {
+    solutionReportFile << inputJobsFile << ";" << inputToolsetsFile << endl;
     solutionReportFile << planingHorizon << ";" << unsupervised << ";" << DAY << endl;
 
     int fineshedJobsCountTotal = 0;

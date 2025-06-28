@@ -148,23 +148,20 @@ int main(int argc, char* argv[]) {
     // TEST
     // ------------------------------------------------------------------------------
 
-    prob->setParans(uType, initSolType);
-    double acc = 0.0;
+    // prob->setParans(uType, initSolType);
+    // double acc = 0.0;
+    // for (int i = 0; i < 100; ++i) {
+    //     solSSP solTeste = prob->randPriority();
 
-    for (int i = 0; i < 100; ++i) {
-        solSSP solTeste = prob->randPriority();
+    //     auto start = std::chrono::high_resolution_clock::now();
+    //     double resultado = prob->evaluate(solTeste);
+    //     auto end = std::chrono::high_resolution_clock::now();
 
-        auto start = std::chrono::high_resolution_clock::now();
-        // double resultado = prob->evaluateReport(solTeste, filenameJobs, filenameTools, solutionReportFile);
-        double resultado = prob->evaluate(solTeste);
-        auto end = std::chrono::high_resolution_clock::now();
-
-        std::chrono::duration<double, std::micro> elapsed = end - start;
-        acc += elapsed.count();
-    }
-
-    std::cout << "Average time for 100 random solutions: " << acc / 100.0 << " μs" << std::endl;
-    return 0;
+    //     std::chrono::duration<double, std::micro> elapsed = end - start;
+    //     acc += elapsed.count();
+    // }
+    // std::cout << "Average time for 100 random solutions: " << acc / 100.0 << " μs" << std::endl;
+    // return 0;
     
     // solutionReportFile << "Final Solution: " << 0 << endl;
     // solutionReportFile << "Time: " << 0 << endl;

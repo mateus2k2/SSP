@@ -189,7 +189,7 @@ goModelo:
 
 goPT:
 	make devCompile
-	make runPT
+	make runPTDiff
 
 # --------------------------------------------------------
 # Meus python
