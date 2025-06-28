@@ -220,8 +220,6 @@ tabelaResultadosComparativa:
 	python ./scripts/reportAnalises.py ./output/TCC2V2 5
 	echo "\n"
 
-# python ./scripts/reportAnalises.py ./output/Exemplo/pt.csv 7
-
 # --------------------------------------------------------
 # Update Git
 # --------------------------------------------------------

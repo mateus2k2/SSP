@@ -38,9 +38,7 @@ double SSP::evaluate(solSSP& s) {
     //     fineshedJobsCountTotal += fineshedJobsCount;
     // }
     vector<vector<int>> machines = splitSolutionIntoMachines(sol.sol, numberMachines);
-    cout << "Number of machines: " << machines.size() << endl;
     for (size_t i = 0; i < machines.size(); i++) {
-        cout << "Machine size: " << machines[i].size() << endl;
         auto [fineshedJobsCount, switchs, switchsInstances, fineshedPriorityCount, trash] = KTNS(machines[i], 0);
         fineshedJobsCountTotal += fineshedJobsCount;
         switchsTotal += switchs;
@@ -53,6 +51,10 @@ double SSP::evaluate(solSSP& s) {
 }
 
 tuple<int, int, int, int, int> SSP::KTNS(vector<int> s, int startIndex) {
+    
+    // int currNumberJobs = numberJobs;
+    int currNumberJobs = s.size();
+
     vector<bool> magazineL(numberTools, true);
     unsigned int switchs = 0;
     int jL;
@@ -65,8 +67,7 @@ tuple<int, int, int, int, int> SSP::KTNS(vector<int> s, int startIndex) {
     int inicioJob = 0;
     int fimJob = 0;
 
-    for (jL = startIndex; jL < numberJobs; ++jL) {
-        cout << "Job: " << jL << " - " << originalJobs[s[jL]].indexJob << endl;
+    for (jL = startIndex; jL < currNumberJobs; ++jL) {
         // ---------------------------------------------------------------------------
         // switchs
         // ---------------------------------------------------------------------------
@@ -76,7 +77,7 @@ tuple<int, int, int, int, int> SSP::KTNS(vector<int> s, int startIndex) {
         int left = jL;
         int cmL = 0;
 
-        while ((cmL < capacityMagazine) && (left < numberJobs)) {
+        while ((cmL < capacityMagazine) && (left < currNumberJobs)) {
             for (auto it = originalJobs[s[left]].toolSetNormalized.tools.begin(); ((it != originalJobs[s[left]].toolSetNormalized.tools.end()) && (cmL < capacityMagazine)); ++it) {
                 if ((magazineL[*it]) && (!magazineCL[*it])) {
                     magazineCL[*it] = true;

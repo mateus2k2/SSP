@@ -147,19 +147,32 @@ int main(int argc, char* argv[]) {
     // ------------------------------------------------------------------------------
     // TEST
     // ------------------------------------------------------------------------------
-    cout << "Running test..." << endl;
-	prob->setParans(uType, initSolType);
-    solSSP solTeste = prob->randPriority();
+
+    prob->setParans(uType, initSolType);
+    double acc = 0.0;
+
+    for (int i = 0; i < 100; ++i) {
+        solSSP solTeste = prob->randPriority();
+
+        auto start = std::chrono::high_resolution_clock::now();
+        // double resultado = prob->evaluateReport(solTeste, filenameJobs, filenameTools, solutionReportFile);
+        double resultado = prob->evaluate(solTeste);
+        auto end = std::chrono::high_resolution_clock::now();
+
+        std::chrono::duration<double, std::micro> elapsed = end - start;
+        acc += elapsed.count();
+    }
+
+    std::cout << "Average time for 100 random solutions: " << acc / 100.0 << " μs" << std::endl;
     return 0;
-    double resultado = prob->evaluateReport(solTeste, filenameJobs, filenameTools, solutionReportFile);
     
-    solutionReportFile << "Final Solution: " << 0 << endl;
-    solutionReportFile << "Time: " << 0 << endl;
-    solutionReportFile << "PTL: " << 0 << endl;
-    solutionReportFile << "MCMC: " << 0 << endl;
-    solutionReportFile << "Best Initial: " << 0 << endl;
-    solutionReportFile << "Mean Initial: " << 0 << endl;
-    return 0;
+    // solutionReportFile << "Final Solution: " << 0 << endl;
+    // solutionReportFile << "Time: " << 0 << endl;
+    // solutionReportFile << "PTL: " << 0 << endl;
+    // solutionReportFile << "MCMC: " << 0 << endl;
+    // solutionReportFile << "Best Initial: " << 0 << endl;
+    // solutionReportFile << "Mean Initial: " << 0 << endl;
+    // return 0;
 
     // PT<solSSP> algoTeste(tempIni, tempfim, tempN, MCL, PTL, passoGatilho, tempD, uType, tempUp);
     // solTeste = prob->neighbor(solTeste);

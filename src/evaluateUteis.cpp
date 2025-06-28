@@ -70,7 +70,6 @@ double SSP::evaluateReport(solSSP& solution, string filenameJobs, string filenam
     // }
     vector<vector<int>> machines = splitSolutionIntoMachines(sol.sol, numberMachines);
     for (size_t i = 0; i < machines.size(); i++) {
-        cout << "Machine: " << i << endl;
         auto [fineshedJobsCount, switchs, switchsInstances, fineshedPriorityCount, _] = KTNSReport(machines[i], 0, solutionReportFile, i);
         fineshedJobsCountTotal += fineshedJobsCount;
         switchsTotal += switchs;

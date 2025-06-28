@@ -85,6 +85,7 @@ class SSP: public Problem<solSSP>{
 		solSSP insertion(solSSP sol);
 		solSSP total_rand(solSSP sol);
 
+		void oneBlockGrouping(solSSP& s);
 		void groupJobs();
 		vector<vector<int>> splitSolutionIntoMachines(const vector<int>& input, size_t n);
 		double evaluate(solSSP& s);
