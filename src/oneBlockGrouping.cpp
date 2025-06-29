@@ -49,7 +49,7 @@ void SSP::oneBlockGrouping(solSSP& s) {
         bitMatrix[i].reset();
     }
 
-    ONB_noCritical(machines);
+    ONB(machines);
 
 }
 
@@ -65,7 +65,7 @@ int deltaShift(int i, int j) { return -deltaBitwise(i - 1, i, i + 1) + deltaBitw
 // BUSCAS
 // ------------------------------------------------------------------------------------------------
 
-double SSP::ONB_noCritical(vector<vector<int>> maquinas) {
+double SSP::ONB(vector<vector<int>> maquinas) {
 
     std::vector<std::pair<double, int>>::iterator critica;
     std::pair<int, int> ONB1, ONB2;
@@ -144,6 +144,7 @@ double SSP::ONB_noCritical(vector<vector<int>> maquinas) {
 
                                     // std::cout << "\nDelta Direita " << deltad << "\n";
                                     if (c1 < cTimeCritica || c2 < cTimeCritica) {
+                                        cout << "Melhorou: " << c1 << " " << c2 << " " << cTimeCritica << endl;
                                         melhorou = true;
                                         if (c1 < c2) {
                                             // Fica à esquerda
@@ -185,121 +186,3 @@ double SSP::ONB_noCritical(vector<vector<int>> maquinas) {
     return evaluate(sol);
 }
 
-void SSP::ONB(std::vector<std::vector<int>>& maquinas, std::vector<std::pair<double, int>>& idx_maquinas, double& makespan, std::vector<std::vector<unsigned>> tProcessamento) {
-    // maquinas - Todas as Máquinas
-    // idx_maquinas - completionTime, idMaquina
-    // makespan
-    // tProcessamento - tempo de processamento das tarefas (carregado na decodificacao)
-    // extern std::vector<std::vector<int>> matrixFerramentas;
-    // extern unsigned t;  // ferramentas
-    // extern unsigned n;  // tarefas
-    std::vector<std::pair<double, int>>::iterator critica;
-    std::pair<int, int> ONB1, ONB2;
-    int deltad, deltae;
-    if (idx_maquinas.size() < m) return;
-    bool melhorou = true;
-    double cTimeCritica = 0;
-    while (melhorou) {
-        melhorou = false;
-        std::sort(idx_maquinas.rbegin(), idx_maquinas.rend());
-        critica = idx_maquinas.begin();
-        cTimeCritica = critica->first;
-        std::vector<int> mCritica = maquinas.at(critica->second - 1);
-        std::vector<int> mAux1, mAux2;
-        // if (KTNS(mCritica, critica->second - 1) == 0) return;
-        for (unsigned i = 0; i <= n + 2; ++i) bitMatrix[i].reset();
-
-        for (unsigned j = 0; j < t; ++j) {
-            for (unsigned i = 0; i < mCritica.size(); ++i) {
-                if (matrixFerramentas[j][mCritica[i]] == 1) {
-                    bitMatrix[i + 1].set(t - 1 - j);
-                }
-            }
-        }
-
-        std::vector<int> linhas;
-        for (unsigned int i = 0; i < t; ++i) linhas.push_back(i);
-        unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-        shuffle(linhas.begin(), linhas.end(), std::default_random_engine(seed));
-
-        for (vector<int>::const_iterator i = linhas.begin(); i != linhas.end(); ++i) {
-            ONB1 = std::make_pair(-1, -1);
-            ONB2 = std::make_pair(-1, -1);
-            for (unsigned j = 0; j < mCritica.size(); ++j) {
-                if (matrixFerramentas[*i][mCritica[j]] == 1) {
-                    if (ONB1.first == -1) {
-                        ONB1.first = j;
-                        while (j < mCritica.size() && matrixFerramentas[*i][mCritica[j]] == 1) ++j;
-                        ONB1.second = j - 1;
-                    } else {
-                        if (ONB2.first == -1) {
-                            ONB2.first = j;
-                            while (j < mCritica.size() && matrixFerramentas[*i][mCritica[j]] == 1) ++j;
-                            ONB2.second = j - 1;
-                        }
-                    }
-                    if (ONB2.first != -1) {
-                        int nMovimentos = ONB1.first - ONB1.second + 1;
-                        int pivo = ONB1.first;
-                        int TPivo = 0;
-                        mAux1 = mCritica;
-                        mAux2 = mCritica;
-                        double c1, c2;
-                        for (int p = 0; p < nMovimentos; ++p) {
-                            // delta avalicao indice la começa em 1
-                            deltae = deltaShift(pivo + 1, ONB2.first + 1);
-                            deltad = deltaShift(pivo + 1, ONB2.second + 2);
-                            if (deltae <= 0 || deltad <= 0) {
-                                // Insiro a esquerda do 2 ONB
-                                TPivo = mAux1[pivo];
-                                for (int pe = pivo; pe < ONB2.first - 1; ++pe) mAux1[pe] = mAux1[pe + 1];
-                                mAux1[ONB2.first - 1] = TPivo;
-                                // c1 = completionTime(tProcessamento, mAux1, critica->second - 1);
-                                c1 = 0; // TODO: avaliar c1
-
-                                // std::cout << "\nDelta Esquerda " << deltae << "\n";
-                                //  Insiro a direita do 2 ONB
-                                TPivo = mAux2[pivo];
-                                for (int pd = pivo; pd < ONB2.second; ++pd) mAux2[pd] = mAux2[pd + 1];
-                                mAux2[ONB2.second] = TPivo;
-                                // c2 = completionTime(tProcessamento, mAux2, critica->second - 1);
-                                c2 = 0; // TODO: avaliar c2
-
-                                // std::cout << "\nDelta Direita " << deltad << "\n";
-                                if (c1 < cTimeCritica || c2 < cTimeCritica) {
-                                    melhorou = true;
-                                    if (c1 < c2) {
-                                        // Fica à esquerda
-                                        //  std::cout << "\nFicou a esquerda\n";
-                                        mCritica = mAux1;
-                                        ONB2.first = ONB2.first - 1;
-                                        cTimeCritica = c1;
-                                    } else {
-                                        // Fica à direita
-                                        //  std::cout << "\nFicou a direita\n";
-                                        mCritica = mAux2;
-                                        cTimeCritica = c2;
-                                    }
-                                }
-                            }  // fim da delta avaliacao <= 0
-                            if (!melhorou) ++pivo;  // se tiver melhorado, a tarefa andou, então o pivo fica.
-                            mAux1 = mCritica;
-                            mAux2 = mCritica;
-                        }  // Fim dos movimentos ONB1->ONB2
-                        // Procura-se o proximo ONB
-                        ONB1.first = ONB2.first;
-                        ONB1.second = ONB2.second;
-                        ONB2 = make_pair(-1, -1);
-                    }
-                }
-            }
-        }  // fim das linhas
-        if (melhorou) {
-            critica->first = cTimeCritica;
-            maquinas.at(critica->second - 1) = mCritica;
-        }
-
-    }  // wend
-    // ONB_noCritical(maquinas, idx_maquinas, tProcessamento, makespan);
-    ONB_noCritical(maquinas);
-}

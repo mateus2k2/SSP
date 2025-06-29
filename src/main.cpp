@@ -149,6 +149,7 @@ int main(int argc, char* argv[]) {
     // ------------------------------------------------------------------------------
     prob->setParans(uType, initSolType);
     solSSP solTeste = prob->randPriority();
+    cout << "Initial Solution: " << prob->evaluate(solTeste) << endl;
     prob->oneBlockGrouping(solTeste);
     return 0;
 

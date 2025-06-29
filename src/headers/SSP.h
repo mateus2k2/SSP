@@ -102,8 +102,7 @@ class SSP: public Problem<solSSP>{
 		void allocateOperationsToMachines(int numMachines);
 		void createSchedules(int condition);
 		
-		double ONB_noCritical(vector<vector<int>> maquinas);
-		void ONB(std::vector<std::vector<int>>& maquinas, std::vector<std::pair<double, int>>& idx_maquinas, double& makespan, std::vector<std::vector<unsigned>> tProcessamento);
+		double ONB(vector<vector<int>> maquinas);
 
 };
 
