@@ -19,20 +19,38 @@
 
 using namespace std;
 
-#define MAXBIT 200
+#define MAXBIT 1000
 vector<bitset<MAXBIT>> bitMatrix;
-unsigned n;  // tarefas
-unsigned m;   // number of machines
-std::vector<unsigned> tempoTroca;
-vector<unsigned> capacidade;  // capacidade do magazine
-std::vector<int> ferramentasJob;
+unsigned n;
+unsigned m;
+unsigned t;
 std::vector<std::vector<int>> matrixFerramentas;
-unsigned t;  // ferramentas
 
 void SSP::oneBlockGrouping(solSSP& s) {
-    // matrix
-    // linha = toolsets
-    // coluna = jobs
+    solSSP sol = expandSolution(s);
+    vector<vector<int>> machines = splitSolutionIntoMachines(sol.sol, numberMachines);
+
+    // Inicializar vars
+    m = numberMachines;
+    t = numberTools;
+    n = sol.sol.size();
+
+    // iterate over all the jobs in sol and fill matrixFerramentas
+    matrixFerramentas.resize(t, vector<int>(n, 0));
+    for (unsigned i = 0; i < n; ++i) {
+        for (int tool : originalJobs[sol.sol[i]].toolSetNormalized.tools) {
+            matrixFerramentas[tool][i] = 1;
+        }
+    }
+
+    // initialize bitMatrix
+    bitMatrix.resize(n + 5);
+    for (unsigned i = 0; i < n + 2; ++i) { // <= CORRETO
+        bitMatrix[i].reset();
+    }
+
+    ONB_noCritical(machines);
+
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -43,59 +61,27 @@ int deltaBitwise(int a, int b, int c) { return ((~bitMatrix[a] & bitMatrix[b] & 
 
 int deltaShift(int i, int j) { return -deltaBitwise(i - 1, i, i + 1) + deltaBitwise(j - 1, i, j); }
 
-long KTNS(const vector<int> processos, int maquina, bool debug = false) { return 0; }
-
-double completionTime(std::vector<std::vector<unsigned>> tProcessamento, std::vector<int>& tarefas, int maquina) {
-    
-    double tPr = 0;
-    for (std::vector<int>::const_iterator i = tarefas.begin(); i != tarefas.end(); ++i) {
-        if ((int)ferramentasJob[*i] > (int)capacidade[maquina]) return 1000000;  // inválido
-        tPr += tProcessamento[maquina][*i];
-    }
-    long nTrocas = KTNS(tarefas, maquina);
-    double tTrocas = nTrocas * tempoTroca[maquina];
-    return (tPr + tTrocas);
-}
-
-double sumCompletionTime(std::vector<std::vector<int>>& maquinas, std::vector<std::vector<unsigned>> tProcessamento) {
-    double tot = 0;
-    int maq = 0;
-    std::vector<int> maquinaAux;
-    for (std::vector<std::vector<int>>::const_iterator i = maquinas.begin(); i != maquinas.end(); ++i) {
-        maquinaAux = *i;
-        tot += completionTime(tProcessamento, maquinaAux, maq);
-        maq++;
-    }
-    return tot;
-}
-
 // ------------------------------------------------------------------------------------------------
 // BUSCAS
 // ------------------------------------------------------------------------------------------------
 
-void ONB_noCritical(std::vector<std::vector<int>>& maquinas, std::vector<std::pair<double, int>>& idx_maquinas, std::vector<std::vector<unsigned>> tProcessamento, double& makespan) {
-    // maquinas - Todas as Máquinas
-    // idx_maquinas - completionTime, idMaquina
-    // tProcessamento - tempo de processamento das tarefas (carregado na decodificacao)
-    extern std::vector<std::vector<int>> matrixFerramentas;
-    extern unsigned t;  // ferramentas
-    extern unsigned n;  // tarefas
+double SSP::ONB_noCritical(vector<vector<int>> maquinas) {
+
     std::vector<std::pair<double, int>>::iterator critica;
     std::pair<int, int> ONB1, ONB2;
     int deltad, deltae;
-    if (idx_maquinas.size() < m) return;
     bool melhorou = true;
     double cTimeCritica = 0;
-    std::sort(idx_maquinas.rbegin(), idx_maquinas.rend());
-    for (std::vector<std::pair<double, int>>::iterator maquinaAtual = idx_maquinas.begin() + 1; maquinaAtual != idx_maquinas.end(); ++maquinaAtual) {
+
+    for (vector<int> maquina : maquinas) {
         melhorou = true;
         while (melhorou) {
             melhorou = false;
 
-            cTimeCritica = maquinaAtual->first;
-            std::vector<int> mCritica = maquinas.at(maquinaAtual->second - 1);
+            auto [fineshedJobsCount, switchs, switchsInstances, fineshedPriorityCount, _] = KTNS(maquina, 0);
+            cTimeCritica = -((PROFITYFINISHED * fineshedJobsCount) - (COSTSWITCH * switchs) - (COSTSWITCHINSTANCE * switchsInstances) - (COSTPRIORITY * fineshedPriorityCount));
+            std::vector<int> mCritica = maquina;
             std::vector<int> mAux1, mAux2;
-            if (KTNS(mCritica, maquinaAtual->second - 1) == 0) continue;
             for (unsigned i = 0; i <= n + 2; ++i) bitMatrix[i].reset();
 
             for (unsigned j = 0; j < t; ++j) {
@@ -143,14 +129,18 @@ void ONB_noCritical(std::vector<std::vector<int>>& maquinas, std::vector<std::pa
                                     TPivo = mAux1[pivo];
                                     for (int pe = pivo; pe < ONB2.first - 1; ++pe) mAux1[pe] = mAux1[pe + 1];
                                     mAux1[ONB2.first - 1] = TPivo;
-                                    c1 = completionTime(tProcessamento, mAux1, maquinaAtual->second - 1);
+                                    // c1 = completionTime(tProcessamento, mAux1, maquinaAtual->second - 1);
+                                    auto [fineshedJobsCount2, switch2, switchsInstance2, fineshedPriorityCount2, _2] = KTNS(mAux1, 0);
+                                    c1 = -((PROFITYFINISHED * fineshedJobsCount2) - (COSTSWITCH * switch2) - (COSTSWITCHINSTANCE * switchsInstance2) - (COSTPRIORITY * fineshedPriorityCount2));
 
                                     // std::cout << "\nDelta Esquerda " << deltae << "\n";
                                     //  Insiro a direita do 2 ONB
                                     TPivo = mAux2[pivo];
                                     for (int pd = pivo; pd < ONB2.second; ++pd) mAux2[pd] = mAux2[pd + 1];
                                     mAux2[ONB2.second] = TPivo;
-                                    c2 = completionTime(tProcessamento, mAux2, maquinaAtual->second - 1);
+                                    // c2 = completionTime(tProcessamento, mAux2, maquinaAtual->second - 1);
+                                    auto [fineshedJobsCount3, switchs3, switchsInstances3, fineshedPriorityCount3, _3] = KTNS(mAux2, 0);
+                                    c2 = -((PROFITYFINISHED * fineshedJobsCount3) - (COSTSWITCH * switchs3) - (COSTSWITCHINSTANCE * switchsInstances3) - (COSTPRIORITY * fineshedPriorityCount3));
 
                                     // std::cout << "\nDelta Direita " << deltad << "\n";
                                     if (c1 < cTimeCritica || c2 < cTimeCritica) {
@@ -182,23 +172,27 @@ void ONB_noCritical(std::vector<std::vector<int>>& maquinas, std::vector<std::pa
                 }
             }  // fim das linhas
             if (melhorou) {
-                maquinaAtual->first = cTimeCritica;
-                maquinas.at(maquinaAtual->second - 1) = mCritica;
+                maquina = mCritica;
             }
 
         }  // wend
     }
-    makespan = sumCompletionTime(maquinas, tProcessamento);
+    solSSP sol;
+    for (const auto& maquina : maquinas) {
+        sol.sol.insert(sol.sol.end(), maquina.begin(), maquina.end());
+    }
+    cout << "ONB: " << evaluate(sol) << endl;
+    return evaluate(sol);
 }
 
-void ONB(std::vector<std::vector<int>>& maquinas, std::vector<std::pair<double, int>>& idx_maquinas, double& makespan, std::vector<std::vector<unsigned>> tProcessamento) {
+void SSP::ONB(std::vector<std::vector<int>>& maquinas, std::vector<std::pair<double, int>>& idx_maquinas, double& makespan, std::vector<std::vector<unsigned>> tProcessamento) {
     // maquinas - Todas as Máquinas
     // idx_maquinas - completionTime, idMaquina
     // makespan
     // tProcessamento - tempo de processamento das tarefas (carregado na decodificacao)
-    extern std::vector<std::vector<int>> matrixFerramentas;
-    extern unsigned t;  // ferramentas
-    extern unsigned n;  // tarefas
+    // extern std::vector<std::vector<int>> matrixFerramentas;
+    // extern unsigned t;  // ferramentas
+    // extern unsigned n;  // tarefas
     std::vector<std::pair<double, int>>::iterator critica;
     std::pair<int, int> ONB1, ONB2;
     int deltad, deltae;
@@ -212,7 +206,7 @@ void ONB(std::vector<std::vector<int>>& maquinas, std::vector<std::pair<double, 
         cTimeCritica = critica->first;
         std::vector<int> mCritica = maquinas.at(critica->second - 1);
         std::vector<int> mAux1, mAux2;
-        if (KTNS(mCritica, critica->second - 1) == 0) return;
+        // if (KTNS(mCritica, critica->second - 1) == 0) return;
         for (unsigned i = 0; i <= n + 2; ++i) bitMatrix[i].reset();
 
         for (unsigned j = 0; j < t; ++j) {
@@ -260,14 +254,16 @@ void ONB(std::vector<std::vector<int>>& maquinas, std::vector<std::pair<double, 
                                 TPivo = mAux1[pivo];
                                 for (int pe = pivo; pe < ONB2.first - 1; ++pe) mAux1[pe] = mAux1[pe + 1];
                                 mAux1[ONB2.first - 1] = TPivo;
-                                c1 = completionTime(tProcessamento, mAux1, critica->second - 1);
+                                // c1 = completionTime(tProcessamento, mAux1, critica->second - 1);
+                                c1 = 0; // TODO: avaliar c1
 
                                 // std::cout << "\nDelta Esquerda " << deltae << "\n";
                                 //  Insiro a direita do 2 ONB
                                 TPivo = mAux2[pivo];
                                 for (int pd = pivo; pd < ONB2.second; ++pd) mAux2[pd] = mAux2[pd + 1];
                                 mAux2[ONB2.second] = TPivo;
-                                c2 = completionTime(tProcessamento, mAux2, critica->second - 1);
+                                // c2 = completionTime(tProcessamento, mAux2, critica->second - 1);
+                                c2 = 0; // TODO: avaliar c2
 
                                 // std::cout << "\nDelta Direita " << deltad << "\n";
                                 if (c1 < cTimeCritica || c2 < cTimeCritica) {
@@ -304,5 +300,6 @@ void ONB(std::vector<std::vector<int>>& maquinas, std::vector<std::pair<double, 
         }
 
     }  // wend
-    ONB_noCritical(maquinas, idx_maquinas, tProcessamento, makespan);
+    // ONB_noCritical(maquinas, idx_maquinas, tProcessamento, makespan);
+    ONB_noCritical(maquinas);
 }

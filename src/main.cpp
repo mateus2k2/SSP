@@ -147,6 +147,10 @@ int main(int argc, char* argv[]) {
     // ------------------------------------------------------------------------------
     // TEST
     // ------------------------------------------------------------------------------
+    prob->setParans(uType, initSolType);
+    solSSP solTeste = prob->randPriority();
+    prob->oneBlockGrouping(solTeste);
+    return 0;
 
     // prob->setParans(uType, initSolType);
     // double acc = 0.0;
@@ -187,7 +191,7 @@ int main(int argc, char* argv[]) {
     PT<solSSP> algo(tempIni, tempfim, tempN, MCL, PTL, passoGatilho, tempD, uType, tempUp);
     ExecTime et;
     solSSP sol = algo.start(thN, prob);
-    solSSP finalSolution = sol;
+    solSSP finalSolution = sol; 
 
     double cost = prob->evaluateReport(finalSolution, solutionReportFile);
 

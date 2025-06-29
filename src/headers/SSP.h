@@ -101,6 +101,10 @@ class SSP: public Problem<solSSP>{
 		void reportDataPractitioner(fstream& solutionReportFile, string filenameJobs, string filenameTools);
 		void allocateOperationsToMachines(int numMachines);
 		void createSchedules(int condition);
+		
+		double ONB_noCritical(vector<vector<int>> maquinas);
+		void ONB(std::vector<std::vector<int>>& maquinas, std::vector<std::pair<double, int>>& idx_maquinas, double& makespan, std::vector<std::vector<unsigned>> tProcessamento);
+
 };
 
 #endif 

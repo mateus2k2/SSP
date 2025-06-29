@@ -21,6 +21,7 @@ RAND_MODE=1
 TESLA_MODE=0
 GUROBI_VERSION=120
 OPTIMIZATION=-O3
+SANITAZE=
 
 ifeq ($(FMT_MODE), 1)
     USE_FMT = -lfmt
@@ -74,14 +75,15 @@ INCLUDES := -I${GUROBI_HOME}/include -I$(PTAPI_HOME)/include
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@mkdir -p $(OBJ_DIR)
-	$(CXX) $(CXXFLAGS) ${OPTIMIZATION} -c $< -o $@ $(INCLUDES)
+	$(CXX) $(CXXFLAGS) ${OPTIMIZATION} $(SANITAZE) -c $< -o $@ $(INCLUDES)
 
 compile: $(OBJ_FILES)
 	@echo "Compilando..."
 	@mkdir -p $(BIN_DIR)
-	$(CXX) $^ -o $(EXEC) $(LDFLAGS)
+	$(CXX) $^ -o $(EXEC) $(SANITAZE) $(LDFLAGS)
 	@echo "Compilado com sucesso em $(EXEC)"
 
+# SANITAZE="-fsanitize=address -fno-omit-frame-pointer"
 debug:
 	make clean
 	make -j$(nproc) DEBUG_MACRO_OPTS=-g OPTIMIZATION=-O0 compile
@@ -179,16 +181,19 @@ runPractitioner:
 
 
 goPractitioner:
+	@clear
 	make devCompile
 	make runPractitioner
 
 goModelo:
+	@clear
 	make devCompile
 	make runModelo
 
 goPT:
+	@clear
 	make devCompile
-	make runPTDiff
+	make runPT
 
 # --------------------------------------------------------
 # Meus python
