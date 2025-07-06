@@ -131,4 +131,3 @@ tuple<int, int, int, int, int> SSP::KTNS(vector<int> s, int startIndex) {
 
     return {fineshedJobsCount, switchs, switchsInstances, fineshedPriorityCount, jL};
 }
-

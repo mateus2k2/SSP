@@ -95,7 +95,7 @@ normalCompile:
 	make -j$(nproc) FMT_MODE=0 GATILHO_MODE=0 RAND_MODE=1 compile
 
 devCompile:
-	make -j$(nproc) FMT_MODE=1 GATILHO_MODE=0 RAND_MODE=1 compile
+	make -j$(nproc) FMT_MODE=1 GATILHO_MODE=0 RAND_MODE=0 compile
 
 clean:
 	rm -rf $(OBJ_DIR) $(BIN_DIR)/mainCpp

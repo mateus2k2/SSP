@@ -477,9 +477,10 @@ def analiseKTNS(file):
                 currMagazine = [tool for tool in currMagazine if tool not in nextToolSet]
                 # print(f"Tamanho {len(currMagazine)}")
 
-            print(f"Magazine no processamento do job: {estado['job']}, operation: {estado['operation']}, depois de retirar as ferramentas por nenhum job subsequente na maquina: {len(currMagazine)}")
-        break
-
+            # print(toolSets)
+            # print(toolSets[jobs[estado['job']]['ToolSet']])
+            print(f" Tools: {len(toolSets[jobs[estado['job']]['ToolSet']])} Magazine no processamento do job: {estado['job']}, operation: {estado['operation']}, depois de retirar as ferramentas por nenhum job subsequente na maquina: {len(currMagazine)}")
+        print("")
 
 
 # ---------------------------------------------------------------------------------------------------

@@ -1,0 +1,224 @@
+#------------------------------------------------------------------------------
+# irace: An implementation in R of (Elitist) Iterated Racing
+# Version: 3.4.1.9fcaeaf
+# Copyright (C) 2010-2020
+# Manuel Lopez-Ibanez     <manuel.lopez-ibanez@manchester.ac.uk>
+# Jeremie Dubois-Lacoste  
+# Leslie Perez Caceres    <leslie.perez.caceres@ulb.ac.be>
+#
+# This is free software, and you are welcome to redistribute it under certain
+# conditions.  See the GNU General Public License for details. There is NO
+# WARRANTY; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+# irace builds upon previous code from the race package:
+#     race: Racing methods for the selection of the best
+#     Copyright (C) 2003 Mauro Birattari
+#------------------------------------------------------------------------------
+# installed at: /home/marco/R/x86_64-redhat-linux-gnu-library/3.6/irace
+# called with: 
+Warning: A default scenario file './scenario.txt' has been found and will be read
+# 2025-06-16 14:42:30 -03: Initialization
+# Elitist race
+# Elitist new instances: 1
+# Elitist limit: 2
+# nbIterations: 4
+# minNbSurvival: 4
+# nbParameters: 7
+# seed: 1666946705
+# confidence level: 0.95
+# budget: 3000
+# mu: 5
+# deterministic: FALSE
+
+# 2025-06-16 14:42:30 -03: Iteration 1 of 4
+# experimentsUsedSoFar: 0
+# remainingBudget: 3000
+# currentBudget: 750
+# nbConfigurations: 125
+# Markers:
+     x No test is performed.
+     c Configurations are discarded only due to capping.
+     - The test is performed and some configurations are discarded.
+     = The test is performed but no configuration is discarded.
+     ! The test is performed and configurations could be discarded but elite configurations are preserved.
+     . All alive configurations are elite and nothing is discarded
+
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+| |   Instance|      Alive|       Best|      Mean best| Exp so far|  W time|  rho|KenW|  Qvar|
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+|x|          1|        125|         32|   -7198.000000|        125|14:48:49|   NA|  NA|    NA|
+|x|          2|        125|        110|   -10519.50000|        250|15:42:18|+0.93|0.96|0.0111|
+|x|          3|        125|         32|   -9636.333333|        375|11:14:01|+0.92|0.94|0.0110|
+|x|          4|        125|         31|   -8749.250000|        500|11:01:45|+0.90|0.93|0.0340|
+|-|          5|         18|         32|   -7756.600000|        625|04:52:41|+0.03|0.22|0.9026|
+|-|          6|          9|         32|   -7090.333333|        643|00:55:28|+0.04|0.20|0.9442|
+|=|          7|          9|         32|   -7098.000000|        652|01:29:22|+0.08|0.21|0.9004|
+|-|          8|          5|         32|   -7206.875000|        661|01:08:45|-0.03|0.10|0.8469|
+|=|          9|          5|         32|   -7085.666667|        666|00:37:58|-0.02|0.09|0.8330|
+|=|         10|          5|         32|   -7749.400000|        671|02:22:37|-0.01|0.09|0.8365|
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+Best-so-far configuration:          32    mean value:    -7749.400000
+Description of the best-so-far configuration:
+   .ID. tempInit tempFim mcl tempDist movimentType initialSolution proporsaoTempUpdate .PARENT.
+32   32     0.01      50 500        4            1               0                   4       NA
+
+# 2025-06-20 06:56:17 -03: Elite configurations (first number is the configuration ID; listed from best to worst according to the sum of ranks):
+    tempInit tempFim mcl tempDist movimentType initialSolution proporsaoTempUpdate
+32      0.01      50 500        4            1               0                   4
+110      0.2      20 500        4            1               0                   5
+31       0.2       1 500        1            1               1                   3
+104      0.2      10 500        2            1               1                   3
+# 2025-06-20 06:56:17 -03: Iteration 2 of 4
+# experimentsUsedSoFar: 671
+# remainingBudget: 2329
+# currentBudget: 776
+# nbConfigurations: 74
+# Markers:
+     x No test is performed.
+     c Configurations are discarded only due to capping.
+     - The test is performed and some configurations are discarded.
+     = The test is performed but no configuration is discarded.
+     ! The test is performed and configurations could be discarded but elite configurations are preserved.
+     . All alive configurations are elite and nothing is discarded
+
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+| |   Instance|      Alive|       Best|      Mean best| Exp so far|  W time|  rho|KenW|  Qvar|
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+|x|         11|         74|        162|   -6212.000000|         74|06:56:53|   NA|  NA|    NA|
+|x|          3|         74|        162|   -7117.000000|        144|06:38:21|+0.92|0.96|0.0405|
+|x|          1|         74|        130|   -7123.333333|        214|08:44:29|+0.93|0.96|0.0297|
+|x|          2|         74|        130|   -8854.000000|        284|23:23:17|+0.94|0.95|0.0231|
+|-|          9|         11|        130|   -8318.600000|        354|06:26:23|+0.12|0.30|0.8340|
+|=|          6|         11|        130|   -7552.666667|        361|00:24:24|-0.00|0.16|0.9180|
+|=|          5|         11|        130|   -7008.000000|        368|00:24:27|+0.04|0.18|0.8766|
+|=|          7|         11|        130|   -7023.875000|        375|01:14:22|-0.00|0.12|0.8924|
+|=|          8|         11|        130|   -7131.222222|        382|00:56:55|-0.01|0.10|0.8988|
+|=|          4|         11|        130|   -7037.600000|        389|00:53:41|-0.01|0.09|0.9114|
+|=|         10|         11|        130|   -7666.454545|        396|03:18:18|-0.01|0.08|0.9179|
+|=|         12|         11|        130|   -7633.666667|        407|01:56:45|+0.00|0.08|0.9058|
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+Best-so-far configuration:         130    mean value:    -7633.666667
+Description of the best-so-far configuration:
+    .ID. tempInit tempFim mcl tempDist movimentType initialSolution proporsaoTempUpdate .PARENT.
+130  130      0.2      50 500        3            1               0                   4       32
+
+# 2025-06-22 20:14:40 -03: Elite configurations (first number is the configuration ID; listed from best to worst according to the sum of ranks):
+    tempInit tempFim mcl tempDist movimentType initialSolution proporsaoTempUpdate
+130      0.2      50 500        3            1               0                   4
+32      0.01      50 500        4            1               0                   4
+153     0.01      50 500        1            1               0                   3
+189      0.2      10 500        4            1               1                   5
+# 2025-06-22 20:14:40 -03: Iteration 3 of 4
+# experimentsUsedSoFar: 1078
+# remainingBudget: 1922
+# currentBudget: 961
+# nbConfigurations: 77
+# Markers:
+     x No test is performed.
+     c Configurations are discarded only due to capping.
+     - The test is performed and some configurations are discarded.
+     = The test is performed but no configuration is discarded.
+     ! The test is performed and configurations could be discarded but elite configurations are preserved.
+     . All alive configurations are elite and nothing is discarded
+
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+| |   Instance|      Alive|       Best|      Mean best| Exp so far|  W time|  rho|KenW|  Qvar|
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+|x|         13|         77|        189|   -8030.000000|         77|08:51:35|   NA|  NA|    NA|
+|x|          9|         77|        232|   -7127.500000|        150|07:56:33|+0.85|0.92|0.0350|
+|x|          5|         77|        189|   -6002.666667|        223|03:34:07|+0.82|0.88|0.0340|
+|x|          7|         77|        225|   -6297.500000|        296|10:52:54|+0.84|0.88|0.0269|
+|-|         11|         18|        232|   -6277.000000|        369|07:56:38|-0.01|0.20|0.9378|
+|=|          6|         18|        232|   -5855.833333|        383|00:48:43|+0.01|0.18|0.9106|
+|=|         12|         18|        232|   -6040.000000|        397|02:28:47|-0.02|0.13|0.9449|
+|=|          3|         18|        232|   -6287.875000|        411|01:54:34|+0.03|0.15|0.8948|
+|=|          1|         18|        232|   -6384.111111|        425|02:28:45|+0.05|0.15|0.8817|
+|=|          2|         18|        232|   -7140.700000|        439|06:37:57|+0.04|0.14|0.8822|
+|=|          8|         18|        237|   -7231.090909|        453|01:54:50|+0.05|0.14|0.8763|
+|=|          4|         18|        237|   -7142.666667|        467|01:47:45|+0.05|0.13|0.8761|
+|=|         10|         18|        130|   -7660.384615|        481|06:39:09|+0.05|0.12|0.8696|
+|-|         14|         15|        237|   -7377.000000|        499|01:02:39|-0.03|0.05|0.9486|
+|=|         15|         15|        240|   -7859.466667|        514|07:06:55|-0.02|0.05|0.9408|
+|=|         16|         15|        237|   -7818.750000|        529|02:03:15|-0.01|0.05|0.9464|
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+Best-so-far configuration:         237    mean value:    -7818.750000
+Description of the best-so-far configuration:
+    .ID. tempInit tempFim mcl tempDist movimentType initialSolution proporsaoTempUpdate .PARENT.
+237  237      0.2      20 500        4            1               1                   4      189
+
+# 2025-06-25 22:19:55 -03: Elite configurations (first number is the configuration ID; listed from best to worst according to the sum of ranks):
+    tempInit tempFim mcl tempDist movimentType initialSolution proporsaoTempUpdate
+237      0.2      20 500        4            1               1                   4
+130      0.2      50 500        3            1               0                   4
+240      0.2      50 500        3            1               1                   4
+232      0.1      20 500        4            1               1                   3
+# 2025-06-25 22:19:55 -03: Iteration 4 of 4
+# experimentsUsedSoFar: 1607
+# remainingBudget: 1393
+# currentBudget: 1393
+# nbConfigurations: 85
+# Markers:
+     x No test is performed.
+     c Configurations are discarded only due to capping.
+     - The test is performed and some configurations are discarded.
+     = The test is performed but no configuration is discarded.
+     ! The test is performed and configurations could be discarded but elite configurations are preserved.
+     . All alive configurations are elite and nothing is discarded
+
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+| |   Instance|      Alive|       Best|      Mean best| Exp so far|  W time|  rho|KenW|  Qvar|
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+|x|         17|         85|        240|   -14534.00000|         85|12:32:50|   NA|  NA|    NA|
+|x|          5|         85|        309|   -9097.500000|        166|04:15:00|+0.65|0.83|0.0182|
+|x|          9|         85|        309|   -8128.666667|        247|09:24:12|+0.67|0.78|0.0300|
+|x|          2|         85|        309|   -9635.750000|        328|10:38:37|+0.70|0.78|0.0242|
+|-|          6|         16|        309|   -8459.400000|        409|04:15:00|-0.06|0.15|1.0037|
+|=|         13|         16|        309|   -8371.666667|        421|01:38:33|-0.09|0.09|1.0340|
+|=|         11|         16|        309|   -8048.142857|        433|01:32:30|-0.06|0.09|0.9952|
+|=|         10|         16|        309|   -8793.500000|        445|05:42:26|-0.03|0.10|0.9665|
+|=|         16|         16|        340|   -8646.666667|        457|01:38:25|-0.00|0.11|0.9514|
+|=|         12|         16|        340|   -8505.500000|        469|02:07:33|+0.01|0.11|0.9469|
+|=|         15|         16|        320|   -9091.727273|        481|05:43:06|+0.01|0.10|0.9270|
+|=|          3|         16|        340|   -8919.083333|        493|01:38:37|+0.03|0.11|0.9110|
+|=|         14|         16|        340|   -8520.615385|        505|00:41:58|-0.00|0.07|0.9438|
+|=|          7|         16|        320|   -8501.571429|        517|02:07:56|-0.01|0.06|0.9409|
+|=|          8|         16|        320|   -8467.133333|        529|01:38:39|-0.01|0.06|0.9384|
+|=|          4|         16|        320|   -8326.187500|        541|01:32:30|-0.00|0.06|0.9372|
+|=|          1|         16|        320|   -8266.764706|        553|02:07:37|+0.00|0.06|0.9340|
+|=|         18|         16|        320|   -8209.277778|        569|02:50:27|+0.01|0.06|0.9310|
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+Best-so-far configuration:         320    mean value:    -8209.277778
+Description of the best-so-far configuration:
+    .ID. tempInit tempFim mcl tempDist movimentType initialSolution proporsaoTempUpdate .PARENT.
+320  320      0.2      50 500        3            1               1                   4      240
+
+# 2025-06-30 22:26:00 -03: Elite configurations (first number is the configuration ID; listed from best to worst according to the sum of ranks):
+    tempInit tempFim mcl tempDist movimentType initialSolution proporsaoTempUpdate
+320      0.2      50 500        3            1               1                   4
+340      0.2      20 500        3            1               1                   4
+346      0.1      20 500        1            1               0                   4
+130      0.2      50 500        3            1               0                   4
+# 2025-06-30 22:26:00 -03: Iteration 5 of 5
+# experimentsUsedSoFar: 2176
+# remainingBudget: 824
+# currentBudget: 824
+# nbConfigurations: 47
+# Markers:
+     x No test is performed.
+     c Configurations are discarded only due to capping.
+     - The test is performed and some configurations are discarded.
+     = The test is performed but no configuration is discarded.
+     ! The test is performed and configurations could be discarded but elite configurations are preserved.
+     . All alive configurations are elite and nothing is discarded
+
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+| |   Instance|      Alive|       Best|      Mean best| Exp so far|  W time|  rho|KenW|  Qvar|
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+|x|         19|         47|        374|   -6262.000000|         47|05:21:50|   NA|  NA|    NA|
+|x|         12|         47|        375|   -6774.000000|         90|06:40:23|+0.66|0.83|0.0444|
+|x|         18|         47|        373|   -6980.000000|        133|06:39:56|+0.71|0.80|0.0339|
+|x|          1|         47|        360|   -7018.250000|        176|06:40:36|+0.71|0.79|0.0254|
+|-|         10|         22|        368|   -8450.400000|        219|17:51:43|-0.14|0.09|1.0986|
+|=|         17|         22|        368|   -9387.833333|        237|08:31:50|-0.06|0.12|1.0201|
+|=|          4|         22|        320|   -8936.857143|        255|02:18:35|-0.07|0.08|1.0155|
+|=|         15|         22|        320|   -9617.750000|        273|08:32:15|-0.04|0.09|0.9721|

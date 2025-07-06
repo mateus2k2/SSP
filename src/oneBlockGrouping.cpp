@@ -45,7 +45,7 @@ void SSP::oneBlockGrouping(solSSP& s) {
 
     // initialize bitMatrix
     bitMatrix.resize(n + 5);
-    for (unsigned i = 0; i < n + 2; ++i) { // <= CORRETO
+    for (unsigned i = 0; i < n + 2; ++i) {
         bitMatrix[i].reset();
     }
 
