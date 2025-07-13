@@ -150,6 +150,7 @@ int main(int argc, char* argv[]) {
     prob->setParans(uType, initSolType);
     solSSP solTeste = prob->randPriority();
     double teste = prob->evaluateReport(solTeste, solutionReportFile);
+    solutionReportFile << "Final Solution: " << teste << endl;
     cout << "Avaliação da solução teste: " << teste << endl;
     return 0;
     
