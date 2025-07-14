@@ -1,72 +1,73 @@
-[H[2J[3Jmake devCompile
-make[1]: Entering directory '/home/mateus/WSL/IC/SSP'
-make -j FMT_MODE=1 GATILHO_MODE=0 RAND_MODE=0 compile
-make[2]: Entering directory '/home/mateus/WSL/IC/SSP'
-g++ -std=c++2a -Wall -Wshadow -m64 -march=native  -DFMT     -O3  -c src/evaluateUteis.cpp -o build/evaluateUteis.o -I/opt/gurobi1201/linux64/include -I../PTAPI/include
-Compilando...
-g++ build/SSP.o build/evaluate.o build/evaluateUteis.o build/initial.o build/loadData.o build/main.o build/modelo.o build/neighbors.o build/oneBlockGrouping.o build/practitioner.o -o src/out/mainCpp  -L/opt/gurobi1201/linux64/lib -lgurobi_c++ -lgurobi120 -lpthread  -lm -lstdc++ -lfmt
-Compilado com sucesso em src/out/mainCpp
-make[2]: Leaving directory '/home/mateus/WSL/IC/SSP'
-make[1]: Leaving directory '/home/mateus/WSL/IC/SSP'
-make runPT
-make[1]: Entering directory '/home/mateus/WSL/IC/SSP'
-./src/out/mainCpp \
-	"./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv" \
-	"./input/Processed/ToolSetInt.csv" \
-	"./output/Exemplo/pt.csv" \
-	--PTL_TEMP_UPDATE_PROPORTION 3 \
-	--DIFERENT_TOOLSETS_MODE 0 \
-	--TEMP_INIT 0.1 \
-        --TEMP_FIM 5 \
-        --N_REPLICAS 11 \
-        --MCL 500 \
-        --PTL 100 \
-        --PASSO_GATILHO 10 \
-        --TEMP_DIST 3 \
-        --TYPE_UPDATE 1 \
-        --INIT_SOL_TYPE 0 \
-        --TEMP_UPDATE 3500 \
-        --PTL_TEMP_UPDATE_PROPORTION 3 \
+clear
+[H[2J[3Jpython ./scripts/reportAnalises.py ./output/Exemplo/pt.csv 0
+---Validating ./output/Exemplo/pt.csv---
+{'fineshedJobsCount': 54.0, 'switchs': 255.0, 'switchsInstances': 9.0, 'unfineshedPriorityCount': 0.0, 'totalUnfineshed': 21.0, 'finalSolution': 1275.0}
+Checking Magazine
+Machine 1/2
+OK
+Machine 2/2
+OK
 
-Job 9 entra no periodo nao supervisionado.fimJob % (DAY): 721 unsupervised: 720 (planingHorizon * DAY): 2880
-Job 11 is in unsupervised period. CurrantSwitches: 2
+Checking Unsupervised Switchs
+Machine 1/2
+OK
+Machine 2/2
+OK
 
-Job 8 entra no periodo nao supervisionado.fimJob % (DAY): 725 unsupervised: 720 (planingHorizon * DAY): 2880
-Job 45 is in unsupervised period. CurrantSwitches: 20
-Tool 3686 é usado por alguma tarefa no periodo nao supervisionado e foi substituida.
-Tool 5957 é usado por alguma tarefa no periodo nao supervisionado e foi substituida.
-Tool 6009 é usado por alguma tarefa no periodo nao supervisionado e foi substituida.
+Checking Switchs
+Error = Found 13 switchInstances and 469 toolSwitchs, expected 9.0 switchInstances and 255.0 toolSwitchs
+ERROR
 
-Job 37 entra no periodo nao supervisionado.fimJob % (DAY): 919 unsupervised: 720 (planingHorizon * DAY): 2880
-Job 30 is in unsupervised period. CurrantSwitches: 17
-Tool 2117 é usado por alguma tarefa no periodo nao supervisionado e foi substituida.
-Tool 2370 é usado por alguma tarefa no periodo nao supervisionado e foi substituida.
-Tool 3698 é usado por alguma tarefa no periodo nao supervisionado e foi substituida.
-Tool 4220 é usado por alguma tarefa no periodo nao supervisionado e foi substituida.
-Tool 5050 é usado por alguma tarefa no periodo nao supervisionado e foi substituida.
-Tool 5185 é usado por alguma tarefa no periodo nao supervisionado e foi substituida.
-Tool 5373 é usado por alguma tarefa no periodo nao supervisionado e foi substituida.
-Tool 5417 é usado por alguma tarefa no periodo nao supervisionado e foi substituida.
-Tool 5418 é usado por alguma tarefa no periodo nao supervisionado e foi substituida.
-Tool 5419 é usado por alguma tarefa no periodo nao supervisionado e foi substituida.
-Tool 5420 é usado por alguma tarefa no periodo nao supervisionado e foi substituida.
-Tool 5421 é usado por alguma tarefa no periodo nao supervisionado e foi substituida.
-Tool 5422 é usado por alguma tarefa no periodo nao supervisionado e foi substituida.
-Tool 5423 é usado por alguma tarefa no periodo nao supervisionado e foi substituida.
-Tool 5424 é usado por alguma tarefa no periodo nao supervisionado e foi substituida.
-Tool 5425 é usado por alguma tarefa no periodo nao supervisionado e foi substituida.
-Tool 5426 é usado por alguma tarefa no periodo nao supervisionado e foi substituida.
+Checking Unfinished Jobs
+TODO
 
-Job 43 entra no periodo nao supervisionado.fimJob % (DAY): 791 unsupervised: 720 (planingHorizon * DAY): 2880
-Job 20 is in unsupervised period. CurrantSwitches: 22
-Tool 279 é usado por alguma tarefa no periodo nao supervisionado e foi substituida.
-Tool 491 é usado por alguma tarefa no periodo nao supervisionado e foi substituida.
-Tool 805 é usado por alguma tarefa no periodo nao supervisionado e foi substituida.
-Tool 3314 é usado por alguma tarefa no periodo nao supervisionado e foi substituida.
-Tool 3326 é usado por alguma tarefa no periodo nao supervisionado e foi substituida.
-Tool 3577 é usado por alguma tarefa no periodo nao supervisionado e foi substituida.
-Tool 5469 é usado por alguma tarefa no periodo nao supervisionado e foi substituida.
-Tool 6072 é usado por alguma tarefa no periodo nao supervisionado e foi substituida.
+Checking Operations Done Once
+Machine 1/2
+OK
+Machine 2/2
+OK
 
-Avaliação da solução teste: 699
-make[1]: Leaving directory '/home/mateus/WSL/IC/SSP'
+Checking Profit
+OK
+
+Running New KTNS
+TODO
+
+Checking Magazine Size
+Machine 1/2
+Error = Job 9 Operation 0 | Magazine size = 42
+Error = Job 11 Operation 0 | Magazine size = 42
+Error = Job 11 Operation 1 | Magazine size = 42
+Error = Job 2 Operation 0 | Magazine size = 42
+Error = Job 2 Operation 1 | Magazine size = 42
+Error = Job 10 Operation 0 | Magazine size = 42
+Error = Job 4 Operation 0 | Magazine size = 42
+Error = Job 3 Operation 0 | Magazine size = 42
+Error = Job 3 Operation 1 | Magazine size = 42
+Error = Job 8 Operation 0 | Magazine size = 42
+Error = Job 34 Operation 0 | Magazine size = 43
+Error = Job 34 Operation 1 | Magazine size = 43
+Error = Job 21 Operation 0 | Magazine size = 43
+Error = Job 21 Operation 1 | Magazine size = 43
+Error = Job 12 Operation 0 | Magazine size = 43
+Error = Job 12 Operation 1 | Magazine size = 43
+Error = Job 35 Operation 0 | Magazine size = 43
+Error = Job 16 Operation 0 | Magazine size = 43
+ERRORSIZE
+Machine 2/2
+Error = Job 37 Operation 0 | Magazine size = 64
+Error = Job 37 Operation 1 | Magazine size = 64
+Error = Job 30 Operation 0 | Magazine size = 64
+Error = Job 43 Operation 0 | Magazine size = 74
+Error = Job 43 Operation 1 | Magazine size = 74
+Error = Job 20 Operation 0 | Magazine size = 74
+Error = Job 46 Operation 0 | Magazine size = 74
+Error = Job 46 Operation 1 | Magazine size = 74
+Error = Job 36 Operation 0 | Magazine size = 74
+Error = Job 27 Operation 0 | Magazine size = 74
+Error = Job 27 Operation 1 | Magazine size = 74
+ERRORSIZE
+
+echo "\n"
+
+
