@@ -53,6 +53,7 @@ double SSP::evaluate(solSSP& s) {
 tuple<int, int, int, int, int> SSP::KTNS(vector<int> s, int startIndex) {
     
     // int currNumberJobs = numberJobs;
+    vector<Job> originalJobsCopy = originalJobs;
     int currNumberJobs = s.size();
 
     vector<bool> magazineL(numberTools, true);
@@ -69,6 +70,60 @@ tuple<int, int, int, int, int> SSP::KTNS(vector<int> s, int startIndex) {
 
     for (jL = startIndex; jL < currNumberJobs; ++jL) {
         // ---------------------------------------------------------------------------
+        // UNSUPERVISED PERIOD FIX
+        // ---------------------------------------------------------------------------
+
+        int processingTimeSum = originalJobsCopy[s[jL]].processingTime;
+        if((originalJobsCopy[s[jL]].isReentrant && !originalJobsCopy[s[jL]].isGrouped) && originalJobsCopy[s[jL]].indexOperation == 0) processingTimeSum = std::accumulate(originalJobsCopy[s[jL]].processingTimes.begin(), originalJobsCopy[s[jL]].processingTimes.end(), 0);
+        fimJob = inicioJob + originalJobsCopy[s[jL]].processingTime;
+
+        fimJob = inicioJob + originalJobsCopy[s[jL]].processingTime;
+
+        // Estou no periodo de supervisao e entrando no periodo sem supervisao
+        if (inicioJob % (DAY) < unsupervised && fimJob % (DAY) > unsupervised && fimJob < (planingHorizon * DAY)) {
+            vector<bool> magazineAntes = magazineL;
+            set<int> unsupervisedMagazine;
+            int inicioUnsupervised = inicioJob;
+            int fimUnsupervised = fimJob;
+            
+            int k;
+            for(k = jL; k < currNumberJobs; ++k) {
+                // verificacao de ferramentas
+                vector<int> newTools;
+                bool breakLoop = false;
+                for (const auto& tool : originalJobsCopy[s[k]].toolSetNormalized.tools) {
+                    if (unsupervisedMagazine.find(tool) == unsupervisedMagazine.end()) {
+                        newTools.push_back(tool);
+                        unsupervisedMagazine.insert(tool);
+                    }
+                    if((int)unsupervisedMagazine.size() >= capacityMagazine) {
+                        for (const auto& newTool : newTools) unsupervisedMagazine.erase(newTool);
+                        breakLoop = true;
+                        break;
+                    }
+                }
+                if (breakLoop) break;
+
+                // verificacao de tempo
+                if (((inicioUnsupervised % DAY) >= unsupervised) && (fimUnsupervised % DAY) < unsupervised) {
+                    break;
+                }
+                
+                // passando o tempo
+                inicioUnsupervised += originalJobsCopy[s[k]].processingTime;
+                fimUnsupervised = inicioUnsupervised + originalJobsCopy[s[k]].processingTime;
+            }
+            // create a new toolset with the tools used in the unsupervised period and put it in all the jobs in the unsupervised period
+            ToolSet unsupervisedToolSet;
+            unsupervisedToolSet.indexToolSet = -1; // -1 to indicate that this is a temporary toolset
+            unsupervisedToolSet.tools.assign(unsupervisedMagazine.begin(), unsupervisedMagazine.end());
+            for (int l = jL; l < k; ++l) {
+                originalJobsCopy[s[l]].toolSetNormalized = unsupervisedToolSet;
+                originalJobsCopy[s[l]].toolSet = unsupervisedToolSet;
+            }
+        }
+
+        // ---------------------------------------------------------------------------
         // switchs
         // ---------------------------------------------------------------------------
 
@@ -78,7 +133,7 @@ tuple<int, int, int, int, int> SSP::KTNS(vector<int> s, int startIndex) {
         int cmL = 0;
 
         while ((cmL < capacityMagazine) && (left < currNumberJobs)) {
-            for (auto it = originalJobs[s[left]].toolSetNormalized.tools.begin(); ((it != originalJobs[s[left]].toolSetNormalized.tools.end()) && (cmL < capacityMagazine)); ++it) {
+            for (auto it = originalJobsCopy[s[left]].toolSetNormalized.tools.begin(); ((it != originalJobsCopy[s[left]].toolSetNormalized.tools.end()) && (cmL < capacityMagazine)); ++it) {
                 if ((magazineL[*it]) && (!magazineCL[*it])) {
                     magazineCL[*it] = true;
                     ++cmL;
@@ -103,16 +158,10 @@ tuple<int, int, int, int, int> SSP::KTNS(vector<int> s, int startIndex) {
         // TIME VERIFICATIONS
         // ---------------------------------------------------------------------------
 
-        int processingTimeSum = originalJobs[s[jL]].processingTime;
-        // if((originalJobs[s[jL]].isReentrant && !originalJobs[s[jL]].isGrouped) && originalJobs[s[jL]].indexOperation == 0) processingTimeSum = originalJobs[s[jL]].processingTimes[0] + originalJobs[s[jL]].processingTimes[1];
-        if((originalJobs[s[jL]].isReentrant && !originalJobs[s[jL]].isGrouped) && originalJobs[s[jL]].indexOperation == 0) processingTimeSum = std::accumulate(originalJobs[s[jL]].processingTimes.begin(), originalJobs[s[jL]].processingTimes.end(), 0);
-
-        fimJob = inicioJob + originalJobs[s[jL]].processingTime;
-
         if (((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) ||                          // verificar se estou em um periodo semsupervisao e houve troca de ferramenta
             (inicioJob % (planingHorizon * DAY) + (processingTimeSum) > (planingHorizon * DAY))) {  // verificar se o job excede o horizonte de planejamento unico (iria extender de uma maquina para outra)
             inicioJob += DAY - (inicioJob % DAY);
-            fimJob = inicioJob + originalJobs[s[jL]].processingTime;
+            fimJob = inicioJob + originalJobsCopy[s[jL]].processingTime;
         }
 
         if (fimJob > (planingHorizon * DAY)) break;
@@ -125,8 +174,8 @@ tuple<int, int, int, int, int> SSP::KTNS(vector<int> s, int startIndex) {
 
         switchs += currantSwitchs;
         if (currantSwitchs > 0) ++switchsInstances;
-        fineshedJobsCount += originalJobs[s[jL]].isGrouped ? 2 : 1;
-        if (originalJobs[s[jL]].priority) fineshedPriorityCount += originalJobs[s[jL]].isGrouped ? 2 : 1;
+        fineshedJobsCount += originalJobsCopy[s[jL]].isGrouped ? 2 : 1;
+        if (originalJobsCopy[s[jL]].priority) fineshedPriorityCount += originalJobsCopy[s[jL]].isGrouped ? 2 : 1;
     }
 
     return {fineshedJobsCount, switchs, switchsInstances, fineshedPriorityCount, jL};

@@ -147,12 +147,13 @@ int main(int argc, char* argv[]) {
     // ------------------------------------------------------------------------------
     // TEST
     // ------------------------------------------------------------------------------
-    prob->setParans(uType, initSolType);
-    solSSP solTeste = prob->randPriority();
-    double teste = prob->evaluateReport(solTeste, solutionReportFile);
-    solutionReportFile << "Final Solution: " << teste << endl;
-    cout << "Avaliação da solução teste: " << teste << endl;
-    return 0;
+    // prob->setParans(uType, initSolType);
+    // solSSP solTeste = prob->randPriority();
+    // // double teste = prob->evaluateReport(solTeste, solutionReportFile);
+    // double teste = prob->evaluate(solTeste);
+    // solutionReportFile << "Final Solution: " << teste << endl;
+    // cout << "Avaliação da solução teste: " << teste << endl;
+    // return 0;
     
     // prob->setParans(uType, initSolType);
     // solSSP solTeste = prob->randPriority();

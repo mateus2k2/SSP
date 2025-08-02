@@ -142,7 +142,7 @@ runPTDiff:
 
 runPT:
 	./src/out/mainCpp \
-		"./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv" \
+		"./input/MyInstancesSameToolSets/n=499,p=0.25,r=0.5,t=2690,v3.csv" \
 		"./input/Processed/ToolSetInt.csv" \
 		"./output/Exemplo/pt.csv" \
 		--PTL_TEMP_UPDATE_PROPORTION 3 \
@@ -192,7 +192,8 @@ goModelo:
 
 goPT:
 	@clear
-	make devCompile
+# 	make devCompile
+	make normalCompile
 	make runPT
 
 # --------------------------------------------------------
