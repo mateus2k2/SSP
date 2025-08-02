@@ -5,11 +5,6 @@
 #include <fmt/ranges.h>
 #endif
 
-struct Interval {
-    int start;
-    int end;
-};
-
 solSSP SSP::expandSolution(solSSP& s) {
     solSSP expandedSol;
 
@@ -91,11 +86,11 @@ double SSP::evaluateReport(solSSP& solution, fstream& solutionReportFile) {
     solutionReportFile << "totalUnfineshed: " << totalUnfineshed << endl;
 
     int cost = (PROFITYFINISHED * fineshedJobsCountTotal) - (COSTSWITCH * switchsTotal) - (COSTSWITCHINSTANCE * switchsInstancesTotal) - (COSTPRIORITY * unfineshedPriorityCountTotal);
-
+    
     return cost;
 }
 
-tuple<int, int, int, int, int> SSP::KTNSReport(vector<int> s, int startIndex, fstream& solutionReportFile, int machine) {
+tuple<int, int, int, int, int>  SSP::KTNSReport(vector<int> s, int startIndex, fstream& solutionReportFile, int machine) {
     vector<bool> magazineL(numberToolsReal, true);
     unsigned int switchs = 0;
     int numberJobsSol = s.size();
@@ -109,23 +104,7 @@ tuple<int, int, int, int, int> SSP::KTNSReport(vector<int> s, int startIndex, fs
     int inicioJob = 0;
     int fimJob = 0;
 
-    int atualIndex = 0;
-    bool testeFlag = false;
-    set<int> unsupervisedMagazine;
-    bool leavingUnsupervised = false;
-    int unsuperviedJobsCount = 0;
-    int unsupervisedJobStartIndex = 0;
-    int unsupervisedJobEndIndex = 0;
-    map<tuple<int, int>, Interval> unsupervisedIntervals;
-    vector<bool> toolUsedUnsupervided(numberToolsReal, false);
-
-
     solutionReportFile << "Machine: " << machine << std::endl;
-
-    // for (jL = startIndex; jL < numberJobsSol; ++jL) {
-    //     const auto &job = originalJobs[s[jL]];
-    //     cout << "Job: " << job.indexJob << ", Operation: " << job.indexOperation << endl;
-    // }
 
     for (jL = startIndex; jL < numberJobsSol; ++jL) {
         // ---------------------------------------------------------------------------
@@ -160,87 +139,48 @@ tuple<int, int, int, int, int> SSP::KTNSReport(vector<int> s, int startIndex, fs
         magazineL = magazineCL;
 
         // ---------------------------------------------------------------------------
-        // TIME VERIFICATIONS
+        // ANALISES
         // ---------------------------------------------------------------------------
 
-        // int processingTimeSum = originalJobs[s[jL]].processingTime;
-        // if ((originalJobs[s[jL]].isReentrant && !originalJobs[s[jL]].isGrouped) && originalJobs[s[jL]].indexOperation == 0) processingTimeSum = std::accumulate(originalJobs[s[jL]].processingTimes.begin(), originalJobs[s[jL]].processingTimes.end(), 0);
+
+
+
+        // ---------------------------------------------------------------------------
+        // TIME VERIFICATIONS
+        // ---------------------------------------------------------------------------
+        
+        int processingTimeSum = originalJobs[s[jL]].processingTime;
+        if((originalJobs[s[jL]].isReentrant && !originalJobs[s[jL]].isGrouped) && originalJobs[s[jL]].indexOperation == 0) processingTimeSum = std::accumulate(originalJobs[s[jL]].processingTimes.begin(), originalJobs[s[jL]].processingTimes.end(), 0);
 
         fimJob = inicioJob + originalJobs[s[jL]].processingTime;
 
-        // Entrou no periodo de supervisao e entrando no periodo sem supervisao
-        if (inicioJob % (DAY) < unsupervised && fimJob % (DAY) > unsupervised && fimJob < (planingHorizon * DAY)) {
-            leavingUnsupervised = false;
-            unsupervisedIntervals.clear();
-            unsupervisedMagazine.clear();
-            unsuperviedJobsCount = 0;
-            unsupervisedJobStartIndex = jL;
-        }
-
-        // estou no començo do periodo sem supervisao ou dentro do periodo sem supervisao
-        if (((inicioJob % (DAY) < unsupervised && fimJob % (DAY) > unsupervised && fimJob < (planingHorizon * DAY)) || ((inicioJob % DAY) >= unsupervised)) && fimJob < (planingHorizon * DAY)) {
-            // cout << "Job: " << originalJobs[s[jL]].indexJob << endl;
-            // cout << "Colocando o job: " << originalJobs[s[jL]].indexJob << " no periodo sem supervisao" << " inicioJob: " << inicioJob << endl;
-            
-            ToolSet currentToolSet = originalJobs[s[jL]].toolSet;
-            ToolSet nextToolset = originalJobs[s[jL+1]].toolSet;
-            unsuperviedJobsCount++;
-            currantSwitchs = 0;
-            for (auto it = currentToolSet.tools.begin(); it != currentToolSet.tools.end(); ++it) unsupervisedMagazine.insert(*it);
-            
-            if (nextToolset.tools.size() + unsupervisedMagazine.size() > (size_t)capacityMagazine) {
-                cout << "Não consigo colocar o job: " << originalJobs[s[jL+1]].indexJob << " no periodo sem supervisao" << " inicioJob: " << inicioJob << " Atual: " << originalJobs[s[jL]].indexJob <<endl;
-                currantSwitchs = unsupervisedMagazine.size();
-                testeFlag = true;
-                atualIndex = jL;
-                leavingUnsupervised = true;
-                unsupervisedJobEndIndex = jL;
-                for (auto it = unsupervisedMagazine.begin(); it != unsupervisedMagazine.end(); ++it) {
-                    magazineCL[*it] = true;
-                }
-                magazineL = magazineCL;
-            }
-            // cout << endl;
-        }
-
-        // estou saindo do periodo sem supervisao
-        if (((inicioJob % DAY) >= unsupervised) && (fimJob % DAY) < unsupervised) {
-            // cout << "saindo do periodo sem supervisao: " << originalJobs[s[jL]].indexJob << " inicioJob: " << inicioJob << endl << endl;
-            leavingUnsupervised = true;
-            unsupervisedJobEndIndex = jL;
-            for (auto it = unsupervisedMagazine.begin(); it != unsupervisedMagazine.end(); ++it) {
-                magazineCL[*it] = true;
-            }
-            magazineL = magazineCL;
-        }
-
-        if((testeFlag && jL == atualIndex + 1)) unsuperviedJobsCount = 0;
-        if (((inicioJob % DAY) >= unsupervised) && (testeFlag && jL == atualIndex + 1)) {  // verificar se o job excede o horizonte de planejamento
-            atualIndex = jL;
-            testeFlag = false;
+        if (((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) ||                         // verificar se estou em um periodo sem supervisao e houve troca de ferramenta
+            (inicioJob % (planingHorizon * DAY) + (processingTimeSum) > (planingHorizon * DAY))) { // verificar se o job excede o horizonte de planejamento
             inicioJob += DAY - (inicioJob % DAY);
             fimJob = inicioJob + originalJobs[s[jL]].processingTime;
-            leavingUnsupervised = true;
-            unsupervisedJobEndIndex = jL;
         }
-        
 
         if (fimJob > (planingHorizon * DAY)) {
-            unsupervisedJobEndIndex = jL - 1;
+            // cout << "Job " << originalJobs[s[jL]].indexJob << " exceeds the planning horizon." << endl;
+            // cout << "Trocas: " << currantSwitchs << endl;
+            // cout << "Current job end time: " << fimJob << ", Planning horizon: " << (planingHorizon * DAY) << endl;
+            // cout << "Job processing time: " << originalJobs[s[jL]].processingTime << endl;
+            // cout << "Job index: " << jL << endl;
+            // cout << "Job start time: " << inicioJob << endl;
+            break;
         }
+
+        inicioJob = fimJob;
 
         // ---------------------------------------------------------------------------
         // COSTS
         // ---------------------------------------------------------------------------
-        
 
-        else{
-            switchs += currantSwitchs;
-            if (currantSwitchs > 0) ++switchsInstances;
-    
-            fineshedJobsCount += originalJobs[s[jL]].isGrouped ? 2 : 1;
-            if (originalJobs[s[jL]].priority) fineshedPriorityCount += originalJobs[s[jL]].isGrouped ? 2 : 1;
-        }
+        switchs += currantSwitchs;
+        if (currantSwitchs > 0) ++switchsInstances;
+
+        fineshedJobsCount += originalJobs[s[jL]].isGrouped ? 2 : 1;
+        if (originalJobs[s[jL]].priority) fineshedPriorityCount += originalJobs[s[jL]].isGrouped ? 2 : 1;
 
         // ---------------------------------------------------------------------------
         // PRINTS
@@ -249,18 +189,12 @@ tuple<int, int, int, int, int> SSP::KTNSReport(vector<int> s, int startIndex, fs
         int startTMP = (fimJob - originalJobs[s[jL]].processingTime) % (planingHorizon * DAY);
         int endTMP = ((fimJob - 1) % (planingHorizon * DAY)) + 1;
 
-        const auto& job = originalJobs[s[jL]];
+        const auto &job = originalJobs[s[jL]];
         bool isGrouped = job.isGrouped;
         int loops = isGrouped ? 2 : 1;
 
-        Interval interval = {startTMP, endTMP};
-        unsupervisedIntervals[std::make_tuple(job.indexJob, job.indexOperation)] = interval;
-
-        cout << "Job: " << originalJobs[s[jL]].indexJob << ", Operation: " << originalJobs[s[jL]].indexOperation << ", Start: " << inicioJob << ", End: " << fimJob << " unsuperviedJobsCount: " << unsuperviedJobsCount << " leavingUnsupervised: " << leavingUnsupervised << endl;
-
-        auto writeJobDetailsMagazine = [&](int job_, int start, int end, int operation, int priority_) {
-            // cout << "writeJobDetailsMagazine Job: " << job_ << ", Operation: " << operation << ", Start: " << start << ", End: " << end << ", Priority: " << priority_ << endl;
-            solutionReportFile << job_ << ";" << operation << ";" << start << ";" << end << ";" << priority_ << ";";
+        auto writeJobDetails = [&](int start, int end, int operation) {
+            solutionReportFile << job.indexJob << ";" << operation << ";" << start << ";" << end << ";" << job.priority << ";";
             for (size_t t = 0; t < magazineCL.size(); ++t) {
                 if (magazineCL[t]) {
                     solutionReportFile << t << ",";
@@ -269,52 +203,15 @@ tuple<int, int, int, int, int> SSP::KTNSReport(vector<int> s, int startIndex, fs
             solutionReportFile << "\n";
         };
 
-        auto writeJobDetailsUnsupervised = [&](int job_, int start, int end, int operation, int priority_) {
-            // cout << "writeJobDetailsUnsupervised Job: " << job_ << ", Operation: " << operation << ", Start: " << start << ", End: " << end << ", Priority: " << priority_ << endl;
-            solutionReportFile << job_ << ";" << operation << ";" << start << ";" << end << ";" << priority_ << ";";
-            for (auto t : unsupervisedMagazine) {
-                solutionReportFile << t << ",";
+        for (int i = 0; i < loops; ++i) {
+            if (isGrouped && i == 0) {
+                writeJobDetails(startTMP, startTMP + job.processingTimes[0], 0);
+            } else if (isGrouped && i == 1) {
+                writeJobDetails(startTMP + job.processingTimes[0], endTMP, 1);
+            } else {
+                writeJobDetails(startTMP, endTMP, job.indexOperation);
             }
-            solutionReportFile << "\n";
-        };
-
-        if(unsuperviedJobsCount == 0) {
-            for (int i = 0; i < loops; ++i) {
-                if (isGrouped && i == 0) {
-                    writeJobDetailsMagazine(job.indexJob, startTMP, startTMP + job.processingTimes[0], 0, job.priority);
-                } else if (isGrouped && i == 1) {
-                    writeJobDetailsMagazine(job.indexJob, startTMP + job.processingTimes[0], endTMP, 1, job.priority);
-                } else {
-                    writeJobDetailsMagazine(job.indexJob, startTMP, endTMP, job.indexOperation, job.priority);
-                }
-            }
-        } else if (leavingUnsupervised) {
-            for (int k = unsupervisedJobStartIndex; k <= unsupervisedJobEndIndex; ++k) {
-                const auto& curJob = originalJobs[s[k]];
-                bool curIsGrouped = curJob.isGrouped;
-                int curLoops = curIsGrouped ? 2 : 1;
-                
-                for (int i = 0; i < curLoops; ++i) {
-                    int curStart = unsupervisedIntervals[std::make_tuple(curJob.indexJob, i)].start;
-                    int curEnd = unsupervisedIntervals[std::make_tuple(curJob.indexJob, i)].end;
-                    writeJobDetailsUnsupervised(curJob.indexJob, curStart, curEnd, i, curJob.priority);
-                }
-            }
-            leavingUnsupervised = false;
-            unsupervisedIntervals.clear();
-            unsupervisedMagazine.clear();
-            unsuperviedJobsCount = 0;
         }
-        
-        // ---------------------------------------------------------------------------
-        // TIME VERIFICATIONS
-        // ---------------------------------------------------------------------------
-
-        if (fimJob > (planingHorizon * DAY)) {
-            break;
-        }
-
-        inicioJob = fimJob;
     }
 
     return {fineshedJobsCount, switchs, switchsInstances, fineshedPriorityCount, jL};

@@ -61,3 +61,57 @@ RODAR
 
 python ./scripts/reportAnalises.py ./output/Exemplo/pt.csv 6
 python ./scripts/reportAnalises.py ./output/Exemplo/pt.csv 7
+
+
+
+
+ Original Job Index: 1, Operation Index: 0, Processing Time: 237, Priority: Yes
+ Original Job Index: 6, Operation Index: 0, Processing Time: 101, Priority: Yes
+ Original Job Index: 7, Operation Index: 0, Processing Time: 104, Priority: Yes
+ Original Job Index: 0, Operation Index: 0, Processing Time: 213, Priority: Yes
+ Original Job Index: 5, Operation Index: 0, Processing Time: 25, Priority: Yes
+ Original Job Index: 9, Operation Index: 0, Processing Time: 41, Priority: Yes
+ Original Job Index: 11, Operation Index: 0, Processing Time: 228, Priority: Yes
+ Original Job Index: 2, Operation Index: 0, Processing Time: 202, Priority: Yes
+ Original Job Index: 10, Operation Index: 0, Processing Time: 4, Priority: Yes
+ Original Job Index: 4, Operation Index: 0, Processing Time: 4, Priority: Yes
+ Original Job Index: 3, Operation Index: 0, Processing Time: 269, Priority: Yes
+ Original Job Index: 8, Operation Index: 0, Processing Time: 18, Priority: Yes
+ Original Job Index: 45, Operation Index: 0, Processing Time: 184, Priority: No
+ Original Job Index: 42, Operation Index: 0, Processing Time: 89, Priority: No
+ Original Job Index: 13, Operation Index: 0, Processing Time: 352, Priority: No
+ Original Job Index: 34, Operation Index: 0, Processing Time: 220, Priority: No
+ Original Job Index: 21, Operation Index: 0, Processing Time: 160, Priority: No
+ Original Job Index: 12, Operation Index: 0, Processing Time: 98, Priority: No
+ Original Job Index: 35, Operation Index: 0, Processing Time: 168, Priority: No
+ Original Job Index: 16, Operation Index: 0, Processing Time: 150, Priority: No
+ Original Job Index: 14, Operation Index: 0, Processing Time: 54, Priority: No
+ Original Job Index: 47, Operation Index: 0, Processing Time: 134, Priority: No
+ Original Job Index: 25, Operation Index: 0, Processing Time: 65, Priority: No
+ Original Job Index: 22, Operation Index: 0, Processing Time: 34, Priority: No
+ Original Job Index: 32, Operation Index: 0, Processing Time: 50, Priority: No
+ Original Job Index: 33, Operation Index: 0, Processing Time: 163, Priority: No
+ Original Job Index: 28, Operation Index: 0, Processing Time: 101, Priority: No
+ Original Job Index: 15, Operation Index: 0, Processing Time: 199, Priority: No
+ Original Job Index: 39, Operation Index: 0, Processing Time: 45, Priority: No
+ Original Job Index: 41, Operation Index: 0, Processing Time: 204, Priority: No
+ Original Job Index: 37, Operation Index: 0, Processing Time: 207, Priority: No
+ Original Job Index: 30, Operation Index: 0, Processing Time: 68, Priority: No
+ Original Job Index: 19, Operation Index: 0, Processing Time: 168, Priority: No
+ Original Job Index: 29, Operation Index: 0, Processing Time: 160, Priority: No
+ Original Job Index: 18, Operation Index: 0, Processing Time: 101, Priority: No
+ Original Job Index: 43, Operation Index: 0, Processing Time: 294, Priority: No
+ Original Job Index: 20, Operation Index: 0, Processing Time: 95, Priority: No
+ Original Job Index: 46, Operation Index: 0, Processing Time: 158, Priority: No
+ Original Job Index: 36, Operation Index: 0, Processing Time: 53, Priority: No
+ Original Job Index: 27, Operation Index: 0, Processing Time: 255, Priority: No
+ Original Job Index: 24, Operation Index: 0, Processing Time: 264, Priority: No
+ Original Job Index: 38, Operation Index: 0, Processing Time: 43, Priority: No
+ Original Job Index: 49, Operation Index: 0, Processing Time: 203, Priority: No
+ Original Job Index: 31, Operation Index: 0, Processing Time: 125, Priority: No
+ Original Job Index: 44, Operation Index: 0, Processing Time: 208, Priority: No
+ Original Job Index: 40, Operation Index: 0, Processing Time: 165, Priority: No
+ Original Job Index: 26, Operation Index: 0, Processing Time: 61, Priority: No
+ Original Job Index: 17, Operation Index: 0, Processing Time: 16, Priority: No
+ Original Job Index: 23, Operation Index: 0, Processing Time: 152, Priority: No
+ Original Job Index: 48, Operation Index: 0, Processing Time: 209, Priority: No
