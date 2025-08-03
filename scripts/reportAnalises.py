@@ -206,6 +206,7 @@ def tabelaResultadosModelo(files):
         if((index+1) % 3 == 0 and not(index == len(files) - 1) and not modoPlanilha): print("\\hline")
 
 def tabelaResultadosPT(listDirs, subDir = 'MyInstancesSameToolSets', totalPTL = 1200):
+    print("TESTE")
     filesList = []
 
     fineshedJobsCountAcc = {}
@@ -220,6 +221,7 @@ def tabelaResultadosPT(listDirs, subDir = 'MyInstancesSameToolSets', totalPTL = 
     BestInitialAcc = {} 
     MeanInitialAcc = {}
 
+    print(listDirs)
     # iterate over each directory and get the list of files inside it
     for dir in listDirs:
         files = os.listdir(f'{dir}/{subDir}')
@@ -274,6 +276,8 @@ def tabelaResultadosPT(listDirs, subDir = 'MyInstancesSameToolSets', totalPTL = 
         if((index+1) % 3 == 0 and not(index == len(files) - 1) and not modoPlanilha): print("\\hline")
     
     # TABELA 2
+    print()
+    print()
     print()
     for index, file in enumerate(filesList): 
         gap = (max(FinalSolutionAcc[file]) - statistics.mean(BestInitialAcc[file]))/max(FinalSolutionAcc[file]) * 100

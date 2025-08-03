@@ -207,7 +207,7 @@ validarFile:
 
 tabelaResultadosPractitioner:
 	clear
-	python ./scripts/reportAnalises.py ./output/Practitioner/MyInstancesSameToolSets/ 2
+	python ./scripts/reportAnalises.py ./output/Practitioner/MyInstancesSameToolSets 2
 	echo "\n"
 
 tabelaResultadosModelo:
@@ -217,7 +217,7 @@ tabelaResultadosModelo:
 
 tabelaResultadosPT:
 	clear
-	python ./scripts/reportAnalises.py ./output/TCC2V2 4
+	python ./scripts/reportAnalises.py ./output/AbestergoFix 4
 	echo "\n"
 
 tabelaResultadosComparativa:
