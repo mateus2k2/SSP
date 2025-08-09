@@ -51,7 +51,7 @@ solSSP SSP::randPriority() {
     for (size_t i = 0; i < groupedJobs.size(); ++i) {
         if (originalJobs[i].priority) {
             priorityJobIndices.push_back(i);
-        } 
+        }
         else {
             nonPriorityJobIndices.push_back(i);
         }

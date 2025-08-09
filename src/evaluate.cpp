@@ -102,10 +102,13 @@ tuple<int, int, int, int, int> SSP::KTNS(vector<int> s, int startIndex) {
                         break;
                     }
                 }
-                if (breakLoop) break;
 
                 // verificacao de tempo
-                if (((inicioUnsupervised % DAY) >= unsupervised) && (fimUnsupervised % DAY) < unsupervised) {
+                if ((((inicioUnsupervised % DAY) >= unsupervised) && (fimUnsupervised % DAY) < unsupervised) || (breakLoop))  {
+                    if( (fimUnsupervised + unsupervised >= (planingHorizon * DAY)) && (originalJobsCopy[s[k]].indexOperation == 1)) {
+                        // cout << "Estou no ultimo periodo sem supervisao" <<  " Tarefa: " << originalJobsCopy[s[k]].indexJob << " " << originalJobsCopy[s[k]].indexOperation << endl;
+                        originalJobsCopy[s[k-1]].flag = true; // flag para indicar que a tarefa foi interrompida
+                    }
                     break;
                 }
                 
@@ -159,7 +162,8 @@ tuple<int, int, int, int, int> SSP::KTNS(vector<int> s, int startIndex) {
         // ---------------------------------------------------------------------------
 
         if (((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) ||                          // verificar se estou em um periodo semsupervisao e houve troca de ferramenta
-            (inicioJob % (planingHorizon * DAY) + (processingTimeSum) > (planingHorizon * DAY))) {  // verificar se o job excede o horizonte de planejamento unico (iria extender de uma maquina para outra)
+            (inicioJob % (planingHorizon * DAY) + (processingTimeSum) > (planingHorizon * DAY)) || 
+            (originalJobsCopy[s[jL]].flag == true)) {  // verificar se o job excede o horizonte de planejamento unico (iria extender de uma maquina para outra)
             inicioJob += DAY - (inicioJob % DAY);
             fimJob = inicioJob + originalJobsCopy[s[jL]].processingTime;
         }

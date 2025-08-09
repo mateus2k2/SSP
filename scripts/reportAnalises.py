@@ -101,14 +101,13 @@ def verificarPares(files):
                 if estado['operation'] == 0: 
                     for jobOriginal in jobs:
                         if jobOriginal['Job'] == job and jobOriginal['Operation'] == 1:
-                            # print(f'Job {Job} esta na solucao e tem operacao 1')
+                            # print(f'Job {job} esta na solucao e tem operacao 1')
                             problemaDeOperation1 = True
                             # verificar se a operacao 1 esta na solucao
-                            for machine in machines:
-                                for estado in machine:
-                                    if estado['job'] == job and estado['operation'] == 1:
-                                        problemaDeOperation1 = False
-                                        break
+                            for estadoInterno in machine:
+                                if estadoInterno['job'] == job and estadoInterno['operation'] == 1:
+                                    problemaDeOperation1 = False
+                                    break
                 if problemaDeOperation1:
                     print(f'Problema de Operation 1 para a instancia {index + 1} no job {job}')
 
@@ -512,7 +511,9 @@ def main():
         files = natsorted(files) 
         fileWithPath = [f"{folderName}/{file}" for file in files if file.endswith(".csv")]
 
-    if option == '1': validarPasta(fileWithPath)  
+    if option == '1': 
+        # validarPasta(fileWithPath)
+        verificarPares(fileWithPath)
     if option == '2': tabelaResultadosPractitioner(fileWithPath)
     if option == '3': tabelaResultadosModelo(fileWithPath)
     if option == '4': tabelaResultadosPT(fileWithPath)

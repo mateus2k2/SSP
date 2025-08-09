@@ -56,6 +56,7 @@ int SSP::laodInstance(string filename) {
         tmpJob.toolSet = originalToolSets[tmpJob.indexToolSet];
         tmpJob.isGrouped = false;
         tmpJob.isReentrant = false;
+        tmpJob.flag = false;
 
         originalJobs.push_back(tmpJob);
     }

@@ -24,6 +24,7 @@ typedef struct{
     int indexToolSet;
     int processingTime;
     bool priority;
+    bool flag; // flag to indicate if the job was interrupted
     ToolSet toolSet;
     ToolSet toolSetNormalized;
 
