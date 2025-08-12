@@ -1,16 +1,25 @@
-MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv      
+# MyInstancesSameToolSets/n=15,p=0.5,r=0.5,t=0,v0.csv
+# MyInstancesSameToolSets/n=15,p=0.25,r=0.5,t=0,v0.csv
+# MyInstancesSameToolSets/n=15,p=0.75,r=0.5,t=0,v0.csv
+# MyInstancesSameToolSets/n=20,p=0.5,r=0.5,t=0,v0.csv
+# MyInstancesSameToolSets/n=20,p=0.25,r=0.5,t=0,v0.csv
+# MyInstancesSameToolSets/n=20,p=0.75,r=0.5,t=0,v0.csv
+# MyInstancesSameToolSets/n=25,p=0.5,r=0.5,t=0,v0.csv
+# MyInstancesSameToolSets/n=25,p=0.25,r=0.5,t=0,v0.csv
+# MyInstancesSameToolSets/n=25,p=0.75,r=0.5,t=0,v0.csv
+# MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv      
 # MyInstancesSameToolSets/n=75,p=0.51,r=0.5,t=650,v1.csv      
 # MyInstancesSameToolSets/n=75,p=0.75,r=0.5,t=650,v2.csv      
-MyInstancesSameToolSets/n=212,p=0.25,r=0.4,t=1390,v6.csv    
+# MyInstancesSameToolSets/n=212,p=0.25,r=0.4,t=1390,v6.csv    
 # MyInstancesSameToolSets/n=212,p=0.50,r=0.4,t=1390,v7.csv    
 # MyInstancesSameToolSets/n=212,p=0.75,r=0.4,t=1390,v8.csv    
-MyInstancesSameToolSets/n=228,p=0.25,r=0.6,t=1520,v3.csv    
+# MyInstancesSameToolSets/n=228,p=0.25,r=0.6,t=1520,v3.csv    
 # MyInstancesSameToolSets/n=228,p=0.50,r=0.6,t=1520,v4.csv    
 # MyInstancesSameToolSets/n=228,p=0.75,r=0.6,t=1520,v5.csv    
-MyInstancesSameToolSets/n=399,p=0.25,r=0.5,t=2310,v0.csv    
+# MyInstancesSameToolSets/n=399,p=0.25,r=0.5,t=2310,v0.csv    
 # MyInstancesSameToolSets/n=399,p=0.50,r=0.5,t=2310,v1.csv    
 # MyInstancesSameToolSets/n=399,p=0.75,r=0.5,t=2310,v2.csv
-MyInstancesSameToolSets/n=499,p=0.25,r=0.5,t=2690,v3.csv
+# MyInstancesSameToolSets/n=499,p=0.25,r=0.5,t=2690,v3.csv
 # MyInstancesSameToolSets/n=499,p=0.50,r=0.5,t=2690,v4.csv
 # MyInstancesSameToolSets/n=499,p=0.75,r=0.5,t=2690,v5.csv
 # MyInstancesSameToolSets/n=600,p=0.25,r=0.5,t=3096,v6.csv
@@ -46,16 +55,16 @@ MyInstancesSameToolSets/n=499,p=0.25,r=0.5,t=2690,v3.csv
 # MyInstancesDiferentToolSets/n=75,p=0.24,r=0.5,t=112,v0.csv
 # MyInstancesDiferentToolSets/n=75,p=0.51,r=0.5,t=112,v0.csv
 # MyInstancesDiferentToolSets/n=75,p=0.75,r=0.5,t=112,v0.csv
-# MyInstancesDiferentToolSets/n=212,p=0.25,r=0.4,t=296,v0.csv
+MyInstancesDiferentToolSets/n=212,p=0.25,r=0.4,t=296,v0.csv
 # MyInstancesDiferentToolSets/n=212,p=0.50,r=0.4,t=296,v0.csv
 # MyInstancesDiferentToolSets/n=212,p=0.75,r=0.4,t=296,v0.csv
-# MyInstancesDiferentToolSets/n=228,p=0.25,r=0.6,t=364,v0.csv
+MyInstancesDiferentToolSets/n=228,p=0.25,r=0.6,t=364,v0.csv
 # MyInstancesDiferentToolSets/n=228,p=0.50,r=0.6,t=364,v0.csv
 # MyInstancesDiferentToolSets/n=228,p=0.75,r=0.6,t=364,v0.csv
-# MyInstancesDiferentToolSets/n=399,p=0.25,r=0.5,t=598,v0.csv
+MyInstancesDiferentToolSets/n=399,p=0.25,r=0.5,t=598,v0.csv
 # MyInstancesDiferentToolSets/n=399,p=0.50,r=0.5,t=598,v0.csv
 # MyInstancesDiferentToolSets/n=399,p=0.75,r=0.5,t=598,v0.csv
-# MyInstancesDiferentToolSets/n=499,p=0.25,r=0.5,t=748,v0.csv
+MyInstancesDiferentToolSets/n=499,p=0.25,r=0.5,t=748,v0.csv
 # MyInstancesDiferentToolSets/n=499,p=0.50,r=0.5,t=748,v0.csv
 # MyInstancesDiferentToolSets/n=499,p=0.75,r=0.5,t=748,v0.csv
 # MyInstancesDiferentToolSets/n=600,p=0.25,r=0.5,t=900,v0.csv
