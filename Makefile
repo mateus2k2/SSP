@@ -106,7 +106,7 @@ clean:
 
 runPTDiff:
 	./src/out/mainCpp \
-		"./input/MyInstancesDiferentToolSets/n=1000,p=0.25,r=0.6,t=1265,v0.csv" \
+		"./input/MyInstancesDiferentToolSets/n=75,p=0.24,r=0.5,t=112,v0.csv" \
 		"./input/Processed/ToolSetInt.csv" \
 		"./output/Exemplo/pt.csv" \
 		--TEMP_INIT 0.1 \
@@ -174,10 +174,10 @@ goModelo:
 
 goPT:
 	@clear
-	make devCompile
-# 	make normalCompile
-	make runPT
-# 	make runPTDiff
+# 	make devCompile
+	make normalCompile
+# 	make runPT
+	make runPTDiff
 
 # --------------------------------------------------------
 # Meus python

@@ -48,8 +48,8 @@ fi
 # exit 1
 
 # These files are saved in execDir. Saving them in /tmp may be faster. 
-STDOUT=c${CONFIG_ID}-${INSTANCE_ID}-${SEED}.stdout
-STDERR=c${CONFIG_ID}-${INSTANCE_ID}-${SEED}.stderr
+STDOUT=./tmp/c${CONFIG_ID}-${INSTANCE_ID}-${SEED}.stdout
+STDERR=./tmp/c${CONFIG_ID}-${INSTANCE_ID}-${SEED}.stderr
 
 TIMEZONE="America/Sao_Paulo"
 export TZ=$TIMEZONE

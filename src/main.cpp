@@ -147,14 +147,14 @@ int main(int argc, char* argv[]) {
     // ------------------------------------------------------------------------------
     // TEST
     // ------------------------------------------------------------------------------
-    prob->setParans(uType, initSolType);
-    solSSP solTeste = prob->randPriority();
-    double testeRetport = prob->evaluateReport(solTeste, solutionReportFile);
-    double teste = prob->evaluate(solTeste);
-    solutionReportFile << "Final Solution: " << testeRetport << endl;
-    cout << "Avaliação da solução teste report: " << testeRetport << endl;
-    cout << "Avaliação da solução teste: " << teste << endl;
-    return 0;
+    // prob->setParans(uType, initSolType);
+    // solSSP solTeste = prob->randPriority();
+    // double testeRetport = prob->evaluateReport(solTeste, solutionReportFile);
+    // double teste = prob->evaluate(solTeste);
+    // solutionReportFile << "Final Solution: " << testeRetport << endl;
+    // cout << "Avaliação da solução teste report: " << testeRetport << endl;
+    // cout << "Avaliação da solução teste: " << teste << endl;
+    // return 0;
     
     // prob->setParans(uType, initSolType);
     // solSSP solTeste = prob->randPriority();
@@ -222,8 +222,16 @@ int main(int argc, char* argv[]) {
 
     solutionReportFile.close();
 
-    cout << "Final Solution: " << cost << endl;
-    cout << "Time: " << et.getTimeMs() << endl;
+    // cout << "Final Solution: " << cost << endl;
+    // cout << "Time: " << et.getTimeMs() << endl;
+
+    // convert ms to min
+    double timeInMin = et.getTimeMs() / 60000.0;
+    int minutes = static_cast<int>(std::round(timeInMin));
+    std::ostringstream oss;
+    oss << std::setw(2) << std::setfill('0') << minutes;
+    std::string padded = oss.str();
+    cout << -cost << "." << padded << endl;
 
     // fstream solutionReportFileInit;
     // solutionReportFileInit.open("/home/mateus/WSL/IC/SSP/output/Exemplo/exemploInit.txt", ios::out);
