@@ -55,7 +55,7 @@
 # MyInstancesDiferentToolSets/n=75,p=0.24,r=0.5,t=112,v0.csv
 # MyInstancesDiferentToolSets/n=75,p=0.51,r=0.5,t=112,v0.csv
 # MyInstancesDiferentToolSets/n=75,p=0.75,r=0.5,t=112,v0.csv
-MyInstancesDiferentToolSets/n=212,p=0.25,r=0.4,t=296,v0.csv
+# MyInstancesDiferentToolSets/n=212,p=0.25,r=0.4,t=296,v0.csv
 # MyInstancesDiferentToolSets/n=212,p=0.50,r=0.4,t=296,v0.csv
 # MyInstancesDiferentToolSets/n=212,p=0.75,r=0.4,t=296,v0.csv
 MyInstancesDiferentToolSets/n=228,p=0.25,r=0.6,t=364,v0.csv
@@ -79,7 +79,7 @@ MyInstancesDiferentToolSets/n=499,p=0.25,r=0.5,t=748,v0.csv
 # MyInstancesDiferentToolSets/n=899,p=0.25,r=0.6,t=1265,v0.csv
 # MyInstancesDiferentToolSets/n=899,p=0.50,r=0.6,t=1265,v0.csv
 # MyInstancesDiferentToolSets/n=899,p=0.75,r=0.6,t=1265,v0.csv
-# MyInstancesDiferentToolSets/n=1000,p=0.25,r=0.6,t=1265,v0.csv
+MyInstancesDiferentToolSets/n=1000,p=0.25,r=0.6,t=1265,v0.csv
 # MyInstancesDiferentToolSets/n=1000,p=0.50,r=0.6,t=1265,v0.csv
 # MyInstancesDiferentToolSets/n=1000,p=0.75,r=0.6,t=1265,v0.csv
 # MyInstancesDiferentToolSets/n=1236,p=0.25,r=0.6,t=1265,v0.csv

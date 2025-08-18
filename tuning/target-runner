@@ -36,7 +36,7 @@ CONFIG_PARAMS=$*
 # EDIT THIS: Path to your executable
 EXE=./../src/out/mainCpp
 # EDIT THIS: Specify how parameters are given to your executable
-EXE_PARAMS="$INSTANCE ./../input/Processed/ToolSetInt.csv ./../output/Exemplo/none.txt --N_REPLICAS 20 --PTL 600 --DIFERENT_TOOLSETS_MODE 0 --PRINT_TIME 0 TEMP_UPDATE 3500 ${CONFIG_PARAMS}"
+EXE_PARAMS="$INSTANCE ./../input/Processed/ToolSetInt.csv ./../output/Exemplo/none.txt --N_REPLICAS 11 --PTL 600 --DIFERENT_TOOLSETS_MODE 1 --PRINT_TIME 0 TEMP_UPDATE 3500 ${CONFIG_PARAMS}"
 
 if [ ! -x "$(command -v ${EXE})" ]; then
     error "${EXE}: not found or not executable (pwd: $(pwd))"
@@ -79,7 +79,7 @@ fi
 # objective value is the first number in the first column of the last line of
 # the output.
 COST=$(tail -n 1 ${STDOUT} | grep -e '^[[:space:]]*[+-]\?[0-9]' | cut -f1)
-COST=$(( COST * -1 ))
+COST=$(echo "$COST * -1" | bc)
 echo "$COST"
 # Comment the following line if you wish to preserve temporary files
 rm -f "${STDOUT}" "${STDERR}"

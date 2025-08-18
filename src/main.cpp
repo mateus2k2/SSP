@@ -231,7 +231,7 @@ int main(int argc, char* argv[]) {
     std::ostringstream oss;
     oss << std::setw(2) << std::setfill('0') << minutes;
     std::string padded = oss.str();
-    cout << -cost << "." << padded << endl;
+    cout << cost << "." << padded << endl;
 
     // fstream solutionReportFileInit;
     // solutionReportFileInit.open("/home/mateus/WSL/IC/SSP/output/Exemplo/exemploInit.txt", ios::out);
