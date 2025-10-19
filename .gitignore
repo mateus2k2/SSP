@@ -5,6 +5,7 @@ src/out/*
 *.stdout
 
 none.txt
+./out
 
 build/*
 ./build/*

@@ -207,6 +207,7 @@ def tabelaResultadosModelo(files):
 def tabelaResultadosPT(listDirs, subDir = 'MyInstancesSameToolSets', totalPTL = 1200):
     print("TESTE")
     filesList = []
+    subDir = 'MyInstancesDiferentToolSets'
 
     fineshedJobsCountAcc = {}
     switchsAcc = {}
@@ -248,6 +249,7 @@ def tabelaResultadosPT(listDirs, subDir = 'MyInstancesSameToolSets', totalPTL = 
     modoPlanilha = False
     separador = '&'
 
+    print(filesList)
     # TABELA 1
     for index, file in enumerate(filesList): 
         instancenameClear = file.split(",t=")[0]

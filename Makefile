@@ -111,9 +111,9 @@ runPTDiff:
 		"./output/Exemplo/pt.csv" \
 		--TEMP_INIT 0.1 \
 		--TEMP_FIM 5 \
-		--N_REPLICAS 11 \
+		--N_REPLICAS 2 \
 		--MCL 500 \
-		--PTL 100 \
+		--PTL 600 \
 		--PASSO_GATILHO 10 \
 		--TEMP_DIST 3 \
 		--TYPE_UPDATE 1 \
@@ -200,7 +200,7 @@ tabelaResultadosModelo:
 
 tabelaResultadosPT:
 	clear
-	python ./scripts/reportAnalises.py ./output/AbestergoFix 4
+	python ./scripts/reportAnalises.py ./output/diffTesla 4
 	echo "\n"
 
 tabelaResultadosComparativa:
