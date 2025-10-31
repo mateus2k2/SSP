@@ -207,7 +207,7 @@ def tabelaResultadosModelo(files):
 def tabelaResultadosPT(listDirs, subDir = 'MyInstancesSameToolSets', totalPTL = 1200):
     print("TESTE")
     filesList = []
-    subDir = 'MyInstancesDiferentToolSets'
+    # subDir = 'MyInstancesDiferentToolSets'
 
     fineshedJobsCountAcc = {}
     switchsAcc = {}

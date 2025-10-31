@@ -1,4 +1,5 @@
 # ./scripts/runAuto.sh ./output/TESTE same PT 9
+# ./scripts/runAuto.sh ./output/practitionerFinal both practitioner 9999
 
 outputFolder=${1:-"./output/Exemplo"}
 runMode=${2:-"both"}

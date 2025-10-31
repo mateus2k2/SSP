@@ -155,7 +155,7 @@ runPractitioner:
 	./src/out/mainCpp \
 		"./input/MyInstancesDiferentToolSets/n=15,p=0.5,r=0.5,t=0,v0.csv" \
 		"./input/Processed/ToolSetInt.csv" \
-		"./output/Practitioner/practitioner.txt" \
+		"./output/PractitionerFinal/practitioner.txt" \
 		--DIFERENT_TOOLSETS_MODE 1 \
 		--INSTANCE_REPORT 0 \
 		--PRACTITIONER 1 \
@@ -190,7 +190,7 @@ validarFile:
 
 tabelaResultadosPractitioner:
 	clear
-	python ./scripts/reportAnalises.py ./output/Practitioner/MyInstancesSameToolSets 2
+	python ./scripts/reportAnalises.py ./output/practitionerFinal/MyInstancesDiferentToolSets 2
 	echo "\n"
 
 tabelaResultadosModelo:
@@ -200,7 +200,7 @@ tabelaResultadosModelo:
 
 tabelaResultadosPT:
 	clear
-	python ./scripts/reportAnalises.py ./output/diffTesla 4
+	python ./scripts/reportAnalises.py ./output/sameTesla 4
 	echo "\n"
 
 tabelaResultadosComparativa:
