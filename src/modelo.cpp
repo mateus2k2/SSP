@@ -665,7 +665,7 @@ int SSP::modelo(string fileOutputPath, int timeLimit) {
         if (timeLimit > 0) {
             model.set(GRB_DoubleParam_TimeLimit, timeLimit*60); // 5 minutes
         }
-        model.write(outputModel);                               // Escreve o modelo em um arquivo
+        // model.write(outputModel);                               // Escreve o modelo em um arquivo
         model.optimize();                                       // Resolve o modelo
 
         int status = model.get(GRB_IntAttr_Status);             // Verifica o status do modelo
