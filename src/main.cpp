@@ -43,6 +43,11 @@ int main(int argc, char* argv[]) {
 	int ptlTempUpProportion = 1;
 	vector<string> arguments(argv + 1, argv + argc);	
 
+    int COSTSWITCH = 1;
+    int COSTSWITCHINSTANCE = 10;
+    int COSTPRIORITY = 30;
+    int PROFITYFINISHED = 30;
+
     //problem varibles
 	// int capacityMagazine       = 8;
     // int numberMachines         = 2;
@@ -111,11 +116,20 @@ int main(int argc, char* argv[]) {
             practitioner = stoi(arguments[i+1]);
         else if(arguments[i]== "--SEQUENCE_BY")
             sequenceBy = stoi(arguments[i+1]);
+
+        else if(arguments[i]== "--COSTSWITCH")
+            COSTSWITCH = stoi(arguments[i+1]);
+        else if(arguments[i]== "--COSTSWITCHINSTANCE")
+            COSTSWITCHINSTANCE = stoi(arguments[i+1]);
+        else if(arguments[i]== "--COSTPRIORITY")
+            COSTPRIORITY = stoi(arguments[i+1]);
+        else if(arguments[i]== "--PROFITYFINISHED")
+            PROFITYFINISHED = stoi(arguments[i+1]);
             
     }
 	tempUp = PTL/ptlTempUpProportion;
 
-	SSP* prob = new SSP(filenameJobs,filenameTools,diferent_toolset_mode);
+	SSP* prob = new SSP(filenameJobs,filenameTools,diferent_toolset_mode,COSTSWITCH, COSTSWITCHINSTANCE, COSTPRIORITY, PROFITYFINISHED);
 
     // ------------------------------------------------------------------------------
     // DATA LOADIDNG AND PRE PROCESSING
@@ -129,7 +143,7 @@ int main(int argc, char* argv[]) {
     }
     if (instance_report) prob->printDataReport();
     prob->groupJobs();
-
+    
     // ------------------------------------------------------------------------------
     // MODELO
     // ------------------------------------------------------------------------------
@@ -140,6 +154,7 @@ int main(int argc, char* argv[]) {
     }
 
     if(practitioner){
+        // cout << "Practitioner Mode" << endl;
         prob->practitioner(solutionReportFile, sequenceBy);
         return 0;
     }
@@ -147,13 +162,15 @@ int main(int argc, char* argv[]) {
     // ------------------------------------------------------------------------------
     // TEST
     // ------------------------------------------------------------------------------
+
     // prob->setParans(uType, initSolType);
     // solSSP solTeste = prob->randPriority();
-    // double testeRetport = prob->evaluateReport(solTeste, solutionReportFile);
     // double teste = prob->evaluate(solTeste);
-    // solutionReportFile << "Final Solution: " << testeRetport << endl;
-    // cout << "Avaliação da solução teste report: " << testeRetport << endl;
     // cout << "Avaliação da solução teste: " << teste << endl;
+    // double testeRetport = prob->evaluateReport(solTeste, solutionReportFile);
+    // cout << "Avaliação da solução teste report: " << testeRetport << endl;
+    // solutionReportFile << "Final Solution: " << testeRetport << endl;
+    // prob->printDataReport();
     // return 0;
     
     // prob->setParans(uType, initSolType);

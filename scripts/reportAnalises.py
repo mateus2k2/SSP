@@ -197,17 +197,17 @@ def tabelaResultadosModelo(files):
             f'{endInfo["switchs"]:,.2f} {separador}'
             f'{endInfo["bestBound"]:,.2f} {separador}'
             f'{endInfo["finalSolution"]:,.2f} {separador}'
-            f'{endInfo['Time']}'
+            f"{endInfo['Time']}"
             f'{endPrint}'
         ).replace('.', ',').replace(',00', ''))
         if(modoPlanilha): outputTeste = outputTeste.replace('&', ';').replace('\\\\', '').replace('\\hline', '')
         print(outputTeste)
         if((index+1) % 3 == 0 and not(index == len(files) - 1) and not modoPlanilha): print("\\hline")
 
-def tabelaResultadosPT(listDirs, subDir = 'MyInstancesSameToolSets', totalPTL = 1200):
+def tabelaResultadosPT(listDirs, subDir = 'MyInstancesSameToolSets', totalPTL = 600):
     print("TESTE")
     filesList = []
-    # subDir = 'MyInstancesDiferentToolSets'
+    subDir = 'MyInstancesDiferentToolSets'
 
     fineshedJobsCountAcc = {}
     switchsAcc = {}
@@ -358,7 +358,7 @@ def tabelaResultadosPT(listDirs, subDir = 'MyInstancesSameToolSets', totalPTL = 
     #     print(gap)     
     # print("mean ", statistics.mean(acc))
 
-def tabelaResultadosComparativa(listDirs, subDir = 'MyInstancesSameToolSets', totalPTL = 1200):
+def tabelaResultadosComparativa(listDirs, subDir = 'MyInstancesSameToolSets', totalPTL = 600):
     filesList = []
 
     fineshedJobsCountAcc = {}
@@ -514,8 +514,8 @@ def main():
         fileWithPath = [f"{folderName}/{file}" for file in files if file.endswith(".csv")]
 
     if option == '1': 
-        # validarPasta(fileWithPath)
-        verificarPares(fileWithPath)
+        validarPasta(fileWithPath)
+        # verificarPares(fileWithPath)
     if option == '2': tabelaResultadosPractitioner(fileWithPath)
     if option == '3': tabelaResultadosModelo(fileWithPath)
     if option == '4': tabelaResultadosPT(fileWithPath)

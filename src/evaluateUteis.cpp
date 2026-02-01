@@ -47,8 +47,12 @@ vector<vector<int>> SSP::splitSolutionIntoMachines(const vector<int>& input, siz
 }
 
 double SSP::evaluateReport(solSSP& solution, fstream& solutionReportFile) {
+    int planingHorizonToRepost =  0;
+    if (planingHorizon % DAY == 0) planingHorizonToRepost = planingHorizon; 
+    else planingHorizonToRepost = ((planingHorizon + DAY - 1) / DAY);
+
     solutionReportFile << inputJobsFile << ";" << inputToolsetsFile << endl;
-    solutionReportFile << planingHorizon << ";" << unsupervised << ";" << DAY << endl;
+    solutionReportFile << planingHorizonToRepost << ";" << unsupervised << ";" << DAY << endl;
 
     int fineshedJobsCountTotal = 0;
     int switchsTotal = 0;
@@ -116,12 +120,8 @@ tuple<int, int, int, int, int>  SSP::KTNSReport(vector<int> s, int startIndex, f
         if((originalJobsCopy[s[jL]].isReentrant && !originalJobsCopy[s[jL]].isGrouped) && originalJobsCopy[s[jL]].indexOperation == 0) processingTimeSum = std::accumulate(originalJobsCopy[s[jL]].processingTimes.begin(), originalJobsCopy[s[jL]].processingTimes.end(), 0);
         fimJob = inicioJob + originalJobsCopy[s[jL]].processingTime;
 
-        if(originalJobsCopy[s[jL]].indexJob == 166){
-            cout << "Job 168: " << originalJobsCopy[s[jL]].processingTime << endl;
-        }
-
         // Estou no periodo de supervisao e entrando no periodo sem supervisao
-        if (inicioJob % (DAY) < unsupervised && fimJob % (DAY) > unsupervised && fimJob < (planingHorizon * DAY)) {
+        if (inicioJob % (DAY) < unsupervised && fimJob % (DAY) > unsupervised && fimJob < (planingHorizon)) {
             vector<bool> magazineAntes = magazineL;
             set<int> unsupervisedMagazine;
             int inicioUnsupervised = inicioJob;
@@ -145,7 +145,7 @@ tuple<int, int, int, int, int>  SSP::KTNSReport(vector<int> s, int startIndex, f
                 }
                 // verificacao de tempo
                 if ((((inicioUnsupervised % DAY) >= unsupervised) && (fimUnsupervised % DAY) < unsupervised) || (breakLoop))  {
-                    if( (fimUnsupervised + unsupervised >= (planingHorizon * DAY)) && (originalJobsCopy[s[k]].indexOperation == 1)) {
+                    if( (fimUnsupervised + unsupervised >= (planingHorizon)) && (originalJobsCopy[s[k]].indexOperation == 1)) {
                         originalJobsCopy[s[k-1]].flag = true; // flag para indicar que a tarefa foi interrompida
                     }
                     break;
@@ -201,13 +201,13 @@ tuple<int, int, int, int, int>  SSP::KTNSReport(vector<int> s, int startIndex, f
         // ---------------------------------------------------------------------------
 
         if (((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) ||                         // verificar se estou em um periodo sem supervisao e houve troca de ferramenta
-            (inicioJob % (planingHorizon * DAY) + (processingTimeSum) > (planingHorizon * DAY)) || // verificar se o job excede o horizonte de planejamento
+            (inicioJob % (planingHorizon) + (processingTimeSum) > (planingHorizon)) || // verificar se o job excede o horizonte de planejamento
             (originalJobsCopy[s[jL]].flag == true)) {
             inicioJob += DAY - (inicioJob % DAY);
             fimJob = inicioJob + originalJobsCopy[s[jL]].processingTime;
         }
 
-        if (fimJob > (planingHorizon * DAY)) {
+        if (fimJob > (planingHorizon)) {
             break;
         }
 
@@ -227,8 +227,8 @@ tuple<int, int, int, int, int>  SSP::KTNSReport(vector<int> s, int startIndex, f
         // PRINTS
         // ---------------------------------------------------------------------------
 
-        int startTMP = (fimJob - originalJobsCopy[s[jL]].processingTime) % (planingHorizon * DAY);
-        int endTMP = ((fimJob - 1) % (planingHorizon * DAY)) + 1;
+        int startTMP = (fimJob - originalJobsCopy[s[jL]].processingTime) % (planingHorizon);
+        int endTMP = ((fimJob - 1) % (planingHorizon)) + 1;
 
         const auto &job = originalJobsCopy[s[jL]];
         bool isGrouped = job.isGrouped;

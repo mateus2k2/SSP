@@ -19,7 +19,7 @@ FMT_MODE=0
 GATILHO_MODE=0
 RAND_MODE=1
 TESLA_MODE=0
-GUROBI_VERSION=120
+GUROBI_VERSION=130
 OPTIMIZATION=-O3
 SANITAZE=
 
@@ -143,13 +143,50 @@ runPT:
 
 runModelo:
 	./src/out/mainCpp \
-		"./input/Exemplo/Jobs.csv" \
-		"./input/Exemplo/ToolSets.csv" \
+		"./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv" \
+		"./input/Processed/ToolSetInt.csv" \
 		"./output/Modelo/Exemplo.csv" \
 		--DIFERENT_TOOLSETS_MODE 0 \
 		--INSTANCE_REPORT 0 \
 		--TIME_LIMIT 5 \
 		--MODELO 1 \
+
+# "./input/BeezaoRaw/IPMTC-I/instance931_m=2_n=25_l=20_c=15_s=0.PMTC" \
+# "./input/BeezaoRaw/IPMTC-I/instance1_m=2_n=8_l=15_c=5_s=0.PMTC" \
+# "./input/BeezaoRaw/IPMTC-II/instanceLarge932_m=6_n=200_l=40_c=30_s=1.PMTC" \
+# "./input/BeezaoRaw/IPMTC-II/instanceLarge931_m=6_n=200_l=40_c=30_s=0.PMTC" \
+
+runBeezao:
+	./src/out/mainCpp \
+		"./input/BeezaoRaw/IPMTC-II/instanceLarge931_m=6_n=200_l=40_c=30_s=0.PMTC" \
+		"" \
+		"./output/Beezao/teste.txt" \
+		--PTL_TEMP_UPDATE_PROPORTION 3 \
+		--DIFERENT_TOOLSETS_MODE 0 \
+		--TEMP_INIT 0.1 \
+        --TEMP_FIM 5 \
+        --N_REPLICAS 11 \
+        --MCL 500 \
+        --PTL 100 \
+        --PASSO_GATILHO 10 \
+        --TEMP_DIST 3 \
+        --TYPE_UPDATE 1 \
+        --INIT_SOL_TYPE 0 \
+        --TEMP_UPDATE 3500 \
+        --PTL_TEMP_UPDATE_PROPORTION 3 \
+		--COSTSWITCH 1 \
+		--COSTSWITCHINSTANCE 0 \
+		--COSTPRIORITY 30 \
+		--PROFITYFINISHED 0
+
+runBeezaoPratica:
+	./src/out/mainCpp \
+		"./input/BeezaoRaw/IPMTC-II/instanceLarge931_m=6_n=200_l=40_c=30_s=0.PMTC" \
+		"" \
+		"./output/Beezao/teste.txt" \
+		--INSTANCE_REPORT 0 \
+		--PRACTITIONER 1 \
+		--SEQUENCE_BY 1 \
 
 runPractitioner:
 	./src/out/mainCpp \
@@ -169,8 +206,14 @@ goPractitioner:
 
 goModelo:
 	@clear
-	make devCompile
+	make normalCompile
 	make runModelo
+
+goBeezao:
+	@clear
+	make compile
+# 	make devCompile
+	make runBeezao
 
 goPT:
 	@clear
@@ -185,27 +228,27 @@ goPT:
 
 validarFile:
 	clear
-	python ./scripts/reportAnalises.py ./output/Exemplo/pt.csv 0
+	python3 ./scripts/reportAnalises.py ./output/Beezao/teste.txt 0
 	echo "\n"
 
 tabelaResultadosPractitioner:
 	clear
-	python ./scripts/reportAnalises.py ./output/practitionerFinal/MyInstancesDiferentToolSets 2
+	python3 ./scripts/reportAnalises.py ./output/practitionerFinal/MyInstancesDiferentToolSets 2
 	echo "\n"
 
 tabelaResultadosModelo:
 	clear
-	python ./scripts/reportAnalises.py ./output/Modelo/MyInstancesSameToolSets 3
+	python3 ./scripts/reportAnalises.py ./output/modeloFinal/MyInstancesDiferentToolSets 3
 	echo "\n"
 
 tabelaResultadosPT:
 	clear
-	python ./scripts/reportAnalises.py ./output/sameTesla 4
+	python3 ./scripts/reportAnalises.py ./output/diffTesla 4
 	echo "\n"
 
 tabelaResultadosComparativa:
 	clear
-	python ./scripts/reportAnalises.py ./output/TCC2V2 5
+	python3 ./scripts/reportAnalises.py ./output/TCC2V2 5
 	echo "\n"
 
 # --------------------------------------------------------

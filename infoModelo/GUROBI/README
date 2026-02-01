@@ -1,9 +1,3 @@
-sshuttle -r mateus@200.239.132.108:4096 0.0.0.0/0
-ParallelTempering
-
-sudo docker run --rm -it --network host --name=firefox -p 5800:5800 -v /docker/appdata/firefox:/config:rw jlesage/firefox
-curl -s ifconfig.me
-
 https://portal.gurobi.com/iam/licenses/list/
 https://www.gurobi.com/resources/functional-code-examples/
 https://support.gurobi.com/hc/en-us/articles/4534161999889-How-do-I-install-Gurobi-Optimizer
@@ -20,3 +14,6 @@ grbgetkey b3a435b4-5af3-46fa-bc0c-17ea96efcf6c --input wsl2-hostinfo.txt
 
 ABSTERGO
 grbgetkey e24939a9-c86f-4d6c-8cf9-aab98b99fafa
+
+
+grbgetkey 67678803-8b1c-43f9-a363-6936c6de73c9

@@ -1,5 +1,7 @@
 # ./scripts/runAuto.sh ./output/TESTE same PT 9
 # ./scripts/runAuto.sh ./output/practitionerFinal both practitioner 9999
+# ./scripts/runAuto.sh ./output/BeezaoAuto beezao PT 9999
+# ./scripts/runAuto.sh ./output/BeezaoAuto beezao practitioner 9999
 
 outputFolder=${1:-"./output/Exemplo"}
 runMode=${2:-"both"}
@@ -11,6 +13,12 @@ licenseFile=${6:-""}
 [ ! -d "$outputFolder" ] && mkdir -p "$outputFolder"
 [ ! -d "$outputFolder/MyInstancesSameToolSets" ] && mkdir -p "$outputFolder/MyInstancesSameToolSets"
 [ ! -d "$outputFolder/MyInstancesDiferentToolSets" ] && mkdir -p "$outputFolder/MyInstancesDiferentToolSets"
+
+instaceExtention="csv"
+if [ "$runMode" = "beezao" ] 
+then
+    instaceExtention="PMTC"
+fi
 
 # if licenseFile is provided set the environment variable
 if [ -n "$licenseFile" ]; then
@@ -32,7 +40,7 @@ run_instances() {
 
     echo "RODANDO INSTANCIAS DE $instancesFolder"
     local counter=1
-    for entry in $(ls -v "$instancesFolder"/*.csv | head -n $head);
+    for entry in $(ls -v "$instancesFolder"/*.$instaceExtention | head -n $head);
     do
         filename=$(basename "$entry")
         local timestamp=$(TZ="America/Sao_Paulo" date "+%Y-%m-%d %H:%M:%S.%3N")
@@ -59,7 +67,7 @@ then
         --TEMP_FIM 5 \
         --N_REPLICAS 11 \
         --MCL 500 \
-        --PTL 600 \
+        --PTL 100 \
         --PASSO_GATILHO 10 \
         --TEMP_DIST 3 \
         --TYPE_UPDATE 1 \
@@ -83,6 +91,18 @@ then
     "
 fi
 
+if [ "$runMode" = "beezao" ] 
+then
+    extraArgs+="\
+        --COSTSWITCH 1 \
+		--COSTSWITCHINSTANCE 0 \
+		--COSTPRIORITY 30 \
+		--PROFITYFINISHED 0
+    "
+fi
+
+echo "$extraArgs"
+
 if [ "$runMode" = "both" ] 
 then
     instancesFolder=./input/MyInstancesSameToolSets
@@ -96,6 +116,11 @@ then
     instancesFolder=./input/MyInstancesSameToolSets
     run_instances "$instancesFolder" "$outputFolder/MyInstancesSameToolSets" 0
 
+elif [ "$runMode" = "beezao" ] 
+then
+    instancesFolder=./input/BeezaoRaw/IPMTC-II
+    run_instances "$instancesFolder" "$outputFolder" 0
+    
 elif [ "$runMode" = "diferent" ] 
 then
     instancesFolder=./input/MyInstancesDiferentToolSets

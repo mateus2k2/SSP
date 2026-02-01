@@ -46,6 +46,11 @@ class SSP: public Problem<solSSP>{
 		int numberOfPriorityJobs;
 		int capacityMagazine;
 		int diferent_toolset_mode;
+
+		int COSTSWITCH;
+		int COSTSWITCHINSTANCE;
+		int COSTPRIORITY;
+		int PROFITYFINISHED;	
 		
 		string inputJobsFile;
 		string inputToolsetsFile;
@@ -66,10 +71,11 @@ class SSP: public Problem<solSSP>{
     	std::function<solSSP()> constructionFunc;
 		
 	public:
-		SSP(std::string filenameJobs, std::string filenameTools, int diferent_toolset_mode);
+		SSP(std::string filenameJobs, std::string filenameTools, int diferent_toolset_mode, int COSTSWITCH, int COSTSWITCHINSTANCE, int COSTPRIORITY, int PROFITYFINISHED);
 		~SSP();
 
 		int laodInstance(string filename);
+		int loadInstanceBeezao(string filename);
 		int laodToolSet(string filename);
 		int loadInstanceParans(string filename);
 		void printDataReport();

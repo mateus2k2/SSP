@@ -50,10 +50,17 @@ struct Machine {
 // DEFINIÇÕES DO PLOBLEMA
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-#define COSTSWITCH         1
-#define COSTSWITCHINSTANCE 10
-#define COSTPRIORITY       30
-#define PROFITYFINISHED    30
+// #define COSTSWITCH         1
+// #define COSTSWITCHINSTANCE 10
+// #define COSTPRIORITY       30
+// #define PROFITYFINISHED    30
+
+// #define COSTSWITCH         1
+// #define COSTSWITCHINSTANCE 0
+// #define COSTPRIORITY       30
+// #define PROFITYFINISHED    0
+
 #define DAY                1440
 
 #endif
+

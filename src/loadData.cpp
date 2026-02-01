@@ -124,7 +124,7 @@ int SSP::laodInstance(string filename) {
 
     // planingHorizon = 7   * (24*60); // 7 dias em minutos
     // unsupervised   = 0.5 * (24*60); // 0.5 dia em minutos
-    planingHorizon = 7;
+    planingHorizon = 7 * DAY;
     unsupervised = 0.5;
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -148,6 +148,10 @@ int SSP::laodInstance(string filename) {
 int SSP::laodToolSet(string filename) {
     ifstream file(filename);
     int tmpIndex;
+
+    if (filename.find("Beezao") != string::npos) {
+        return 0;
+    }
 
     if (!file.is_open()) {
         cerr << "Error opening toolset file!" << endl;
@@ -261,8 +265,155 @@ void SSP::groupJobs() {
 }
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
+// LOAD BEEZAO
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+double getMakespan(const std::string& instanceNamePath){
+    auto pos1 = instanceNamePath.find_last_of('/');
+    std::string instanceName = (pos1 != std::string::npos) ? instanceNamePath.substr(pos1 + 1) : instanceNamePath;
+
+    std::ifstream file("./input/BeezaoRaw/alns-original.csv");
+    if (!file.is_open()) {
+        throw std::runtime_error("Could not open CSV file");
+    }
+
+    std::string line;
+    double sum = 0.0;
+    int count = 0;
+
+    std::getline(file, line);
+
+    while (std::getline(file, line)) {
+        std::stringstream ss(line);
+        std::string field;
+
+        std::getline(ss, field, ',');
+
+        auto pos = field.find('/');
+        std::string cleanInstance =
+            (pos != std::string::npos) ? field.substr(pos + 1) : field;
+
+        if (cleanInstance != instanceName)
+            continue;
+
+        for (int i = 0; i < 5; ++i)
+            std::getline(ss, field, ',');
+
+        std::getline(ss, field, ',');
+        sum += std::stod(field);
+        count++;
+    }
+
+    if (count == 0) {
+        throw std::runtime_error("Instance not found in CSV");
+    }
+
+    return sum / count;
+}
+
+int SSP::loadInstanceBeezao(string filename) {
+    ifstream file(filename);
+    if (!file.is_open()) {
+        cerr << "Error opening Beezao instance file!" << endl;
+        exit(1);
+    }
+
+    // ---------------------------------------------------------------------
+    // Row 1: #machines, #jobs, #tools, capacity of magazine
+    int machines, jobs, tools, capacity;
+    file >> machines >> jobs >> tools >> capacity;
+
+    numberMachines   = machines;
+    numberJobs       = jobs;
+    numberJobsUngrouped = jobs;
+    numberToolsReal  = tools;
+    capacityMagazine = capacity;
+
+    // ---------------------------------------------------------------------
+    // Row 2: switching time
+    int switchingTime;
+    file >> switchingTime;
+
+    // ---------------------------------------------------------------------
+    // Row 3: processing times
+    vector<int> processingTimes(jobs);
+    for (int j = 0; j < jobs; j++) {
+        file >> processingTimes[j];
+    }
+
+    // ---------------------------------------------------------------------
+    // Remaining rows: tool requirement matrix (tools × jobs)
+    vector<vector<int>> toolMatrix(tools, vector<int>(jobs, 0));
+    for (int t = 0; t < tools; t++) {
+        for (int j = 0; j < jobs; j++) {
+            file >> toolMatrix[t][j];
+        }
+    }
+
+
+    // ---------------------------------------------------------------------
+    // Create ToolSets: ONE toolset per job
+    originalToolSets.clear();
+    for (int j = 0; j < jobs; j++) {
+        ToolSet ts;
+        ts.indexToolSet = j;
+        for (int t = 0; t < tools; t++) {
+            if (toolMatrix[t][j] == 1) {
+                ts.tools.push_back(t);
+            }
+        }
+        originalToolSets[j] = ts;
+    }
+
+    // ---------------------------------------------------------------------
+    // Create Jobs
+    originalJobs.clear();
+    numberOfPriorityJobs = 0;
+
+    for (int j = 0; j < jobs; j++) {
+        Job job;
+        job.indexJob        = j;
+        job.indexOperation = 0;
+        job.indexToolSet   = j;
+        job.processingTime = processingTimes[j];
+        job.priority       = 1;   // default priority
+        numberOfPriorityJobs += job.priority;
+
+        job.toolSet        = originalToolSets[j];
+        job.toolSetNormalized = originalToolSets[j];
+        job.isGrouped      = false;
+        job.isReentrant    = false;
+        job.flag           = false;
+
+        originalJobs.push_back(job);
+    }
+
+    // ---------------------------------------------------------------------
+    // Build tool-job boolean matrix
+    numberTools = tools;
+    toolJob.clear();
+    toolJob.resize(numberTools, vector<bool>(numberJobs, false));
+
+    for (int j = 0; j < jobs; j++) {
+        for (int t : originalToolSets[j].tools) {
+            toolJob[t][j] = true;
+        }
+    }
+
+    // ---------------------------------------------------------------------
+    planingHorizon = getMakespan(filename);
+    unsupervised = planingHorizon;
+
+    file.close();
+
+    return 0;
+}
+
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
 // LOAD PRINTS
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
+
 void SSP::printDataReport() {
 #ifdef FMT
     fmt::print("\n------------------------------------------------------------------------------------------------------------------------------------------\n");

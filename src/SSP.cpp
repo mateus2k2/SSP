@@ -5,13 +5,24 @@
 #include <fmt/core.h>
 #endif
 
-SSP::SSP(std::string filenameJobs, std::string filenameTools, int diferent_toolset_mode_){
-    laodToolSet(filenameTools);
-    laodInstance(filenameJobs);
-    loadInstanceParans(filenameJobs);
+SSP::SSP(std::string filenameJobs, std::string filenameTools, int diferent_toolset_mode_, int COSTSWITCH_, int COSTSWITCHINSTANCE_, int COSTPRIORITY_, int PROFITYFINISHED_){
+	if (filenameJobs.find("Beezao") != string::npos) {
+        loadInstanceBeezao(filenameJobs);
+    }
+	else{
+		laodToolSet(filenameTools);
+		laodInstance(filenameJobs);
+		loadInstanceParans(filenameJobs);
+	}
+
 	this->diferent_toolset_mode = diferent_toolset_mode_;
 	this->inputJobsFile = filenameJobs;
 	this->inputToolsetsFile = filenameTools;
+
+	this->COSTSWITCH = COSTSWITCH_;
+	this->COSTSWITCHINSTANCE = COSTSWITCHINSTANCE_;
+	this->COSTPRIORITY = COSTPRIORITY_;
+	this->PROFITYFINISHED = PROFITYFINISHED_;
 }
 
 SSP::~SSP(){	
