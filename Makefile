@@ -158,7 +158,7 @@ runModelo:
 
 runBeezao:
 	./src/out/mainCpp \
-		"./input/BeezaoRaw/IPMTC-II/instanceLarge931_m=6_n=200_l=40_c=30_s=0.PMTC" \
+		"./input/BeezaoRaw/IPMTC-II/instanceLarge960_m=6_n=200_l=40_c=30_s=2.PMTC" \
 		"" \
 		"./output/Beezao/teste.txt" \
 		--PTL_TEMP_UPDATE_PROPORTION 3 \
@@ -167,7 +167,7 @@ runBeezao:
         --TEMP_FIM 5 \
         --N_REPLICAS 11 \
         --MCL 500 \
-        --PTL 100 \
+        --PTL 500 \
         --PASSO_GATILHO 10 \
         --TEMP_DIST 3 \
         --TYPE_UPDATE 1 \
