@@ -166,7 +166,7 @@ runBeezao:
 		--TEMP_INIT 0.1 \
         --TEMP_FIM 5 \
         --N_REPLICAS 11 \
-        --MCL 500 \
+        --MCL 100 \
         --PTL 500 \
         --PASSO_GATILHO 10 \
         --TEMP_DIST 3 \

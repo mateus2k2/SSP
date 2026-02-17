@@ -46,6 +46,32 @@ vector<vector<int>> SSP::splitSolutionIntoMachines(const vector<int>& input, siz
     return result;
 }
 
+vector<vector<int>> SSP::splitSolutionIntoMachinesByTime(const vector<int>& input, size_t h) {
+    
+    // int processingTimeSum = originalJobsCopy[s[jL]].processingTime;
+    
+    vector<vector<int>> result;
+
+    // iterate over the input and sum the processing times until it reaches h, then create a new vector for the next machine
+    vector<int> currentMachine;
+    int currentTime = 0;
+    for (size_t i = 0; i < input.size(); ++i) {
+        int processingTime = originalJobs[input[i]].processingTime;
+        if (currentTime + processingTime > h) {
+            result.push_back(move(currentMachine));
+            currentMachine.clear();
+            currentTime = 0;
+        }
+        currentMachine.push_back(input[i]);
+        currentTime += processingTime;
+    }
+    if (!currentMachine.empty()) {
+        result.push_back(move(currentMachine));
+    }
+
+    return result;
+}
+
 double SSP::evaluateReport(solSSP& solution, fstream& solutionReportFile) {
     int planingHorizonToRepost =  0;
     if (planingHorizon % DAY == 0) planingHorizonToRepost = planingHorizon; 
@@ -72,14 +98,24 @@ double SSP::evaluateReport(solSSP& solution, fstream& solutionReportFile) {
     //     totalUnfineshed -= fineshedJobsCount;
     //     fineshedJobsCountTotal += fineshedJobsCount;
     // }
-    vector<vector<int>> machines = splitSolutionIntoMachines(sol.sol, numberMachines);
+
+    // vector<vector<int>> machines = splitSolutionIntoMachines(sol.sol, numberMachines);
+    vector<vector<int>> machines = splitSolutionIntoMachinesByTime(sol.sol, planingHorizon);
+    int criticalMachine = 0;
+    int criticalMachineSwitchs = 0;
+
     for (size_t i = 0; i < machines.size(); i++) {
-        auto [fineshedJobsCount, switchs, switchsInstances, fineshedPriorityCount, _] = KTNSReport(machines[i], 0, solutionReportFile, i);
+        auto [fineshedJobsCount, switchs, switchsInstances, fineshedPriorityCount, _, lastTime] = KTNSReport(machines[i], 0, solutionReportFile, i);
         fineshedJobsCountTotal += fineshedJobsCount;
         switchsTotal += switchs;
         switchsInstancesTotal += switchsInstances;
         unfineshedPriorityCountTotal -= fineshedPriorityCount;
         totalUnfineshed -= fineshedJobsCount;
+        
+        if (lastTime > criticalMachine) {
+            criticalMachine = lastTime;
+            criticalMachineSwitchs = switchs;
+        }
     }
 
     solutionReportFile << "END" << endl;
@@ -88,13 +124,19 @@ double SSP::evaluateReport(solSSP& solution, fstream& solutionReportFile) {
     solutionReportFile << "switchsInstances: " << switchsInstancesTotal << endl;
     solutionReportFile << "unfineshedPriorityCount: " << unfineshedPriorityCountTotal << endl;
     solutionReportFile << "totalUnfineshed: " << totalUnfineshed << endl;
+    solutionReportFile << "criticalMachineSwitchs: " << criticalMachineSwitchs << endl;
+    solutionReportFile << "criticalMachineTime: " << criticalMachine << endl;
+
+    if(totalUnfineshed != 0) {
+        cout << "Warning: totalUnfineshed (" << totalUnfineshed << ") is not equal to the size of the solution (" << solution.sol.size() << ")" << endl;
+    }
 
     int cost = (PROFITYFINISHED * fineshedJobsCountTotal) - (COSTSWITCH * switchsTotal) - (COSTSWITCHINSTANCE * switchsInstancesTotal) - (COSTPRIORITY * unfineshedPriorityCountTotal);
     
     return cost;
 }
 
-tuple<int, int, int, int, int>  SSP::KTNSReport(vector<int> s, int startIndex, fstream& solutionReportFile, int machine) {
+tuple<int, int, int, int, int, int>  SSP::KTNSReport(vector<int> s, int startIndex, fstream& solutionReportFile, int machine) {
     vector<Job> originalJobsCopy = originalJobs;
     vector<bool> magazineL(numberToolsReal, true);
     unsigned int switchs = 0;
@@ -108,6 +150,7 @@ tuple<int, int, int, int, int>  SSP::KTNSReport(vector<int> s, int startIndex, f
 
     int inicioJob = 0;
     int fimJob = 0;
+    int lastTime = 0;
 
     solutionReportFile << "Machine: " << machine << std::endl;
 
@@ -229,6 +272,7 @@ tuple<int, int, int, int, int>  SSP::KTNSReport(vector<int> s, int startIndex, f
 
         int startTMP = (fimJob - originalJobsCopy[s[jL]].processingTime) % (planingHorizon);
         int endTMP = ((fimJob - 1) % (planingHorizon)) + 1;
+        lastTime = endTMP;
 
         const auto &job = originalJobsCopy[s[jL]];
         bool isGrouped = job.isGrouped;
@@ -255,5 +299,5 @@ tuple<int, int, int, int, int>  SSP::KTNSReport(vector<int> s, int startIndex, f
         }
     }
 
-    return {fineshedJobsCount, switchs, switchsInstances, fineshedPriorityCount, jL};
+    return {fineshedJobsCount, switchs, switchsInstances, fineshedPriorityCount, jL, lastTime};
 }

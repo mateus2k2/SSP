@@ -94,9 +94,10 @@ class SSP: public Problem<solSSP>{
 		void oneBlockGrouping(solSSP& s);
 		void groupJobs();
 		vector<vector<int>> splitSolutionIntoMachines(const vector<int>& input, size_t n);
+		vector<vector<int>> splitSolutionIntoMachinesByTime(const vector<int>& input, size_t h);
 		double evaluate(solSSP& s);
 		double evaluateReport(solSSP &sol, fstream& solutionReportFile);
-		tuple<int, int, int, int, int> KTNSReport(vector<int> s, int startIndex, fstream& solutionReportFile, int machine);
+		tuple<int, int, int, int, int, int> KTNSReport(vector<int> s, int startIndex, fstream& solutionReportFile, int machine);
 		tuple<int, int, int, int, int> KTNS(vector<int> s, int startIndex);
 		
 		int modelo(string filenameoutput, int timeLimit);

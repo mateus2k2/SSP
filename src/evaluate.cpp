@@ -37,7 +37,10 @@ double SSP::evaluate(solSSP& s) {
     //     totalUnfineshed -= fineshedJobsCount;
     //     fineshedJobsCountTotal += fineshedJobsCount;
     // }
-    vector<vector<int>> machines = splitSolutionIntoMachines(sol.sol, numberMachines);
+
+    vector<vector<int>> machines = splitSolutionIntoMachinesByTime(sol.sol, planingHorizon);
+    // vector<vector<int>> machines = splitSolutionIntoMachines(sol.sol, numberMachines);
+
     for (size_t i = 0; i < machines.size(); i++) {
         auto [fineshedJobsCount, switchs, switchsInstances, fineshedPriorityCount, trash] = KTNS(machines[i], 0);
         fineshedJobsCountTotal += fineshedJobsCount;
