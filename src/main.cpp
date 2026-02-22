@@ -20,6 +20,7 @@
 
 #include "ExecTime.h"
 #include "PT.h"
+#include "headers/GA.h"
 
 using namespace std;
 
@@ -214,45 +215,83 @@ int main(int argc, char* argv[]) {
     // SSP
     // ------------------------------------------------------------------------------
 
-	prob->setParans(uType, initSolType);
-    PT<solSSP> algo(tempIni, tempfim, tempN, MCL, PTL, passoGatilho, tempD, uType, tempUp);
+	// prob->setParans(uType, initSolType);
+    // PT<solSSP> algo(tempIni, tempfim, tempN, MCL, PTL, passoGatilho, tempD, uType, tempUp);
+    // ExecTime et;
+    // solSSP sol = algo.start(thN, prob);
+    // solSSP finalSolution = sol; 
+
+    // double cost = prob->evaluateReport(finalSolution, solutionReportFile);
+
+    // solSSP initFromBest = algo.getInitFromBest();
+    // vector<solSSP> initAll = algo.getInitAll();
+
+    // double meanInitial = 0; 
+    // std::sort(initAll.begin(), initAll.end(), [](auto a, auto b) { return a.evalSol < b.evalSol; });
+    // for (size_t i = 0; i < initAll.size(); i++) meanInitial += initAll[i].evalSol;
+    // meanInitial = meanInitial/initAll.size();
+
+    // solutionReportFile << "Final Solution: " << cost << endl;
+    // solutionReportFile << "Time: " << et.getTimeMs() << endl;
+    // solutionReportFile << "PTL: " << sol.ptl << endl; //PTL onde a melhor solucao foi gerada
+    // solutionReportFile << "MCMC: " << sol.mcmc << endl; //Index da cadeia de markove onde a melhor solucao foi gerada
+    // solutionReportFile << "Best Initial: " << -initAll[0].evalSol << endl;
+    // solutionReportFile << "Mean Initial: " << -meanInitial << endl;
+
+    // solutionReportFile.close();
+
+    // // cout << "Final Solution: " << cost << endl;
+    // // cout << "Time: " << et.getTimeMs() << endl;
+
+    // // convert ms to min
+    // double timeInMin = et.getTimeMs() / 60000.0;
+    // int minutes = static_cast<int>(std::round(timeInMin));
+    // std::ostringstream oss;
+    // oss << std::setw(2) << std::setfill('0') << minutes;
+    // std::string padded = oss.str();
+    // cout << cost << "." << padded << endl;
+
+    // // fstream solutionReportFileInit;
+    // // solutionReportFileInit.open("/home/mateus/WSL/IC/SSP/output/Exemplo/exemploInit.txt", ios::out);
+    // // prob->evaluateReportKTNS(initAll[0], filenameJobs, filenameTools, solutionReportFileInit);
+
+    // return 0;
+
+    // Replace the SSP section:
+    // ------------------------------------------------------------------------------
+    // GA
+    // ------------------------------------------------------------------------------
+
+    prob->setParans(uType, initSolType);
+
+    // Build the operation list from the already-grouped jobs
+    // prob->groupJobs() was already called above
+    GAParams gaParams;
+    gaParams.numMachines  = prob->getNumberMachines();
+    gaParams.magazineCap  = prob->getCapacityMagazine();
+    gaParams.horizon      = prob->getPlaningHorizon();   // already in minutes
+    gaParams.unsupHours   = prob->getUnsupervised() / 60; // convert min→hours
+    gaParams.revenue      = PROFITYFINISHED;
+    gaParams.penaltyCost  = COSTPRIORITY;
+    gaParams.fixedSwitch  = COSTSWITCHINSTANCE;
+    gaParams.varSwitch    = COSTSWITCH;
+    gaParams.maxTimeSec   = 3600.0;
+
+    GeneticAlgorithm ga(prob->getGroupedJobs(), gaParams, /*seed=*/42);
+
     ExecTime et;
-    solSSP sol = algo.start(thN, prob);
-    solSSP finalSolution = sol; 
+    Chromosome best = ga.run();
 
-    double cost = prob->evaluateReport(finalSolution, solutionReportFile);
-
-    solSSP initFromBest = algo.getInitFromBest();
-    vector<solSSP> initAll = algo.getInitAll();
-
-    double meanInitial = 0; 
-    std::sort(initAll.begin(), initAll.end(), [](auto a, auto b) { return a.evalSol < b.evalSol; });
-    for (size_t i = 0; i < initAll.size(); i++) meanInitial += initAll[i].evalSol;
-    meanInitial = meanInitial/initAll.size();
-
+    // Write report
+    double cost = best.fitness;
     solutionReportFile << "Final Solution: " << cost << endl;
     solutionReportFile << "Time: " << et.getTimeMs() << endl;
-    solutionReportFile << "PTL: " << sol.ptl << endl; //PTL onde a melhor solucao foi gerada
-    solutionReportFile << "MCMC: " << sol.mcmc << endl; //Index da cadeia de markove onde a melhor solucao foi gerada
-    solutionReportFile << "Best Initial: " << -initAll[0].evalSol << endl;
-    solutionReportFile << "Mean Initial: " << -meanInitial << endl;
-
+    solutionReportFile << "PTL: "  << 0 << endl;
+    solutionReportFile << "MCMC: " << 0 << endl;
+    solutionReportFile << "Best Initial: " << 0 << endl;
+    solutionReportFile << "Mean Initial: " << 0 << endl;
     solutionReportFile.close();
 
-    // cout << "Final Solution: " << cost << endl;
-    // cout << "Time: " << et.getTimeMs() << endl;
-
-    // convert ms to min
-    double timeInMin = et.getTimeMs() / 60000.0;
-    int minutes = static_cast<int>(std::round(timeInMin));
-    std::ostringstream oss;
-    oss << std::setw(2) << std::setfill('0') << minutes;
-    std::string padded = oss.str();
-    cout << cost << "." << padded << endl;
-
-    // fstream solutionReportFileInit;
-    // solutionReportFileInit.open("/home/mateus/WSL/IC/SSP/output/Exemplo/exemploInit.txt", ios::out);
-    // prob->evaluateReportKTNS(initAll[0], filenameJobs, filenameTools, solutionReportFileInit);
-
+    cout << cost << endl;
     return 0;
 }

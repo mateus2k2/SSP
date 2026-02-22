@@ -111,6 +111,14 @@ class SSP: public Problem<solSSP>{
 		
 		double ONB(vector<vector<int>> maquinas);
 
+
+		// Add to SSP.h public section:
+		int  getNumberMachines()   const { return numberMachines; }
+		int  getCapacityMagazine() const { return capacityMagazine; }
+		int  getPlaningHorizon()   const { return planingHorizon; }
+		int  getUnsupervised()     const { return unsupervised; }
+		const std::vector<Job>& getGroupedJobs() const { return groupedJobs; }
+
 };
 
 #endif 
