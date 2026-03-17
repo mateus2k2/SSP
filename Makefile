@@ -260,3 +260,4 @@ m ?= update
 git:
 	clear && git add . && git commit -m "$(m)" && git push origin master
 
+# python3 ./scripts/uteis/validador.Beezao.py

@@ -34,7 +34,7 @@ GeneticAlgorithm::GeneticAlgorithm(const std::vector<Job>& operations,
         for (int t : op.toolSetNormalized.tools)
             toolsOf_[i].insert(t);
         isPriority_[i] = op.priority;
-        opId_[i] = {op.indexJob, op.indexOperation};
+        opId_[i] = {op.indexJob, op.indexOperation}; 
     }
 
     // Sanity: every tool set must fit in the magazine

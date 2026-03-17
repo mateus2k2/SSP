@@ -273,30 +273,38 @@ def validateFolder(folderPath):
             valid, errors = validate_solution_toolsets(originalData, solution)
             if not valid:
                 print(f"❌ {filename} - Toolset validation failed with {len(errors)} errors.")
-                continue
+                # continue
 
             valid, errors = validate_toolset_capacity(originalData)
             if not valid:
                 print(f"❌ {filename} - Capacity validation failed with {len(errors)} errors.")
-                continue
+                # continue
 
             valid, report = validate_all_jobs_finished(originalData, solution)
             if not valid:
                 print(f"❌ {filename} - Job completion validation failed.")
                 print(report)
-                continue
+                # continue
             
             planejamentoObj, machines, endInfoObj = solution
+
+            final = 30*endInfoObj["fineshedJobsCount"] - (endInfoObj["switchs"] + 10*endInfoObj["switchsInstances"] + 30*endInfoObj["totalUnfineshed"])
+            def fmt(n):
+                return str(n).replace(".", ",")
+
             csvData.append({
                 "Instancia": planejamentoObj["jobsFileName"].split("/")[-1].replace(".PMTC", ""),
                 "Tarefas Finalizadas": endInfoObj["fineshedJobsCount"],
                 "Tarefas não finalizads": endInfoObj["totalUnfineshed"],
                 "Trocas": endInfoObj["switchs"],
                 "Instancias de troca": endInfoObj["switchsInstances"],
-                "Soluções Iniciais": -endInfoObj["meanInitial"],
-                "Soluções Final": -endInfoObj["finalSolution"],
-                "Tempo": endInfoObj["Time"]/1000,
-                "PTL": round((endInfoObj["PTL"] / 600 * 100), 2)
+                "Soluções Iniciais": 0,
+                # "Soluções Iniciais": fmt(-endInfoObj["meanInitial"]),
+                "Soluções Final": fmt(endInfoObj["finalSolution"]),
+                "Soluções Final Real": fmt(final),
+                "Tempo": fmt(endInfoObj["Time"] / 1000),
+                "PTL": 0
+                # "PTL": fmt(round((endInfoObj["PTL"] / 600 * 100), 2))
             })
     
     # save to CSV
@@ -311,13 +319,14 @@ def validateFolder(folderPath):
             "Instancias de troca",
             "Soluções Iniciais",
             "Soluções Final",
+            "Soluções Final Real",
             "Tempo",
             "PTL"
         ]
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames, delimiter=";")
         writer.writeheader()
         for row in csvData:
             writer.writerow(row)
 
 
-validateFolder("/workspaces/IC/SSP/output/BeezaoAutoPT")
+validateFolder("/workspaces/IC/SSP/output/BeezaoAutoPractitioner")
