@@ -43,6 +43,11 @@ def get_makespan(instance_name_path: str) -> float:
 
     return total / count
 
+def get_makespan_simple(sumProcessingTimes: float, numberMachines: int) -> float:
+    # round up
+    return -(-sumProcessingTimes // numberMachines)
+
+
 def load_instance_beezao(filename: str):
     try:
         file = open(filename, "r")
@@ -122,7 +127,8 @@ def load_instance_beezao(filename: str):
 
     # ---------------------------------------------------------------------
     # Planning horizon
-    planingHorizon = get_makespan(filename)
+    # planingHorizon = get_makespan(filename)
+    planingHorizon = get_makespan_simple(sum(processingTimes), numberMachines)
     unsupervised = planingHorizon
 
     file.close()
@@ -315,8 +321,10 @@ def processRunFolder(folderPath, accumulator):
         entry["Soluções Final"].append(endInfoObj["finalSolution"])
         entry["Soluções Final Real"].append(final)
         entry["Tempo"].append(endInfoObj["Time"] / 1000)
-        entry["Soluções Iniciais"].append(endInfoObj["bestInitial"])
-        entry["PTL"].append(endInfoObj["PTL"])
+        if "bestInitial" in endInfoObj:
+            entry["Soluções Iniciais"].append(endInfoObj["bestInitial"])
+        if "PTL" in endInfoObj:
+            entry["PTL"].append(endInfoObj["PTL"])
 
 
 def validateFolder(topFolderPath):
@@ -380,4 +388,4 @@ def validateFolder(topFolderPath):
     print(f"Output: {output_csv}")
 
 
-validateFolder("/home/mateus/WSL/IC/SSP/output/BeezaoLarge10")
+validateFolder("/home/mateus/WSL/IC/SSP/output/BeezaoPractitionerSmall")
