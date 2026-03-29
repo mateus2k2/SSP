@@ -1,0 +1,26 @@
+./input/BeezaoRaw/IPMTC-I/instance99_m=2_n=8_l=15_c=10_s=2.PMTC;./input/Processed/ToolSetInt.csv
+1;122;1440
+Machine: 0
+1;0;0;42;1;0,2,3,4,5,7,9,11,12,13,
+0;0;42;91;1;0,2,3,4,7,9,11,12,13,14,
+7;0;91;95;1;0,1,2,3,4,9,11,12,13,14,
+2;0;95;117;1;0,1,2,3,4,8,9,11,12,14,
+3;0;117;122;1;0,1,2,3,4,5,8,9,12,14,
+Machine: 1
+5;0;0;50;1;0,1,2,4,5,6,8,9,10,14,
+6;0;50;102;1;0,1,2,6,8,9,10,12,13,14,
+4;0;102;121;1;0,1,2,6,7,8,9,10,11,13,
+END
+fineshedJobsCount: 8
+switchs: 8
+switchsInstances: 6
+unfineshedPriorityCount: 0
+totalUnfineshed: 0
+criticalMachineSwitchs: 4
+criticalMachineTime: 122
+Final Solution: -8
+Time: 629
+PTL: 0
+MCMC: 74
+Best Initial: -8
+Mean Initial: -27.8182

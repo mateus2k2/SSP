@@ -261,72 +261,123 @@ def validate_all_jobs_finished(originalData: dict, solution: tuple):
 # Time
 # PTL
 # Medias das soluções iniciais
-csvData = []
+def fmt(n):
+    return str(round(n, 4)).replace(".", ",")
 
-def validateFolder(folderPath):
+def processRunFolder(folderPath, accumulator):
+    """Parse all .PMTC files in a single run folder and accumulate results."""
     for filename in os.listdir(folderPath):
-        if filename.endswith(".PMTC"):
-            print(f"Validating {filename}...")
-            solution = rp.parseReport(os.path.join(folderPath, filename))
-            originalData = load_instance_beezao(solution[0]["jobsFileName"])
+        if not filename.endswith(".PMTC"):
+            continue
 
-            valid, errors = validate_solution_toolsets(originalData, solution)
-            if not valid:
-                print(f"❌ {filename} - Toolset validation failed with {len(errors)} errors.")
-                # continue
+        filepath = os.path.join(folderPath, filename)
+        print(f"  Validating {filename}...")
+        solution = rp.parseReport(filepath)
+        originalData = load_instance_beezao(solution[0]["jobsFileName"])
 
-            valid, errors = validate_toolset_capacity(originalData)
-            if not valid:
-                print(f"❌ {filename} - Capacity validation failed with {len(errors)} errors.")
-                # continue
+        valid, errors = validate_solution_toolsets(originalData, solution)
+        if not valid:
+            print(f"    ❌ Toolset validation failed with {len(errors)} errors.")
 
-            valid, report = validate_all_jobs_finished(originalData, solution)
-            if not valid:
-                print(f"❌ {filename} - Job completion validation failed.")
-                print(report)
-                # continue
-            
-            planejamentoObj, machines, endInfoObj = solution
+        valid, errors = validate_toolset_capacity(originalData)
+        if not valid:
+            print(f"    ❌ Capacity validation failed with {len(errors)} errors.")
 
-            final = 30*endInfoObj["fineshedJobsCount"] - (endInfoObj["switchs"] + 10*endInfoObj["switchsInstances"] + 30*endInfoObj["totalUnfineshed"])
-            def fmt(n):
-                return str(n).replace(".", ",")
+        valid, report = validate_all_jobs_finished(originalData, solution)
+        if not valid:
+            print(f"    ❌ Job completion validation failed.")
+            print(report)
 
-            csvData.append({
-                "Instancia": planejamentoObj["jobsFileName"].split("/")[-1].replace(".PMTC", ""),
-                "Tarefas Finalizadas": endInfoObj["fineshedJobsCount"],
-                "Tarefas não finalizads": endInfoObj["totalUnfineshed"],
-                "Trocas": endInfoObj["switchs"],
-                "Instancias de troca": endInfoObj["switchsInstances"],
-                "Soluções Iniciais": 0,
-                # "Soluções Iniciais": fmt(-endInfoObj["meanInitial"]),
-                "Soluções Final": fmt(endInfoObj["finalSolution"]),
-                "Soluções Final Real": fmt(final),
-                "Tempo": fmt(endInfoObj["Time"] / 1000),
-                "PTL": 0
-                # "PTL": fmt(round((endInfoObj["PTL"] / 600 * 100), 2))
-            })
-    
-    # save to CSV
-    # sort by instance name
+        planejamentoObj, machines, endInfoObj = solution
+        instance_name = planejamentoObj["jobsFileName"].split("/")[-1].replace(".PMTC", "")
+        final = (30 * endInfoObj["fineshedJobsCount"]
+                 - (endInfoObj["switchs"]
+                    + 10 * endInfoObj["switchsInstances"]
+                    + 30 * endInfoObj["totalUnfineshed"]))
+
+        entry = accumulator.setdefault(instance_name, {
+            "Instancia": instance_name,
+            "Tarefas Finalizadas": [],
+            "Tarefas não finalizads": [],
+            "Trocas": [],
+            "Instancias de troca": [],
+            "Soluções Final": [],
+            "Soluções Final Real": [],
+            "Tempo": [],
+            "Soluções Iniciais": [],
+            "PTL": [],
+        })
+
+        entry["Tarefas Finalizadas"].append(endInfoObj["fineshedJobsCount"])
+        entry["Tarefas não finalizads"].append(endInfoObj["totalUnfineshed"])
+        entry["Trocas"].append(endInfoObj["switchs"])
+        entry["Instancias de troca"].append(endInfoObj["switchsInstances"])
+        entry["Soluções Final"].append(endInfoObj["finalSolution"])
+        entry["Soluções Final Real"].append(final)
+        entry["Tempo"].append(endInfoObj["Time"] / 1000)
+        entry["Soluções Iniciais"].append(endInfoObj["bestInitial"])
+        entry["PTL"].append(endInfoObj["PTL"])
+
+
+def validateFolder(topFolderPath):
+    """
+    topFolderPath should contain numbered subfolders (one per execution run).
+    Results for the same instance are averaged across runs and written to CSV.
+    """
+    accumulator = {}
+
+    run_dirs = sorted(
+        d for d in os.listdir(topFolderPath)
+        if os.path.isdir(os.path.join(topFolderPath, d))
+    )
+
+    for run_dir in run_dirs:
+        run_path = os.path.join(topFolderPath, run_dir)
+        print(f"Processing run: {run_dir}")
+        processRunFolder(run_path, accumulator)
+
+    # Build averaged rows
+    csvData = []
+    for instance_name, entry in accumulator.items():
+        def mean(lst):
+            return sum(lst) / len(lst) if lst else 0
+
+        csvData.append({
+            "Instancia": instance_name,
+            "Tarefas Finalizadas": fmt(mean(entry["Tarefas Finalizadas"])),
+            "Tarefas não finalizads": fmt(mean(entry["Tarefas não finalizads"])),
+            "Trocas": fmt(mean(entry["Trocas"])),
+            "Instancias de troca": fmt(mean(entry["Instancias de troca"])),
+            "Soluções Iniciais": fmt(mean(entry["Soluções Iniciais"])),
+            "Soluções Final": fmt(mean(entry["Soluções Final"])),
+            "Soluções Final Real": fmt(mean(entry["Soluções Final Real"])),
+            "Tempo": fmt(mean(entry["Tempo"])),
+            "PTL": fmt(mean(entry["PTL"])),
+        })
+
     csvData.sort(key=lambda x: int(x["Instancia"].split("_")[0].replace("instanceLarge", "").replace("instance", "")))
-    with open("/workspaces/IC/SSP/output/beezao_large_pt.csv", "w", newline="") as csvfile:
-        fieldnames = [
-            "Instancia",
-            "Tarefas Finalizadas",
-            "Tarefas não finalizads",
-            "Trocas",
-            "Instancias de troca",
-            "Soluções Iniciais",
-            "Soluções Final",
-            "Soluções Final Real",
-            "Tempo",
-            "PTL"
-        ]
+
+    output_csv = os.path.join(topFolderPath, "results_mean.csv")
+    fieldnames = [
+        "Instancia",
+        "Tarefas Finalizadas",
+        "Tarefas não finalizads",
+        "Trocas",
+        "Instancias de troca",
+        "Soluções Iniciais",
+        "Soluções Final",
+        "Soluções Final Real",
+        "Tempo",
+        "PTL",
+    ]
+    with open(output_csv, "w", newline="") as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames, delimiter=";")
         writer.writeheader()
         for row in csvData:
             writer.writerow(row)
 
+    print(f"\nDone. {len(csvData)} instances averaged across {len(run_dirs)} runs.")
+    print(f"Output: {output_csv}")
 
-validateFolder("/workspaces/IC/SSP/output/BeezaoAutoPractitioner")
+
+validateFolder("/home/mateus/WSL/IC/SSP/output/BeezaoLarge10")
