@@ -1,0 +1,39 @@
+Compatibility matrix	1,1	1,2	2,1	3,1	3,2	4,1	4,2	5,1	6,1	7,1	Sum
+1,1	1	1						1		1	4
+1,2	1	1						1		1	4
+2,1			1			1	1				3
+3,1				1	1						2
+3,2				1	1						2
+4,1			1			1	1				3
+4,2			1			1	1				3
+5,1	1	1						1		1	4
+6,1									1		1
+7,1	1	1						1		1	4
+Sum	4	4	3	2	2	3	3	4	1	4	
+											
+											
+MIMU	U* = 4					Sweeping	L* = 4				
+S1	3,1	3,2				S1	6,1				
+S2	2,1	4,1	4,2			S2	3,1	3,2			
+S3	6,1					S3	2,1	4,1	4,2		
+S4	1,1	1,2	7,1	5,1		S4	1,1	1,2	7,1	5,1	
+											
+											
+BnB											
+Step 0.	U* = 4	(from MIMU)		L* = 4	(from sweeping procedure)						
+	i = root node										
+	S_i = \emptyset										
+											
+Step 1.	h	6,1		C = 8 - 6 = 2							
+	D(i) = 0		→	D(h) = D(i) + 1 = 0 + 1 = 1							
+											
+Step 2.	SW(h) = 3		→	lb(h) = D(h) + SW(h) = 1 + 3 = 4							
+	Ul(h) = 3		→	ub(h) = D(h) + UI(h) = 1 + 3 = 4							
+											
+Step 3.	Condition (a): lb(h) = ub(h) holds.										
+	Condition (b): lb(h) ≥ U* also holds.										
+	Terminate node h in the tree.										
+											
+Step 4.	No non-terminated branching tree are left in the tree. 										
+	STOP the BnB method.										
+	U* = 4										

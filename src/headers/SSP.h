@@ -37,7 +37,7 @@ struct solSSP: public solution{
 class SSP: public Problem<solSSP>{
 	private:
 		int planingHorizon;
-		int unsupervised;
+		float unsupervised;
 		int numberMachines;
 		int numberTools;
 		int numberToolsReal;

@@ -257,7 +257,6 @@ int main(int argc, char* argv[]) {
 
     // return 0;
 
-    // Replace the SSP section:
     // ------------------------------------------------------------------------------
     // GA
     // ------------------------------------------------------------------------------
@@ -277,20 +276,28 @@ int main(int argc, char* argv[]) {
     gaParams.varSwitch    = COSTSWITCH;
     gaParams.maxTimeSec   = 3600.0;
 
-    GeneticAlgorithm ga(prob->getGroupedJobs(), gaParams, /*seed=*/42);
+    // Wrap SSP::evaluate as a profit function (evaluate() returns -profit)
+    GeneticAlgorithm::EvalFn evalFn = [&](const vector<int>& perm) -> double {
+        solSSP s;
+        s.sol = perm;
+        return -prob->evaluate(s);   // negate: SSP returns negative profit
+    };
+
+    GeneticAlgorithm ga(prob->getGroupedJobs(), gaParams, evalFn, /*seed=*/42);
 
     ExecTime et;
     Chromosome best = ga.run();
 
     // Write report
     double cost = best.fitness;
+    solSSP bestSol;
+    bestSol.sol = best.perm;
+    int finalcost = prob->evaluateReport(bestSol, solutionReportFile);
+
     solutionReportFile << "Final Solution: " << cost << endl;
     solutionReportFile << "Time: " << et.getTimeMs() << endl;
-    solutionReportFile << "PTL: "  << 0 << endl;
-    solutionReportFile << "MCMC: " << 0 << endl;
-    solutionReportFile << "Best Initial: " << 0 << endl;
-    solutionReportFile << "Mean Initial: " << 0 << endl;
-    solutionReportFile.close();
+    // solutionReportFile << "Best Initial: " << -initAll[0].evalSol << endl;
+    // solutionReportFile << "Mean Initial: " << -meanInitial << endl;
 
     cout << cost << endl;
     return 0;

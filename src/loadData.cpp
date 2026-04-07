@@ -124,7 +124,7 @@ int SSP::laodInstance(string filename) {
 
     // planingHorizon = 7   * (24*60); // 7 dias em minutos
     // unsupervised   = 0.5 * (24*60); // 0.5 dia em minutos
-    planingHorizon = 7 * DAY;
+    planingHorizon = 7;
     unsupervised = 0.5;
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -415,68 +415,68 @@ int SSP::loadInstanceBeezao(string filename) {
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 void SSP::printDataReport() {
-#ifdef FMT
-    fmt::print("\n------------------------------------------------------------------------------------------------------------------------------------------\n");
-    fmt::print("DATA REPORT\n");
-    fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n\n");
+// #ifdef FMT
+//     fmt::print("\n------------------------------------------------------------------------------------------------------------------------------------------\n");
+//     fmt::print("DATA REPORT\n");
+//     fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n\n");
 
-    fmt::print("Number of Machines: {}\n", numberMachines);
-    fmt::print("Capacity of Magazine: {}\n", capacityMagazine);
-    fmt::print("Planing Horizon: {}\n", planingHorizon);
-    fmt::print("Unsupervised: {}\n\n", unsupervised);
-    fmt::print("Number of Tools: {}\n\n", numberTools);
-    fmt::print("Number of Original Jobs: {}\n\n", numberJobs);
+//     fmt::print("Number of Machines: {}\n", numberMachines);
+//     fmt::print("Capacity of Magazine: {}\n", capacityMagazine);
+//     fmt::print("Planing Horizon: {}\n", planingHorizon);
+//     fmt::print("Unsupervised: {}\n\n", unsupervised);
+//     fmt::print("Number of Tools: {}\n\n", numberTools);
+//     fmt::print("Number of Original Jobs: {}\n\n", numberJobs);
 
-    fmt::print("\n------------------------------------------------------------------------------------------------------------------------------------------\n");
-    fmt::print("JOBS DATA\n");
-    fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n\n");
+//     fmt::print("\n------------------------------------------------------------------------------------------------------------------------------------------\n");
+//     fmt::print("JOBS DATA\n");
+//     fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n\n");
 
-    size_t index = 0;
-    for (const auto &thisJob : originalJobs) {
-        fmt::print("Index: {}\n", index);
-        fmt::print("Job: {}\n", thisJob.indexJob);
-        fmt::print("Operation: {}\n", thisJob.indexOperation);
-        fmt::print("ProcessingTime: {}\n", thisJob.processingTime);
-        fmt::print("Priority: {}\n", thisJob.priority);
-        fmt::print("ToolSet Tools: {}\n", fmt::join(thisJob.toolSet.tools, " "));
-        fmt::print("thisJob.indexToolSet: {}\n", thisJob.indexToolSet);
-        fmt::print("thisJob.toolSet.indexToolSet: {}\n", thisJob.toolSet.indexToolSet);
-        fmt::print("Normalized ToolSet Tools: {}\n", fmt::join(normalizedToolSets[thisJob.indexToolSet].tools, " "));
-        fmt::print("isGrouped: {}\n", thisJob.isGrouped);
-        fmt::print("ProcessingTimes: {}\n\n", fmt::join(thisJob.processingTimes, " "));
-        ++index;
-    }
+//     size_t index = 0;
+//     for (const auto &thisJob : originalJobs) {
+//         fmt::print("Index: {}\n", index);
+//         fmt::print("Job: {}\n", thisJob.indexJob);
+//         fmt::print("Operation: {}\n", thisJob.indexOperation);
+//         fmt::print("ProcessingTime: {}\n", thisJob.processingTime);
+//         fmt::print("Priority: {}\n", thisJob.priority);
+//         fmt::print("ToolSet Tools: {}\n", fmt::join(thisJob.toolSet.tools, " "));
+//         fmt::print("thisJob.indexToolSet: {}\n", thisJob.indexToolSet);
+//         fmt::print("thisJob.toolSet.indexToolSet: {}\n", thisJob.toolSet.indexToolSet);
+//         fmt::print("Normalized ToolSet Tools: {}\n", fmt::join(normalizedToolSets[thisJob.indexToolSet].tools, " "));
+//         fmt::print("isGrouped: {}\n", thisJob.isGrouped);
+//         fmt::print("ProcessingTimes: {}\n\n", fmt::join(thisJob.processingTimes, " "));
+//         ++index;
+//     }
 
-    fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n");
-    fmt::print("TOOL SET\n");
-    fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n\n");
+//     fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n");
+//     fmt::print("TOOL SET\n");
+//     fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n\n");
 
-    // print the tool set map
-    for (const auto &[key, value] : originalToolSets) {
-        fmt::print("ToolSet: {}\n", key);
-        fmt::print("Tools: {}\n\n", fmt::join(value.tools, " "));
-    }
+//     // print the tool set map
+//     for (const auto &[key, value] : originalToolSets) {
+//         fmt::print("ToolSet: {}\n", key);
+//         fmt::print("Tools: {}\n\n", fmt::join(value.tools, " "));
+//     }
 
-    fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n");
-    fmt::print("TOOL NORMALIZED\n");
-    fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n\n");
+//     fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n");
+//     fmt::print("TOOL NORMALIZED\n");
+//     fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n\n");
 
-    // print the tool set map
-    for (const auto &[key, value] : normalizedToolSets) {
-        fmt::print("ToolSet: {}\n", key);
-        fmt::print("Tools: {}\n\n", fmt::join(value.tools, " "));
-    }
+//     // print the tool set map
+//     for (const auto &[key, value] : normalizedToolSets) {
+//         fmt::print("ToolSet: {}\n", key);
+//         fmt::print("Tools: {}\n\n", fmt::join(value.tools, " "));
+//     }
 
-    fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n");
-    fmt::print("TOOL JOB\n");
-    fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n\n");
+//     fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n");
+//     fmt::print("TOOL JOB\n");
+//     fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n\n");
 
-    // print the toolJob matrix
-    for (int i = 0; i < numberTools; i++) {
-        fmt::print("Tool: {}\n", i);
-        fmt::print("Jobs: {}\n\n", fmt::join(toolJob[i], " "));
-    }
+//     // print the toolJob matrix
+//     for (int i = 0; i < numberTools; i++) {
+//         fmt::print("Tool: {}\n", i);
+//         fmt::print("Jobs: {}\n\n", fmt::join(toolJob[i], " "));
+//     }
 
-#endif
+// #endif
 }
 

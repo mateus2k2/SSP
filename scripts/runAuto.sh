@@ -1,6 +1,7 @@
 # ./scripts/runAuto.sh ./output/TESTE same PT 9
 # ./scripts/runAuto.sh ./output/practitionerFinal both practitioner 9999
-# ./scripts/runAuto.sh ./output/BeezaoAuto beezao PT 9999
+# ./scripts/runAuto.sh ./output/GATeste1 beezao PT 9999
+# ./scripts/runAuto.sh ./output/GATeste1 both PT 9999 > out 2>&1
 # ./scripts/runAuto.sh ./output/BeezaoAuto beezao practitioner 9999
 
 outputFolder=${1:-"./output/Exemplo"}
@@ -15,7 +16,7 @@ licenseFile=${6:-""}
 [ ! -d "$outputFolder/MyInstancesDiferentToolSets" ] && mkdir -p "$outputFolder/MyInstancesDiferentToolSets"
 
 instaceExtention="csv"
-if [ "$runMode" = "beezao" ] 
+if [ "$runMode" = "beezao" ]
 then
     instaceExtention="PMTC"
 fi

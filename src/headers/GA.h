@@ -1,268 +1,130 @@
 #pragma once
-#include <vector>
-#include <set>
-#include <map>
-#include <random>
+
 #include <functional>
-#include <algorithm>
-#include <numeric>
-#include <limits>
-#include <tuple>
-#include <string>
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <chrono>
+#include <random>
+#include <unordered_map>
+#include <vector>
 
-#include "SSP.h"
+#include "GlobalVars.h"
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  Forward declarations / types assumed from your existing code
-// ─────────────────────────────────────────────────────────────────────────────
-// struct ToolSet {
-//     int indexToolSet;
-//     std::vector<int> tools;
-// };
-
-// struct Job {
-//     int indexJob;
-//     int indexOperation;     // k-th operation of the job
-//     int indexToolSet;
-//     int processingTime;
-//     bool priority;
-//     bool flag;
-//     ToolSet toolSet;
-//     ToolSet toolSetNormalized;
-//     bool isGrouped;
-//     bool isReentrant;
-//     std::vector<int> processingTimes;
-//     std::vector<ToolSet> toolSets;
-// };
-
-// ─────────────────────────────────────────────────────────────────────────────
-//  GA-specific data structures
-// ─────────────────────────────────────────────────────────────────────────────
-
-/**
- * A MaximalClass is a group of operations that can all fit in the tool
- * magazine at the same time (total tools <= TC).
- * Paper notation: S_g
- */
-struct MaximalClass {
-    std::vector<int> operationIndices;   // indices into the global operation list
-    int machineId = 0;                   // machine assigned to this class (M_g)
-
-    // Convenience: union of all tool sets of operations in this class
-    std::set<int> allTools() const;       // filled lazily by GA
-};
-
-/**
- * One gene in a chromosome: v_g = {S_g, M_g}
- * Paper: chromosome v = (v_1, …, v_n) = ({S_1,M_1}, …, {S_n,M_n})
- */
-struct Gene {
-    MaximalClass cls;   // S_g
-    int machineId = 0;  // M_g (duplicated from cls for convenience)
-};
-
-/**
- * A full chromosome.
- * V^S  = job vector  (sequence of MaximalClasses)
- * V^M  = machine vector (machine assigned to each class)
- * fitness = profit = Revenue - PenaltyCost - ToolSwitchCost
- */
-struct Chromosome {
-    std::vector<Gene> genes;            // length n = number of maximal classes
-    double fitness = -std::numeric_limits<double>::infinity();
-
-    int numGenes() const { return (int)genes.size(); }
-};
-
-// ─────────────────────────────────────────────────────────────────────────────
-//  GA parameters (Section 7.2 of the paper)
+// GA parameter bundle (filled by main.cpp from SSP accessors)
 // ─────────────────────────────────────────────────────────────────────────────
 struct GAParams {
-    int    popSize      = 400;   // N_p
-    double gamma1       = 0.20;  // tournament selection rate
-    double gamma2       = 0.10;  // elitism rate
-    double probSwap     = 0.01;  // P_s  (swap mutation probability)
-    double probUniform  = 0.01;  // P_u  (uniform mutation probability)
-    int    Q            = 1;     // number of generations using POX after new best
-    int    Gc           = 20;    // max non-improvement generations before stopping
-    double maxTimeSec   = 3600.0;// maximum wall-clock time
-    int    numMachines  = 1;     // |M|
-    int    magazineCap  = 80;    // T_C
-    int    horizon      = 10080; // H  (minutes; 7 days * 24 h * 60 = 10080)
-    int    unsupHours   = 12;    // t_U  (unsupervised hours per day)
-    // Cost / revenue parameters
-    int    revenue      = 30;    // r  per finished operation
-    int    penaltyCost  = 30;    // c_p per unfinished priority operation
-    int    fixedSwitch  = 10;    // c_f per tool-switch instance
-    int    varSwitch    = 1;     // c_v per individual tool switch
-    // BnB seeding: 5 % of population
-    double bnbSeedFrac  = 0.05;
+    int    numMachines = 2;
+    int    magazineCap = 80;
+    int    horizon     = 10080;   // planning horizon in minutes (7 days)
+    double unsupHours  = 12.0;   // unsupervised hours per day
+    int    revenue     = 30;
+    int    penaltyCost = 30;
+    int    fixedSwitch = 10;
+    int    varSwitch   = 1;
+    double maxTimeSec  = 3600.0; // 1 hour
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  Main GA class
+// Chromosome: permutation of grouped-job indices + fitness (profit, higher=better)
+// ─────────────────────────────────────────────────────────────────────────────
+struct Chromosome {
+    std::vector<int> perm;
+    double           fitness = 0.0;
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Genetic Algorithm  — Dang et al. 2023, Section 4
+//
+// Chromosome encoding:  permutation of grouped-job indices.
+//   The KTNS scheduler (inside evalFn) assigns jobs to machines via a time-
+//   based split, so no explicit machine vector is needed here.
+//
+// Operators (paper → implementation):
+//   CX  = Two-Point Crossover + Partially-Mapped Crossover repair
+//   POX = Problem-Oriented Crossover (priority sort + greedy tool-similarity)
+//   SM  = Swap Mutation  (Ps = 0.01 per locus)
+//   UM  = Uniform / Reinsertion Mutation  (Pu = 0.01 per locus)
+//
+// Parameters (Table A.2-A.5):
+//   Np = 400, SE = 40, ST = 80, Gc = 20, Ω = 1, Ps = Pu = 0.01
 // ─────────────────────────────────────────────────────────────────────────────
 class GeneticAlgorithm {
 public:
-    // ── Construction ──────────────────────────────────────────────────────────
-    /**
-     * @param operations  flat list of all operations (O), ordered by job then
-     *                    operation index.  Precedence constraints come from
-     *                    consecutive operations with the same indexJob.
-     * @param params      tunable hyper-parameters
-     * @param seed        random seed (for reproducibility)
-     */
-    GeneticAlgorithm(const std::vector<Job>& operations,
-                     const GAParams&         params,
-                     unsigned int            seed = 42);
+    /// evalFn(perm) must return the PROFIT (positive value, higher = better).
+    using EvalFn = std::function<double(const std::vector<int>&)>;
 
-    // ── Public interface ──────────────────────────────────────────────────────
-    /** Run the GA; returns the best chromosome found. */
+    GeneticAlgorithm(const std::vector<Job>& groupedJobs,
+                     const GAParams&         params,
+                     EvalFn                  evalFn,
+                     unsigned                seed = 42);
+
+    /// Run the GA and return the best chromosome found.
     Chromosome run();
 
-    /** Evaluate (and set) the fitness of a chromosome in-place. */
-    void evaluateChromosome(Chromosome& chr);
-
-    /** Return the all-time best chromosome. */
-    const Chromosome& bestChromosome() const { return bestChr_; }
-
-    // ── Exposed for unit-testing ───────────────────────────────────────────────
-    std::vector<Chromosome> population_;    // current generation P_k
-
 private:
-    // ── Problem data ──────────────────────────────────────────────────────────
-    std::vector<Job> ops_;          // all operations O
+    // ── problem data ──────────────────────────────────────────────────────────
+    std::vector<Job> jobs_;   // grouped jobs
     GAParams         params_;
+    EvalFn           eval_;
     std::mt19937     rng_;
+    int              n_;      // number of grouped jobs
 
-    // Precomputed: for operation i, which tools does it need?
-    // toolsOf_[i] = set of tool IDs
-    std::vector<std::set<int>> toolsOf_;
+    // ── hyper-parameters (tuned values from paper) ────────────────────────────
+    static constexpr int    Np_    = 400;   // population size
+    static constexpr int    SE_    = 40;    // elitism count  (10 % of Np)
+    static constexpr int    ST_    = 80;    // tournament size (20 % of Np)
+    static constexpr int    Gc_    = 200;    // max generations without improvement
+    static constexpr int    Omega_ = 1;     // POX generations after improvement
+    static constexpr double Ps_    = 0.01;  // swap-mutation prob per locus
+    static constexpr double Pu_    = 0.01;  // reinsertion-mutation prob per locus
 
-    // Precomputed: for operation i, is it priority?
-    std::vector<bool> isPriority_;
+    // ── initialisation ────────────────────────────────────────────────────────
+    Chromosome makeRandom();
+    Chromosome makePriorityFirst();
+    void       initPopulation(std::vector<Chromosome>& pop);
 
-    // Precomputed: operation index → (jobIndex, operationIndex k)
-    std::vector<std::pair<int,int>> opId_;
+    // ── crossover ─────────────────────────────────────────────────────────────
+    std::pair<Chromosome, Chromosome>
+        combinedCrossover(const Chromosome& p1, const Chromosome& p2);
 
-    // Total number of operations
-    int numOps_;
-    int numMachines_;
-    int TC_;            // magazine capacity
+    void pmxRepair(std::vector<int>&       child,
+                   const std::vector<int>& segParent,
+                   const std::vector<int>& fillParent,
+                   int l, int r);
 
-    // Best chromosome so far
-    Chromosome bestChr_;
+    Chromosome problemOrientedCrossover(const Chromosome& c);
 
-    // ── Initialisation (Section 5.2) ──────────────────────────────────────────
-    void initialisePopulation();
+    // ── mutation ──────────────────────────────────────────────────────────────
+    void swapMutation       (Chromosome& c);
+    void reinsertionMutation(Chromosome& c);
 
-    /** Generate one chromosome with a random permutation of maximal classes. */
-    Chromosome randomChromosome();
-    Chromosome randomChromosomeFromBnB();
+    // ── selection ─────────────────────────────────────────────────────────────
+    const Chromosome& tournamentSelect(const std::vector<Chromosome>& pop);
 
-    /** BnB grouping: partition all operations into min # of maximal classes.
-     *  Returns the sequence of maximal classes (operations grouped). */
-    std::vector<MaximalClass> bnbGrouping();
+    // ── BnB initialization (MIMU + Sweeping) ─────────────────────────────────
+    // Returns the union of all tools required by grouped job i.
+    std::vector<int> jobTools(int i) const;
 
-    // ── BnB helpers (Appendix E) ──────────────────────────────────────────────
-    /** MIMU: sequential maximal partition (upper-bound heuristic). */
-    std::vector<MaximalClass> MIMU(std::vector<int> opSet);
+    // MIMU: greedily builds a maximal-class partition (upper bound U*).
+    // Maximise intersection with current class, break ties by min new tools.
+    std::vector<std::vector<int>> runMIMU();
 
-    /** Sweeping procedure: lower-bound heuristic. */
-    int sweepingLowerBound(const std::vector<int>& opSet);
+    // Sweeping: partition starting from the most-constrained unassigned job.
+    std::vector<std::vector<int>> runSweeping();
 
-    /** Check if opSet forms a valid class (union of tools <= TC). */
-    bool isValidClass(const std::vector<int>& opSet) const;
+    // BnB: if U*==L*, return either partition; otherwise branch on the job
+    // with fewest remaining compatible peers and pick the child with lower
+    // depth + sweep-estimate bound.  Returns the best partition found or
+    // the MIMU partition if the time budget for BnB is exceeded.
+    std::vector<std::vector<int>> runBnB();
 
-    /** Union of tools for a set of operation indices. */
-    std::set<int> unionTools(const std::vector<int>& opSet) const;
+    // Convert a partition (list of maximal classes) to a GA chromosome.
+    // Jobs within each class are optionally shuffled for diversity.
+    Chromosome partitionToChromosome(const std::vector<std::vector<int>>& partition,
+                                     bool shuffleWithin = false);
 
-    // ── Chromosome construction helpers ───────────────────────────────────────
-    /**
-     * Given a sequence (partition) of maximal classes, assign machines using
-     * the constructive heuristic from Dang et al. 2021 (Section 5.3.2 step 3).
-     * Machines are chosen by: (a) machine already has required tools; else
-     *                         (b) machine with least accumulated workload.
-     */
-    void assignMachines(Chromosome& chr);
+    // ── utilities ─────────────────────────────────────────────────────────────
+    int  toolOverlap   (int i, int j) const;
+    void removeDuplicates(std::vector<Chromosome>& pop);
 
-    /** Merge adjacent classes on the same machine if they still fit in T_C.
-     *  Paper Section 5.5. */
-    void mergeToMaximalClasses(Chromosome& chr);
-
-    // ── Selection (Section 5.3) ───────────────────────────────────────────────
-    /** Tournament selection; returns index of winner in population_. */
-    int tournamentSelect();
-
-    // ── Crossover (Section 5.3) ───────────────────────────────────────────────
-    /** Combined crossover = 2X + APMX (Section 5.3.1). */
-    std::pair<Chromosome,Chromosome> combinedCrossover(const Chromosome& p1,
-                                                       const Chromosome& p2);
-
-    /** Two-point crossover on the gene sequence. */
-    std::pair<Chromosome,Chromosome> twoPointCrossover(const Chromosome& p1,
-                                                       const Chromosome& p2);
-
-    /** Adapted partial-mapped crossover: fix duplicates after 2X. */
-    void adaptedPMX(Chromosome& offspring, const Chromosome& donor,
-                    int cut1, int cut2);
-
-    /** Problem-oriented crossover (Section 5.3.2). 
-     *  Applies to a single chromosome (modifies it in-place). */
-    void problemOrientedCrossover(Chromosome& chr);
-
-    // ── Mutation (Section 5.4) ────────────────────────────────────────────────
-    /** Swap mutation on gene-level and operation-level. */
-    void swapMutation(Chromosome& chr);
-
-    /** Uniform mutation on the machine vector. */
-    void uniformMutation(Chromosome& chr);
-
-    // ── KTNS tool-switching (Section 5.7) ─────────────────────────────────────
-    /**
-     * Given the sequence of finished maximal classes on one machine,
-     * compute the total number of tool switches using KTNS.
-     * Returns {totalSwitches, numSwitchInstances}.
-     */
-    std::pair<int,int> KTNS(const std::vector<MaximalClass>& seq,
-                            const std::vector<int>& opIndices) const;
-
-    // ── Fitness evaluation (Algorithm 2) ──────────────────────────────────────
-    /**
-     * Decode a chromosome, simulate the schedule respecting unsupervised
-     * shifts, compute revenue, penalty, and tool-switch costs.
-     */
-    double fitnessEval(Chromosome& chr);
-
-    // ── Elitism + immigration (Section 5.6) ───────────────────────────────────
-    void nextGeneration(std::vector<Chromosome>& offspring);
-
-    // ── Utility ───────────────────────────────────────────────────────────────
-    int  uniformInt(int lo, int hi);           // inclusive
-    double uniformReal(double lo, double hi);
-    bool toolsFitInMagazine(const std::set<int>& toolsAlready,
-                            const std::set<int>& toolsNeeded) const;
-    /** Return tools union of a MaximalClass. */
-    std::set<int> classTools(const MaximalClass& cls) const;
-
-    /** Validate that a chromosome's precedence constraints are satisfied.
-     *  (Each job j appears n_j times in the right order across genes.) */
-    bool validatePrecedence(const Chromosome& chr) const;
-
-    /** Decode the job-vector part of a chromosome into a flat ordered
-     *  list of operations respecting precedence. */
-    std::vector<int> decodeToOperationSequence(const Chromosome& chr) const;
-
-    // Machine state during fitness evaluation
-    struct MachineState {
-        int availTime = 0;                // a_m
-        std::set<int> magazine;           // current tools in magazine
-        std::vector<MaximalClass> finishedClasses; // S_F_m
-        std::vector<int> finishedOps;     // O_F_m
-        int finishedPriority = 0;         // |O_P_m|
-    };
+    static bool fitnessDesc(const Chromosome& a, const Chromosome& b)
+        { return a.fitness > b.fitness; }
 };

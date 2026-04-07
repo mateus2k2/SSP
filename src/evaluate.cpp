@@ -37,10 +37,7 @@ double SSP::evaluate(solSSP& s) {
     //     totalUnfineshed -= fineshedJobsCount;
     //     fineshedJobsCountTotal += fineshedJobsCount;
     // }
-
-    vector<vector<int>> machines = splitSolutionIntoMachinesByTime(sol.sol, planingHorizon);
-    // vector<vector<int>> machines = splitSolutionIntoMachines(sol.sol, numberMachines);
-
+    vector<vector<int>> machines = splitSolutionIntoMachines(sol.sol, numberMachines);
     for (size_t i = 0; i < machines.size(); i++) {
         auto [fineshedJobsCount, switchs, switchsInstances, fineshedPriorityCount, trash] = KTNS(machines[i], 0);
         fineshedJobsCountTotal += fineshedJobsCount;
@@ -52,8 +49,10 @@ double SSP::evaluate(solSSP& s) {
 
     int result = -((PROFITYFINISHED * fineshedJobsCountTotal) - (COSTSWITCH * switchsTotal) - (COSTSWITCHINSTANCE * switchsInstancesTotal) - (COSTPRIORITY * unFineshedPriorityCountTotal));
     
+    // cout << "planingHorizon: " << planingHorizon << " unsupervised: " << unsupervised << endl;
     // cout << "fineshedJobsCount: " << fineshedJobsCountTotal << " switchsTotal: " << switchsTotal << " switchsInstancesTotal: " << switchsInstancesTotal << " unFineshedPriorityCountTotal: " << unFineshedPriorityCountTotal << " totalUnfineshed: " << totalUnfineshed << endl;
-    
+    // cout << "Profit: " << result << endl;
+
     return result;
 }
 
@@ -87,7 +86,7 @@ tuple<int, int, int, int, int> SSP::KTNS(vector<int> s, int startIndex) {
         fimJob = inicioJob + originalJobsCopy[s[jL]].processingTime;
 
         // Estou no periodo de supervisao e entrando no periodo sem supervisao
-        if (inicioJob % (DAY) < unsupervised && fimJob % (DAY) > unsupervised && fimJob < (planingHorizon)) {
+        if (inicioJob % (DAY) < unsupervised && fimJob % (DAY) > unsupervised && fimJob < (planingHorizon * DAY)) {
             vector<bool> magazineAntes = magazineL;
             set<int> unsupervisedMagazine;
             int inicioUnsupervised = inicioJob;
@@ -112,7 +111,7 @@ tuple<int, int, int, int, int> SSP::KTNS(vector<int> s, int startIndex) {
 
                 // verificacao de tempo
                 if ((((inicioUnsupervised % DAY) >= unsupervised) && (fimUnsupervised % DAY) < unsupervised) || (breakLoop))  {
-                    if( (fimUnsupervised + unsupervised >= (planingHorizon)) && (originalJobsCopy[s[k]].indexOperation == 1)) {
+                    if( (fimUnsupervised + unsupervised >= (planingHorizon * DAY)) && (originalJobsCopy[s[k]].indexOperation == 1)) {
                         // cout << "Estou no ultimo periodo sem supervisao" <<  " Tarefa: " << originalJobsCopy[s[k]].indexJob << " " << originalJobsCopy[s[k]].indexOperation << endl;
                         originalJobsCopy[s[k-1]].flag = true; // flag para indicar que a tarefa foi interrompida
                     }
@@ -168,16 +167,14 @@ tuple<int, int, int, int, int> SSP::KTNS(vector<int> s, int startIndex) {
         // TIME VERIFICATIONS
         // ---------------------------------------------------------------------------
 
-        // cout << "(planingHorizon) " << (planingHorizon) << " Job: " << originalJobsCopy[s[jL]].indexJob << " " << originalJobsCopy[s[jL]].indexOperation << " Inicio: " << inicioJob << " Fim: " << fimJob << " ProcessingTimeSum: " << processingTimeSum << " CurrantSwitchs: " << currantSwitchs << endl;
-
         if (((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) ||                          // verificar se estou em um periodo semsupervisao e houve troca de ferramenta
-            (inicioJob % (planingHorizon) + (processingTimeSum) > (planingHorizon)) || 
+            (inicioJob % (planingHorizon * DAY) + (processingTimeSum) > (planingHorizon * DAY)) || 
             (originalJobsCopy[s[jL]].flag == true)) {  // verificar se o job excede o horizonte de planejamento unico (iria extender de uma maquina para outra)
             inicioJob += DAY - (inicioJob % DAY);
             fimJob = inicioJob + originalJobsCopy[s[jL]].processingTime;
         }
 
-        if (fimJob > (planingHorizon)) break;
+        if (fimJob > (planingHorizon * DAY)) break;
 
         inicioJob = fimJob;
 

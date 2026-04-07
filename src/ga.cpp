@@ -1,1068 +1,614 @@
+#include <algorithm>
+#include <chrono>
+#include <iostream>
+#include <numeric>
+#include <set>
+#include <unordered_map>
+#include <vector>
+
 #include "headers/GA.h"
-#include <cassert>
-#include <climits>
-#include <stdexcept>
+
+#define INT_MAX 2147483647
+
+using namespace std;
+using Clock = chrono::steady_clock;
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  MaximalClass helper
+// Constructor
 // ─────────────────────────────────────────────────────────────────────────────
-std::set<int> MaximalClass::allTools() const {
-    // NOTE: The GA fills this lazily via GeneticAlgorithm::classTools().
-    // This stub is kept for completeness.
-    return {};
+GeneticAlgorithm::GeneticAlgorithm(const vector<Job>& groupedJobs,
+                                   const GAParams&    params,
+                                   EvalFn             evalFn,
+                                   unsigned           seed)
+    : jobs_(groupedJobs),
+      params_(params),
+      eval_(move(evalFn)),
+      rng_(seed),
+      n_((int)groupedJobs.size())
+{}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Initialisation helpers
+// ─────────────────────────────────────────────────────────────────────────────
+
+Chromosome GeneticAlgorithm::makeRandom() {
+    Chromosome c;
+    c.perm.resize(n_);
+    iota(c.perm.begin(), c.perm.end(), 0);
+    shuffle(c.perm.begin(), c.perm.end(), rng_);
+    c.fitness = eval_(c.perm);
+    return c;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-//  Constructor
-// ─────────────────────────────────────────────────────────────────────────────
-GeneticAlgorithm::GeneticAlgorithm(const std::vector<Job>& operations,
-                                   const GAParams&         params,
-                                   unsigned int            seed)
-    : ops_(operations), params_(params), rng_(seed)
-{
-    numOps_      = (int)ops_.size();
-    numMachines_ = params_.numMachines;
-    TC_          = params_.magazineCap;
-
-    // Pre-compute per-operation tool sets and priority flags
-    toolsOf_.resize(numOps_);
-    isPriority_.resize(numOps_);
-    opId_.resize(numOps_);
-
-    for (int i = 0; i < numOps_; ++i) {
-        const auto& op = ops_[i];
-        for (int t : op.toolSetNormalized.tools)
-            toolsOf_[i].insert(t);
-        isPriority_[i] = op.priority;
-        opId_[i] = {op.indexJob, op.indexOperation}; 
+Chromosome GeneticAlgorithm::makePriorityFirst() {
+    Chromosome c;
+    vector<int> prio, nonPrio;
+    for (int i = 0; i < n_; ++i) {
+        if (jobs_[i].priority) prio.push_back(i);
+        else                   nonPrio.push_back(i);
     }
+    shuffle(prio.begin(),    prio.end(),    rng_);
+    shuffle(nonPrio.begin(), nonPrio.end(), rng_);
+    c.perm.insert(c.perm.end(), prio.begin(),    prio.end());
+    c.perm.insert(c.perm.end(), nonPrio.begin(), nonPrio.end());
+    c.fitness = eval_(c.perm);
+    return c;
+}
 
-    // Sanity: every tool set must fit in the magazine
-    for (int i = 0; i < numOps_; ++i) {
-        if ((int)toolsOf_[i].size() > TC_)
-            throw std::runtime_error("Operation " + std::to_string(i) +
-                                     " requires more tools than magazine capacity!");
+// ─────────────────────────────────────────────────────────────────────────────
+// BnB initialisation helpers  (paper Section 4.1, BnB Grouping Method)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Returns the union of all tool indices required by grouped job i.
+vector<int> GeneticAlgorithm::jobTools(int i) const {
+    set<int> tools;
+    const Job& j = jobs_[i];
+    if (j.isGrouped && !j.toolSets.empty()) {
+        for (const auto& ts : j.toolSets)
+            for (int t : ts.tools) tools.insert(t);
+    } else {
+        for (int t : j.toolSetNormalized.tools) tools.insert(t);
     }
+    return vector<int>(tools.begin(), tools.end());
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-//  Utility
-// ─────────────────────────────────────────────────────────────────────────────
-int GeneticAlgorithm::uniformInt(int lo, int hi) {
-    std::uniform_int_distribution<int> d(lo, hi);
-    return d(rng_);
-}
+// MIMU — Maximal Intersection, Minimal Union.
+// Builds a maximal-class partition greedily: at each step pick the unassigned
+// job that (1) maximises tool intersection with the current class, then
+// (2) minimises the number of new tools added.  Produces upper bound U*.
+vector<vector<int>> GeneticAlgorithm::runMIMU() {
+    vector<bool> assigned(n_, false);
+    vector<vector<int>> partition;
 
-double GeneticAlgorithm::uniformReal(double lo, double hi) {
-    std::uniform_real_distribution<double> d(lo, hi);
-    return d(rng_);
-}
-
-std::set<int> GeneticAlgorithm::unionTools(const std::vector<int>& opSet) const {
-    std::set<int> result;
-    for (int idx : opSet)
-        result.insert(toolsOf_[idx].begin(), toolsOf_[idx].end());
-    return result;
-}
-
-std::set<int> GeneticAlgorithm::classTools(const MaximalClass& cls) const {
-    return unionTools(cls.operationIndices);
-}
-
-bool GeneticAlgorithm::isValidClass(const std::vector<int>& opSet) const {
-    return (int)unionTools(opSet).size() <= TC_;
-}
-
-bool GeneticAlgorithm::toolsFitInMagazine(const std::set<int>& already,
-                                           const std::set<int>& needed) const {
-    std::set<int> combined;
-    combined.insert(already.begin(), already.end());
-    combined.insert(needed.begin(), needed.end());
-    return (int)combined.size() <= TC_;
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-//  MIMU heuristic  (Algorithm E.1)
-// ─────────────────────────────────────────────────────────────────────────────
-std::vector<MaximalClass> GeneticAlgorithm::MIMU(std::vector<int> opSet) {
-    std::vector<MaximalClass> classes;
-    std::vector<bool> used(numOps_, false);
-
-    // Mark operations NOT in opSet as used
-    {
-        std::set<int> inSet(opSet.begin(), opSet.end());
-        for (int i = 0; i < numOps_; ++i)
-            if (!inSet.count(i)) used[i] = true;
-    }
-
-    auto remaining = [&]() {
-        std::vector<int> r;
-        for (int i : opSet)
-            if (!used[i]) r.push_back(i);
-        return r;
-    };
+    // Precompute tool sets
+    vector<vector<int>> tools(n_);
+    for (int i = 0; i < n_; ++i) tools[i] = jobTools(i);
 
     while (true) {
-        auto rem = remaining();
-        if (rem.empty()) break;
+        // Seed: first unassigned job
+        int seed = -1;
+        for (int i = 0; i < n_; ++i)
+            if (!assigned[i]) { seed = i; break; }
+        if (seed == -1) break;
 
-        MaximalClass cls;
+        vector<int> cls = {seed};
+        assigned[seed] = true;
+        set<int> clsTools(tools[seed].begin(), tools[seed].end());
 
-        // Step 3: pick the operation with the largest |T_jk| to start the class
-        int seed = rem[0];
-        for (int i : rem)
-            if (toolsOf_[i].size() > toolsOf_[seed].size()) seed = i;
-        cls.operationIndices.push_back(seed);
-        used[seed] = true;
+        // Greedily expand the class
+        bool expanded = true;
+        while (expanded) {
+            expanded      = false;
+            int bestJ     = -1;
+            int bestInter = -1;
+            int bestNewT  = INT_MAX;
 
-        // Expand class (Step 4-5)
-        while (true) {
-            rem = remaining();
-            if (rem.empty()) break;
+            for (int j = 0; j < n_; ++j) {
+                if (assigned[j]) continue;
+                int inter   = 0;
+                int newTools = 0;
+                for (int t : tools[j]) {
+                    if (clsTools.count(t)) ++inter;
+                    else                   ++newTools;
+                }
+                // Feasibility: total tools must fit in magazine
+                if ((int)(clsTools.size() + newTools) > params_.magazineCap) continue;
 
-            std::set<int> currentTools = unionTools(cls.operationIndices);
-
-            // Filter: which remaining ops are still compatible with the class?
-            std::vector<int> compatible;
-            for (int i : rem) {
-                std::set<int> combined = currentTools;
-                combined.insert(toolsOf_[i].begin(), toolsOf_[i].end());
-                if ((int)combined.size() <= TC_)
-                    compatible.push_back(i);
-            }
-            if (compatible.empty()) break;
-
-            // Select op that maximises |R(S) ∩ T_jk|, break ties by minimising
-            // |T_jk - R(S)|  (lexicographic: max intersection, min union extra)
-            int best = compatible[0];
-            int bestInter = 0, bestExtra = INT_MAX;
-            for (int i : compatible) {
-                int inter = 0;
-                for (int t : toolsOf_[i])
-                    if (currentTools.count(t)) inter++;
-                int extra = (int)toolsOf_[i].size() - inter;
+                // Prefer max intersection, break ties by min new tools
                 if (inter > bestInter ||
-                   (inter == bestInter && extra < bestExtra)) {
-                    best      = i;
+                    (inter == bestInter && newTools < bestNewT)) {
                     bestInter = inter;
-                    bestExtra = extra;
+                    bestNewT  = newTools;
+                    bestJ     = j;
                 }
             }
-            cls.operationIndices.push_back(best);
-            used[best] = true;
-        }
 
-        classes.push_back(cls);
+            if (bestJ != -1) {
+                cls.push_back(bestJ);
+                assigned[bestJ] = true;
+                for (int t : tools[bestJ]) clsTools.insert(t);
+                expanded = true;
+            }
+        }
+        partition.push_back(move(cls));
     }
-    return classes;
+    return partition;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-//  Sweeping lower-bound  (Algorithm E.2)
-// ─────────────────────────────────────────────────────────────────────────────
-int GeneticAlgorithm::sweepingLowerBound(const std::vector<int>& opSet) {
-    if (opSet.empty()) return 0;
+// Sweeping — builds a partition starting from the most-constrained job.
+// At each step, pick the unassigned job with the fewest compatible unassigned
+// peers, then sweep all compatible jobs into its class.  Produces lower bound L*.
+vector<vector<int>> GeneticAlgorithm::runSweeping() {
+    // Precompute tool sets and pairwise compatibility
+    vector<vector<int>> tools(n_);
+    for (int i = 0; i < n_; ++i) tools[i] = jobTools(i);
 
-    // LB from coverage: ceil(|union all tools| / TC)
-    std::set<int> allT = unionTools(opSet);
-    int lb1 = ((int)allT.size() + TC_ - 1) / TC_;
+    // compat[i][j] = true if jobs i and j can share a maximal class
+    vector<vector<bool>> compat(n_, vector<bool>(n_, false));
+    for (int i = 0; i < n_; ++i) {
+        for (int j = i; j < n_; ++j) {
+            set<int> u(tools[i].begin(), tools[i].end());
+            for (int t : tools[j]) u.insert(t);
+            bool ok = (int)u.size() <= params_.magazineCap;
+            compat[i][j] = compat[j][i] = ok;
+        }
+    }
 
-    // Sweeping procedure
-    std::vector<bool> used(numOps_, false);
-    std::set<int> inSet(opSet.begin(), opSet.end());
-    for (int i = 0; i < numOps_; ++i)
-        if (!inSet.count(i)) used[i] = true;
+    vector<bool> assigned(n_, false);
+    vector<vector<int>> partition;
 
-    int lb2 = 0;
     while (true) {
-        // Collect remaining
-        std::vector<int> rem;
-        for (int i : opSet)
-            if (!used[i]) rem.push_back(i);
-        if (rem.empty()) break;
-
-        // Find op compatible with fewest others
-        int pivot = rem[0];
-        int minCompat = INT_MAX;
-        for (int i : rem) {
+        // Find unassigned job with fewest compatible unassigned peers
+        int seed    = -1;
+        int minComp = INT_MAX;
+        for (int i = 0; i < n_; ++i) {
+            if (assigned[i]) continue;
             int cnt = 0;
-            for (int j : rem) {
-                if (j == i) { cnt++; continue; }
-                std::set<int> combined = toolsOf_[i];
-                combined.insert(toolsOf_[j].begin(), toolsOf_[j].end());
-                if ((int)combined.size() <= TC_) cnt++;
+            for (int j = 0; j < n_; ++j)
+                if (!assigned[j] && compat[i][j]) ++cnt;
+            if (cnt < minComp) { minComp = cnt; seed = i; }
+        }
+        if (seed == -1) break;
+
+        // Sweep seed + all compatible unassigned jobs that still fit
+        vector<int> cls = {seed};
+        assigned[seed] = true;
+        set<int> clsTools(tools[seed].begin(), tools[seed].end());
+
+        for (int j = 0; j < n_; ++j) {
+            if (assigned[j] || !compat[seed][j]) continue;
+            // Check combined fit
+            set<int> candidate = clsTools;
+            for (int t : tools[j]) candidate.insert(t);
+            if ((int)candidate.size() <= params_.magazineCap) {
+                cls.push_back(j);
+                assigned[j] = true;
+                clsTools = move(candidate);
             }
-            if (cnt < minCompat) { minCompat = cnt; pivot = i; }
         }
-
-        // Sweep: mark pivot and all ops compatible with pivot
-        for (int i : rem) {
-            std::set<int> combined = toolsOf_[pivot];
-            combined.insert(toolsOf_[i].begin(), toolsOf_[i].end());
-            if ((int)combined.size() <= TC_)
-                used[i] = true;
-        }
-        lb2++;
+        partition.push_back(move(cls));
     }
-
-    return std::max(lb1, lb2);
+    return partition;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-//  BnB grouping  (Section 5.2.1 / Algorithm E.3)
-// ─────────────────────────────────────────────────────────────────────────────
-std::vector<MaximalClass> GeneticAlgorithm::bnbGrouping() {
-    std::vector<int> allOps(numOps_);
-    std::iota(allOps.begin(), allOps.end(), 0);
+// BnB — terminates when U* == L*.  For instances where MIMU already equals
+// Sweeping (the common case, as in Example 4), this returns immediately.
+// A lightweight branch step is used when a gap remains; the search depth is
+// bounded to keep init time tractable.
+vector<vector<int>> GeneticAlgorithm::runBnB() {
+    auto mimu     = runMIMU();
+    auto sweeping = runSweeping();
+    int  U        = (int)mimu.size();
+    int  L        = (int)sweeping.size();
 
-    // Initial upper bound from MIMU
-    std::vector<MaximalClass> bestPartition = MIMU(allOps);
-    int UB = (int)bestPartition.size();
+    if (U == L) return mimu;   // optimal found at root — Example 4 case
 
-    // Initial lower bound from sweeping
-    int LB = sweepingLowerBound(allOps);
+    // Gap exists: simple branch-and-bound.
+    // We branch by trying each unassigned job as the seed of the next class,
+    // pruning when depth + remaining lower-bound estimate ≥ current U*.
+    // Keep the best (fewest classes) partition found.
+    vector<vector<int>> best = mimu;
 
-    if (LB == UB) return bestPartition; // already optimal
+    // Precompute tool sets
+    vector<vector<int>> tools(n_);
+    for (int i = 0; i < n_; ++i) tools[i] = jobTools(i);
 
-    // BnB tree: each node is a partial partition (list of committed classes)
-    // plus the set of uncommitted operations.
-    // For industry-size problems, we run MIMU and return (paper does the same
-    // for speed): the MIMU already gives a good upper bound used in the GA init.
-    // A full BnB is exponential; the paper uses it only for small seeding (5%).
-    // Here we implement a depth-limited BnB:
+    // Stack entry: (partial partition so far, assigned bitmask)
+    using State = pair<vector<vector<int>>, vector<bool>>;
+    vector<State> stack;
+    stack.push_back({{}, vector<bool>(n_, false)});
 
-    struct Node {
-        std::vector<MaximalClass> committed; // classes decided so far
-        std::vector<int>          remaining; // operations not yet placed
-        int depth;
-    };
-
-    std::vector<Node> stack;
-    stack.push_back({/*committed=*/{}, allOps, 0});
-
-    const int MAX_NODES = 100000; // safety limit
-    int explored = 0;
-
-    while (!stack.empty() && explored < MAX_NODES) {
-        Node node = stack.back();
+    while (!stack.empty()) {
+        auto [partial, assigned] = move(stack.back());
         stack.pop_back();
-        explored++;
 
-        if (node.remaining.empty()) {
-            int sz = (int)node.committed.size();
-            if (sz < UB) {
-                UB = sz;
-                bestPartition = node.committed;
-            }
+        // Count remaining unassigned
+        int remaining = 0;
+        for (int i = 0; i < n_; ++i) if (!assigned[i]) ++remaining;
+
+        if (remaining == 0) {
+            if ((int)partial.size() < (int)best.size())
+                best = partial;
             continue;
         }
 
-        // Lower bound for this node
-        int nodeLB = (int)node.committed.size() + sweepingLowerBound(node.remaining);
-        if (nodeLB >= UB) continue; // prune
-
-        // Find the operation compatible with the fewest others → branch on it
-        int pivot = node.remaining[0];
-        int minC  = INT_MAX;
-        for (int i : node.remaining) {
-            int c = 0;
-            for (int j : node.remaining) {
-                std::set<int> comb = toolsOf_[i];
-                comb.insert(toolsOf_[j].begin(), toolsOf_[j].end());
-                if ((int)comb.size() <= TC_) c++;
-            }
-            if (c < minC) { minC = c; pivot = i; }
+        // Lower-bound estimate: at least ⌈remaining_tools / TC⌉ more classes
+        // Use a simple sweep estimate: count distinct tools still needed
+        set<int> remainingTools;
+        for (int i = 0; i < n_; ++i) {
+            if (!assigned[i])
+                for (int t : tools[i]) remainingTools.insert(t);
         }
+        int lbExtra = max(1, (int)((remainingTools.size() + params_.magazineCap - 1) / params_.magazineCap));
+        if ((int)partial.size() + lbExtra >= (int)best.size())
+            continue;  // prune
 
-        // Enumerate all maximal classes of `remaining` that contain `pivot`
-        // We enumerate by building each possible maximal class containing pivot
-        // using MIMU restricted to subsets that include pivot.
+        // Branch: try each unassigned job as the seed of the next class
+        for (int seed = 0; seed < n_; ++seed) {
+            if (assigned[seed]) continue;
 
-        // Simplified branching: try adding each compatible subset {pivot + X}
-        // by starting MIMU from pivot.  We just branch on "pivot goes into a
-        // class built by MIMU starting from pivot" or "pivot alone if TC allows".
+            // Build a MIMU-style class starting from this seed
+            vector<bool>  newAssigned = assigned;
+            set<int>      clsTools(tools[seed].begin(), tools[seed].end());
+            vector<int>   cls = {seed};
+            newAssigned[seed] = true;
 
-        // Build the class starting from pivot using MIMU logic
-        MaximalClass cls;
-        cls.operationIndices.push_back(pivot);
-        std::set<int> curTools = toolsOf_[pivot];
-
-        std::vector<int> rem2;
-        for (int i : node.remaining)
-            if (i != pivot) rem2.push_back(i);
-
-        // Greedy extend (MIMU-style)
-        bool changed = true;
-        while (changed) {
-            changed = false;
-            int bestAdd = -1, bestInter = -1, bestExtra = INT_MAX;
-            for (int i : rem2) {
-                bool alreadyIn = false;
-                for (int x : cls.operationIndices)
-                    if (x == i) { alreadyIn = true; break; }
-                if (alreadyIn) continue;
-
-                std::set<int> comb = curTools;
-                comb.insert(toolsOf_[i].begin(), toolsOf_[i].end());
-                if ((int)comb.size() > TC_) continue;
-
-                int inter = 0;
-                for (int t : toolsOf_[i])
-                    if (curTools.count(t)) inter++;
-                int extra = (int)toolsOf_[i].size() - inter;
-
-                if (inter > bestInter ||
-                   (inter == bestInter && extra < bestExtra)) {
-                    bestAdd   = i;
-                    bestInter = inter;
-                    bestExtra = extra;
-                    changed   = true;
+            // Greedily fill (same MIMU criterion)
+            bool expanded = true;
+            while (expanded) {
+                expanded      = false;
+                int bestJ     = -1;
+                int bestInter = -1;
+                int bestNewT  = INT_MAX;
+                for (int j = 0; j < n_; ++j) {
+                    if (newAssigned[j]) continue;
+                    int inter = 0, newT = 0;
+                    for (int t : tools[j]) {
+                        if (clsTools.count(t)) ++inter;
+                        else                   ++newT;
+                    }
+                    if ((int)(clsTools.size() + newT) > params_.magazineCap) continue;
+                    if (inter > bestInter || (inter == bestInter && newT < bestNewT)) {
+                        bestInter = inter; bestNewT = newT; bestJ = j;
+                    }
+                }
+                if (bestJ != -1) {
+                    cls.push_back(bestJ);
+                    newAssigned[bestJ] = true;
+                    for (int t : tools[bestJ]) clsTools.insert(t);
+                    expanded = true;
                 }
             }
-            if (bestAdd >= 0) {
-                cls.operationIndices.push_back(bestAdd);
-                curTools.insert(toolsOf_[bestAdd].begin(), toolsOf_[bestAdd].end());
-                rem2.erase(std::remove(rem2.begin(), rem2.end(), bestAdd), rem2.end());
-            }
+
+            vector<vector<int>> newPartial = partial;
+            newPartial.push_back(move(cls));
+            stack.push_back({move(newPartial), move(newAssigned)});
+
+            // Only push one branch per level to keep stack size manageable;
+            // Sweeping already gives a good lower bound.
+            break;
         }
-
-        // Build child node
-        Node child;
-        child.committed = node.committed;
-        child.committed.push_back(cls);
-        child.remaining = rem2; // ops not in cls
-        child.depth = node.depth + 1;
-        stack.push_back(child);
-    }
-
-    return bestPartition;
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-//  Machine assignment  (constructive heuristic, Section 5.3.2 step 3)
-// ─────────────────────────────────────────────────────────────────────────────
-void GeneticAlgorithm::assignMachines(Chromosome& chr) {
-    // Track magazine state and accumulated workload per machine
-    std::vector<std::set<int>> magazineState(numMachines_);
-    std::vector<int> workload(numMachines_, 0);
-
-    for (auto& gene : chr.genes) {
-        std::set<int> neededTools = classTools(gene.cls);
-
-        // Step 3a: prefer machine that already holds a subset of needed tools
-        int bestMachine = -1;
-        int bestOverlap = -1;
-        for (int m = 0; m < numMachines_; ++m) {
-            int overlap = 0;
-            for (int t : neededTools)
-                if (magazineState[m].count(t)) overlap++;
-            if (overlap > bestOverlap) { bestOverlap = overlap; bestMachine = m; }
-        }
-
-        // Step 3b: if tie (or zero overlap everywhere) use least workload
-        if (bestOverlap == 0) {
-            int minW = INT_MAX;
-            for (int m = 0; m < numMachines_; ++m)
-                if (workload[m] < minW) { minW = workload[m]; bestMachine = m; }
-        }
-
-        gene.machineId     = bestMachine;
-        gene.cls.machineId = bestMachine;
-
-        // Update workload (sum of processing times in this class)
-        for (int idx : gene.cls.operationIndices)
-            workload[bestMachine] += ops_[idx].processingTime;
-
-        // Update magazine (simplified: replace with needed tools; KTNS applied later)
-        magazineState[bestMachine].insert(neededTools.begin(), neededTools.end());
-    }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-//  Merge to maximal classes  (Section 5.5)
-// ─────────────────────────────────────────────────────────────────────────────
-void GeneticAlgorithm::mergeToMaximalClasses(Chromosome& chr) {
-    // Group genes by machine, then try to merge adjacent classes on the same machine
-    bool merged = true;
-    while (merged) {
-        merged = false;
-        for (int g = 0; g + 1 < (int)chr.genes.size(); ++g) {
-            if (chr.genes[g].machineId != chr.genes[g+1].machineId) continue;
-
-            // Try merging
-            std::vector<int> combined = chr.genes[g].cls.operationIndices;
-            combined.insert(combined.end(),
-                            chr.genes[g+1].cls.operationIndices.begin(),
-                            chr.genes[g+1].cls.operationIndices.end());
-
-            if (isValidClass(combined)) {
-                chr.genes[g].cls.operationIndices = combined;
-                chr.genes.erase(chr.genes.begin() + g + 1);
-                merged = true;
-                break; // restart scan after any merge
-            }
-        }
-    }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-//  Random chromosome  (Section 5.2)
-// ─────────────────────────────────────────────────────────────────────────────
-Chromosome GeneticAlgorithm::randomChromosome() {
-    // 1. Build a random permutation of all operations respecting precedence.
-    //    We use a topological shuffle: for each job, the operations must appear
-    //    in order.  Approach: list each operation by (job, k), then pick a
-    //    random valid operation at each step.
-
-    // Group operations by job
-    std::map<int, std::vector<int>> jobOps; // jobIndex → list of op indices sorted by k
-    for (int i = 0; i < numOps_; ++i)
-        jobOps[ops_[i].indexJob].push_back(i);
-    for (auto& kv : jobOps)
-        std::sort(kv.second.begin(), kv.second.end(),
-                  [&](int a, int b){ return ops_[a].indexOperation < ops_[b].indexOperation; });
-
-    // "Next available" pointer per job
-    std::map<int,int> nextPtr;
-    for (auto& kv : jobOps) nextPtr[kv.first] = 0;
-
-    std::vector<int> permutation;
-    permutation.reserve(numOps_);
-    while ((int)permutation.size() < numOps_) {
-        // Collect available operations (first unscheduled for each job)
-        std::vector<int> available;
-        for (auto& kv : jobOps) {
-            int ptr = nextPtr[kv.first];
-            if (ptr < (int)kv.second.size())
-                available.push_back(kv.second[ptr]);
-        }
-        // Pick uniformly at random
-        int chosen = available[uniformInt(0, (int)available.size()-1)];
-        permutation.push_back(chosen);
-        nextPtr[ops_[chosen].indexJob]++;
-    }
-
-    // 2. Pack operations into maximal classes (greedy left-to-right)
-    Chromosome chr;
-    MaximalClass current;
-    std::set<int> currentTools;
-
-    for (int idx : permutation) {
-        std::set<int> combined = currentTools;
-        combined.insert(toolsOf_[idx].begin(), toolsOf_[idx].end());
-
-        if (!current.operationIndices.empty() && (int)combined.size() > TC_) {
-            // Close current class
-            Gene g;  g.cls = current;  chr.genes.push_back(g);
-            current = MaximalClass();
-            current.operationIndices.push_back(idx);
-            currentTools = toolsOf_[idx];
-        } else {
-            current.operationIndices.push_back(idx);
-            currentTools = combined;
-        }
-    }
-    if (!current.operationIndices.empty()) {
-        Gene g; g.cls = current; chr.genes.push_back(g);
-    }
-
-    // 3. Assign machines
-    assignMachines(chr);
-    return chr;
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-//  Chromosome from BnB grouping  (Section 5.2)
-// ─────────────────────────────────────────────────────────────────────────────
-Chromosome GeneticAlgorithm::randomChromosomeFromBnB() {
-    auto classes = bnbGrouping();
-
-    // Shuffle the classes randomly (still valid since precedence is within a class
-    // only if same job — we need to ensure job ordering still holds across classes).
-    // Paper: the class content is fixed; only ordering is shuffled.
-    std::shuffle(classes.begin(), classes.end(), rng_);
-
-    // Ensure each job's operations appear in order across classes.
-    // We re-sort within each class by (job, operation index) and then
-    // validate/fix cross-class ordering.
-    for (auto& cls : classes)
-        std::sort(cls.operationIndices.begin(), cls.operationIndices.end(),
-                  [&](int a, int b){
-                      if (ops_[a].indexJob != ops_[b].indexJob)
-                          return ops_[a].indexJob < ops_[b].indexJob;
-                      return ops_[a].indexOperation < ops_[b].indexOperation;
-                  });
-
-    Chromosome chr;
-    for (auto& cls : classes) {
-        Gene g; g.cls = cls; chr.genes.push_back(g);
-    }
-    assignMachines(chr);
-    return chr;
-}
-
-
-// ─────────────────────────────────────────────────────────────────────────────
-//  Population initialisation  (Section 5.2)
-// ─────────────────────────────────────────────────────────────────────────────
-void GeneticAlgorithm::initialisePopulation() {
-    population_.clear();
-    population_.reserve(params_.popSize);
-
-    int bnbCount = std::max(1, (int)(params_.bnbSeedFrac * params_.popSize));
-
-    // Seed with BnB-based chromosomes
-    for (int i = 0; i < bnbCount && (int)population_.size() < params_.popSize; ++i) {
-        Chromosome chr = randomChromosomeFromBnB();
-        evaluateChromosome(chr);
-        population_.push_back(chr);
-    }
-
-    // Fill the rest with random chromosomes
-    while ((int)population_.size() < params_.popSize) {
-        Chromosome chr = randomChromosome();
-        evaluateChromosome(chr);
-        population_.push_back(chr);
-    }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-//  KTNS  (Section 5.7)
-//  Given a sequence of maximal classes on ONE machine, returns
-//  {totalToolSwitches, numberOfSwitchInstances}.
-//  "A tool switch = one inserted tool."
-// ─────────────────────────────────────────────────────────────────────────────
-std::pair<int,int> GeneticAlgorithm::KTNS(const std::vector<MaximalClass>& seq,
-                                           const std::vector<int>& /*opIndices*/) const {
-    if (seq.empty()) return {0, 0};
-
-    int totalSwitches   = 0;
-    int switchInstances = 0;
-
-    // Magazine starts empty; tools for first class are pre-loaded (no cost for
-    // the first class per the paper assumption).
-    std::set<int> magazine;
-    {
-        // Load tools for first class for free
-        std::set<int> firstTools;
-        for (int idx : seq[0].operationIndices)
-            for (int t : toolsOf_[idx]) firstTools.insert(t);
-        // Respect TC_ — first class must fit (guaranteed by construction)
-        magazine = firstTools;
-    }
-
-    for (int s = 1; s < (int)seq.size(); ++s) {
-        // Tools needed for class s
-        std::set<int> needed;
-        for (int idx : seq[s].operationIndices)
-            for (int t : toolsOf_[idx]) needed.insert(t);
-
-        // Missing tools = tools in `needed` but not in `magazine`
-        std::vector<int> missing;
-        for (int t : needed)
-            if (!magazine.count(t)) missing.push_back(t);
-
-        if (missing.empty()) continue; // no switch needed
-
-        // KTNS: decide which tools to remove.
-        // Score each present tool by when it is next needed.
-        // Tools needed the soonest get the highest score → removed last.
-        // Tools never needed again get score 0 → removed first.
-
-        // Build "next-use" position for each tool currently in magazine
-        // (looking at classes s, s+1, …)
-        auto nextUse = [&](int tool) -> int {
-            for (int k = s; k < (int)seq.size(); ++k) {
-                std::set<int> kTools;
-                for (int idx : seq[k].operationIndices)
-                    for (int t : toolsOf_[idx]) kTools.insert(t);
-                if (kTools.count(tool)) return k;
-            }
-            return (int)seq.size(); // never used again
-        };
-
-        int slotsNeeded = (int)missing.size() - (TC_ - (int)magazine.size());
-        if (slotsNeeded < 0) slotsNeeded = 0;
-
-        if (slotsNeeded > 0) {
-            // Collect present tools not in `needed` (candidates for eviction)
-            std::vector<std::pair<int,int>> evictable; // {nextUsePos, tool}
-            for (int t : magazine) {
-                if (!needed.count(t))
-                    evictable.push_back({nextUse(t), t});
-            }
-            // Sort ascending by nextUse: tools used furthest away removed first
-            std::sort(evictable.begin(), evictable.end());
-            // We remove those needed LEAST soon (smallest nextUse value = soonest
-            // is needed → keep.  Largest nextUse → evict first.)
-            // Paper: "remove those needed the soonest LAST" = remove furthest first.
-            // Re-sort descending:
-            std::sort(evictable.begin(), evictable.end(),
-                      [](const auto& a, const auto& b){ return a.first > b.first; });
-
-            for (int r = 0; r < slotsNeeded && r < (int)evictable.size(); ++r)
-                magazine.erase(evictable[r].second);
-        }
-
-        // Insert missing tools
-        magazine.insert(missing.begin(), missing.end());
-
-        totalSwitches   += (int)missing.size();
-        switchInstances += 1;
-    }
-
-    return {totalSwitches, switchInstances};
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-//  Fitness evaluation  (Algorithm 2)
-// ─────────────────────────────────────────────────────────────────────────────
-double GeneticAlgorithm::fitnessEval(Chromosome& chr) {
-    // Convert horizon and unsupervised hours to minutes (same unit as processing times)
-    const int H    = params_.horizon;          // minutes
-    const int tU   = params_.unsupHours * 60;  // minutes per day
-    const int dayL = 24 * 60;                  // minutes per day
-
-    // Per-machine state
-    std::vector<MachineState> machines(numMachines_);
-
-    // Decode: iterate genes in order
-    for (auto& gene : chr.genes) {
-        int m = gene.machineId;
-        MachineState& ms = machines[m];
-
-        if (ms.availTime > H) continue; // machine past horizon
-
-        // If current availTime falls within an unsupervised shift, delay to
-        // start of next supervised shift  (lines 6-8 of Algorithm 2)
-        {
-            int tod = ms.availTime % dayL;        // time of day (minutes)
-            int supervisedEnd = dayL - tU;        // supervised hours end at this minute
-            if (tod >= supervisedEnd) {
-                // We are in an unsupervised period — skip to next supervised shift
-                ms.availTime += (dayL - tod);
-            }
-        }
-
-        // Sort operations in this class: priority ops first (line 4)
-        std::vector<int> ops = gene.cls.operationIndices;
-        std::sort(ops.begin(), ops.end(),
-                  [&](int a, int b){ return isPriority_[a] > isPriority_[b]; });
-
-        MaximalClass finishedCls;
-        finishedCls.machineId = m;
-
-        for (int idx : ops) {
-            if (ms.availTime > H) break;
-
-            int endTime = ms.availTime + ops_[idx].processingTime;
-            if (endTime <= H) {
-                ms.availTime = endTime;
-                finishedCls.operationIndices.push_back(idx);
-                ms.finishedOps.push_back(idx);
-                if (isPriority_[idx]) ms.finishedPriority++;
-            }
-        }
-
-        if (!finishedCls.operationIndices.empty())
-            ms.finishedClasses.push_back(finishedCls);
-    }
-
-    // Compute revenue
-    int totalFinished = 0;
-    int totalFinishedPriority = 0;
-    for (auto& ms : machines) {
-        totalFinished += (int)ms.finishedOps.size();
-        totalFinishedPriority += ms.finishedPriority;
-    }
-
-    double revenue = params_.revenue * totalFinished;
-
-    // Penalty for unfinished priority ops
-    int totalPriorityOps = 0;
-    for (int i = 0; i < numOps_; ++i)
-        if (isPriority_[i]) totalPriorityOps++;
-    int unfinishedPriority = totalPriorityOps - totalFinishedPriority;
-    double penalty = params_.penaltyCost * unfinishedPriority;
-
-    // Tool switching cost via KTNS (lines 21-29 of Algorithm 2)
-    int totalToolSwitches   = 0;
-    int totalSwitchInstances = 0;
-    for (auto& ms : machines) {
-        auto [ts, si] = KTNS(ms.finishedClasses, ms.finishedOps);
-        totalToolSwitches   += ts;
-        totalSwitchInstances += si;
-    }
-
-    double switchCost = params_.fixedSwitch * totalSwitchInstances +
-                        params_.varSwitch   * totalToolSwitches;
-
-    double profit = revenue - penalty - switchCost;
-    chr.fitness   = profit;
-    return profit;
-}
-
-void GeneticAlgorithm::evaluateChromosome(Chromosome& chr) {
-    fitnessEval(chr);
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-//  Tournament selection  (Section 5.3)
-// ─────────────────────────────────────────────────────────────────────────────
-int GeneticAlgorithm::tournamentSelect() {
-    int tournSize = std::max(2, (int)(params_.gamma1 * params_.popSize));
-    int best = uniformInt(0, (int)population_.size() - 1);
-    for (int i = 1; i < tournSize; ++i) {
-        int candidate = uniformInt(0, (int)population_.size() - 1);
-        if (population_[candidate].fitness > population_[best].fitness)
-            best = candidate;
     }
     return best;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-//  Two-point crossover  (Section 5.3.1)
-// ─────────────────────────────────────────────────────────────────────────────
-std::pair<Chromosome,Chromosome>
-GeneticAlgorithm::twoPointCrossover(const Chromosome& p1, const Chromosome& p2) {
-    // Both parents must have the same number of genes after normalisation.
-    // In practice they may differ; we use the shorter length as limit.
-    int n1 = p1.numGenes(), n2 = p2.numGenes();
-    int n  = std::min(n1, n2);
-    if (n < 2) return {p1, p2};
+// Convert a partition to a Chromosome.  Classes are emitted in order;
+// optionally shuffle jobs within each class for diversity.
+Chromosome GeneticAlgorithm::partitionToChromosome(const vector<vector<int>>& partition,
+                                                    bool shuffleWithin) {
+    Chromosome c;
+    c.perm.reserve(n_);
+    for (auto cls : partition) {            // copy so we can shuffle
+        if (shuffleWithin) shuffle(cls.begin(), cls.end(), rng_);
+        for (int j : cls) c.perm.push_back(j);
+    }
+    c.fitness = eval_(c.perm);
+    return c;
+}
 
-    int cut1 = uniformInt(0, n - 2);
-    int cut2 = uniformInt(cut1 + 1, n - 1);
+// 5 % BnB-seeded + 5 % priority-seeded + 90 % random  (paper Section 4.1)
+void GeneticAlgorithm::initPopulation(vector<Chromosome>& pop) {
+    // BnB partition (computed once; diversified via within-class shuffling)
+    vector<vector<int>> bnbPartition = runBnB();
+    int bnbSeeded  = max(1, Np_ / 20);   // 5 % from BnB
+    int prioSeeded = max(1, Np_ / 20);   // 5 % priority-first
 
-    Chromosome c1 = p1, c2 = p2;
+    // First BnB chromosome: classes in their natural order
+    pop.push_back(partitionToChromosome(bnbPartition, /*shuffleWithin=*/false));
 
-    // Exchange the substring [cut1, cut2] between parents
-    for (int i = cut1; i <= cut2 && i < n1 && i < n2; ++i)
-        std::swap(c1.genes[i], c2.genes[i]);
+    // Remaining BnB chromosomes: shuffle within classes for diversity
+    for (int i = 1; i < bnbSeeded; ++i)
+        pop.push_back(partitionToChromosome(bnbPartition, /*shuffleWithin=*/true));
 
-    return {c1, c2};
+    for (int i = 0; i < prioSeeded; ++i)
+        pop.push_back(makePriorityFirst());
+
+    while ((int)pop.size() < Np_)
+        pop.push_back(makeRandom());
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  Adapted PMX: fix duplicate operations in offspring after 2X
-//  (Section 5.3.1)
+// Selection — tournament (size ST_)
 // ─────────────────────────────────────────────────────────────────────────────
-void GeneticAlgorithm::adaptedPMX(Chromosome& offspring, const Chromosome& /*donor*/,
-                                   int cut1, int cut2) {
-    // Collect all operation indices in the offspring
-    // Find duplicates and missing operations
 
-    std::map<int,int> opCount;
-    for (auto& gene : offspring.genes)
-        for (int idx : gene.cls.operationIndices)
-            opCount[idx]++;
-
-    // Find missing ops (count 0) and duplicated ops (count > 1)
-    std::vector<int> missing, dups;
-    for (int i = 0; i < numOps_; ++i) {
-        int cnt = opCount.count(i) ? opCount[i] : 0;
-        if (cnt == 0) missing.push_back(i);
-        else if (cnt > 1) dups.push_back(i);
+const Chromosome& GeneticAlgorithm::tournamentSelect(const vector<Chromosome>& pop) {
+    int sz  = (int)pop.size();
+    int cap = min(ST_, sz);
+    uniform_int_distribution<int> dist(0, sz - 1);
+    int best = dist(rng_);
+    for (int i = 1; i < cap; ++i) {
+        int idx = dist(rng_);
+        if (pop[idx].fitness > pop[best].fitness)
+            best = idx;
     }
-
-    // Replace one duplicate outside [cut1,cut2] with a missing op
-    int mi = 0;
-    for (int g = 0; g < (int)offspring.genes.size() && mi < (int)missing.size(); ++g) {
-        if (g >= cut1 && g <= cut2) continue; // inside exchanged region — skip
-        auto& ops = offspring.genes[g].cls.operationIndices;
-        for (int& idx : ops) {
-            if (mi >= (int)missing.size()) break;
-            if (opCount[idx] > 1) {
-                opCount[idx]--;
-                opCount[missing[mi]]++;
-                idx = missing[mi];
-                mi++;
-            }
-        }
-    }
+    return pop[best];
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  Combined crossover  (Section 5.3.1)
+// Combined Crossover (CX): Two-Point Crossover + PMX repair
+// Paper Section 4.2 (Two-Point + Adapted Partial-Mapped Crossover)
 // ─────────────────────────────────────────────────────────────────────────────
-std::pair<Chromosome,Chromosome>
+
+// child[l..r] is already filled from segParent[l..r].
+// Fill remaining positions from fillParent, following the PMX mapping chain.
+void GeneticAlgorithm::pmxRepair(vector<int>&       child,
+                                  const vector<int>& segParent,
+                                  const vector<int>& fillParent,
+                                  int l, int r) {
+    // Build position map for the copied segment
+    unordered_map<int, int> segPos;
+    segPos.reserve(r - l + 1);
+    for (int i = l; i <= r; ++i)
+        segPos[segParent[i]] = i;
+
+    for (int i = 0; i < n_; ++i) {
+        if (i >= l && i <= r) continue;
+        int val = fillParent[i];
+        while (segPos.count(val))        // val is in the segment → follow chain
+            val = fillParent[segPos[val]];
+        child[i] = val;
+    }
+}
+
+pair<Chromosome, Chromosome>
 GeneticAlgorithm::combinedCrossover(const Chromosome& p1, const Chromosome& p2) {
-    int n  = std::min(p1.numGenes(), p2.numGenes());
-    if (n < 2) return {p1, p2};
+    if (n_ < 2) return {p1, p2};
 
-    int cut1 = uniformInt(0, n - 2);
-    int cut2 = uniformInt(cut1 + 1, n - 1);
+    uniform_int_distribution<int> posDist(0, n_ - 1);
+    int l = posDist(rng_);
+    int r = posDist(rng_);
+    if (l > r) swap(l, r);
 
-    // Step 1: two-point crossover
-    auto [c1, c2] = twoPointCrossover(p1, p2);
+    Chromosome c1, c2;
+    c1.perm.resize(n_, -1);
+    c2.perm.resize(n_, -1);
 
-    // Step 2: APMX to repair duplicates
-    adaptedPMX(c1, p2, cut1, cut2);
-    adaptedPMX(c2, p1, cut1, cut2);
+    for (int i = l; i <= r; ++i) {
+        c1.perm[i] = p1.perm[i];
+        c2.perm[i] = p2.perm[i];
+    }
 
-    // Re-assign machines
-    assignMachines(c1);
-    assignMachines(c2);
+    pmxRepair(c1.perm, p1.perm, p2.perm, l, r);
+    pmxRepair(c2.perm, p2.perm, p1.perm, l, r);
 
     return {c1, c2};
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  Problem-oriented crossover  (Section 5.3.2)
-//  Applied to a single chromosome (modifies in place).
+// Problem-Oriented Crossover (POX) — Paper Section 4.3
+//
+// Step 1: Priority jobs first (stable sort preserves relative order).
+// Step 2: Greedy nearest-neighbour tool-similarity ordering of the rest.
+// Step 3: Machine allocation handled implicitly by the KTNS evaluator.
 // ─────────────────────────────────────────────────────────────────────────────
-void GeneticAlgorithm::problemOrientedCrossover(Chromosome& chr) {
-    if (chr.genes.empty()) return;
 
-    // ── Step 1: re-order genes by decreasing number of priority operations ──
-    std::stable_sort(chr.genes.begin(), chr.genes.end(),
-        [&](const Gene& a, const Gene& b) {
-            int pa = 0, pb = 0;
-            for (int idx : a.cls.operationIndices) if (isPriority_[idx]) pa++;
-            for (int idx : b.cls.operationIndices) if (isPriority_[idx]) pb++;
-            return pa > pb; // descending
-        });
+int GeneticAlgorithm::toolOverlap(int i, int j) const {
+    set<int> toolsI;
+    const Job& ji = jobs_[i];
+    if (ji.isGrouped && !ji.toolSets.empty()) {
+        for (const auto& ts : ji.toolSets)
+            for (int t : ts.tools) toolsI.insert(t);
+    } else {
+        for (int t : ji.toolSetNormalized.tools) toolsI.insert(t);
+    }
 
-    // ── Step 2: group operations with similar tool sets ──
-    // For each gene from v_1, find other genes with overlapping tools and
-    // pull those operations earlier.
-    // We implement this as: for each gene, collect all operations in later genes
-    // that share tools with this gene's tool set, and move them adjacent.
-    for (int g = 0; g < (int)chr.genes.size(); ++g) {
-        std::set<int> gTools = classTools(chr.genes[g].cls);
+    int overlap = 0;
+    const Job& jj = jobs_[j];
+    if (jj.isGrouped && !jj.toolSets.empty()) {
+        for (const auto& ts : jj.toolSets)
+            for (int t : ts.tools)
+                if (toolsI.count(t)) ++overlap;
+    } else {
+        for (int t : jj.toolSetNormalized.tools)
+            if (toolsI.count(t)) ++overlap;
+    }
+    return overlap;
+}
 
-        for (int h = g + 1; h < (int)chr.genes.size(); ++h) {
-            std::set<int> hTools = classTools(chr.genes[h].cls);
-            // Check intersection
-            bool overlap = false;
-            for (int t : gTools)
-                if (hTools.count(t)) { overlap = true; break; }
+Chromosome GeneticAlgorithm::problemOrientedCrossover(const Chromosome& c) {
+    Chromosome result = c;
+    vector<int>& perm = result.perm;
 
-            if (overlap) {
-                // Try to merge h into g if fits
-                std::vector<int> combined = chr.genes[g].cls.operationIndices;
-                combined.insert(combined.end(),
-                                chr.genes[h].cls.operationIndices.begin(),
-                                chr.genes[h].cls.operationIndices.end());
-                if (isValidClass(combined)) {
-                    chr.genes[g].cls.operationIndices = combined;
-                    chr.genes.erase(chr.genes.begin() + h);
-                    --h; // adjust index
-                } else {
-                    // Move h to position g+1 (bring similar tools closer)
-                    Gene moved = chr.genes[h];
-                    chr.genes.erase(chr.genes.begin() + h);
-                    chr.genes.insert(chr.genes.begin() + g + 1, moved);
-                }
-                break; // move on to next g
+    // Step 1: priority jobs first
+    stable_sort(perm.begin(), perm.end(), [&](int a, int b) {
+        return (int)jobs_[a].priority > (int)jobs_[b].priority;
+    });
+
+    // Step 2: greedy tool-similarity ordering for non-priority jobs
+    int boundary = 0;
+    while (boundary < n_ && jobs_[perm[boundary]].priority) ++boundary;
+
+    if (boundary < n_) {
+        int np = n_ - boundary;
+        vector<int>  pool(perm.begin() + boundary, perm.end());
+        vector<bool> placed(np, false);
+
+        vector<int> ordered;
+        ordered.reserve(np);
+
+        placed[0] = true;
+        ordered.push_back(pool[0]);
+
+        while ((int)ordered.size() < np) {
+            int last     = ordered.back();
+            int bestIdx  = -1;
+            int bestOver = -1;
+
+            for (int k = 0; k < np; ++k) {
+                if (placed[k]) continue;
+                int ov = toolOverlap(last, pool[k]);
+                if (ov > bestOver) { bestOver = ov; bestIdx = k; }
             }
-        }
-    }
-
-    // ── Step 3: constructive heuristic for machine assignment ──
-    assignMachines(chr);
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-//  Swap mutation  (Section 5.4)
-// ─────────────────────────────────────────────────────────────────────────────
-void GeneticAlgorithm::swapMutation(Chromosome& chr) {
-    int n = chr.numGenes();
-    if (n < 2) return;
-
-    // Gene-level swap
-    for (int g = 0; g < n; ++g) {
-        if (uniformReal(0.0, 1.0) < params_.probSwap) {
-            int g2 = uniformInt(0, n - 1);
-            std::swap(chr.genes[g], chr.genes[g2]);
-        }
-    }
-
-    // Operation-level swap
-    // Collect all (gene_index, op_position) pairs
-    for (int g = 0; g < (int)chr.genes.size(); ++g) {
-        auto& opsG = chr.genes[g].cls.operationIndices;
-        for (int oi = 0; oi < (int)opsG.size(); ++oi) {
-            if (uniformReal(0.0, 1.0) >= params_.probSwap) continue;
-
-            // Pick a random target gene and op position
-            int tg  = uniformInt(0, (int)chr.genes.size() - 1);
-            auto& opsT = chr.genes[tg].cls.operationIndices;
-            if (opsT.empty()) continue;
-            int ti = uniformInt(0, (int)opsT.size() - 1);
-
-            // Compute tentative new classes after swap
-            std::vector<int> newG = opsG;
-            std::vector<int> newT = opsT;
-            int opA = newG[oi];
-            int opB = newT[ti];
-            if (opA == opB) continue;
-
-            // Check precedence compatibility (simplified: same job operations
-            // must not be reordered across the chromosome)
-            // We check feasibility by verifying tool capacity only here;
-            // precedence is maintained via the job-occurrence ordering convention.
-            newG[oi] = opB;
-            newT[ti] = opA;
-
-            bool fitsG = isValidClass(newG);
-            bool fitsT = isValidClass(newT);
-
-            if (fitsG && fitsT) {
-                opsG = newG;
-                opsT = newT;
-            } else if (!fitsT) {
-                // opA cannot go into gene tg — add opA to a new class at the end
-                newG[oi] = opB;          // keep opB in gene tg's class
-                opsG = newG;
-                opsT.push_back(opA);     // opA appended (may exceed TC → new class)
-                // If exceeds, split off a new gene
-                if (!isValidClass(opsT)) {
-                    opsT.pop_back();
-                    MaximalClass newCls;
-                    newCls.operationIndices.push_back(opA);
-                    Gene newGene;
-                    newGene.cls = newCls;
-                    newGene.machineId = uniformInt(0, numMachines_ - 1);
-                    chr.genes.push_back(newGene);
-                }
+            if (bestIdx == -1) {  // fallback: first unplaced
+                for (int k = 0; k < np; ++k)
+                    if (!placed[k]) { bestIdx = k; break; }
             }
+            placed[bestIdx] = true;
+            ordered.push_back(pool[bestIdx]);
+        }
+
+        for (int i = 0; i < np; ++i)
+            perm[boundary + i] = ordered[i];
+    }
+
+    result.fitness = eval_(result.perm);
+    return result;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Mutation
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Swap Mutation (SM): with probability Ps_ per locus, swap with random position.
+void GeneticAlgorithm::swapMutation(Chromosome& c) {
+    uniform_real_distribution<double> prob(0.0, 1.0);
+    uniform_int_distribution<int>     pos(0, n_ - 1);
+    for (int i = 0; i < n_; ++i) {
+        if (prob(rng_) < Ps_)
+            swap(c.perm[i], c.perm[pos(rng_)]);
+    }
+}
+
+// Reinsertion / Uniform Mutation (UM): with probability Pu_ per locus, remove
+// and re-insert at a random position.  Adapts the paper's machine-vector
+// uniform mutation to our implicit-machine permutation encoding.
+void GeneticAlgorithm::reinsertionMutation(Chromosome& c) {
+    uniform_real_distribution<double> prob(0.0, 1.0);
+    uniform_int_distribution<int>     pos(0, n_ - 1);
+    for (int i = n_ - 1; i >= 0; --i) {   // backwards keeps later indices valid
+        if (prob(rng_) < Pu_) {
+            int j   = pos(rng_);
+            int val = c.perm[i];
+            c.perm.erase(c.perm.begin() + i);
+            if (j >= (int)c.perm.size()) j = (int)c.perm.size();
+            c.perm.insert(c.perm.begin() + j, val);
         }
     }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  Uniform mutation  (Section 5.4)
+// Duplicate removal
 // ─────────────────────────────────────────────────────────────────────────────
-void GeneticAlgorithm::uniformMutation(Chromosome& chr) {
-    for (auto& gene : chr.genes) {
-        if (uniformReal(0.0, 1.0) < params_.probUniform) {
-            gene.machineId     = uniformInt(0, numMachines_ - 1);
-            gene.cls.machineId = gene.machineId;
-        }
+
+void GeneticAlgorithm::removeDuplicates(vector<Chromosome>& pop) {
+    set<vector<int>> seen;
+    for (auto& ch : pop) {
+        if (!seen.insert(ch.perm).second)
+            ch = makeRandom();
     }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  Elitism + immigration  (Section 5.6)
+// Main GA loop — Algorithm 1 of Dang et al. 2023
 // ─────────────────────────────────────────────────────────────────────────────
-void GeneticAlgorithm::nextGeneration(std::vector<Chromosome>& offspring) {
-    // Sort parents by descending fitness
-    std::sort(population_.begin(), population_.end(),
-              [](const Chromosome& a, const Chromosome& b){ return a.fitness > b.fitness; });
 
-    int eliteCount = std::max(1, (int)(params_.gamma2 * params_.popSize));
-
-    // Replace the worst `eliteCount` offspring with the best `eliteCount` parents
-    std::sort(offspring.begin(), offspring.end(),
-              [](const Chromosome& a, const Chromosome& b){ return a.fitness < b.fitness; });
-
-    for (int i = 0; i < eliteCount && i < (int)offspring.size(); ++i)
-        offspring[i] = population_[i]; // replace worst offspring with best parent
-
-    // Remove duplicates (immigration: replace duplicates with random chromosomes)
-    for (int i = 0; i < (int)offspring.size(); ++i) {
-        for (int j = i + 1; j < (int)offspring.size(); ++j) {
-            // Simple duplicate check: same fitness (probabilistic)
-            if (std::abs(offspring[i].fitness - offspring[j].fitness) < 1e-9) {
-                Chromosome fresh = randomChromosome();
-                evaluateChromosome(fresh);
-                offspring[j] = fresh;
-            }
-        }
-    }
-
-    population_ = offspring;
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-//  Main GA loop  (Algorithm 1)
-// ─────────────────────────────────────────────────────────────────────────────
 Chromosome GeneticAlgorithm::run() {
-    // Line 1: initialise
-    initialisePopulation();
+    if (n_ == 0) return Chromosome{};
 
-    // Find initial best
-    bestChr_ = *std::max_element(population_.begin(), population_.end(),
-                                  [](const Chromosome& a, const Chromosome& b){
-                                      return a.fitness < b.fitness;
-                                  });
+    auto startTime  = Clock::now();
+    auto elapsedSec = [&]() -> double {
+        return chrono::duration<double>(Clock::now() - startTime).count();
+    };
 
-    bool usePOX = false;  // `best` flag
-    int  q       = 0;     // POX iteration counter
+    // ── Initialise ──
+    vector<Chromosome> pop;
+    pop.reserve(Np_);
+    initPopulation(pop);
+    sort(pop.begin(), pop.end(), fitnessDesc);
 
-    int  nonImpGen = 0;   // consecutive generations without improvement
+    Chromosome best       = pop[0];
+    int  gensNoImprove    = 0;
+    bool poxActive        = false;
+    int  poxGenCount      = 0;
 
-    auto wallStart = std::chrono::steady_clock::now();
+    cerr << "[GA] n=" << n_ << "  Np=" << Np_
+         << "  init_best=" << best.fitness << "\n";
 
-    // Main loop
-    while (true) {
-        // Check stopping criteria
-        double elapsed = std::chrono::duration<double>(
-            std::chrono::steady_clock::now() - wallStart).count();
-        if (elapsed >= params_.maxTimeSec) break;
-        if (nonImpGen >= params_.Gc)       break;
+    // ── Main loop ──
+    while (elapsedSec() < params_.maxTimeSec && gensNoImprove < Gc_) {
 
-        std::vector<Chromosome> offspring;
-        offspring.reserve(params_.popSize);
+        bool usePOX = poxActive && (poxGenCount < Omega_);
 
-        // Generate N_p offspring via crossover
-        while ((int)offspring.size() < params_.popSize) {
-            int idx1 = tournamentSelect();
-            int idx2 = tournamentSelect();
-            const Chromosome& p1 = population_[idx1];
-            const Chromosome& p2 = population_[idx2];
+        // Build offspring
+        vector<Chromosome> offspring;
+        offspring.reserve(Np_);
 
-            Chromosome c1, c2;
+        while ((int)offspring.size() < Np_) {
+            const Chromosome& p1 = tournamentSelect(pop);
+            const Chromosome& p2 = tournamentSelect(pop);
 
-            // Lines 6-10: choose crossover type
-            if (usePOX && q <= params_.Q) {
-                // Problem-oriented crossover
-                c1 = p1; c2 = p2;
-                problemOrientedCrossover(c1);
-                problemOrientedCrossover(c2);
-            } else {
-                // Combined crossover
-                auto [cc1, cc2] = combinedCrossover(p1, p2);
-                c1 = cc1; c2 = cc2;
+            auto [c1, c2] = combinedCrossover(p1, p2);
+
+            if (usePOX) {
+                // POX already evaluates; mutation below will re-evaluate
+                c1 = problemOrientedCrossover(c1);
+                c2 = problemOrientedCrossover(c2);
             }
 
-            // Line 11: mutation
-            swapMutation(c1);  uniformMutation(c1);
-            swapMutation(c2);  uniformMutation(c2);
+            swapMutation(c1);
+            reinsertionMutation(c1);
+            c1.fitness = eval_(c1.perm);
 
-            // Line 12: merge to maximal classes
-            mergeToMaximalClasses(c1);
-            mergeToMaximalClasses(c2);
+            swapMutation(c2);
+            reinsertionMutation(c2);
+            c2.fitness = eval_(c2.perm);
 
-            // Line 13: evaluate
-            evaluateChromosome(c1);
-            evaluateChromosome(c2);
-
-            offspring.push_back(std::move(c1));
-            if ((int)offspring.size() < params_.popSize)
-                offspring.push_back(std::move(c2));
+            offspring.push_back(move(c1));
+            if ((int)offspring.size() < Np_)
+                offspring.push_back(move(c2));
         }
 
-        // Find best in offspring
-        const Chromosome& genBest = *std::max_element(offspring.begin(), offspring.end(),
-            [](const Chromosome& a, const Chromosome& b){ return a.fitness < b.fitness; });
+        // Elitism: sort offspring ascending (worst first),
+        // overwrite SE_ worst with SE_ best parents.
+        sort(offspring.begin(), offspring.end(),
+             [](const Chromosome& a, const Chromosome& b) {
+                 return a.fitness < b.fitness;
+             });
+        for (int i = 0; i < SE_ && i < Np_; ++i)
+            offspring[i] = pop[i];   // pop is descending: pop[0] = best
 
-        // Lines 15-20: update best and POX flag
-        if (genBest.fitness > bestChr_.fitness) {
-            bestChr_ = genBest;
-            usePOX   = true;
-            q        = 1;
-            nonImpGen = 0;
+        // Deduplicate, then sort for next generation
+        removeDuplicates(offspring);
+        pop = move(offspring);
+        sort(pop.begin(), pop.end(), fitnessDesc);
+
+        // Track improvement
+        if (pop[0].fitness > best.fitness) {
+            best          = pop[0];
+            gensNoImprove = 0;
+            poxActive     = true;
+            poxGenCount   = 0;
+            cerr << "[GA] New best=" << best.fitness
+                 << "  t=" << (int)elapsedSec() << "s\n";
         } else {
-            usePOX = false;
-            q++;
-            nonImpGen++;
+            ++gensNoImprove;
+            if (poxActive && ++poxGenCount >= Omega_)
+                poxActive = false;
         }
-
-        // Line 14: create next generation
-        nextGeneration(offspring);
     }
 
-    return bestChr_;
+    cerr << "[GA] Done  best=" << best.fitness
+         << "  no_improve=" << gensNoImprove
+         << "  t=" << (int)elapsedSec() << "s\n";
+    return best;
 }

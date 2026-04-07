@@ -388,4 +388,4 @@ def validateFolder(topFolderPath):
     print(f"Output: {output_csv}")
 
 
-validateFolder("/home/mateus/WSL/IC/SSP/output/BeezaoPractitionerSmall")
+validateFolder("/workspaces/IC/SSP/output/Beezao")
