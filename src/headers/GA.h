@@ -71,7 +71,7 @@ private:
     static constexpr int    Np_    = 400;   // population size
     static constexpr int    SE_    = 40;    // elitism count  (10 % of Np)
     static constexpr int    ST_    = 80;    // tournament size (20 % of Np)
-    static constexpr int    Gc_    = 200;    // max generations without improvement
+    static constexpr int    Gc_    = 20;   // max generations without improvement
     static constexpr int    Omega_ = 1;     // POX generations after improvement
     static constexpr double Ps_    = 0.01;  // swap-mutation prob per locus
     static constexpr double Pu_    = 0.01;  // reinsertion-mutation prob per locus
