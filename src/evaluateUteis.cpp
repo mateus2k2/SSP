@@ -73,9 +73,9 @@ vector<vector<int>> SSP::splitSolutionIntoMachinesByTime(const vector<int>& inpu
 }
 
 double SSP::evaluateReport(solSSP& solution, fstream& solutionReportFile) {
-    int planingHorizonToRepost =  0;
-    if (planingHorizon % DAY == 0) planingHorizonToRepost = planingHorizon; 
-    else planingHorizonToRepost = ((planingHorizon + DAY - 1) / DAY);
+    // int planingHorizonToRepost =  0;
+    // if (planingHorizon % DAY == 0) planingHorizonToRepost = planingHorizon; 
+    // else planingHorizonToRepost = ((planingHorizon + DAY - 1) / DAY);
 
     solutionReportFile << inputJobsFile << ";" << inputToolsetsFile << endl;
     solutionReportFile << planingHorizon << ";" << unsupervised << ";" << DAY << endl;
@@ -162,10 +162,6 @@ tuple<int, int, int, int, int, int>  SSP::KTNSReport(vector<int> s, int startInd
         int processingTimeSum = originalJobsCopy[s[jL]].processingTime;
         if((originalJobsCopy[s[jL]].isReentrant && !originalJobsCopy[s[jL]].isGrouped) && originalJobsCopy[s[jL]].indexOperation == 0) processingTimeSum = std::accumulate(originalJobsCopy[s[jL]].processingTimes.begin(), originalJobsCopy[s[jL]].processingTimes.end(), 0);
         fimJob = inicioJob + originalJobsCopy[s[jL]].processingTime;
-
-        if(originalJobsCopy[s[jL]].indexJob == 166){
-            cout << "Job 168: " << originalJobsCopy[s[jL]].processingTime << endl;
-        }
 
         // Estou no periodo de supervisao e entrando no periodo sem supervisao
         if (inicioJob % (DAY) < unsupervised && fimJob % (DAY) > unsupervised && fimJob < (planingHorizon * DAY)) {

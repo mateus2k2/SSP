@@ -291,8 +291,9 @@ def processRunFolder(folderPath, accumulator):
 
         valid, report = validate_all_jobs_finished(originalData, solution)
         if not valid:
-            print(f"    ❌ Job completion validation failed.")
-            print(report)
+            # print(f"    ❌ Job completion validation failed.")
+            # print(report)
+            pass
 
         planejamentoObj, machines, endInfoObj = solution
         instance_name = planejamentoObj["jobsFileName"].split("/")[-1].replace(".PMTC", "")
@@ -388,4 +389,4 @@ def validateFolder(topFolderPath):
     print(f"Output: {output_csv}")
 
 
-validateFolder("/workspaces/IC/SSP/output/Beezao")
+validateFolder("./output/BeezaoPTLarge/")

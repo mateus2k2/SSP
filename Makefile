@@ -124,11 +124,11 @@ runPTDiff:
 
 runPT:
 	./src/out/mainCpp \
-		"./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv" \
-		"./input/Processed/ToolSetInt.csv" \
+		"/workspaces/IC/SSP/input/BaseInstances/2M1/n=5,r=0.5,t=8,v0.txt" \
+		"" \
 		"./output/Exemplo/pt.csv" \
 		--PTL_TEMP_UPDATE_PROPORTION 3 \
-		--DIFERENT_TOOLSETS_MODE 0 \
+		--DIFERENT_TOOLSETS_MODE 1 \
 		--TEMP_INIT 0.1 \
         --TEMP_FIM 5 \
         --N_REPLICAS 11 \
@@ -151,23 +151,32 @@ runModelo:
 		--TIME_LIMIT 5 \
 		--MODELO 1 \
 
-# "./input/BeezaoRaw/IPMTC-I/instance931_m=2_n=25_l=20_c=15_s=0.PMTC" \
-# "./input/BeezaoRaw/IPMTC-I/instance1_m=2_n=8_l=15_c=5_s=0.PMTC" \
-# "./input/BeezaoRaw/IPMTC-II/instanceLarge932_m=6_n=200_l=40_c=30_s=1.PMTC" \
-# "./input/BeezaoRaw/IPMTC-II/instanceLarge931_m=6_n=200_l=40_c=30_s=0.PMTC" \
+# instanceLarge931_m=6_n=200_l=40_c=30_s=0.PMTC
+# instanceLarge932_m=6_n=200_l=40_c=30_s=1.PMTC
+# instanceLarge933_m=6_n=200_l=40_c=30_s=2.PMTC
+# instanceLarge946_m=6_n=200_l=40_c=30_s=0.PMTC
+# instanceLarge947_m=6_n=200_l=40_c=30_s=1.PMTC
+# instanceLarge948_m=6_n=200_l=40_c=30_s=2.PMTC
+# instanceLarge952_m=6_n=200_l=40_c=30_s=0.PMTC
+# instanceLarge953_m=6_n=200_l=40_c=30_s=1.PMTC
+# instanceLarge954_m=6_n=200_l=40_c=30_s=2.PMTC
+# instanceLarge958_m=6_n=200_l=40_c=30_s=0.PMTC
+# instanceLarge959_m=6_n=200_l=40_c=30_s=1.PMTC
+# instanceLarge960_m=6_n=200_l=40_c=30_s=2.PMTC
 
+# instanceLarge931_m=6_n=200_l=40_c=30_s=0	199	1	554,8	189,3	-940,6	-584,8	3492,2	27,0783	96,3
 runBeezao:
 	./src/out/mainCpp \
-		"./input/BeezaoRaw/IPMTC-II/instanceLarge960_m=6_n=200_l=40_c=30_s=2.PMTC" \
+		"./input/BaseInstances/6M2/n=5,r=0.4,t=5,v0.txt" \
 		"" \
-		"./output/Beezao/teste.txt" \
+		"./output/Beezao/960.txt" \
 		--PTL_TEMP_UPDATE_PROPORTION 3 \
 		--DIFERENT_TOOLSETS_MODE 0 \
 		--TEMP_INIT 0.1 \
         --TEMP_FIM 5 \
         --N_REPLICAS 11 \
         --MCL 100 \
-        --PTL 500 \
+        --PTL 200 \
         --PASSO_GATILHO 10 \
         --TEMP_DIST 3 \
         --TYPE_UPDATE 1 \
@@ -211,16 +220,16 @@ goModelo:
 
 goBeezao:
 	@clear
-	make compile
+	make normalCompile
 # 	make devCompile
 	make runBeezao
 
 goPT:
 	@clear
-# 	make devCompile
-	make normalCompile
+	make devCompile
+# 	make normalCompile
+# 	make runBeezao
 	make runPT
-# 	make runPTDiff
 
 # --------------------------------------------------------
 # Meus python

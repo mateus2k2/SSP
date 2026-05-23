@@ -65,53 +65,44 @@ python ./scripts/reportAnalises.py ./output/Exemplo/pt.csv 7
 
 
 
- Original Job Index: 1, Operation Index: 0, Processing Time: 237, Priority: Yes
- Original Job Index: 6, Operation Index: 0, Processing Time: 101, Priority: Yes
- Original Job Index: 7, Operation Index: 0, Processing Time: 104, Priority: Yes
- Original Job Index: 0, Operation Index: 0, Processing Time: 213, Priority: Yes
- Original Job Index: 5, Operation Index: 0, Processing Time: 25, Priority: Yes
- Original Job Index: 9, Operation Index: 0, Processing Time: 41, Priority: Yes
- Original Job Index: 11, Operation Index: 0, Processing Time: 228, Priority: Yes
- Original Job Index: 2, Operation Index: 0, Processing Time: 202, Priority: Yes
- Original Job Index: 10, Operation Index: 0, Processing Time: 4, Priority: Yes
- Original Job Index: 4, Operation Index: 0, Processing Time: 4, Priority: Yes
- Original Job Index: 3, Operation Index: 0, Processing Time: 269, Priority: Yes
- Original Job Index: 8, Operation Index: 0, Processing Time: 18, Priority: Yes
- Original Job Index: 45, Operation Index: 0, Processing Time: 184, Priority: No
- Original Job Index: 42, Operation Index: 0, Processing Time: 89, Priority: No
- Original Job Index: 13, Operation Index: 0, Processing Time: 352, Priority: No
- Original Job Index: 34, Operation Index: 0, Processing Time: 220, Priority: No
- Original Job Index: 21, Operation Index: 0, Processing Time: 160, Priority: No
- Original Job Index: 12, Operation Index: 0, Processing Time: 98, Priority: No
- Original Job Index: 35, Operation Index: 0, Processing Time: 168, Priority: No
- Original Job Index: 16, Operation Index: 0, Processing Time: 150, Priority: No
- Original Job Index: 14, Operation Index: 0, Processing Time: 54, Priority: No
- Original Job Index: 47, Operation Index: 0, Processing Time: 134, Priority: No
- Original Job Index: 25, Operation Index: 0, Processing Time: 65, Priority: No
- Original Job Index: 22, Operation Index: 0, Processing Time: 34, Priority: No
- Original Job Index: 32, Operation Index: 0, Processing Time: 50, Priority: No
- Original Job Index: 33, Operation Index: 0, Processing Time: 163, Priority: No
- Original Job Index: 28, Operation Index: 0, Processing Time: 101, Priority: No
- Original Job Index: 15, Operation Index: 0, Processing Time: 199, Priority: No
- Original Job Index: 39, Operation Index: 0, Processing Time: 45, Priority: No
- Original Job Index: 41, Operation Index: 0, Processing Time: 204, Priority: No
- Original Job Index: 37, Operation Index: 0, Processing Time: 207, Priority: No
- Original Job Index: 30, Operation Index: 0, Processing Time: 68, Priority: No
- Original Job Index: 19, Operation Index: 0, Processing Time: 168, Priority: No
- Original Job Index: 29, Operation Index: 0, Processing Time: 160, Priority: No
- Original Job Index: 18, Operation Index: 0, Processing Time: 101, Priority: No
- Original Job Index: 43, Operation Index: 0, Processing Time: 294, Priority: No
- Original Job Index: 20, Operation Index: 0, Processing Time: 95, Priority: No
- Original Job Index: 46, Operation Index: 0, Processing Time: 158, Priority: No
- Original Job Index: 36, Operation Index: 0, Processing Time: 53, Priority: No
- Original Job Index: 27, Operation Index: 0, Processing Time: 255, Priority: No
- Original Job Index: 24, Operation Index: 0, Processing Time: 264, Priority: No
- Original Job Index: 38, Operation Index: 0, Processing Time: 43, Priority: No
- Original Job Index: 49, Operation Index: 0, Processing Time: 203, Priority: No
- Original Job Index: 31, Operation Index: 0, Processing Time: 125, Priority: No
- Original Job Index: 44, Operation Index: 0, Processing Time: 208, Priority: No
- Original Job Index: 40, Operation Index: 0, Processing Time: 165, Priority: No
- Original Job Index: 26, Operation Index: 0, Processing Time: 61, Priority: No
- Original Job Index: 17, Operation Index: 0, Processing Time: 16, Priority: No
- Original Job Index: 23, Operation Index: 0, Processing Time: 152, Priority: No
- Original Job Index: 48, Operation Index: 0, Processing Time: 209, Priority: No
+
+
+
+
+
+
+
+
+Where can I find information about the different operations, i. e., which jobs are reentrant or not? For example, the first base case has 250 jobs and 376 operations. The data file has 250 rows, but I cannot figure out where to find the information about the 376 operations.
+First we set a “setup_max” parameter {2M1: 0.5, 6M1: 0.6, 6M2:0.4}
+Second we iterate over the jobs from 1 to 250 and generate jobs. If 1 setup 1 job, if 2 setups 2 jobs until we reach 376 jobs
+The decision for 1 or 2 jobs is made with the following variable:
+calculation = nr of jobs with 2nd setup / (nr of jobs – nr of jobs with 2nd setup + 1)
+If calculation > setup_max è setups = 1, else è setups = 2
+ 
+
+Where can I find information about job types, i. e., which jobs are priority and which are regular?
+First we assign the priority level = 0.5
+Same iteration as with nr setups per job. So from job 1 to job 250
+calculation = Amount of priority jobs /  amount of priority jobs + amount of regular jobs + 1
+If calculation < priority level è append job to priority jobs, else è append to regular jobs
+ 
+ 
+
+Unsupervised shifts are considered to start at instant 24-t_U?
+Yes exactly
+ 
+
+Where can I find information about priority ratio, tool ratio and reentrant operations ratio, i. e., which jobs, tools and operations are selected when these ratios vary as indicated in the paper? Is it possible to reproduce the instances? 
+Priority ratio and reentrant ratio (setup_max) is mentioned above. The assignment is as per method above.
+The tool ratio is the list of unique tools. From job 1 to n we append the unique tools to the list. At the end we calculate the tool ratio
+If tool ratio is too low è               1. we iterate over the existing jobs
+2. we iterate over the tl references from id = 0 to id =n.
+3. If a tool in that tl is not part of unique tools and nr of tools for that job fit in tool capacity, it is added to the TL of the current iterated job
+3b. If other jobs also require the TL of that job, also the tool is added in that job
+                If tool ratio is too high è              1. We iterate over existing jobs
+                                                                                2. If the length of tool set > t_min è {2M1: 2, 6M1: 10, 6M2: 5}, we remove the tool for the TL                                                           
+ 
+ 
+The magazine capacity is set as 80. However, some tool sets seem to have more than 80 tools, e. g., from instance 6M1401: TL51, TL52, and TL88. Particularly, TL51 seems to have 127 tools and is used by 4 different jobs. In this case a different magazine capacity is considered?
+No tool capacity remains the same. If the tool set is too large, we assign a random TL to that job.

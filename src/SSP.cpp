@@ -9,6 +9,9 @@ SSP::SSP(std::string filenameJobs, std::string filenameTools, int diferent_tools
 	if (filenameJobs.find("Beezao") != string::npos) {
         loadInstanceBeezao(filenameJobs);
     }
+	if (filenameJobs.find("BaseInstances") != string::npos) {
+        loadInstanceBase(filenameJobs);
+    }
 	else{
 		laodToolSet(filenameTools);
 		laodInstance(filenameJobs);

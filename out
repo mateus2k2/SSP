@@ -1,2487 +1,377 @@
-make -j FMT_MODE=0 GATILHO_MODE=0 RAND_MODE=1 compile
-make[1]: Entering directory '/workspaces/IC/SSP'
-Compilando...
-g++ build/SSP.o build/evaluate.o build/evaluateUteis.o build/ga.o build/initial.o build/loadData.o build/main.o build/modelo.o build/neighbors.o build/oneBlockGrouping.o build/practitioner.o -o src/out/mainCpp  -L/workspaces/IC/SSP/infoModelo/GUROBI/gurobi1300/linux64/lib -lgurobi_c++ -lgurobi130 -lpthread  -lm -lstdc++ 
-Compilado com sucesso em src/out/mainCpp
-make[1]: Leaving directory '/workspaces/IC/SSP'
-         --TEMP_INIT 0.1         --TEMP_FIM 5         --N_REPLICAS 11         --MCL 500         --PTL 100         --PASSO_GATILHO 10         --TEMP_DIST 3         --TYPE_UPDATE 1         --INIT_SOL_TYPE 0         --TEMP_UPDATE 3500         --PTL_TEMP_UPDATE_PROPORTION 3     
-RODANDO INSTANCIAS DE ./input/MyInstancesSameToolSets
-2026-04-07 12:27:01.749 - 1 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=15,p=0.5,r=0.5,t=0,v0.csv ./input/Processed/ToolSetInt.csv ./output/GATeste1/MyInstancesSameToolSets/n=15,p=0.5,r=0.5,t=0,v0.csv
-[GA] n=13  Np=400  init_best=269
-[GA] New best=278  t=0s
-[GA] New best=286  t=0s
-[GA] New best=291  t=0s
-[GA] New best=296  t=0s
-[GA] New best=302  t=0s
-[GA] Done  best=302  no_improve=200  t=0s
-302
-2026-04-07 12:27:02.748 - 2 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=15,p=0.25,r=0.5,t=0,v0.csv ./input/Processed/ToolSetInt.csv ./output/GATeste1/MyInstancesSameToolSets/n=15,p=0.25,r=0.5,t=0,v0.csv
-[GA] n=13  Np=400  init_best=412
-[GA] Done  best=412  no_improve=200  t=0s
-412
-2026-04-07 12:27:03.456 - 3 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=15,p=0.75,r=0.5,t=0,v0.csv ./input/Processed/ToolSetInt.csv ./output/GATeste1/MyInstancesSameToolSets/n=15,p=0.75,r=0.5,t=0,v0.csv
-[GA] n=13  Np=400  init_best=389
-[GA] New best=392  t=0s
-[GA] New best=393  t=0s
-[GA] New best=394  t=0s
-[GA] New best=397  t=0s
-[GA] Done  best=397  no_improve=200  t=1s
-397
-2026-04-07 12:27:04.937 - 4 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=20,p=0.5,r=0.5,t=0,v0.csv ./input/Processed/ToolSetInt.csv ./output/GATeste1/MyInstancesSameToolSets/n=20,p=0.5,r=0.5,t=0,v0.csv
-[GA] n=14  Np=400  init_best=503
-[GA] New best=504  t=0s
-[GA] Done  best=504  no_improve=200  t=1s
-504
-2026-04-07 12:27:06.234 - 5 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=20,p=0.25,r=0.5,t=0,v0.csv ./input/Processed/ToolSetInt.csv ./output/GATeste1/MyInstancesSameToolSets/n=20,p=0.25,r=0.5,t=0,v0.csv
-[GA] n=14  Np=400  init_best=541
-[GA] New best=545  t=0s
-[GA] New best=546  t=0s
-[GA] Done  best=546  no_improve=200  t=1s
-546
-2026-04-07 12:27:07.422 - 6 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=20,p=0.75,r=0.5,t=0,v0.csv ./input/Processed/ToolSetInt.csv ./output/GATeste1/MyInstancesSameToolSets/n=20,p=0.75,r=0.5,t=0,v0.csv
-[GA] n=14  Np=400  init_best=566
-[GA] Done  best=566  no_improve=200  t=1s
-566
-2026-04-07 12:27:08.484 - 7 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=25,p=0.5,r=0.5,t=0,v0.csv ./input/Processed/ToolSetInt.csv ./output/GATeste1/MyInstancesSameToolSets/n=25,p=0.5,r=0.5,t=0,v0.csv
-[GA] n=17  Np=400  init_best=595
-[GA] New best=614  t=0s
-[GA] Done  best=614  no_improve=200  t=1s
-614
-2026-04-07 12:27:10.204 - 8 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=25,p=0.25,r=0.5,t=0,v0.csv ./input/Processed/ToolSetInt.csv ./output/GATeste1/MyInstancesSameToolSets/n=25,p=0.25,r=0.5,t=0,v0.csv
-[GA] n=17  Np=400  init_best=658
-[GA] Done  best=658  no_improve=200  t=1s
-658
-2026-04-07 12:27:14.376 - 9 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=25,p=0.75,r=0.5,t=0,v0.csv ./input/Processed/ToolSetInt.csv ./output/GATeste1/MyInstancesSameToolSets/n=25,p=0.75,r=0.5,t=0,v0.csv
-[GA] n=17  Np=400  init_best=620
-[GA] New best=630  t=0s
-[GA] New best=636  t=0s
-[GA] Done  best=636  no_improve=200  t=1s
-636
-2026-04-07 12:27:16.104 - 10 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv ./input/Processed/ToolSetInt.csv ./output/GATeste1/MyInstancesSameToolSets/n=75,p=0.24,r=0.5,t=650,v0.csv
-[GA] n=50  Np=400  init_best=1280
-[GA] New best=1307  t=0s
-[GA] New best=1310  t=0s
-[GA] New best=1356  t=0s
-[GA] New best=1382  t=0s
-[GA] New best=1400  t=1s
-[GA] New best=1402  t=1s
-[GA] New best=1410  t=1s
-[GA] New best=1416  t=1s
-[GA] New best=1435  t=2s
-[GA] New best=1437  t=2s
-[GA] New best=1451  t=2s
-[GA] New best=1461  t=2s
-[GA] New best=1467  t=3s
-[GA] New best=1474  t=3s
-[GA] New best=1485  t=3s
-[GA] New best=1495  t=3s
-[GA] New best=1497  t=4s
-[GA] New best=1503  t=5s
-[GA] New best=1510  t=5s
-[GA] New best=1512  t=6s
-[GA] New best=1513  t=6s
-[GA] New best=1514  t=6s
-[GA] Done  best=1514  no_improve=200  t=12s
-1514
-2026-04-07 12:27:28.759 - 11 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=75,p=0.51,r=0.5,t=650,v1.csv ./input/Processed/ToolSetInt.csv ./output/GATeste1/MyInstancesSameToolSets/n=75,p=0.51,r=0.5,t=650,v1.csv
-[GA] n=50  Np=400  init_best=1036
-[GA] New best=1119  t=0s
-[GA] New best=1177  t=0s
-[GA] New best=1232  t=0s
-[GA] New best=1233  t=0s
-[GA] New best=1264  t=0s
-[GA] New best=1272  t=0s
-[GA] New best=1284  t=0s
-[GA] New best=1296  t=1s
-[GA] New best=1329  t=1s
-[GA] New best=1357  t=1s
-[GA] New best=1380  t=1s
-[GA] New best=1383  t=1s
-[GA] New best=1400  t=1s
-[GA] New best=1410  t=1s
-[GA] New best=1412  t=2s
-[GA] New best=1422  t=2s
-[GA] New best=1425  t=2s
-[GA] New best=1431  t=2s
-[GA] New best=1435  t=3s
-[GA] New best=1437  t=3s
-[GA] New best=1440  t=3s
-[GA] New best=1441  t=3s
-[GA] New best=1442  t=4s
-[GA] New best=1443  t=4s
-[GA] Done  best=1443  no_improve=200  t=10s
-1443
-2026-04-07 12:27:38.957 - 12 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=75,p=0.75,r=0.5,t=650,v2.csv ./input/Processed/ToolSetInt.csv ./output/GATeste1/MyInstancesSameToolSets/n=75,p=0.75,r=0.5,t=650,v2.csv
-[GA] n=50  Np=400  init_best=1236
-[GA] New best=1326  t=0s
-[GA] New best=1355  t=0s
-[GA] New best=1393  t=0s
-[GA] New best=1422  t=0s
-[GA] New best=1429  t=0s
-[GA] New best=1443  t=0s
-[GA] New best=1448  t=0s
-[GA] New best=1449  t=0s
-[GA] New best=1452  t=0s
-[GA] New best=1457  t=0s
-[GA] New best=1460  t=0s
-[GA] New best=1470  t=0s
-[GA] New best=1478  t=1s
-[GA] New best=1486  t=1s
-[GA] New best=1492  t=1s
-[GA] New best=1497  t=1s
-[GA] New best=1500  t=1s
-[GA] New best=1501  t=1s
-[GA] New best=1502  t=1s
-[GA] New best=1504  t=1s
-[GA] New best=1508  t=2s
-[GA] New best=1509  t=2s
-[GA] New best=1510  t=2s
-[GA] New best=1519  t=2s
-[GA] New best=1520  t=2s
-[GA] New best=1522  t=2s
-[GA] New best=1524  t=2s
-[GA] New best=1525  t=3s
-[GA] New best=1526  t=3s
-[GA] New best=1527  t=3s
-[GA] New best=1532  t=3s
-[GA] New best=1533  t=3s
-[GA] New best=1535  t=4s
-[GA] New best=1539  t=4s
-[GA] New best=1540  t=6s
-[GA] New best=1541  t=6s
-[GA] Done  best=1541  no_improve=200  t=12s
-1541
-2026-04-07 12:27:54.081 - 13 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=212,p=0.25,r=0.4,t=1390,v6.csv ./input/Processed/ToolSetInt.csv ./output/GATeste1/MyInstancesSameToolSets/n=212,p=0.25,r=0.4,t=1390,v6.csv
-[GA] n=152  Np=400  init_best=2644
-[GA] New best=2790  t=0s
-[GA] New best=3089  t=2s
-[GA] New best=3101  t=4s
-[GA] New best=3141  t=6s
-[GA] New best=3164  t=8s
-[GA] New best=3183  t=11s
-[GA] New best=3212  t=13s
-[GA] New best=3217  t=15s
-[GA] New best=3264  t=17s
-[GA] New best=3288  t=20s
-[GA] New best=3325  t=22s
-[GA] New best=3348  t=24s
-[GA] New best=3364  t=26s
-[GA] New best=3400  t=28s
-[GA] New best=3410  t=31s
-[GA] New best=3419  t=33s
-[GA] New best=3424  t=35s
-[GA] New best=3427  t=37s
-[GA] New best=3433  t=40s
-[GA] New best=3448  t=42s
-[GA] New best=3452  t=44s
-[GA] New best=3482  t=46s
-[GA] New best=3503  t=48s
-[GA] New best=3520  t=51s
-[GA] New best=3530  t=53s
-[GA] New best=3551  t=55s
-[GA] New best=3556  t=57s
-[GA] New best=3566  t=59s
-[GA] New best=3581  t=62s
-[GA] New best=3605  t=64s
-[GA] New best=3616  t=66s
-[GA] New best=3636  t=68s
-[GA] New best=3646  t=70s
-[GA] New best=3655  t=73s
-[GA] New best=3667  t=75s
-[GA] New best=3668  t=77s
-[GA] New best=3677  t=79s
-[GA] New best=3680  t=81s
-[GA] New best=3693  t=83s
-[GA] New best=3696  t=86s
-[GA] New best=3717  t=88s
-[GA] New best=3719  t=90s
-[GA] New best=3747  t=92s
-[GA] New best=3757  t=94s
-[GA] New best=3768  t=97s
-[GA] New best=3779  t=99s
-[GA] New best=3782  t=101s
-[GA] New best=3790  t=104s
-[GA] New best=3799  t=106s
-[GA] New best=3801  t=108s
-[GA] New best=3803  t=110s
-[GA] New best=3807  t=113s
-[GA] New best=3809  t=115s
-[GA] New best=3812  t=117s
-[GA] New best=3819  t=119s
-[GA] New best=3822  t=122s
-[GA] New best=3825  t=124s
-[GA] New best=3829  t=127s
-[GA] New best=3839  t=129s
-[GA] New best=3850  t=132s
-[GA] New best=3852  t=134s
-[GA] New best=3854  t=136s
-[GA] New best=3858  t=139s
-[GA] New best=3860  t=141s
-[GA] New best=3868  t=143s
-[GA] New best=3869  t=145s
-[GA] New best=3870  t=148s
-[GA] New best=3872  t=150s
-[GA] New best=3875  t=152s
-[GA] New best=3876  t=155s
-[GA] New best=3880  t=157s
-[GA] New best=3886  t=159s
-[GA] New best=3915  t=162s
-[GA] New best=3917  t=164s
-[GA] New best=3922  t=166s
-[GA] New best=3929  t=169s
-[GA] New best=3931  t=171s
-[GA] New best=3933  t=174s
-[GA] New best=3940  t=176s
-[GA] New best=3946  t=178s
-[GA] New best=3949  t=181s
-[GA] New best=3955  t=183s
-[GA] New best=3958  t=185s
-[GA] New best=3961  t=188s
-[GA] New best=3962  t=190s
-[GA] New best=3970  t=192s
-[GA] New best=3972  t=195s
-[GA] New best=3981  t=197s
-[GA] New best=3984  t=199s
-[GA] New best=3986  t=202s
-[GA] New best=3994  t=204s
-[GA] New best=3995  t=206s
-[GA] New best=3999  t=209s
-[GA] New best=4007  t=211s
-[GA] New best=4008  t=213s
-[GA] New best=4011  t=215s
-[GA] New best=4013  t=219s
-[GA] New best=4018  t=221s
-[GA] New best=4021  t=223s
-[GA] New best=4024  t=226s
-[GA] New best=4028  t=228s
-[GA] New best=4030  t=230s
-[GA] New best=4031  t=234s
-[GA] New best=4032  t=237s
-[GA] New best=4037  t=239s
-[GA] New best=4039  t=241s
-[GA] New best=4040  t=244s
-[GA] New best=4045  t=248s
-[GA] New best=4049  t=250s
-[GA] New best=4050  t=252s
-[GA] New best=4075  t=255s
-[GA] New best=4076  t=257s
-[GA] New best=4082  t=259s
-[GA] New best=4084  t=261s
-[GA] New best=4085  t=264s
-[GA] New best=4087  t=266s
-[GA] New best=4090  t=268s
-[GA] New best=4091  t=270s
-[GA] New best=4092  t=273s
-[GA] New best=4098  t=275s
-[GA] New best=4106  t=278s
-[GA] New best=4108  t=280s
-[GA] New best=4109  t=282s
-[GA] New best=4111  t=284s
-[GA] New best=4112  t=287s
-[GA] New best=4128  t=289s
-[GA] New best=4129  t=292s
-[GA] New best=4133  t=295s
-[GA] New best=4135  t=297s
-[GA] New best=4137  t=300s
-[GA] New best=4138  t=303s
-[GA] New best=4140  t=305s
-[GA] New best=4141  t=308s
-[GA] New best=4142  t=310s
-[GA] New best=4143  t=313s
-[GA] New best=4144  t=315s
-[GA] New best=4145  t=318s
-[GA] New best=4146  t=321s
-[GA] New best=4155  t=323s
-[GA] New best=4158  t=327s
-[GA] New best=4159  t=331s
-[GA] New best=4168  t=337s
-[GA] New best=4169  t=341s
-[GA] New best=4170  t=344s
-[GA] New best=4171  t=348s
-[GA] New best=4173  t=351s
-[GA] New best=4178  t=354s
-[GA] New best=4181  t=357s
-[GA] New best=4186  t=360s
-[GA] New best=4187  t=362s
-[GA] New best=4190  t=365s
-[GA] New best=4191  t=372s
-[GA] New best=4195  t=377s
-[GA] New best=4196  t=380s
-[GA] New best=4197  t=383s
-[GA] New best=4198  t=386s
-[GA] New best=4202  t=389s
-[GA] New best=4205  t=393s
-[GA] New best=4208  t=397s
-[GA] New best=4211  t=401s
-[GA] New best=4212  t=407s
-[GA] New best=4214  t=409s
-[GA] New best=4219  t=413s
-[GA] New best=4222  t=416s
-[GA] New best=4223  t=421s
-[GA] New best=4224  t=424s
-[GA] New best=4225  t=427s
-[GA] New best=4230  t=430s
-[GA] New best=4231  t=438s
-[GA] New best=4232  t=441s
-[GA] New best=4233  t=444s
-[GA] New best=4234  t=446s
-[GA] New best=4236  t=449s
-[GA] New best=4238  t=452s
-[GA] New best=4239  t=456s
-[GA] New best=4240  t=460s
-[GA] New best=4242  t=470s
-[GA] New best=4244  t=472s
-[GA] New best=4248  t=475s
-[GA] New best=4250  t=477s
-[GA] New best=4251  t=483s
-[GA] New best=4252  t=506s
-[GA] New best=4253  t=509s
-[GA] Done  best=4253  no_improve=200  t=539s
-4253
-2026-04-07 12:37:36.206 - 14 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=212,p=0.50,r=0.4,t=1390,v7.csv ./input/Processed/ToolSetInt.csv ./output/GATeste1/MyInstancesSameToolSets/n=212,p=0.50,r=0.4,t=1390,v7.csv
-[GA] n=152  Np=400  init_best=2744
-[GA] New best=2833  t=0s
-[GA] New best=2890  t=1s
-[GA] New best=3008  t=2s
-[GA] New best=3084  t=3s
-[GA] New best=3164  t=5s
-[GA] New best=3215  t=6s
-[GA] New best=3254  t=7s
-[GA] New best=3259  t=8s
-[GA] New best=3316  t=9s
-[GA] New best=3323  t=11s
-[GA] New best=3345  t=12s
-[GA] New best=3364  t=13s
-[GA] New best=3384  t=14s
-[GA] New best=3391  t=15s
-[GA] New best=3399  t=16s
-[GA] New best=3409  t=18s
-[GA] New best=3436  t=19s
-[GA] New best=3448  t=20s
-[GA] New best=3457  t=21s
-[GA] New best=3462  t=23s
-[GA] New best=3468  t=24s
-[GA] New best=3486  t=25s
-[GA] New best=3487  t=27s
-[GA] New best=3516  t=28s
-[GA] New best=3521  t=29s
-[GA] New best=3529  t=30s
-[GA] New best=3570  t=32s
-[GA] New best=3577  t=33s
-[GA] New best=3589  t=34s
-[GA] New best=3601  t=35s
-[GA] New best=3616  t=37s
-[GA] New best=3617  t=38s
-[GA] New best=3628  t=39s
-[GA] New best=3630  t=40s
-[GA] New best=3658  t=42s
-[GA] New best=3659  t=44s
-[GA] New best=3667  t=45s
-[GA] New best=3670  t=46s
-[GA] New best=3677  t=48s
-[GA] New best=3686  t=49s
-[GA] New best=3687  t=50s
-[GA] New best=3690  t=51s
-[GA] New best=3700  t=52s
-[GA] New best=3702  t=54s
-[GA] New best=3703  t=55s
-[GA] New best=3715  t=56s
-[GA] New best=3717  t=58s
-[GA] New best=3725  t=59s
-[GA] New best=3727  t=60s
-[GA] New best=3728  t=61s
-[GA] New best=3734  t=62s
-[GA] New best=3736  t=64s
-[GA] New best=3740  t=65s
-[GA] New best=3760  t=66s
-[GA] New best=3768  t=68s
-[GA] New best=3779  t=69s
-[GA] New best=3806  t=70s
-[GA] New best=3807  t=72s
-[GA] New best=3809  t=73s
-[GA] New best=3823  t=75s
-[GA] New best=3824  t=76s
-[GA] New best=3827  t=78s
-[GA] New best=3834  t=79s
-[GA] New best=3843  t=82s
-[GA] New best=3847  t=83s
-[GA] New best=3861  t=85s
-[GA] New best=3862  t=86s
-[GA] New best=3864  t=88s
-[GA] New best=3865  t=90s
-[GA] New best=3876  t=92s
-[GA] New best=3877  t=93s
-[GA] New best=3885  t=94s
-[GA] New best=3886  t=96s
-[GA] New best=3888  t=98s
-[GA] New best=3893  t=99s
-[GA] New best=3895  t=100s
-[GA] New best=3896  t=102s
-[GA] New best=3897  t=105s
-[GA] New best=3905  t=106s
-[GA] New best=3906  t=107s
-[GA] New best=3908  t=110s
-[GA] New best=3909  t=112s
-[GA] New best=3915  t=114s
-[GA] New best=3919  t=115s
-[GA] New best=3925  t=116s
-[GA] New best=3926  t=118s
-[GA] New best=3932  t=120s
-[GA] New best=3943  t=121s
-[GA] New best=3947  t=122s
-[GA] New best=3953  t=124s
-[GA] New best=3955  t=126s
-[GA] New best=3957  t=129s
-[GA] New best=3962  t=130s
-[GA] New best=3963  t=132s
-[GA] New best=3970  t=133s
-[GA] New best=3971  t=135s
-[GA] New best=3974  t=137s
-[GA] New best=3976  t=138s
-[GA] New best=3978  t=139s
-[GA] New best=3979  t=141s
-[GA] New best=3980  t=142s
-[GA] New best=3999  t=144s
-[GA] New best=4000  t=145s
-[GA] New best=4001  t=147s
-[GA] New best=4007  t=148s
-[GA] New best=4011  t=150s
-[GA] New best=4015  t=152s
-[GA] New best=4021  t=156s
-[GA] New best=4024  t=158s
-[GA] New best=4029  t=160s
-[GA] New best=4032  t=162s
-[GA] New best=4034  t=165s
-[GA] New best=4035  t=166s
-[GA] New best=4036  t=169s
-[GA] New best=4037  t=171s
-[GA] New best=4042  t=177s
-[GA] New best=4043  t=178s
-[GA] New best=4045  t=182s
-[GA] New best=4046  t=183s
-[GA] New best=4047  t=185s
-[GA] New best=4054  t=189s
-[GA] New best=4055  t=194s
-[GA] New best=4056  t=196s
-[GA] New best=4057  t=198s
-[GA] New best=4058  t=199s
-[GA] New best=4059  t=205s
-[GA] New best=4060  t=213s
-[GA] New best=4076  t=215s
-[GA] New best=4079  t=222s
-[GA] New best=4080  t=228s
-[GA] New best=4089  t=232s
-[GA] New best=4091  t=253s
-[GA] Done  best=4091  no_improve=200  t=282s
-4091
-2026-04-07 12:42:42.828 - 15 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=212,p=0.75,r=0.4,t=1390,v8.csv ./input/Processed/ToolSetInt.csv ./output/GATeste1/MyInstancesSameToolSets/n=212,p=0.75,r=0.4,t=1390,v8.csv
-[GA] n=152  Np=400  init_best=1648
-[GA] New best=1969  t=0s
-[GA] New best=2150  t=0s
-[GA] New best=2301  t=1s
-[GA] New best=2509  t=1s
-[GA] New best=2573  t=2s
-[GA] New best=2674  t=2s
-[GA] New best=2712  t=2s
-[GA] New best=2809  t=3s
-[GA] New best=2847  t=3s
-[GA] New best=2986  t=4s
-[GA] New best=3015  t=4s
-[GA] New best=3051  t=5s
-[GA] New best=3086  t=6s
-[GA] New best=3136  t=6s
-[GA] New best=3143  t=7s
-[GA] New best=3180  t=8s
-[GA] New best=3182  t=8s
-[GA] New best=3201  t=9s
-[GA] New best=3221  t=9s
-[GA] New best=3229  t=10s
-[GA] New best=3252  t=11s
-[GA] New best=3256  t=11s
-[GA] New best=3265  t=12s
-[GA] New best=3272  t=13s
-[GA] New best=3290  t=13s
-[GA] New best=3307  t=14s
-[GA] New best=3308  t=15s
-[GA] New best=3314  t=15s
-[GA] New best=3318  t=16s
-[GA] New best=3331  t=17s
-[GA] New best=3338  t=18s
-[GA] New best=3343  t=18s
-[GA] New best=3355  t=19s
-[GA] New best=3391  t=19s
-[GA] New best=3396  t=20s
-[GA] New best=3400  t=21s
-[GA] New best=3406  t=21s
-[GA] New best=3418  t=22s
-[GA] New best=3434  t=23s
-[GA] New best=3444  t=23s
-[GA] New best=3458  t=24s
-[GA] New best=3469  t=25s
-[GA] New best=3479  t=25s
-[GA] New best=3484  t=26s
-[GA] New best=3485  t=27s
-[GA] New best=3490  t=27s
-[GA] New best=3493  t=28s
-[GA] New best=3501  t=29s
-[GA] New best=3505  t=30s
-[GA] New best=3508  t=30s
-[GA] New best=3512  t=31s
-[GA] New best=3515  t=32s
-[GA] New best=3519  t=33s
-[GA] New best=3522  t=34s
-[GA] New best=3524  t=35s
-[GA] New best=3525  t=36s
-[GA] New best=3526  t=37s
-[GA] New best=3533  t=37s
-[GA] New best=3536  t=38s
-[GA] New best=3538  t=39s
-[GA] New best=3543  t=39s
-[GA] New best=3545  t=41s
-[GA] New best=3558  t=41s
-[GA] New best=3560  t=42s
-[GA] New best=3565  t=43s
-[GA] New best=3571  t=44s
-[GA] New best=3572  t=44s
-[GA] New best=3576  t=45s
-[GA] New best=3583  t=46s
-[GA] New best=3585  t=46s
-[GA] New best=3590  t=47s
-[GA] New best=3592  t=48s
-[GA] New best=3593  t=49s
-[GA] New best=3598  t=50s
-[GA] New best=3606  t=51s
-[GA] New best=3611  t=51s
-[GA] New best=3624  t=52s
-[GA] New best=3626  t=53s
-[GA] New best=3638  t=53s
-[GA] New best=3640  t=55s
-[GA] New best=3643  t=57s
-[GA] New best=3649  t=57s
-[GA] New best=3651  t=58s
-[GA] New best=3660  t=59s
-[GA] New best=3671  t=60s
-[GA] New best=3681  t=60s
-[GA] New best=3682  t=61s
-[GA] New best=3689  t=62s
-[GA] New best=3695  t=63s
-[GA] New best=3719  t=64s
-[GA] New best=3720  t=65s
-[GA] New best=3727  t=66s
-[GA] New best=3731  t=66s
-[GA] New best=3742  t=67s
-[GA] New best=3744  t=68s
-[GA] New best=3771  t=69s
-[GA] New best=3778  t=70s
-[GA] New best=3780  t=72s
-[GA] New best=3784  t=73s
-[GA] New best=3785  t=74s
-[GA] New best=3787  t=76s
-[GA] New best=3792  t=77s
-[GA] New best=3794  t=77s
-[GA] New best=3797  t=78s
-[GA] New best=3798  t=79s
-[GA] New best=3799  t=80s
-[GA] New best=3801  t=82s
-[GA] New best=3802  t=82s
-[GA] New best=3806  t=83s
-[GA] New best=3807  t=84s
-[GA] New best=3810  t=87s
-[GA] New best=3811  t=87s
-[GA] New best=3815  t=89s
-[GA] New best=3816  t=92s
-[GA] New best=3820  t=92s
-[GA] New best=3821  t=93s
-[GA] New best=3823  t=95s
-[GA] New best=3831  t=96s
-[GA] New best=3838  t=97s
-[GA] New best=3843  t=99s
-[GA] New best=3845  t=100s
-[GA] New best=3846  t=100s
-[GA] New best=3847  t=101s
-[GA] New best=3848  t=102s
-[GA] New best=3851  t=108s
-[GA] New best=3856  t=109s
-[GA] New best=3866  t=110s
-[GA] New best=3867  t=110s
-[GA] New best=3869  t=115s
-[GA] New best=3870  t=126s
-[GA] New best=3875  t=130s
-[GA] New best=3877  t=131s
-[GA] New best=3878  t=133s
-[GA] New best=3882  t=134s
-[GA] New best=3883  t=134s
-[GA] New best=3893  t=135s
-[GA] New best=3900  t=137s
-[GA] New best=3902  t=140s
-[GA] New best=3903  t=143s
-[GA] New best=3906  t=152s
-[GA] New best=3908  t=156s
-[GA] New best=3910  t=161s
-[GA] New best=3912  t=173s
-[GA] New best=3914  t=181s
-[GA] New best=3915  t=183s
-[GA] New best=3916  t=184s
-[GA] New best=3917  t=185s
-[GA] New best=3918  t=188s
-[GA] New best=3921  t=197s
-[GA] New best=3924  t=208s
-[GA] New best=3935  t=210s
-[GA] New best=3936  t=225s
-[GA] New best=3937  t=237s
-[GA] New best=3942  t=248s
-[GA] New best=3945  t=276s
-[GA] New best=3946  t=300s
-[GA] New best=3947  t=327s
-[GA] New best=3954  t=351s
-[GA] New best=3959  t=364s
-[GA] Done  best=3959  no_improve=200  t=392s
-3959
-2026-04-07 12:49:47.205 - 16 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=228,p=0.25,r=0.6,t=1520,v3.csv ./input/Processed/ToolSetInt.csv ./output/GATeste1/MyInstancesSameToolSets/n=228,p=0.25,r=0.6,t=1520,v3.csv
-[GA] n=143  Np=400  init_best=3238
-[GA] New best=3460  t=0s
-[GA] New best=3721  t=1s
-[GA] New best=3743  t=3s
-[GA] New best=3791  t=5s
-[GA] New best=3829  t=6s
-[GA] New best=3860  t=8s
-[GA] New best=3946  t=10s
-[GA] New best=3983  t=11s
-[GA] New best=3992  t=13s
-[GA] New best=4016  t=15s
-[GA] New best=4024  t=17s
-[GA] New best=4037  t=19s
-[GA] New best=4061  t=20s
-[GA] New best=4081  t=22s
-[GA] New best=4094  t=24s
-[GA] New best=4113  t=26s
-[GA] New best=4133  t=28s
-[GA] New best=4162  t=30s
-[GA] New best=4178  t=31s
-[GA] New best=4195  t=33s
-[GA] New best=4211  t=35s
-[GA] New best=4220  t=37s
-[GA] New best=4233  t=38s
-[GA] New best=4238  t=40s
-[GA] New best=4245  t=42s
-[GA] New best=4248  t=44s
-[GA] New best=4259  t=46s
-[GA] New best=4267  t=48s
-[GA] New best=4277  t=50s
-[GA] New best=4283  t=52s
-[GA] New best=4293  t=53s
-[GA] New best=4310  t=55s
-[GA] New best=4313  t=57s
-[GA] New best=4318  t=59s
-[GA] New best=4323  t=61s
-[GA] New best=4339  t=63s
-[GA] New best=4344  t=65s
-[GA] New best=4345  t=67s
-[GA] New best=4346  t=69s
-[GA] New best=4347  t=71s
-[GA] New best=4349  t=73s
-[GA] New best=4355  t=74s
-[GA] New best=4358  t=76s
-[GA] New best=4360  t=78s
-[GA] New best=4365  t=80s
-[GA] New best=4367  t=82s
-[GA] New best=4369  t=84s
-[GA] New best=4376  t=86s
-[GA] New best=4378  t=88s
-[GA] New best=4379  t=89s
-[GA] New best=4384  t=91s
-[GA] New best=4386  t=93s
-[GA] New best=4389  t=95s
-[GA] New best=4390  t=97s
-[GA] New best=4396  t=99s
-[GA] New best=4407  t=101s
-[GA] New best=4417  t=103s
-[GA] New best=4420  t=105s
-[GA] New best=4422  t=108s
-[GA] New best=4438  t=109s
-[GA] New best=4439  t=111s
-[GA] New best=4442  t=113s
-[GA] New best=4444  t=115s
-[GA] New best=4446  t=118s
-[GA] New best=4447  t=120s
-[GA] New best=4452  t=122s
-[GA] New best=4453  t=125s
-[GA] New best=4457  t=127s
-[GA] New best=4458  t=128s
-[GA] New best=4459  t=130s
-[GA] New best=4462  t=132s
-[GA] New best=4463  t=134s
-[GA] New best=4468  t=138s
-[GA] New best=4473  t=140s
-[GA] New best=4474  t=142s
-[GA] New best=4479  t=144s
-[GA] New best=4480  t=146s
-[GA] New best=4481  t=148s
-[GA] New best=4483  t=150s
-[GA] New best=4484  t=152s
-[GA] New best=4486  t=154s
-[GA] New best=4487  t=156s
-[GA] New best=4489  t=159s
-[GA] New best=4490  t=162s
-[GA] New best=4491  t=165s
-[GA] New best=4493  t=167s
-[GA] New best=4495  t=169s
-[GA] New best=4496  t=171s
-[GA] New best=4497  t=173s
-[GA] New best=4500  t=175s
-[GA] New best=4504  t=179s
-[GA] New best=4506  t=181s
-[GA] New best=4507  t=187s
-[GA] New best=4508  t=196s
-[GA] New best=4527  t=198s
-[GA] New best=4528  t=201s
-[GA] New best=4532  t=205s
-[GA] New best=4534  t=208s
-[GA] New best=4537  t=210s
-[GA] New best=4539  t=218s
-[GA] New best=4540  t=221s
-[GA] New best=4541  t=227s
-[GA] New best=4542  t=234s
-[GA] New best=4544  t=240s
-[GA] New best=4546  t=244s
-[GA] New best=4547  t=247s
-[GA] New best=4549  t=253s
-[GA] New best=4550  t=255s
-[GA] New best=4551  t=257s
-[GA] New best=4552  t=263s
-[GA] New best=4557  t=267s
-[GA] New best=4559  t=272s
-[GA] New best=4564  t=281s
-[GA] New best=4566  t=284s
-[GA] New best=4568  t=292s
-[GA] New best=4569  t=297s
-[GA] New best=4571  t=301s
-[GA] New best=4572  t=304s
-[GA] New best=4573  t=306s
-[GA] New best=4575  t=311s
-[GA] New best=4580  t=313s
-[GA] Done  best=4580  no_improve=200  t=340s
-4580
-2026-04-07 12:55:56.963 - 17 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=228,p=0.50,r=0.6,t=1520,v4.csv ./input/Processed/ToolSetInt.csv ./output/GATeste1/MyInstancesSameToolSets/n=228,p=0.50,r=0.6,t=1520,v4.csv
-[GA] n=143  Np=400  init_best=3074
-[GA] New best=3180  t=0s
-[GA] New best=3344  t=1s
-[GA] New best=3404  t=2s
-[GA] New best=3539  t=3s
-[GA] New best=3623  t=4s
-[GA] New best=3661  t=5s
-[GA] New best=3723  t=6s
-[GA] New best=3744  t=7s
-[GA] New best=3767  t=8s
-[GA] New best=3779  t=9s
-[GA] New best=3789  t=10s
-[GA] New best=3853  t=11s
-[GA] New best=3880  t=12s
-[GA] New best=3889  t=13s
-[GA] New best=3901  t=14s
-[GA] New best=3906  t=15s
-[GA] New best=3935  t=16s
-[GA] New best=3940  t=17s
-[GA] New best=3987  t=18s
-[GA] New best=4001  t=19s
-[GA] New best=4016  t=20s
-[GA] New best=4024  t=22s
-[GA] New best=4036  t=23s
-[GA] New best=4044  t=24s
-[GA] New best=4045  t=25s
-[GA] New best=4061  t=26s
-[GA] New best=4078  t=28s
-[GA] New best=4087  t=29s
-[GA] New best=4095  t=30s
-[GA] New best=4114  t=31s
-[GA] New best=4117  t=32s
-[GA] New best=4119  t=33s
-[GA] New best=4123  t=34s
-[GA] New best=4131  t=35s
-[GA] New best=4147  t=36s
-[GA] New best=4148  t=37s
-[GA] New best=4152  t=38s
-[GA] New best=4156  t=39s
-[GA] New best=4157  t=40s
-[GA] New best=4161  t=41s
-[GA] New best=4163  t=42s
-[GA] New best=4164  t=43s
-[GA] New best=4166  t=44s
-[GA] New best=4167  t=45s
-[GA] New best=4187  t=47s
-[GA] New best=4189  t=48s
-[GA] New best=4191  t=49s
-[GA] New best=4193  t=50s
-[GA] New best=4201  t=51s
-[GA] New best=4208  t=53s
-[GA] New best=4210  t=54s
-[GA] New best=4213  t=55s
-[GA] New best=4214  t=56s
-[GA] New best=4216  t=57s
-[GA] New best=4219  t=58s
-[GA] New best=4221  t=59s
-[GA] New best=4224  t=60s
-[GA] New best=4226  t=61s
-[GA] New best=4228  t=62s
-[GA] New best=4234  t=64s
-[GA] New best=4237  t=65s
-[GA] New best=4240  t=66s
-[GA] New best=4243  t=67s
-[GA] New best=4245  t=68s
-[GA] New best=4252  t=69s
-[GA] New best=4255  t=70s
-[GA] New best=4257  t=71s
-[GA] New best=4260  t=73s
-[GA] New best=4261  t=74s
-[GA] New best=4263  t=75s
-[GA] New best=4268  t=76s
-[GA] New best=4270  t=77s
-[GA] New best=4272  t=78s
-[GA] New best=4277  t=79s
-[GA] New best=4281  t=80s
-[GA] New best=4283  t=82s
-[GA] New best=4285  t=83s
-[GA] New best=4286  t=84s
-[GA] New best=4288  t=85s
-[GA] New best=4296  t=86s
-[GA] New best=4298  t=87s
-[GA] New best=4300  t=89s
-[GA] New best=4301  t=90s
-[GA] New best=4303  t=92s
-[GA] New best=4305  t=93s
-[GA] New best=4310  t=95s
-[GA] New best=4311  t=96s
-[GA] New best=4322  t=97s
-[GA] New best=4325  t=98s
-[GA] New best=4327  t=99s
-[GA] New best=4335  t=101s
-[GA] New best=4343  t=102s
-[GA] New best=4344  t=104s
-[GA] New best=4345  t=108s
-[GA] New best=4346  t=110s
-[GA] New best=4347  t=113s
-[GA] New best=4348  t=114s
-[GA] New best=4349  t=115s
-[GA] New best=4350  t=116s
-[GA] New best=4353  t=117s
-[GA] New best=4354  t=119s
-[GA] New best=4361  t=121s
-[GA] New best=4362  t=122s
-[GA] New best=4364  t=124s
-[GA] New best=4367  t=125s
-[GA] New best=4368  t=126s
-[GA] New best=4370  t=128s
-[GA] New best=4371  t=131s
-[GA] New best=4372  t=135s
-[GA] New best=4374  t=136s
-[GA] New best=4375  t=138s
-[GA] New best=4378  t=140s
-[GA] New best=4379  t=150s
-[GA] New best=4380  t=152s
-[GA] New best=4381  t=153s
-[GA] New best=4382  t=155s
-[GA] New best=4383  t=156s
-[GA] New best=4385  t=164s
-[GA] New best=4387  t=168s
-[GA] New best=4388  t=169s
-[GA] New best=4389  t=171s
-[GA] New best=4390  t=175s
-[GA] New best=4393  t=180s
-[GA] New best=4395  t=181s
-[GA] New best=4396  t=183s
-[GA] New best=4397  t=187s
-[GA] New best=4398  t=191s
-[GA] New best=4399  t=193s
-[GA] New best=4403  t=195s
-[GA] New best=4406  t=199s
-[GA] New best=4408  t=202s
-[GA] New best=4410  t=204s
-[GA] New best=4411  t=206s
-[GA] New best=4413  t=211s
-[GA] New best=4415  t=212s
-[GA] New best=4416  t=215s
-[GA] New best=4417  t=218s
-[GA] New best=4418  t=220s
-[GA] New best=4419  t=225s
-[GA] New best=4423  t=234s
-[GA] New best=4424  t=237s
-[GA] New best=4425  t=252s
-[GA] New best=4426  t=254s
-[GA] New best=4428  t=255s
-[GA] New best=4430  t=257s
-[GA] New best=4432  t=261s
-[GA] New best=4434  t=276s
-[GA] Done  best=4434  no_improve=200  t=301s
-4434
-2026-04-07 13:01:23.751 - 18 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=228,p=0.75,r=0.6,t=1520,v5.csv ./input/Processed/ToolSetInt.csv ./output/GATeste1/MyInstancesSameToolSets/n=228,p=0.75,r=0.6,t=1520,v5.csv
-[GA] n=143  Np=400  init_best=2512
-[GA] New best=2550  t=0s
-[GA] New best=2702  t=0s
-[GA] New best=2851  t=1s
-[GA] New best=3025  t=1s
-[GA] New best=3096  t=2s
-[GA] New best=3125  t=2s
-[GA] New best=3148  t=3s
-[GA] New best=3178  t=3s
-[GA] New best=3192  t=4s
-[GA] New best=3211  t=5s
-[GA] New best=3220  t=5s
-[GA] New best=3243  t=6s
-[GA] New best=3255  t=6s
-[GA] New best=3260  t=7s
-[GA] New best=3311  t=7s
-[GA] New best=3327  t=8s
-[GA] New best=3328  t=8s
-[GA] New best=3349  t=9s
-[GA] New best=3359  t=9s
-[GA] New best=3370  t=10s
-[GA] New best=3380  t=11s
-[GA] New best=3390  t=11s
-[GA] New best=3407  t=12s
-[GA] New best=3427  t=12s
-[GA] New best=3431  t=13s
-[GA] New best=3446  t=13s
-[GA] New best=3451  t=14s
-[GA] New best=3458  t=15s
-[GA] New best=3476  t=15s
-[GA] New best=3477  t=16s
-[GA] New best=3478  t=16s
-[GA] New best=3494  t=17s
-[GA] New best=3495  t=17s
-[GA] New best=3499  t=18s
-[GA] New best=3530  t=19s
-[GA] New best=3566  t=19s
-[GA] New best=3567  t=20s
-[GA] New best=3579  t=20s
-[GA] New best=3592  t=21s
-[GA] New best=3594  t=21s
-[GA] New best=3604  t=22s
-[GA] New best=3612  t=22s
-[GA] New best=3619  t=23s
-[GA] New best=3626  t=23s
-[GA] New best=3641  t=24s
-[GA] New best=3654  t=25s
-[GA] New best=3655  t=25s
-[GA] New best=3667  t=26s
-[GA] New best=3670  t=26s
-[GA] New best=3680  t=27s
-[GA] New best=3684  t=27s
-[GA] New best=3687  t=28s
-[GA] New best=3701  t=29s
-[GA] New best=3723  t=29s
-[GA] New best=3725  t=30s
-[GA] New best=3726  t=31s
-[GA] New best=3730  t=31s
-[GA] New best=3738  t=32s
-[GA] New best=3747  t=32s
-[GA] New best=3751  t=33s
-[GA] New best=3756  t=34s
-[GA] New best=3762  t=35s
-[GA] New best=3783  t=35s
-[GA] New best=3784  t=36s
-[GA] New best=3800  t=37s
-[GA] New best=3804  t=38s
-[GA] New best=3809  t=38s
-[GA] New best=3818  t=39s
-[GA] New best=3822  t=39s
-[GA] New best=3825  t=40s
-[GA] New best=3831  t=40s
-[GA] New best=3833  t=41s
-[GA] New best=3835  t=42s
-[GA] New best=3837  t=42s
-[GA] New best=3839  t=43s
-[GA] New best=3841  t=43s
-[GA] New best=3845  t=44s
-[GA] New best=3846  t=44s
-[GA] New best=3848  t=45s
-[GA] New best=3854  t=46s
-[GA] New best=3858  t=47s
-[GA] New best=3862  t=47s
-[GA] New best=3872  t=48s
-[GA] New best=3878  t=48s
-[GA] New best=3885  t=49s
-[GA] New best=3888  t=51s
-[GA] New best=3889  t=53s
-[GA] New best=3897  t=53s
-[GA] New best=3898  t=55s
-[GA] New best=3899  t=56s
-[GA] New best=3902  t=57s
-[GA] New best=3912  t=57s
-[GA] New best=3917  t=59s
-[GA] New best=3927  t=59s
-[GA] New best=3931  t=61s
-[GA] New best=3932  t=62s
-[GA] New best=3935  t=62s
-[GA] New best=3944  t=63s
-[GA] New best=3950  t=64s
-[GA] New best=3951  t=66s
-[GA] New best=3952  t=67s
-[GA] New best=3954  t=68s
-[GA] New best=3957  t=69s
-[GA] New best=3958  t=70s
-[GA] New best=3961  t=72s
-[GA] New best=3963  t=76s
-[GA] New best=3965  t=77s
-[GA] New best=3968  t=79s
-[GA] New best=3969  t=79s
-[GA] New best=3976  t=81s
-[GA] New best=3982  t=83s
-[GA] New best=3984  t=83s
-[GA] New best=3993  t=85s
-[GA] New best=3994  t=87s
-[GA] New best=3995  t=94s
-[GA] New best=3997  t=95s
-[GA] New best=3998  t=102s
-[GA] New best=4007  t=110s
-[GA] New best=4011  t=111s
-[GA] New best=4022  t=112s
-[GA] New best=4024  t=117s
-[GA] New best=4028  t=118s
-[GA] New best=4029  t=119s
-[GA] New best=4030  t=120s
-[GA] New best=4031  t=121s
-[GA] New best=4039  t=122s
-[GA] New best=4041  t=126s
-[GA] New best=4043  t=127s
-[GA] New best=4048  t=131s
-[GA] New best=4050  t=134s
-[GA] New best=4051  t=135s
-[GA] New best=4052  t=140s
-[GA] New best=4061  t=146s
-[GA] New best=4067  t=148s
-[GA] New best=4068  t=149s
-[GA] New best=4070  t=153s
-[GA] New best=4074  t=160s
-[GA] New best=4075  t=165s
-[GA] New best=4077  t=167s
-[GA] New best=4079  t=167s
-[GA] New best=4080  t=180s
-[GA] New best=4084  t=192s
-[GA] New best=4085  t=193s
-[GA] New best=4086  t=198s
-[GA] New best=4087  t=198s
-[GA] New best=4088  t=206s
-[GA] New best=4089  t=210s
-[GA] New best=4090  t=214s
-[GA] New best=4092  t=215s
-[GA] New best=4094  t=216s
-[GA] New best=4095  t=217s
-[GA] New best=4096  t=220s
-[GA] New best=4097  t=224s
-[GA] New best=4099  t=229s
-[GA] New best=4101  t=237s
-[GA] New best=4102  t=238s
-[GA] New best=4104  t=240s
-[GA] New best=4105  t=245s
-[GA] New best=4106  t=250s
-[GA] New best=4108  t=251s
-[GA] New best=4109  t=253s
-[GA] New best=4111  t=256s
-[GA] New best=4113  t=268s
-[GA] Done  best=4113  no_improve=200  t=294s
-4113
-2026-04-07 13:06:42.399 - 19 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=399,p=0.25,r=0.5,t=2310,v0.csv ./input/Processed/ToolSetInt.csv ./output/GATeste1/MyInstancesSameToolSets/n=399,p=0.25,r=0.5,t=2310,v0.csv
-[GA] n=266  Np=400  init_best=5467
-[GA] New best=5637  t=0s
-[GA] New best=5822  t=5s
-[GA] New best=5926  t=9s
-[GA] New best=6097  t=13s
-[GA] New best=6120  t=17s
-[GA] New best=6187  t=22s
-[GA] New best=6353  t=27s
-[GA] New best=6461  t=31s
-[GA] New best=6471  t=36s
-[GA] New best=6546  t=40s
-[GA] New best=6629  t=45s
-[GA] New best=6661  t=50s
-[GA] New best=6720  t=54s
-[GA] New best=6734  t=59s
-[GA] New best=6769  t=64s
-[GA] New best=6794  t=69s
-[GA] New best=6803  t=74s
-[GA] New best=6806  t=79s
-[GA] New best=6822  t=83s
-[GA] New best=6831  t=88s
-[GA] New best=6838  t=93s
-[GA] New best=6854  t=98s
-[GA] New best=6881  t=102s
-[GA] New best=6894  t=107s
-[GA] New best=6936  t=112s
-[GA] New best=6948  t=116s
-[GA] New best=6960  t=121s
-[GA] New best=6965  t=127s
-[GA] New best=6972  t=132s
-[GA] New best=6986  t=136s
-[GA] New best=6994  t=141s
-[GA] New best=6996  t=146s
-[GA] New best=7002  t=151s
-[GA] New best=7025  t=155s
-[GA] New best=7028  t=161s
-[GA] New best=7038  t=166s
-[GA] New best=7046  t=171s
-[GA] New best=7048  t=176s
-[GA] New best=7056  t=181s
-[GA] New best=7065  t=185s
-[GA] New best=7087  t=191s
-[GA] New best=7099  t=196s
-[GA] New best=7113  t=201s
-[GA] New best=7118  t=208s
-[GA] New best=7122  t=213s
-[GA] New best=7127  t=217s
-[GA] New best=7131  t=222s
-[GA] New best=7144  t=227s
-[GA] New best=7149  t=233s
-[GA] New best=7153  t=238s
-[GA] New best=7164  t=243s
-[GA] New best=7213  t=249s
-[GA] New best=7217  t=256s
-[GA] New best=7218  t=262s
-[GA] New best=7225  t=268s
-[GA] New best=7232  t=273s
-[GA] New best=7238  t=279s
-[GA] New best=7240  t=286s
-[GA] New best=7246  t=291s
-[GA] New best=7247  t=295s
-[GA] New best=7256  t=301s
-[GA] New best=7257  t=306s
-[GA] New best=7258  t=312s
-[GA] New best=7260  t=317s
-[GA] New best=7261  t=323s
-[GA] New best=7262  t=329s
-[GA] New best=7270  t=333s
-[GA] New best=7273  t=340s
-[GA] New best=7274  t=347s
-[GA] New best=7279  t=352s
-[GA] New best=7282  t=357s
-[GA] New best=7287  t=364s
-[GA] New best=7290  t=369s
-[GA] New best=7292  t=374s
-[GA] New best=7294  t=380s
-[GA] New best=7301  t=386s
-[GA] New best=7309  t=393s
-[GA] New best=7328  t=398s
-[GA] New best=7331  t=403s
-[GA] New best=7343  t=410s
-[GA] New best=7345  t=420s
-[GA] New best=7347  t=428s
-[GA] New best=7350  t=435s
-[GA] New best=7353  t=443s
-[GA] New best=7360  t=449s
-[GA] New best=7361  t=454s
-[GA] New best=7362  t=460s
-[GA] New best=7366  t=467s
-[GA] New best=7367  t=472s
-[GA] New best=7368  t=479s
-[GA] New best=7369  t=487s
-[GA] New best=7373  t=492s
-[GA] New best=7375  t=499s
-[GA] New best=7376  t=503s
-[GA] New best=7379  t=510s
-[GA] New best=7380  t=515s
-[GA] New best=7385  t=519s
-[GA] New best=7388  t=528s
-[GA] New best=7398  t=532s
-[GA] New best=7401  t=539s
-[GA] New best=7402  t=543s
-[GA] New best=7429  t=548s
-[GA] New best=7430  t=555s
-[GA] New best=7441  t=560s
-[GA] New best=7442  t=565s
-[GA] New best=7451  t=570s
-[GA] New best=7452  t=574s
-[GA] New best=7453  t=579s
-[GA] New best=7457  t=585s
-[GA] New best=7461  t=589s
-[GA] New best=7466  t=596s
-[GA] New best=7467  t=603s
-[GA] New best=7468  t=612s
-[GA] New best=7469  t=620s
-[GA] New best=7473  t=630s
-[GA] New best=7480  t=637s
-[GA] New best=7484  t=643s
-[GA] New best=7490  t=648s
-[GA] New best=7497  t=655s
-[GA] New best=7503  t=660s
-[GA] New best=7504  t=664s
-[GA] New best=7505  t=669s
-[GA] New best=7506  t=674s
-[GA] New best=7508  t=678s
-[GA] New best=7512  t=685s
-[GA] New best=7519  t=695s
-[GA] New best=7520  t=705s
-[GA] New best=7522  t=715s
-[GA] New best=7524  t=727s
-[GA] New best=7525  t=734s
-[GA] New best=7526  t=739s
-[GA] New best=7528  t=748s
-[GA] New best=7529  t=755s
-[GA] New best=7537  t=760s
-[GA] New best=7539  t=765s
-[GA] New best=7540  t=773s
-[GA] New best=7548  t=778s
-[GA] New best=7549  t=785s
-[GA] New best=7554  t=790s
-[GA] New best=7557  t=798s
-[GA] New best=7563  t=802s
-[GA] New best=7566  t=814s
-[GA] New best=7572  t=828s
-[GA] New best=7583  t=840s
-[GA] New best=7596  t=849s
-[GA] New best=7598  t=868s
-[GA] New best=7601  t=874s
-[GA] New best=7603  t=879s
-[GA] New best=7605  t=894s
-[GA] New best=7607  t=901s
-[GA] New best=7609  t=907s
-[GA] New best=7610  t=914s
-[GA] New best=7620  t=924s
-[GA] New best=7621  t=929s
-[GA] New best=7622  t=936s
-[GA] New best=7628  t=953s
-[GA] New best=7631  t=971s
-[GA] New best=7634  t=977s
-[GA] New best=7637  t=989s
-[GA] New best=7639  t=997s
-[GA] New best=7640  t=1004s
-[GA] New best=7641  t=1011s
-[GA] New best=7644  t=1016s
-[GA] New best=7645  t=1027s
-[GA] New best=7652  t=1033s
-[GA] New best=7653  t=1039s
-[GA] New best=7660  t=1044s
-[GA] New best=7666  t=1052s
-[GA] New best=7668  t=1072s
-[GA] New best=7669  t=1078s
-[GA] New best=7673  t=1100s
-[GA] New best=7676  t=1107s
-[GA] New best=7680  t=1117s
-[GA] New best=7683  t=1125s
-[GA] New best=7690  t=1140s
-[GA] New best=7694  t=1154s
-[GA] New best=7696  t=1164s
-[GA] New best=7700  t=1178s
-[GA] New best=7701  t=1185s
-[GA] New best=7705  t=1191s
-[GA] New best=7706  t=1197s
-[GA] New best=7709  t=1202s
-[GA] New best=7714  t=1214s
-[GA] New best=7719  t=1220s
-[GA] New best=7720  t=1236s
-[GA] New best=7723  t=1245s
-[GA] New best=7727  t=1252s
-[GA] New best=7732  t=1263s
-[GA] New best=7734  t=1283s
-[GA] New best=7736  t=1300s
-[GA] New best=7740  t=1312s
-[GA] New best=7743  t=1322s
-[GA] New best=7747  t=1329s
-[GA] New best=7750  t=1335s
-[GA] New best=7755  t=1344s
-[GA] New best=7757  t=1349s
-[GA] New best=7760  t=1356s
-[GA] New best=7761  t=1366s
-[GA] New best=7763  t=1371s
-[GA] New best=7764  t=1388s
-[GA] New best=7766  t=1398s
-[GA] New best=7772  t=1409s
-[GA] New best=7781  t=1420s
-[GA] New best=7783  t=1428s
-[GA] New best=7784  t=1436s
-[GA] New best=7785  t=1455s
-[GA] New best=7786  t=1461s
-[GA] New best=7787  t=1467s
-[GA] New best=7790  t=1476s
-[GA] New best=7791  t=1482s
-[GA] New best=7792  t=1494s
-[GA] New best=7793  t=1500s
-[GA] New best=7794  t=1515s
-[GA] New best=7795  t=1521s
-[GA] New best=7796  t=1534s
-[GA] New best=7798  t=1543s
-[GA] New best=7799  t=1551s
-[GA] Done  best=7799  no_improve=200  t=1606s
-Job 168: 163
-7799
-2026-04-07 13:35:54.875 - 20 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=399,p=0.50,r=0.5,t=2310,v1.csv ./input/Processed/ToolSetInt.csv ./output/GATeste1/MyInstancesSameToolSets/n=399,p=0.50,r=0.5,t=2310,v1.csv
-[GA] n=266  Np=400  init_best=4689
-[GA] New best=5011  t=0s
-[GA] New best=5349  t=3s
-[GA] New best=5623  t=5s
-[GA] New best=5701  t=8s
-[GA] New best=5772  t=10s
-[GA] New best=5872  t=13s
-[GA] New best=5902  t=15s
-[GA] New best=6062  t=18s
-[GA] New best=6083  t=21s
-[GA] New best=6094  t=23s
-[GA] New best=6102  t=26s
-[GA] New best=6123  t=28s
-[GA] New best=6140  t=31s
-[GA] New best=6154  t=34s
-[GA] New best=6181  t=36s
-[GA] New best=6196  t=39s
-[GA] New best=6198  t=41s
-[GA] New best=6209  t=44s
-[GA] New best=6245  t=47s
-[GA] New best=6267  t=50s
-[GA] New best=6272  t=52s
-[GA] New best=6301  t=55s
-[GA] New best=6315  t=58s
-[GA] New best=6350  t=61s
-[GA] New best=6364  t=63s
-[GA] New best=6439  t=67s
-[GA] New best=6455  t=71s
-[GA] New best=6475  t=74s
-[GA] New best=6485  t=76s
-[GA] New best=6487  t=79s
-[GA] New best=6511  t=82s
-[GA] New best=6536  t=85s
-[GA] New best=6544  t=87s
-[GA] New best=6549  t=90s
-[GA] New best=6557  t=92s
-[GA] New best=6560  t=96s
-[GA] New best=6562  t=99s
-[GA] New best=6577  t=102s
-[GA] New best=6592  t=105s
-[GA] New best=6601  t=109s
-[GA] New best=6604  t=112s
-[GA] New best=6618  t=115s
-[GA] New best=6623  t=118s
-[GA] New best=6628  t=121s
-[GA] New best=6631  t=124s
-[GA] New best=6641  t=127s
-[GA] New best=6642  t=131s
-[GA] New best=6659  t=134s
-[GA] New best=6667  t=137s
-[GA] New best=6676  t=140s
-[GA] New best=6690  t=143s
-[GA] New best=6691  t=146s
-[GA] New best=6695  t=149s
-[GA] New best=6718  t=152s
-[GA] New best=6722  t=155s
-[GA] New best=6725  t=159s
-[GA] New best=6727  t=162s
-[GA] New best=6728  t=165s
-[GA] New best=6740  t=168s
-[GA] New best=6746  t=171s
-[GA] New best=6750  t=174s
-[GA] New best=6765  t=178s
-[GA] New best=6768  t=180s
-[GA] New best=6790  t=183s
-[GA] New best=6809  t=186s
-[GA] New best=6826  t=189s
-[GA] New best=6831  t=192s
-[GA] New best=6836  t=196s
-[GA] New best=6841  t=199s
-[GA] New best=6850  t=202s
-[GA] New best=6871  t=208s
-[GA] New best=6885  t=212s
-[GA] New best=6890  t=216s
-[GA] New best=6896  t=218s
-[GA] New best=6899  t=221s
-[GA] New best=6906  t=225s
-[GA] New best=6908  t=228s
-[GA] New best=6915  t=231s
-[GA] New best=6929  t=235s
-[GA] New best=6936  t=238s
-[GA] New best=6941  t=241s
-[GA] New best=6942  t=245s
-[GA] New best=6960  t=248s
-[GA] New best=6965  t=250s
-[GA] New best=6970  t=253s
-[GA] New best=6971  t=256s
-[GA] New best=6972  t=259s
-[GA] New best=6975  t=262s
-[GA] New best=6985  t=266s
-[GA] New best=6986  t=269s
-[GA] New best=6987  t=271s
-[GA] New best=6996  t=274s
-[GA] New best=6998  t=277s
-[GA] New best=7011  t=280s
-[GA] New best=7035  t=283s
-[GA] New best=7039  t=286s
-[GA] New best=7041  t=291s
-[GA] New best=7042  t=295s
-[GA] New best=7051  t=299s
-[GA] New best=7056  t=305s
-[GA] New best=7061  t=308s
-[GA] New best=7064  t=313s
-[GA] New best=7066  t=316s
-[GA] New best=7067  t=319s
-[GA] New best=7068  t=324s
-[GA] New best=7070  t=329s
-[GA] New best=7073  t=332s
-[GA] New best=7077  t=335s
-[GA] New best=7078  t=339s
-[GA] New best=7089  t=344s
-[GA] New best=7092  t=349s
-[GA] New best=7093  t=352s
-[GA] New best=7094  t=355s
-[GA] New best=7099  t=359s
-[GA] New best=7100  t=362s
-[GA] New best=7102  t=366s
-[GA] New best=7103  t=370s
-[GA] New best=7104  t=373s
-[GA] New best=7105  t=375s
-[GA] New best=7107  t=379s
-[GA] New best=7108  t=383s
-[GA] New best=7126  t=386s
-[GA] New best=7139  t=397s
-[GA] New best=7140  t=402s
-[GA] New best=7142  t=411s
-[GA] New best=7143  t=415s
-[GA] New best=7147  t=418s
-[GA] New best=7148  t=422s
-[GA] New best=7152  t=425s
-[GA] New best=7162  t=428s
-[GA] New best=7166  t=431s
-[GA] New best=7172  t=436s
-[GA] New best=7176  t=440s
-[GA] New best=7181  t=443s
-[GA] New best=7189  t=454s
-[GA] New best=7191  t=458s
-[GA] New best=7195  t=469s
-[GA] New best=7196  t=474s
-[GA] New best=7198  t=477s
-[GA] New best=7199  t=486s
-[GA] New best=7200  t=490s
-[GA] New best=7205  t=495s
-[GA] New best=7213  t=501s
-[GA] New best=7220  t=504s
-[GA] New best=7221  t=509s
-[GA] New best=7222  t=513s
-[GA] New best=7225  t=515s
-[GA] New best=7232  t=520s
-[GA] New best=7233  t=524s
-[GA] New best=7236  t=528s
-[GA] New best=7237  t=531s
-[GA] New best=7238  t=533s
-[GA] New best=7239  t=537s
-[GA] New best=7243  t=543s
-[GA] New best=7251  t=552s
-[GA] New best=7254  t=562s
-[GA] New best=7255  t=567s
-[GA] New best=7258  t=571s
-[GA] New best=7259  t=576s
-[GA] New best=7263  t=579s
-[GA] New best=7268  t=582s
-[GA] New best=7277  t=588s
-[GA] New best=7278  t=591s
-[GA] New best=7285  t=595s
-[GA] New best=7286  t=604s
-[GA] New best=7287  t=607s
-[GA] New best=7288  t=612s
-[GA] New best=7290  t=616s
-[GA] New best=7295  t=619s
-[GA] New best=7296  t=623s
-[GA] New best=7297  t=628s
-[GA] New best=7298  t=635s
-[GA] New best=7299  t=647s
-[GA] New best=7301  t=657s
-[GA] New best=7302  t=664s
-[GA] New best=7305  t=668s
-[GA] New best=7308  t=675s
-[GA] New best=7309  t=686s
-[GA] New best=7310  t=693s
-[GA] New best=7311  t=695s
-[GA] New best=7312  t=698s
-[GA] New best=7317  t=701s
-[GA] New best=7318  t=722s
-[GA] New best=7320  t=732s
-[GA] New best=7322  t=736s
-[GA] New best=7324  t=744s
-[GA] New best=7325  t=751s
-[GA] New best=7335  t=755s
-[GA] New best=7337  t=771s
-[GA] New best=7338  t=775s
-[GA] New best=7340  t=779s
-[GA] New best=7341  t=784s
-[GA] New best=7343  t=790s
-[GA] New best=7373  t=792s
-[GA] New best=7375  t=796s
-[GA] New best=7377  t=805s
-[GA] New best=7381  t=816s
-[GA] New best=7384  t=826s
-[GA] New best=7387  t=834s
-[GA] New best=7392  t=849s
-[GA] New best=7398  t=852s
-[GA] New best=7401  t=857s
-[GA] New best=7404  t=866s
-[GA] New best=7406  t=871s
-[GA] New best=7409  t=879s
-[GA] New best=7411  t=883s
-[GA] New best=7412  t=911s
-[GA] New best=7413  t=926s
-[GA] New best=7414  t=933s
-[GA] New best=7415  t=938s
-[GA] New best=7417  t=982s
-[GA] New best=7420  t=989s
-[GA] New best=7422  t=1001s
-[GA] New best=7424  t=1004s
-[GA] New best=7429  t=1010s
-[GA] New best=7430  t=1017s
-[GA] New best=7432  t=1049s
-[GA] New best=7433  t=1053s
-[GA] New best=7434  t=1068s
-[GA] New best=7435  t=1082s
-[GA] New best=7436  t=1086s
-[GA] New best=7437  t=1090s
-[GA] New best=7438  t=1105s
-[GA] New best=7442  t=1136s
-[GA] New best=7443  t=1143s
-[GA] New best=7447  t=1159s
-[GA] New best=7450  t=1167s
-[GA] New best=7457  t=1177s
-[GA] New best=7461  t=1187s
-[GA] New best=7463  t=1197s
-[GA] New best=7464  t=1212s
-[GA] New best=7466  t=1216s
-[GA] New best=7471  t=1235s
-[GA] New best=7473  t=1261s
-[GA] New best=7477  t=1266s
-[GA] New best=7478  t=1275s
-[GA] New best=7479  t=1280s
-[GA] New best=7480  t=1286s
-[GA] New best=7481  t=1297s
-[GA] New best=7483  t=1303s
-[GA] New best=7486  t=1325s
-[GA] New best=7488  t=1334s
-[GA] New best=7489  t=1344s
-[GA] New best=7514  t=1347s
-[GA] New best=7516  t=1350s
-[GA] New best=7519  t=1371s
-[GA] New best=7520  t=1377s
-[GA] New best=7526  t=1387s
-[GA] New best=7528  t=1407s
-[GA] New best=7531  t=1411s
-[GA] New best=7532  t=1418s
-[GA] New best=7533  t=1444s
-[GA] New best=7535  t=1455s
-[GA] New best=7537  t=1488s
-[GA] New best=7539  t=1493s
-[GA] New best=7540  t=1517s
-[GA] New best=7541  t=1540s
-[GA] New best=7543  t=1550s
-[GA] New best=7544  t=1586s
-[GA] New best=7546  t=1593s
-[GA] New best=7547  t=1603s
-[GA] New best=7548  t=1613s
-[GA] New best=7552  t=1644s
-[GA] New best=7554  t=1675s
-[GA] New best=7556  t=1685s
-[GA] New best=7560  t=1720s
-[GA] Done  best=7560  no_improve=200  t=1770s
-Job 168: 109
-7560
-2026-04-07 14:08:00.707 - 21 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=399,p=0.75,r=0.5,t=2310,v2.csv ./input/Processed/ToolSetInt.csv ./output/GATeste1/MyInstancesSameToolSets/n=399,p=0.75,r=0.5,t=2310,v2.csv
-[GA] n=266  Np=400  init_best=4353
-[GA] New best=4547  t=0s
-[GA] New best=4832  t=1s
-[GA] New best=4926  t=2s
-[GA] New best=4998  t=3s
-[GA] New best=5078  t=4s
-[GA] New best=5100  t=5s
-[GA] New best=5123  t=6s
-[GA] New best=5134  t=7s
-[GA] New best=5165  t=8s
-[GA] New best=5291  t=9s
-[GA] New best=5362  t=11s
-[GA] New best=5417  t=12s
-[GA] New best=5446  t=14s
-[GA] New best=5469  t=15s
-[GA] New best=5556  t=16s
-[GA] New best=5557  t=17s
-[GA] New best=5602  t=18s
-[GA] New best=5653  t=20s
-[GA] New best=5675  t=21s
-[GA] New best=5686  t=22s
-[GA] New best=5748  t=23s
-[GA] New best=5775  t=24s
-[GA] New best=5845  t=26s
-[GA] New best=5870  t=28s
-[GA] New best=5897  t=29s
-[GA] New best=5917  t=30s
-[GA] New best=5924  t=32s
-[GA] New best=5935  t=33s
-[GA] New best=5954  t=35s
-[GA] New best=5959  t=37s
-[GA] New best=5988  t=38s
-[GA] New best=5990  t=40s
-[GA] New best=5997  t=41s
-[GA] New best=6000  t=42s
-[GA] New best=6005  t=44s
-[GA] New best=6060  t=45s
-[GA] New best=6068  t=48s
-[GA] New best=6089  t=49s
-[GA] New best=6090  t=50s
-[GA] New best=6103  t=52s
-[GA] New best=6109  t=53s
-[GA] New best=6115  t=55s
-[GA] New best=6117  t=56s
-[GA] New best=6152  t=57s
-[GA] New best=6156  t=59s
-[GA] New best=6167  t=60s
-[GA] New best=6186  t=61s
-[GA] New best=6194  t=63s
-[GA] New best=6206  t=65s
-[GA] New best=6231  t=66s
-[GA] New best=6237  t=68s
-[GA] New best=6254  t=70s
-[GA] New best=6260  t=72s
-[GA] New best=6262  t=73s
-[GA] New best=6266  t=77s
-[GA] New best=6268  t=78s
-[GA] New best=6275  t=79s
-[GA] New best=6281  t=81s
-[GA] New best=6292  t=84s
-[GA] New best=6305  t=87s
-[GA] New best=6316  t=92s
-[GA] New best=6327  t=96s
-[GA] New best=6335  t=97s
-[GA] New best=6341  t=100s
-[GA] New best=6344  t=101s
-[GA] New best=6345  t=102s
-[GA] New best=6354  t=106s
-[GA] New best=6357  t=109s
-[GA] New best=6363  t=111s
-[GA] New best=6364  t=114s
-[GA] New best=6365  t=117s
-[GA] New best=6368  t=119s
-[GA] New best=6373  t=122s
-[GA] New best=6376  t=123s
-[GA] New best=6378  t=125s
-[GA] New best=6383  t=131s
-[GA] New best=6384  t=134s
-[GA] New best=6385  t=135s
-[GA] New best=6397  t=138s
-[GA] New best=6398  t=139s
-[GA] New best=6399  t=143s
-[GA] New best=6400  t=146s
-[GA] New best=6406  t=147s
-[GA] New best=6411  t=151s
-[GA] New best=6413  t=153s
-[GA] New best=6423  t=155s
-[GA] New best=6427  t=156s
-[GA] New best=6428  t=158s
-[GA] New best=6429  t=162s
-[GA] New best=6430  t=164s
-[GA] New best=6431  t=165s
-[GA] New best=6436  t=167s
-[GA] New best=6437  t=171s
-[GA] New best=6440  t=173s
-[GA] New best=6442  t=176s
-[GA] New best=6450  t=179s
-[GA] New best=6458  t=182s
-[GA] New best=6461  t=183s
-[GA] New best=6463  t=184s
-[GA] New best=6467  t=187s
-[GA] New best=6472  t=189s
-[GA] New best=6475  t=191s
-[GA] New best=6478  t=192s
-[GA] New best=6486  t=194s
-[GA] New best=6487  t=200s
-[GA] New best=6492  t=205s
-[GA] New best=6493  t=208s
-[GA] New best=6494  t=214s
-[GA] New best=6496  t=215s
-[GA] New best=6497  t=220s
-[GA] New best=6500  t=223s
-[GA] New best=6504  t=225s
-[GA] New best=6522  t=227s
-[GA] New best=6529  t=231s
-[GA] New best=6536  t=234s
-[GA] New best=6539  t=235s
-[GA] New best=6546  t=239s
-[GA] New best=6551  t=246s
-[GA] New best=6558  t=248s
-[GA] New best=6562  t=250s
-[GA] New best=6567  t=253s
-[GA] New best=6576  t=255s
-[GA] New best=6579  t=257s
-[GA] New best=6585  t=259s
-[GA] New best=6591  t=262s
-[GA] New best=6597  t=264s
-[GA] New best=6604  t=268s
-[GA] New best=6610  t=271s
-[GA] New best=6611  t=279s
-[GA] New best=6616  t=284s
-[GA] New best=6621  t=290s
-[GA] New best=6622  t=296s
-[GA] New best=6626  t=299s
-[GA] New best=6627  t=302s
-[GA] New best=6633  t=305s
-[GA] New best=6637  t=307s
-[GA] New best=6639  t=312s
-[GA] New best=6649  t=316s
-[GA] New best=6664  t=318s
-[GA] New best=6665  t=321s
-[GA] New best=6667  t=323s
-[GA] New best=6675  t=325s
-[GA] New best=6681  t=328s
-[GA] New best=6684  t=341s
-[GA] New best=6686  t=342s
-[GA] New best=6688  t=352s
-[GA] New best=6689  t=362s
-[GA] New best=6690  t=363s
-[GA] New best=6694  t=365s
-[GA] New best=6696  t=366s
-[GA] New best=6702  t=369s
-[GA] New best=6705  t=372s
-[GA] New best=6709  t=374s
-[GA] New best=6711  t=375s
-[GA] New best=6713  t=378s
-[GA] New best=6714  t=379s
-[GA] New best=6727  t=382s
-[GA] New best=6728  t=385s
-[GA] New best=6732  t=387s
-[GA] New best=6734  t=388s
-[GA] New best=6736  t=389s
-[GA] New best=6737  t=393s
-[GA] New best=6743  t=397s
-[GA] New best=6744  t=401s
-[GA] New best=6745  t=405s
-[GA] New best=6747  t=412s
-[GA] New best=6760  t=415s
-[GA] New best=6766  t=418s
-[GA] New best=6767  t=425s
-[GA] New best=6768  t=429s
-[GA] New best=6781  t=430s
-[GA] New best=6788  t=434s
-[GA] New best=6789  t=436s
-[GA] New best=6790  t=440s
-[GA] New best=6791  t=442s
-[GA] New best=6793  t=445s
-[GA] New best=6795  t=449s
-[GA] New best=6799  t=453s
-[GA] New best=6803  t=455s
-[GA] New best=6804  t=458s
-[GA] New best=6819  t=465s
-[GA] New best=6820  t=482s
-[GA] New best=6824  t=486s
-[GA] New best=6825  t=489s
-[GA] New best=6829  t=490s
-[GA] New best=6835  t=502s
-[GA] New best=6837  t=508s
-[GA] New best=6838  t=510s
-[GA] New best=6840  t=512s
-[GA] New best=6843  t=515s
-[GA] New best=6845  t=519s
-[GA] New best=6846  t=520s
-[GA] New best=6849  t=522s
-[GA] New best=6852  t=525s
-[GA] New best=6855  t=527s
-[GA] New best=6856  t=531s
-[GA] New best=6857  t=533s
-[GA] New best=6860  t=538s
-[GA] New best=6861  t=545s
-[GA] New best=6862  t=551s
-[GA] New best=6863  t=554s
-[GA] New best=6869  t=562s
-[GA] New best=6874  t=566s
-[GA] New best=6878  t=570s
-[GA] New best=6881  t=573s
-[GA] New best=6883  t=590s
-[GA] New best=6885  t=592s
-[GA] New best=6886  t=594s
-[GA] New best=6888  t=596s
-[GA] New best=6891  t=598s
-[GA] New best=6894  t=612s
-[GA] New best=6895  t=613s
-[GA] New best=6905  t=621s
-[GA] New best=6907  t=635s
-[GA] New best=6908  t=645s
-[GA] New best=6913  t=648s
-[GA] New best=6914  t=650s
-[GA] New best=6917  t=654s
-[GA] New best=6921  t=662s
-[GA] New best=6922  t=677s
-[GA] New best=6923  t=684s
-[GA] New best=6927  t=701s
-[GA] New best=6934  t=705s
-[GA] New best=6936  t=718s
-[GA] New best=6938  t=733s
-[GA] New best=6940  t=754s
-[GA] New best=6943  t=784s
-[GA] New best=6944  t=792s
-[GA] New best=6945  t=819s
-[GA] New best=6946  t=834s
-[GA] New best=6958  t=838s
-[GA] New best=6961  t=840s
-[GA] New best=6963  t=848s
-[GA] New best=6966  t=856s
-[GA] New best=6967  t=862s
-[GA] New best=6969  t=865s
-[GA] New best=6970  t=874s
-[GA] New best=6972  t=893s
-[GA] New best=6973  t=912s
-[GA] New best=6975  t=924s
-[GA] New best=6981  t=957s
-[GA] New best=6985  t=966s
-[GA] New best=6992  t=975s
-[GA] New best=6993  t=992s
-[GA] New best=6994  t=1008s
-[GA] New best=6995  t=1037s
-[GA] New best=6996  t=1061s
-[GA] New best=7006  t=1065s
-[GA] New best=7007  t=1082s
-[GA] New best=7011  t=1093s
-[GA] New best=7013  t=1101s
-[GA] Done  best=7013  no_improve=200  t=1150s
-7013
-2026-04-07 14:29:12.689 - 22 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=499,p=0.25,r=0.5,t=2690,v3.csv ./input/Processed/ToolSetInt.csv ./output/GATeste1/MyInstancesSameToolSets/n=499,p=0.25,r=0.5,t=2690,v3.csv
-[GA] n=333  Np=400  init_best=6405
-[GA] New best=6639  t=0s
-[GA] New best=6762  t=7s
-[GA] New best=6875  t=14s
-[GA] New best=7034  t=20s
-[GA] New best=7112  t=27s
-[GA] New best=7206  t=34s
-[GA] New best=7295  t=41s
-[GA] New best=7319  t=48s
-[GA] New best=7444  t=55s
-[GA] New best=7524  t=62s
-[GA] New best=7544  t=69s
-[GA] New best=7561  t=76s
-[GA] New best=7576  t=83s
-[GA] New best=7619  t=90s
-[GA] New best=7651  t=97s
-[GA] New best=7789  t=103s
-[GA] New best=7814  t=110s
-[GA] New best=7858  t=117s
-[GA] New best=7861  t=124s
-[GA] New best=7927  t=132s
-[GA] New best=7941  t=138s
-[GA] New best=8002  t=146s
-[GA] New best=8007  t=154s
-[GA] New best=8044  t=160s
-[GA] New best=8078  t=168s
-[GA] New best=8082  t=175s
-[GA] New best=8096  t=182s
-[GA] New best=8113  t=189s
-[GA] New best=8115  t=196s
-[GA] New best=8125  t=203s
-[GA] New best=8130  t=210s
-[GA] New best=8169  t=217s
-[GA] New best=8231  t=224s
-[GA] New best=8264  t=231s
-[GA] New best=8266  t=238s
-[GA] New best=8308  t=246s
-[GA] New best=8311  t=253s
-[GA] New best=8329  t=261s
-[GA] New best=8363  t=268s
-[GA] New best=8377  t=278s
-[GA] New best=8395  t=285s
-[GA] New best=8399  t=293s
-[GA] New best=8428  t=300s
-[GA] New best=8447  t=307s
-[GA] New best=8490  t=318s
-[GA] New best=8499  t=328s
-[GA] New best=8509  t=336s
-[GA] New best=8533  t=345s
-[GA] New best=8578  t=354s
-[GA] New best=8582  t=361s
-[GA] New best=8594  t=368s
-[GA] New best=8596  t=376s
-[GA] New best=8606  t=383s
-[GA] New best=8622  t=390s
-[GA] New best=8630  t=400s
-[GA] New best=8638  t=408s
-[GA] New best=8640  t=417s
-[GA] New best=8650  t=427s
-[GA] New best=8661  t=433s
-[GA] New best=8663  t=444s
-[GA] New best=8671  t=451s
-[GA] New best=8686  t=461s
-[GA] New best=8694  t=472s
-[GA] New best=8711  t=483s
-[GA] New best=8716  t=492s
-[GA] New best=8723  t=504s
-[GA] New best=8725  t=511s
-[GA] New best=8742  t=523s
-[GA] New best=8743  t=534s
-[GA] New best=8761  t=544s
-[GA] New best=8791  t=554s
-[GA] New best=8795  t=564s
-[GA] New best=8810  t=571s
-[GA] New best=8834  t=579s
-[GA] New best=8835  t=591s
-[GA] New best=8838  t=606s
-[GA] New best=8839  t=615s
-[GA] New best=8847  t=622s
-[GA] New best=8857  t=635s
-[GA] New best=8866  t=654s
-[GA] New best=8871  t=675s
-[GA] New best=8874  t=705s
-[GA] New best=8875  t=719s
-[GA] New best=8876  t=728s
-[GA] New best=8879  t=738s
-[GA] New best=8895  t=754s
-[GA] New best=8905  t=766s
-[GA] New best=8921  t=782s
-[GA] New best=8922  t=791s
-[GA] New best=8929  t=804s
-[GA] New best=8931  t=815s
-[GA] New best=8932  t=824s
-[GA] New best=8934  t=838s
-[GA] New best=8936  t=846s
-[GA] New best=8937  t=867s
-[GA] New best=8939  t=874s
-[GA] New best=8942  t=902s
-[GA] New best=8946  t=944s
-[GA] New best=8947  t=971s
-[GA] New best=8953  t=982s
-[GA] New best=8962  t=999s
-[GA] New best=8967  t=1022s
-[GA] New best=8968  t=1042s
-[GA] New best=8972  t=1058s
-[GA] New best=8974  t=1066s
-[GA] New best=8977  t=1084s
-[GA] New best=8978  t=1097s
-[GA] New best=8981  t=1123s
-[GA] New best=8982  t=1141s
-[GA] New best=8985  t=1154s
-[GA] New best=8986  t=1166s
-[GA] New best=8989  t=1177s
-[GA] New best=8992  t=1184s
-[GA] New best=9002  t=1193s
-[GA] New best=9003  t=1202s
-[GA] New best=9008  t=1215s
-[GA] New best=9012  t=1234s
-[GA] New best=9017  t=1250s
-[GA] New best=9019  t=1269s
-[GA] New best=9020  t=1293s
-[GA] New best=9022  t=1335s
-[GA] New best=9023  t=1375s
-[GA] New best=9026  t=1391s
-[GA] New best=9027  t=1436s
-[GA] New best=9028  t=1472s
-[GA] New best=9031  t=1505s
-[GA] New best=9032  t=1516s
-[GA] New best=9043  t=1529s
-[GA] New best=9044  t=1541s
-[GA] New best=9047  t=1550s
-[GA] New best=9049  t=1563s
-[GA] New best=9050  t=1576s
-[GA] New best=9058  t=1585s
-[GA] New best=9063  t=1602s
-[GA] New best=9070  t=1617s
-[GA] New best=9073  t=1629s
-[GA] New best=9075  t=1641s
-[GA] New best=9078  t=1648s
-[GA] New best=9083  t=1656s
-[GA] New best=9088  t=1670s
-[GA] New best=9092  t=1695s
-[GA] New best=9094  t=1708s
-[GA] New best=9103  t=1716s
-[GA] New best=9108  t=1746s
-[GA] New best=9112  t=1764s
-[GA] New best=9113  t=1779s
-[GA] New best=9114  t=1789s
-[GA] New best=9115  t=1798s
-[GA] New best=9123  t=1807s
-[GA] New best=9133  t=1827s
-[GA] New best=9135  t=1850s
-[GA] New best=9139  t=1862s
-[GA] New best=9142  t=1891s
-[GA] New best=9143  t=1905s
-[GA] New best=9145  t=1940s
-[GA] New best=9146  t=1972s
-[GA] New best=9149  t=2000s
-[GA] New best=9150  t=2020s
-[GA] New best=9155  t=2033s
-[GA] New best=9156  t=2056s
-[GA] New best=9157  t=2066s
-[GA] New best=9160  t=2080s
-[GA] New best=9161  t=2089s
-[GA] New best=9162  t=2096s
-[GA] New best=9163  t=2112s
-[GA] New best=9164  t=2131s
-[GA] New best=9167  t=2140s
-[GA] New best=9168  t=2164s
-[GA] New best=9172  t=2194s
-[GA] New best=9173  t=2219s
-[GA] New best=9183  t=2268s
-[GA] New best=9192  t=2294s
-[GA] New best=9194  t=2314s
-[GA] New best=9196  t=2329s
-[GA] New best=9197  t=2340s
-[GA] New best=9198  t=2351s
-[GA] New best=9201  t=2359s
-[GA] New best=9202  t=2375s
-[GA] New best=9204  t=2384s
-[GA] New best=9214  t=2399s
-[GA] New best=9215  t=2419s
-[GA] New best=9229  t=2432s
-[GA] New best=9230  t=2447s
-[GA] New best=9236  t=2487s
-[GA] New best=9243  t=2533s
-[GA] New best=9244  t=2553s
-[GA] New best=9245  t=2562s
-[GA] New best=9247  t=2573s
-[GA] New best=9248  t=2602s
-[GA] New best=9249  t=2616s
-[GA] New best=9256  t=2628s
-[GA] New best=9257  t=2638s
-[GA] New best=9259  t=2661s
-[GA] New best=9260  t=2686s
-[GA] New best=9266  t=2701s
-[GA] New best=9267  t=2759s
-[GA] New best=9278  t=2780s
-[GA] Done  best=9278  no_improve=200  t=2849s
-Job 168: 74
-9278
-2026-04-07 15:21:35.890 - 23 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=499,p=0.50,r=0.5,t=2690,v4.csv ./input/Processed/ToolSetInt.csv ./output/GATeste1/MyInstancesSameToolSets/n=499,p=0.50,r=0.5,t=2690,v4.csv
-[GA] n=333  Np=400  init_best=5616
-[GA] New best=5769  t=0s
-[GA] New best=6071  t=4s
-[GA] New best=6083  t=8s
-[GA] New best=6130  t=11s
-[GA] New best=6210  t=15s
-[GA] New best=6233  t=19s
-[GA] New best=6297  t=22s
-[GA] New best=6344  t=26s
-[GA] New best=6541  t=30s
-[GA] New best=6619  t=33s
-[GA] New best=6627  t=39s
-[GA] New best=6730  t=43s
-[GA] New best=6751  t=47s
-[GA] New best=6878  t=51s
-[GA] New best=6947  t=54s
-[GA] New best=7016  t=58s
-[GA] New best=7024  t=64s
-[GA] New best=7048  t=68s
-[GA] New best=7070  t=71s
-[GA] New best=7123  t=75s
-[GA] New best=7166  t=79s
-[GA] New best=7169  t=84s
-[GA] New best=7217  t=89s
-[GA] New best=7250  t=93s
-[GA] New best=7316  t=97s
-[GA] New best=7348  t=102s
-[GA] New best=7400  t=107s
-[GA] New best=7434  t=110s
-[GA] New best=7454  t=114s
-[GA] New best=7474  t=119s
-[GA] New best=7479  t=124s
-[GA] New best=7509  t=128s
-[GA] New best=7530  t=132s
-[GA] New best=7532  t=138s
-[GA] New best=7544  t=143s
-[GA] New best=7590  t=148s
-[GA] New best=7597  t=154s
-[GA] New best=7612  t=159s
-[GA] New best=7625  t=163s
-[GA] New best=7645  t=167s
-[GA] New best=7654  t=175s
-[GA] New best=7659  t=179s
-[GA] New best=7664  t=184s
-[GA] New best=7676  t=188s
-[GA] New best=7708  t=192s
-[GA] New best=7714  t=197s
-[GA] New best=7722  t=203s
-[GA] New best=7728  t=207s
-[GA] New best=7762  t=212s
-[GA] New best=7787  t=217s
-[GA] New best=7790  t=223s
-[GA] New best=7797  t=227s
-[GA] New best=7805  t=233s
-[GA] New best=7833  t=238s
-[GA] New best=7835  t=244s
-[GA] New best=7847  t=248s
-[GA] New best=7861  t=255s
-[GA] New best=7875  t=261s
-[GA] New best=7896  t=266s
-[GA] New best=7902  t=271s
-[GA] New best=7907  t=276s
-[GA] New best=7923  t=280s
-[GA] New best=7945  t=289s
-[GA] New best=7949  t=293s
-[GA] New best=7954  t=305s
-[GA] New best=7962  t=309s
-[GA] New best=7968  t=319s
-[GA] New best=7973  t=327s
-[GA] New best=7978  t=336s
-[GA] New best=7983  t=340s
-[GA] New best=7993  t=348s
-[GA] New best=8000  t=356s
-[GA] New best=8007  t=366s
-[GA] New best=8018  t=371s
-[GA] New best=8023  t=375s
-[GA] New best=8040  t=380s
-[GA] New best=8042  t=387s
-[GA] New best=8051  t=394s
-[GA] New best=8055  t=405s
-[GA] New best=8056  t=410s
-[GA] New best=8058  t=414s
-[GA] New best=8060  t=422s
-[GA] New best=8063  t=432s
-[GA] New best=8065  t=442s
-[GA] New best=8071  t=449s
-[GA] New best=8076  t=467s
-[GA] New best=8077  t=477s
-[GA] New best=8083  t=485s
-[GA] New best=8087  t=491s
-[GA] New best=8103  t=511s
-[GA] New best=8116  t=515s
-[GA] New best=8135  t=522s
-[GA] New best=8149  t=528s
-[GA] New best=8157  t=535s
-[GA] New best=8166  t=540s
-[GA] New best=8172  t=545s
-[GA] New best=8173  t=549s
-[GA] New best=8174  t=556s
-[GA] New best=8197  t=566s
-[GA] New best=8207  t=593s
-[GA] New best=8210  t=599s
-[GA] New best=8254  t=608s
-[GA] New best=8265  t=625s
-[GA] New best=8271  t=631s
-[GA] New best=8275  t=641s
-[GA] New best=8289  t=645s
-[GA] New best=8293  t=648s
-[GA] New best=8295  t=652s
-[GA] New best=8296  t=656s
-[GA] New best=8299  t=665s
-[GA] New best=8323  t=672s
-[GA] New best=8335  t=701s
-[GA] New best=8351  t=716s
-[GA] New best=8355  t=726s
-[GA] New best=8374  t=742s
-[GA] New best=8380  t=749s
-[GA] New best=8393  t=754s
-[GA] New best=8401  t=759s
-[GA] New best=8406  t=767s
-[GA] New best=8409  t=771s
-[GA] New best=8410  t=775s
-[GA] New best=8411  t=780s
-[GA] New best=8414  t=788s
-[GA] New best=8416  t=810s
-[GA] New best=8417  t=817s
-[GA] New best=8418  t=825s
-[GA] New best=8419  t=841s
-[GA] New best=8432  t=847s
-[GA] New best=8453  t=850s
-[GA] New best=8464  t=867s
-[GA] New best=8467  t=873s
-[GA] New best=8468  t=877s
-[GA] New best=8484  t=882s
-[GA] New best=8504  t=888s
-[GA] New best=8506  t=897s
-[GA] New best=8516  t=907s
-[GA] New best=8520  t=931s
-[GA] New best=8521  t=943s
-[GA] New best=8522  t=949s
-[GA] New best=8532  t=958s
-[GA] New best=8533  t=963s
-[GA] New best=8534  t=970s
-[GA] New best=8553  t=976s
-[GA] New best=8555  t=981s
-[GA] New best=8563  t=987s
-[GA] New best=8575  t=999s
-[GA] New best=8576  t=1005s
-[GA] New best=8582  t=1018s
-[GA] New best=8592  t=1029s
-[GA] New best=8594  t=1049s
-[GA] New best=8601  t=1053s
-[GA] New best=8603  t=1063s
-[GA] New best=8609  t=1081s
-[GA] New best=8623  t=1086s
-[GA] New best=8632  t=1098s
-[GA] New best=8634  t=1117s
-[GA] New best=8640  t=1130s
-[GA] New best=8642  t=1136s
-[GA] New best=8654  t=1157s
-[GA] New best=8656  t=1162s
-[GA] New best=8675  t=1178s
-[GA] New best=8687  t=1190s
-[GA] New best=8697  t=1208s
-[GA] New best=8698  t=1235s
-[GA] New best=8700  t=1273s
-[GA] New best=8701  t=1280s
-[GA] New best=8703  t=1288s
-[GA] New best=8705  t=1300s
-[GA] New best=8732  t=1308s
-[GA] New best=8734  t=1316s
-[GA] Done  best=8734  no_improve=200  t=1382s
-Job 168: 107
-8734
-2026-04-07 15:47:10.965 - 24 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=499,p=0.75,r=0.5,t=2690,v5.csv ./input/Processed/ToolSetInt.csv ./output/GATeste1/MyInstancesSameToolSets/n=499,p=0.75,r=0.5,t=2690,v5.csv
-[GA] n=333  Np=400  init_best=4018
-[GA] New best=4200  t=0s
-[GA] New best=4399  t=1s
-[GA] New best=4713  t=3s
-[GA] New best=4775  t=4s
-[GA] New best=4820  t=5s
-[GA] New best=5082  t=7s
-[GA] New best=5151  t=8s
-[GA] New best=5243  t=10s
-[GA] New best=5414  t=11s
-[GA] New best=5479  t=13s
-[GA] New best=5632  t=15s
-[GA] New best=5673  t=16s
-[GA] New best=5774  t=18s
-[GA] New best=5775  t=19s
-[GA] New best=5777  t=21s
-[GA] New best=5781  t=22s
-[GA] New best=5835  t=24s
-[GA] New best=5935  t=26s
-[GA] New best=6032  t=27s
-[GA] New best=6105  t=30s
-[GA] New best=6215  t=31s
-[GA] New best=6233  t=34s
-[GA] New best=6295  t=36s
-[GA] New best=6369  t=37s
-[GA] New best=6399  t=39s
-[GA] New best=6422  t=41s
-[GA] New best=6441  t=43s
-[GA] New best=6451  t=44s
-[GA] New best=6499  t=46s
-[GA] New best=6521  t=49s
-[GA] New best=6564  t=50s
-[GA] New best=6574  t=53s
-[GA] New best=6576  t=54s
-[GA] New best=6579  t=56s
-[GA] New best=6644  t=58s
-[GA] New best=6656  t=61s
-[GA] New best=6658  t=63s
-[GA] New best=6733  t=65s
-[GA] New best=6781  t=68s
-[GA] New best=6824  t=72s
-[GA] New best=6831  t=79s
-[GA] New best=6892  t=81s
-[GA] New best=6970  t=85s
-[GA] New best=6976  t=87s
-[GA] New best=6993  t=89s
-[GA] New best=7001  t=100s
-[GA] New best=7024  t=101s
-[GA] New best=7060  t=106s
-[GA] New best=7062  t=108s
-[GA] New best=7063  t=110s
-[GA] New best=7068  t=112s
-[GA] New best=7076  t=114s
-[GA] New best=7077  t=116s
-[GA] New best=7085  t=118s
-[GA] New best=7088  t=128s
-[GA] New best=7090  t=130s
-[GA] New best=7100  t=133s
-[GA] New best=7116  t=142s
-[GA] New best=7129  t=145s
-[GA] New best=7131  t=147s
-[GA] New best=7134  t=152s
-[GA] New best=7135  t=155s
-[GA] New best=7145  t=157s
-[GA] New best=7151  t=165s
-[GA] New best=7152  t=168s
-[GA] New best=7167  t=176s
-[GA] New best=7170  t=183s
-[GA] New best=7176  t=186s
-[GA] New best=7178  t=191s
-[GA] New best=7197  t=195s
-[GA] New best=7203  t=202s
-[GA] New best=7206  t=207s
-[GA] New best=7208  t=210s
-[GA] New best=7237  t=214s
-[GA] New best=7238  t=223s
-[GA] New best=7241  t=228s
-[GA] New best=7243  t=235s
-[GA] New best=7259  t=238s
-[GA] New best=7262  t=247s
-[GA] New best=7282  t=249s
-[GA] New best=7304  t=251s
-[GA] New best=7308  t=255s
-[GA] New best=7319  t=259s
-[GA] New best=7329  t=264s
-[GA] New best=7349  t=267s
-[GA] New best=7358  t=272s
-[GA] New best=7414  t=276s
-[GA] New best=7421  t=280s
-[GA] New best=7436  t=283s
-[GA] New best=7445  t=285s
-[GA] New best=7455  t=292s
-[GA] New best=7466  t=295s
-[GA] New best=7481  t=301s
-[GA] New best=7493  t=317s
-[GA] New best=7501  t=321s
-[GA] New best=7504  t=327s
-[GA] New best=7515  t=333s
-[GA] New best=7521  t=337s
-[GA] New best=7522  t=343s
-[GA] New best=7530  t=345s
-[GA] New best=7533  t=347s
-[GA] New best=7534  t=349s
-[GA] New best=7539  t=354s
-[GA] New best=7542  t=358s
-[GA] New best=7545  t=362s
-[GA] New best=7546  t=371s
-[GA] New best=7556  t=376s
-[GA] New best=7566  t=384s
-[GA] New best=7572  t=386s
-[GA] New best=7577  t=393s
-[GA] New best=7583  t=396s
-[GA] New best=7622  t=406s
-[GA] New best=7627  t=417s
-[GA] New best=7630  t=423s
-[GA] New best=7656  t=431s
-[GA] New best=7658  t=435s
-[GA] New best=7662  t=436s
-[GA] New best=7665  t=440s
-[GA] New best=7668  t=444s
-[GA] New best=7672  t=448s
-[GA] New best=7682  t=458s
-[GA] New best=7687  t=461s
-[GA] New best=7689  t=465s
-[GA] New best=7694  t=467s
-[GA] New best=7704  t=471s
-[GA] New best=7712  t=475s
-[GA] New best=7714  t=476s
-[GA] New best=7717  t=486s
-[GA] New best=7722  t=487s
-[GA] New best=7729  t=490s
-[GA] New best=7739  t=493s
-[GA] New best=7746  t=509s
-[GA] New best=7748  t=511s
-[GA] New best=7756  t=525s
-[GA] New best=7759  t=528s
-[GA] New best=7760  t=532s
-[GA] New best=7762  t=534s
-[GA] New best=7769  t=538s
-[GA] New best=7772  t=550s
-[GA] New best=7774  t=553s
-[GA] New best=7783  t=557s
-[GA] New best=7789  t=559s
-[GA] New best=7790  t=565s
-[GA] New best=7791  t=575s
-[GA] New best=7794  t=579s
-[GA] New best=7797  t=586s
-[GA] New best=7800  t=598s
-[GA] New best=7816  t=605s
-[GA] New best=7841  t=608s
-[GA] New best=7847  t=619s
-[GA] New best=7848  t=628s
-[GA] New best=7861  t=637s
-[GA] New best=7864  t=642s
-[GA] New best=7872  t=651s
-[GA] New best=7877  t=660s
-[GA] New best=7889  t=665s
-[GA] New best=7947  t=678s
-[GA] New best=7949  t=682s
-[GA] New best=7950  t=688s
-[GA] New best=7952  t=709s
-[GA] New best=7953  t=718s
-[GA] New best=7954  t=724s
-[GA] New best=7955  t=731s
-[GA] New best=7956  t=736s
-[GA] New best=7957  t=742s
-[GA] New best=7967  t=744s
-[GA] New best=7971  t=760s
-[GA] New best=7974  t=773s
-[GA] New best=7977  t=783s
-[GA] New best=7978  t=792s
-[GA] New best=7980  t=797s
-[GA] New best=7981  t=814s
-[GA] New best=7988  t=818s
-[GA] New best=7992  t=820s
-[GA] New best=7996  t=842s
-[GA] New best=8007  t=851s
-[GA] New best=8014  t=864s
-[GA] New best=8025  t=871s
-[GA] New best=8046  t=879s
-[GA] New best=8054  t=898s
-[GA] New best=8055  t=907s
-[GA] New best=8063  t=918s
-[GA] New best=8064  t=922s
-[GA] New best=8066  t=936s
-[GA] New best=8067  t=950s
-[GA] New best=8084  t=954s
-[GA] New best=8091  t=957s
-[GA] New best=8092  t=969s
-[GA] New best=8094  t=976s
-[GA] New best=8095  t=991s
-[GA] New best=8096  t=1006s
-[GA] New best=8097  t=1010s
-[GA] New best=8113  t=1013s
-[GA] New best=8126  t=1028s
-[GA] New best=8127  t=1036s
-[GA] New best=8128  t=1052s
-[GA] Done  best=8128  no_improve=200  t=1116s
-Job 168: 180
-8128
-2026-04-07 16:07:51.802 - 25 ./src/out/mainCpp ./input/MyInstancesSameToolSets/n=600,p=0.25,r=0.5,t=3096,v6.csv ./input/Processed/ToolSetInt.csv ./output/GATeste1/MyInstancesSameToolSets/n=600,p=0.25,r=0.5,t=3096,v6.csv
-[GA] n=400  Np=400  init_best=7727
-[GA] New best=8020  t=0s
-[GA] New best=8220  t=10s
-[GA] New best=8295  t=19s
-[GA] New best=8471  t=29s
-[GA] New best=8524  t=38s
-[GA] New best=8601  t=47s
-[GA] New best=8746  t=57s
-[GA] New best=8755  t=67s
-[GA] New best=8833  t=77s
-[GA] New best=8865  t=86s
-[GA] New best=8910  t=96s
-[GA] New best=8959  t=106s
-[GA] New best=9079  t=115s
-[GA] New best=9096  t=130s
-[GA] New best=9113  t=140s
-[GA] New best=9132  t=152s
-[GA] New best=9160  t=162s
-[GA] New best=9235  t=172s
-[GA] New best=9271  t=182s
-[GA] New best=9324  t=192s
-[GA] New best=9391  t=203s
-[GA] New best=9401  t=220s
-[GA] New best=9417  t=231s
-[GA] New best=9440  t=240s
-[GA] New best=9459  t=251s
-[GA] New best=9501  t=263s
-[GA] New best=9502  t=275s
-[GA] New best=9534  t=291s
-[GA] New best=9550  t=302s
-[GA] New best=9565  t=313s
-[GA] New best=9580  t=327s
-[GA] New best=9582  t=337s
-[GA] New best=9594  t=348s
-[GA] New best=9596  t=359s
-[GA] New best=9652  t=368s
-[GA] New best=9689  t=378s
-[GA] New best=9702  t=398s
-[GA] New best=9707  t=408s
-[GA] New best=9733  t=421s
-[GA] New best=9785  t=432s
-[GA] New best=9786  t=456s
-[GA] New best=9796  t=468s
-[GA] New best=9808  t=484s
-[GA] New best=9836  t=499s
-[GA] New best=9837  t=515s
-[GA] New best=9847  t=534s
-[GA] New best=9857  t=553s
-[GA] New best=9872  t=564s
-[GA] New best=9889  t=585s
-[GA] New best=9892  t=603s
-[GA] New best=9962  t=613s
-[GA] New best=9988  t=638s
-[GA] New best=10039  t=648s
-[GA] New best=10079  t=670s
-[GA] New best=10095  t=714s
-[GA] New best=10104  t=730s
-[GA] New best=10106  t=744s
-[GA] New best=10138  t=755s
-[GA] New best=10142  t=767s
-[GA] New best=10147  t=799s
-[GA] New best=10152  t=845s
-[GA] New best=10160  t=864s
-[GA] New best=10168  t=883s
-[GA] New best=10173  t=901s
-[GA] New best=10204  t=926s
-[GA] New best=10227  t=946s
-[GA] New best=10238  t=982s
-[GA] New best=10246  t=993s
-[GA] New best=10280  t=1016s
-[GA] New best=10304  t=1047s
-[GA] New best=10341  t=1063s
-[GA] New best=10345  t=1081s
-[GA] New best=10348  t=1106s
-[GA] New best=10355  t=1116s
-[GA] New best=10356  t=1159s
-[GA] New best=10369  t=1171s
-[GA] New best=10384  t=1209s
+Job: 0 - Operation: 1
+Job: 0 - Operation: 2
+Job: 1 - Operation: 1
+Job: 1 - Operation: 2
+Job: 2 - Operation: 1
+Job: 3 - Operation: 1
+Job: 3 - Operation: 2
+Job: 4 - Operation: 1
+Job: 5 - Operation: 1
+Job: 5 - Operation: 2
+Job: 6 - Operation: 1
+Job: 7 - Operation: 1
+Job: 7 - Operation: 2
+Job: 8 - Operation: 1
+Job: 9 - Operation: 1
+Job: 9 - Operation: 2
+Job: 10 - Operation: 1
+Job: 11 - Operation: 1
+Job: 11 - Operation: 2
+Job: 12 - Operation: 1
+Job: 13 - Operation: 1
+Job: 13 - Operation: 2
+Job: 14 - Operation: 1
+Job: 15 - Operation: 1
+Job: 15 - Operation: 2
+Job: 16 - Operation: 1
+Job: 17 - Operation: 1
+Job: 17 - Operation: 2
+Job: 18 - Operation: 1
+Job: 19 - Operation: 1
+Job: 19 - Operation: 2
+Job: 20 - Operation: 1
+Job: 21 - Operation: 1
+Job: 21 - Operation: 2
+Job: 22 - Operation: 1
+Job: 23 - Operation: 1
+Job: 23 - Operation: 2
+Job: 24 - Operation: 1
+Job: 25 - Operation: 1
+Job: 25 - Operation: 2
+Job: 26 - Operation: 1
+Job: 27 - Operation: 1
+Job: 27 - Operation: 2
+Job: 28 - Operation: 1
+Job: 29 - Operation: 1
+Job: 29 - Operation: 2
+Job: 30 - Operation: 1
+Job: 31 - Operation: 1
+Job: 31 - Operation: 2
+Job: 32 - Operation: 1
+Job: 33 - Operation: 1
+Job: 33 - Operation: 2
+Job: 34 - Operation: 1
+Job: 35 - Operation: 1
+Job: 35 - Operation: 2
+Job: 36 - Operation: 1
+Job: 37 - Operation: 1
+Job: 37 - Operation: 2
+Job: 38 - Operation: 1
+Job: 39 - Operation: 1
+Job: 39 - Operation: 2
+Job: 40 - Operation: 1
+Job: 41 - Operation: 1
+Job: 41 - Operation: 2
+Job: 42 - Operation: 1
+Job: 43 - Operation: 1
+Job: 43 - Operation: 2
+Job: 44 - Operation: 1
+Job: 45 - Operation: 1
+Job: 45 - Operation: 2
+Job: 46 - Operation: 1
+Job: 47 - Operation: 1
+Job: 47 - Operation: 2
+Job: 48 - Operation: 1
+Job: 49 - Operation: 1
+Job: 49 - Operation: 2
+Job: 50 - Operation: 1
+Job: 51 - Operation: 1
+Job: 51 - Operation: 2
+Job: 52 - Operation: 1
+Job: 53 - Operation: 1
+Job: 53 - Operation: 2
+Job: 54 - Operation: 1
+Job: 55 - Operation: 1
+Job: 55 - Operation: 2
+Job: 56 - Operation: 1
+Job: 57 - Operation: 1
+Job: 57 - Operation: 2
+Job: 58 - Operation: 1
+Job: 59 - Operation: 1
+Job: 59 - Operation: 2
+Job: 60 - Operation: 1
+Job: 61 - Operation: 1
+Job: 61 - Operation: 2
+Job: 62 - Operation: 1
+Job: 63 - Operation: 1
+Job: 63 - Operation: 2
+Job: 64 - Operation: 1
+Job: 65 - Operation: 1
+Job: 65 - Operation: 2
+Job: 66 - Operation: 1
+Job: 67 - Operation: 1
+Job: 67 - Operation: 2
+Job: 68 - Operation: 1
+Job: 69 - Operation: 1
+Job: 69 - Operation: 2
+Job: 70 - Operation: 1
+Job: 71 - Operation: 1
+Job: 71 - Operation: 2
+Job: 72 - Operation: 1
+Job: 73 - Operation: 1
+Job: 73 - Operation: 2
+Job: 74 - Operation: 1
+Job: 75 - Operation: 1
+Job: 75 - Operation: 2
+Job: 76 - Operation: 1
+Job: 77 - Operation: 1
+Job: 77 - Operation: 2
+Job: 78 - Operation: 1
+Job: 79 - Operation: 1
+Job: 79 - Operation: 2
+Job: 80 - Operation: 1
+Job: 81 - Operation: 1
+Job: 81 - Operation: 2
+Job: 82 - Operation: 1
+Job: 83 - Operation: 1
+Job: 83 - Operation: 2
+Job: 84 - Operation: 1
+Job: 85 - Operation: 1
+Job: 85 - Operation: 2
+Job: 86 - Operation: 1
+Job: 87 - Operation: 1
+Job: 87 - Operation: 2
+Job: 88 - Operation: 1
+Job: 89 - Operation: 1
+Job: 89 - Operation: 2
+Job: 90 - Operation: 1
+Job: 91 - Operation: 1
+Job: 91 - Operation: 2
+Job: 92 - Operation: 1
+Job: 93 - Operation: 1
+Job: 93 - Operation: 2
+Job: 94 - Operation: 1
+Job: 95 - Operation: 1
+Job: 95 - Operation: 2
+Job: 96 - Operation: 1
+Job: 97 - Operation: 1
+Job: 97 - Operation: 2
+Job: 98 - Operation: 1
+Job: 99 - Operation: 1
+Job: 99 - Operation: 2
+Job: 100 - Operation: 1
+Job: 101 - Operation: 1
+Job: 101 - Operation: 2
+Job: 102 - Operation: 1
+Job: 103 - Operation: 1
+Job: 103 - Operation: 2
+Job: 104 - Operation: 1
+Job: 105 - Operation: 1
+Job: 105 - Operation: 2
+Job: 106 - Operation: 1
+Job: 107 - Operation: 1
+Job: 107 - Operation: 2
+Job: 108 - Operation: 1
+Job: 109 - Operation: 1
+Job: 109 - Operation: 2
+Job: 110 - Operation: 1
+Job: 111 - Operation: 1
+Job: 111 - Operation: 2
+Job: 112 - Operation: 1
+Job: 113 - Operation: 1
+Job: 113 - Operation: 2
+Job: 114 - Operation: 1
+Job: 115 - Operation: 1
+Job: 115 - Operation: 2
+Job: 116 - Operation: 1
+Job: 117 - Operation: 1
+Job: 117 - Operation: 2
+Job: 118 - Operation: 1
+Job: 119 - Operation: 1
+Job: 119 - Operation: 2
+Job: 120 - Operation: 1
+Job: 121 - Operation: 1
+Job: 121 - Operation: 2
+Job: 122 - Operation: 1
+Job: 123 - Operation: 1
+Job: 123 - Operation: 2
+Job: 124 - Operation: 1
+Job: 125 - Operation: 1
+Job: 125 - Operation: 2
+Job: 126 - Operation: 1
+Job: 127 - Operation: 1
+Job: 127 - Operation: 2
+Job: 128 - Operation: 1
+Job: 129 - Operation: 1
+Job: 129 - Operation: 2
+Job: 130 - Operation: 1
+Job: 131 - Operation: 1
+Job: 131 - Operation: 2
+Job: 132 - Operation: 1
+Job: 133 - Operation: 1
+Job: 133 - Operation: 2
+Job: 134 - Operation: 1
+Job: 135 - Operation: 1
+Job: 135 - Operation: 2
+Job: 136 - Operation: 1
+Job: 137 - Operation: 1
+Job: 137 - Operation: 2
+Job: 138 - Operation: 1
+Job: 139 - Operation: 1
+Job: 139 - Operation: 2
+Job: 140 - Operation: 1
+Job: 141 - Operation: 1
+Job: 141 - Operation: 2
+Job: 142 - Operation: 1
+Job: 143 - Operation: 1
+Job: 143 - Operation: 2
+Job: 144 - Operation: 1
+Job: 145 - Operation: 1
+Job: 145 - Operation: 2
+Job: 146 - Operation: 1
+Job: 147 - Operation: 1
+Job: 147 - Operation: 2
+Job: 148 - Operation: 1
+Job: 149 - Operation: 1
+Job: 149 - Operation: 2
+Job: 150 - Operation: 1
+Job: 151 - Operation: 1
+Job: 151 - Operation: 2
+Job: 152 - Operation: 1
+Job: 153 - Operation: 1
+Job: 153 - Operation: 2
+Job: 154 - Operation: 1
+Job: 155 - Operation: 1
+Job: 155 - Operation: 2
+Job: 156 - Operation: 1
+Job: 157 - Operation: 1
+Job: 157 - Operation: 2
+Job: 158 - Operation: 1
+Job: 159 - Operation: 1
+Job: 159 - Operation: 2
+Job: 160 - Operation: 1
+Job: 161 - Operation: 1
+Job: 161 - Operation: 2
+Job: 162 - Operation: 1
+Job: 163 - Operation: 1
+Job: 163 - Operation: 2
+Job: 164 - Operation: 1
+Job: 165 - Operation: 1
+Job: 165 - Operation: 2
+Job: 166 - Operation: 1
+Job: 167 - Operation: 1
+Job: 167 - Operation: 2
+Job: 168 - Operation: 1
+Job: 169 - Operation: 1
+Job: 169 - Operation: 2
+Job: 170 - Operation: 1
+Job: 171 - Operation: 1
+Job: 171 - Operation: 2
+Job: 172 - Operation: 1
+Job: 173 - Operation: 1
+Job: 173 - Operation: 2
+Job: 174 - Operation: 1
+Job: 175 - Operation: 1
+Job: 175 - Operation: 2
+Job: 176 - Operation: 1
+Job: 177 - Operation: 1
+Job: 177 - Operation: 2
+Job: 178 - Operation: 1
+Job: 179 - Operation: 1
+Job: 179 - Operation: 2
+Job: 180 - Operation: 1
+Job: 181 - Operation: 1
+Job: 181 - Operation: 2
+Job: 182 - Operation: 1
+Job: 183 - Operation: 1
+Job: 183 - Operation: 2
+Job: 184 - Operation: 1
+Job: 185 - Operation: 1
+Job: 185 - Operation: 2
+Job: 186 - Operation: 1
+Job: 187 - Operation: 1
+Job: 187 - Operation: 2
+Job: 188 - Operation: 1
+Job: 189 - Operation: 1
+Job: 189 - Operation: 2
+Job: 190 - Operation: 1
+Job: 191 - Operation: 1
+Job: 191 - Operation: 2
+Job: 192 - Operation: 1
+Job: 193 - Operation: 1
+Job: 193 - Operation: 2
+Job: 194 - Operation: 1
+Job: 195 - Operation: 1
+Job: 195 - Operation: 2
+Job: 196 - Operation: 1
+Job: 197 - Operation: 1
+Job: 197 - Operation: 2
+Job: 198 - Operation: 1
+Job: 199 - Operation: 1
+Job: 199 - Operation: 2
+Job: 200 - Operation: 1
+Job: 201 - Operation: 1
+Job: 201 - Operation: 2
+Job: 202 - Operation: 1
+Job: 203 - Operation: 1
+Job: 203 - Operation: 2
+Job: 204 - Operation: 1
+Job: 205 - Operation: 1
+Job: 205 - Operation: 2
+Job: 206 - Operation: 1
+Job: 207 - Operation: 1
+Job: 207 - Operation: 2
+Job: 208 - Operation: 1
+Job: 209 - Operation: 1
+Job: 209 - Operation: 2
+Job: 210 - Operation: 1
+Job: 211 - Operation: 1
+Job: 211 - Operation: 2
+Job: 212 - Operation: 1
+Job: 213 - Operation: 1
+Job: 213 - Operation: 2
+Job: 214 - Operation: 1
+Job: 215 - Operation: 1
+Job: 215 - Operation: 2
+Job: 216 - Operation: 1
+Job: 217 - Operation: 1
+Job: 217 - Operation: 2
+Job: 218 - Operation: 1
+Job: 219 - Operation: 1
+Job: 219 - Operation: 2
+Job: 220 - Operation: 1
+Job: 221 - Operation: 1
+Job: 221 - Operation: 2
+Job: 222 - Operation: 1
+Job: 223 - Operation: 1
+Job: 223 - Operation: 2
+Job: 224 - Operation: 1
+Job: 225 - Operation: 1
+Job: 225 - Operation: 2
+Job: 226 - Operation: 1
+Job: 227 - Operation: 1
+Job: 227 - Operation: 2
+Job: 228 - Operation: 1
+Job: 229 - Operation: 1
+Job: 229 - Operation: 2
+Job: 230 - Operation: 1
+Job: 231 - Operation: 1
+Job: 231 - Operation: 2
+Job: 232 - Operation: 1
+Job: 233 - Operation: 1
+Job: 233 - Operation: 2
+Job: 234 - Operation: 1
+Job: 235 - Operation: 1
+Job: 235 - Operation: 2
+Job: 236 - Operation: 1
+Job: 237 - Operation: 1
+Job: 237 - Operation: 2
+Job: 238 - Operation: 1
+Job: 239 - Operation: 1
+Job: 239 - Operation: 2
+Job: 240 - Operation: 1
+Job: 241 - Operation: 1
+Job: 241 - Operation: 2
+Job: 242 - Operation: 1
+Job: 243 - Operation: 1
+Job: 243 - Operation: 2
+Job: 244 - Operation: 1
+Job: 245 - Operation: 1
+Job: 245 - Operation: 2
+Job: 246 - Operation: 1
+Job: 247 - Operation: 1
+Job: 247 - Operation: 2
+Job: 248 - Operation: 1
+Job: 249 - Operation: 1
+Job: 249 - Operation: 2
+Total jobs with setup 2: 126

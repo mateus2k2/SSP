@@ -401,10 +401,140 @@ int SSP::loadInstanceBeezao(string filename) {
     }
 
     // ---------------------------------------------------------------------
-    planingHorizon = getMakespan(filename);
+    planingHorizon = getMakespan(filename) * 2;
+    // cout << "Estimated Makespan from ALNS: " << planingHorizon << endl;
     unsupervised = planingHorizon;
 
     file.close();
+
+    return 0;
+}
+
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
+// LOAD BASE
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+int SSP::loadInstanceBase(string filename) {
+    ifstream file(filename);
+    if (!file.is_open()) {
+        cerr << "Error opening Base instance file!" << endl;
+        exit(1);
+    }
+
+    // ---------------------------------------------------------------------
+    // Row 1: CAPACITY MACHINES HORIZON UNSUPERVISED_MINUTS
+    int capacity, machines, horizon, unsupervisedMinuts;
+    file >> capacity >> machines >> horizon >> unsupervisedMinuts;
+    capacityMagazine = capacity;
+    numberMachines = machines;
+    planingHorizon = horizon;
+    unsupervised = unsupervisedMinuts;
+
+    string emptyLine;
+    getline(file, emptyLine); // consume rest of row 1
+    getline(file, emptyLine); // consume empty row 2
+
+    // ---------------------------------------------------------------------
+    // Remaining rows: JOB OPERATION PROCESSINGTIME PRIORITY TOOLSET
+    originalJobs.clear();
+    originalToolSets.clear();
+    numberOfPriorityJobs = 0;
+
+    string line;
+    int toolSetIndex = 0;
+    while (getline(file, line)) {
+        if (line.empty()) continue;
+
+        stringstream ss(line);
+        Job tmpJob;
+        string toolsStr;
+
+        ss >> tmpJob.indexJob >> tmpJob.indexOperation >> tmpJob.processingTime >> tmpJob.priority;
+        ss >> toolsStr;
+
+        numberOfPriorityJobs += tmpJob.priority;
+
+        ToolSet ts;
+        ts.indexToolSet = toolSetIndex;
+        stringstream tss(toolsStr);
+        string toolVal;
+        while (getline(tss, toolVal, ',')) {
+            if (!toolVal.empty())
+                ts.tools.push_back(stoi(toolVal));
+        }
+
+        originalToolSets[toolSetIndex] = ts;
+        tmpJob.indexToolSet = toolSetIndex;
+        tmpJob.toolSet      = ts;
+        tmpJob.isGrouped    = false;
+        tmpJob.isReentrant  = false;
+        tmpJob.flag         = false;
+
+        originalJobs.push_back(tmpJob);
+        toolSetIndex++;
+    }
+
+    file.close();
+
+    // ---------------------------------------------------------------------
+    // Mark reentrant jobs (operation 1 → find matching operation 0)
+    for (auto &thisJob : originalJobs) {
+        if (thisJob.indexOperation == 1) {
+            for (auto &otherJob : originalJobs) {
+                if (otherJob.indexOperation == 0 && otherJob.indexJob == thisJob.indexJob) {
+                    thisJob.isReentrant  = true;
+                    otherJob.isReentrant = true;
+                }
+            }
+        }
+    }
+
+    // ---------------------------------------------------------------------
+    // Build normalization maps
+    int ferramentaIndex = 0;
+    for (auto &thisJob : originalJobs) {
+        for (auto &tool : thisJob.toolSet.tools) {
+            if (ferramentas.find(tool) == ferramentas.end()) {
+                ferramentas[tool] = ferramentaIndex;
+                ferramentNormalizadaXFerramentaReal[ferramentaIndex] = tool;
+                ferramentaIndex++;
+            }
+        }
+    }
+    numberOfTools = ferramentaIndex;
+    numberTools   = ferramentaIndex;
+
+    numberToolsReal = 0;
+    for (const auto &[key, value] : originalToolSets) {
+        for (const auto &tool : value.tools) {
+            if (tool > numberToolsReal) numberToolsReal = tool;
+        }
+    }
+    numberToolsReal++;
+
+    // Build normalized toolsets and assign back to jobs
+    for (auto &thisJob : originalJobs) {
+        ToolSet tmpToolSet;
+        tmpToolSet.indexToolSet = thisJob.indexToolSet;
+        for (auto &tool : thisJob.toolSet.tools) {
+            tmpToolSet.tools.push_back(ferramentas[tool]);
+        }
+        normalizedToolSets[thisJob.indexToolSet] = tmpToolSet;
+        thisJob.toolSetNormalized = normalizedToolSets[thisJob.indexToolSet];
+    }
+
+    numberJobsUngrouped = originalJobs.size();
+    numberJobs          = originalJobs.size();
+
+    // ---------------------------------------------------------------------
+    // Build tool-job boolean matrix (tool × job index)
+    toolJob.assign(numberTools, vector<bool>(numberJobs, false));
+    for (auto &thisJob : originalJobs) {
+        for (auto &tool : thisJob.toolSetNormalized.tools) {
+            toolJob[tool][thisJob.indexJob] = true;
+        }
+    }
 
     return 0;
 }
@@ -415,68 +545,68 @@ int SSP::loadInstanceBeezao(string filename) {
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 void SSP::printDataReport() {
-// #ifdef FMT
-//     fmt::print("\n------------------------------------------------------------------------------------------------------------------------------------------\n");
-//     fmt::print("DATA REPORT\n");
-//     fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n\n");
+#ifdef FMT
+    fmt::print("\n------------------------------------------------------------------------------------------------------------------------------------------\n");
+    fmt::print("DATA REPORT\n");
+    fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n\n");
 
-//     fmt::print("Number of Machines: {}\n", numberMachines);
-//     fmt::print("Capacity of Magazine: {}\n", capacityMagazine);
-//     fmt::print("Planing Horizon: {}\n", planingHorizon);
-//     fmt::print("Unsupervised: {}\n\n", unsupervised);
-//     fmt::print("Number of Tools: {}\n\n", numberTools);
-//     fmt::print("Number of Original Jobs: {}\n\n", numberJobs);
+    fmt::print("Number of Machines: {}\n", numberMachines);
+    fmt::print("Capacity of Magazine: {}\n", capacityMagazine);
+    fmt::print("Planing Horizon: {}\n", planingHorizon);
+    fmt::print("Unsupervised: {}\n\n", unsupervised);
+    fmt::print("Number of Tools: {}\n\n", numberTools);
+    fmt::print("Number of Original Jobs: {}\n\n", numberJobs);
 
-//     fmt::print("\n------------------------------------------------------------------------------------------------------------------------------------------\n");
-//     fmt::print("JOBS DATA\n");
-//     fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n\n");
+    fmt::print("\n------------------------------------------------------------------------------------------------------------------------------------------\n");
+    fmt::print("JOBS DATA\n");
+    fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n\n");
 
-//     size_t index = 0;
-//     for (const auto &thisJob : originalJobs) {
-//         fmt::print("Index: {}\n", index);
-//         fmt::print("Job: {}\n", thisJob.indexJob);
-//         fmt::print("Operation: {}\n", thisJob.indexOperation);
-//         fmt::print("ProcessingTime: {}\n", thisJob.processingTime);
-//         fmt::print("Priority: {}\n", thisJob.priority);
-//         fmt::print("ToolSet Tools: {}\n", fmt::join(thisJob.toolSet.tools, " "));
-//         fmt::print("thisJob.indexToolSet: {}\n", thisJob.indexToolSet);
-//         fmt::print("thisJob.toolSet.indexToolSet: {}\n", thisJob.toolSet.indexToolSet);
-//         fmt::print("Normalized ToolSet Tools: {}\n", fmt::join(normalizedToolSets[thisJob.indexToolSet].tools, " "));
-//         fmt::print("isGrouped: {}\n", thisJob.isGrouped);
-//         fmt::print("ProcessingTimes: {}\n\n", fmt::join(thisJob.processingTimes, " "));
-//         ++index;
-//     }
+    size_t index = 0;
+    for (const auto &thisJob : originalJobs) {
+        fmt::print("Index: {}\n", index);
+        fmt::print("Job: {}\n", thisJob.indexJob);
+        fmt::print("Operation: {}\n", thisJob.indexOperation);
+        fmt::print("ProcessingTime: {}\n", thisJob.processingTime);
+        fmt::print("Priority: {}\n", thisJob.priority);
+        fmt::print("ToolSet Tools: {}\n", fmt::join(thisJob.toolSet.tools, " "));
+        fmt::print("thisJob.indexToolSet: {}\n", thisJob.indexToolSet);
+        fmt::print("thisJob.toolSet.indexToolSet: {}\n", thisJob.toolSet.indexToolSet);
+        fmt::print("Normalized ToolSet Tools: {}\n", fmt::join(normalizedToolSets[thisJob.indexToolSet].tools, " "));
+        fmt::print("isGrouped: {}\n", thisJob.isGrouped);
+        fmt::print("ProcessingTimes: {}\n\n", fmt::join(thisJob.processingTimes, " "));
+        ++index;
+    }
 
-//     fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n");
-//     fmt::print("TOOL SET\n");
-//     fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n\n");
+    fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n");
+    fmt::print("TOOL SET\n");
+    fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n\n");
 
-//     // print the tool set map
-//     for (const auto &[key, value] : originalToolSets) {
-//         fmt::print("ToolSet: {}\n", key);
-//         fmt::print("Tools: {}\n\n", fmt::join(value.tools, " "));
-//     }
+    // print the tool set map
+    for (const auto &[key, value] : originalToolSets) {
+        fmt::print("ToolSet: {}\n", key);
+        fmt::print("Tools: {}\n\n", fmt::join(value.tools, " "));
+    }
 
-//     fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n");
-//     fmt::print("TOOL NORMALIZED\n");
-//     fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n\n");
+    fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n");
+    fmt::print("TOOL NORMALIZED\n");
+    fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n\n");
 
-//     // print the tool set map
-//     for (const auto &[key, value] : normalizedToolSets) {
-//         fmt::print("ToolSet: {}\n", key);
-//         fmt::print("Tools: {}\n\n", fmt::join(value.tools, " "));
-//     }
+    // print the tool set map
+    for (const auto &[key, value] : normalizedToolSets) {
+        fmt::print("ToolSet: {}\n", key);
+        fmt::print("Tools: {}\n\n", fmt::join(value.tools, " "));
+    }
 
-//     fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n");
-//     fmt::print("TOOL JOB\n");
-//     fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n\n");
+    fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n");
+    fmt::print("TOOL JOB\n");
+    fmt::print("------------------------------------------------------------------------------------------------------------------------------------------\n\n");
 
-//     // print the toolJob matrix
-//     for (int i = 0; i < numberTools; i++) {
-//         fmt::print("Tool: {}\n", i);
-//         fmt::print("Jobs: {}\n\n", fmt::join(toolJob[i], " "));
-//     }
+    // print the toolJob matrix
+    for (int i = 0; i < numberTools; i++) {
+        fmt::print("Tool: {}\n", i);
+        fmt::print("Jobs: {}\n\n", fmt::join(toolJob[i], " "));
+    }
 
-// #endif
+#endif
 }
 
