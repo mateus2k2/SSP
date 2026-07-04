@@ -124,9 +124,9 @@ runPTDiff:
 
 runPT:
 	./src/out/mainCpp \
-		"/workspaces/IC/SSP/input/BaseInstances/2M1/n=5,r=0.5,t=8,v0.txt" \
+		"./input/BaseInstances/6M1/n=1201,r=0.6,t=1525,v0.txt" \
 		"" \
-		"./output/Exemplo/pt.csv" \
+		"./output/Exemplo/ga.csv" \
 		--PTL_TEMP_UPDATE_PROPORTION 3 \
 		--DIFERENT_TOOLSETS_MODE 1 \
 		--TEMP_INIT 0.1 \
@@ -199,9 +199,9 @@ runBeezaoPratica:
 
 runPractitioner:
 	./src/out/mainCpp \
-		"./input/MyInstancesDiferentToolSets/n=15,p=0.5,r=0.5,t=0,v0.csv" \
-		"./input/Processed/ToolSetInt.csv" \
-		"./output/PractitionerFinal/practitioner.txt" \
+		"./input/BaseInstances/6M1/n=1201,r=0.6,t=1525,v0.txt" \
+		"" \
+		"./output/Exemplo/practitioner.csv" \
 		--DIFERENT_TOOLSETS_MODE 1 \
 		--INSTANCE_REPORT 0 \
 		--PRACTITIONER 1 \
@@ -226,10 +226,10 @@ goBeezao:
 
 goPT:
 	@clear
-	make devCompile
-# 	make normalCompile
+# 	make devCompile
+	make normalCompile
 # 	make runBeezao
-	make runPT
+	make runPractitioner
 
 # --------------------------------------------------------
 # Meus python
