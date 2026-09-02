@@ -1,3 +1,8 @@
+# DEPRECATED (2026-09-02): this was the actual BaseInstances (2M1/6M1/6M2)
+# generator, despite the throwaway name and being buried in uteis/ -- see
+# scripts/generateInstances.py's `base` subcommand, which is this same
+# algorithm ported to relative paths, a real CLI, and no destructive
+# unconditional rmtree. Kept only for reference.
 import random
 import os
 import shutil
