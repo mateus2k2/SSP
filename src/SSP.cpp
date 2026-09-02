@@ -6,11 +6,19 @@
 #endif
 
 SSP::SSP(std::string filenameJobs, std::string filenameTools, int diferent_toolset_mode_, int COSTSWITCH_, int COSTSWITCHINSTANCE_, int COSTPRIORITY_, int PROFITYFINISHED_){
+	// Instance format is inferred from the file's path. Note this used to be two
+	// sibling if-statements (the second with its own else) rather than an if/else-if
+	// chain: a "Beezao" instance would run loadInstanceBeezao() and THEN also fall
+	// into the else branch (since it doesn't match "BaseInstances"), trying to load
+	// a toolset file that Beezao/BaseInstances callers pass as "" and crashing.
 	if (filenameJobs.find("Beezao") != string::npos) {
         loadInstanceBeezao(filenameJobs);
     }
-	if (filenameJobs.find("BaseInstances") != string::npos) {
+	else if (filenameJobs.find("BaseInstances") != string::npos) {
         loadInstanceBase(filenameJobs);
+    }
+	else if (filenameJobs.find("Consolidated") != string::npos) {
+        loadInstanceConsolidated(filenameJobs);
     }
 	else{
 		laodToolSet(filenameTools);

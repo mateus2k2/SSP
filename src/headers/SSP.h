@@ -77,6 +77,7 @@ class SSP: public Problem<solSSP>{
 		int laodInstance(string filename);
 		int loadInstanceBeezao(string filename);
 		int loadInstanceBase(string filename);
+		int loadInstanceConsolidated(string filename);
 		int laodToolSet(string filename);
 		int loadInstanceParans(string filename);
 		void printDataReport();

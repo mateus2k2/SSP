@@ -541,6 +541,114 @@ int SSP::loadInstanceBase(string filename) {
 
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
+// LOAD CONSOLIDATED
+//
+// Single-file instance format (see input/Consolidated/README and scripts/consolidateInstances.py):
+//   line 1: informational title, e.g. "n=75,p=0.24,r=0.5,t=650" (ignored)
+//   line 2: capacity
+//   line 3: machines
+//   line 4: days
+//   line 5: unsupervised_minuts
+//   line 6: blank
+//   remaining lines: job operation priority processingtime <one 0/1 per tool, 1=required>
+// Unlike loadInstanceBeezao's ".txt with a tool-requirement matrix" or laodInstance's
+// "jobs CSV + shared toolset CSV" formats, each job row already carries its own full,
+// already-normalized (dense, 0-based) tool bit-vector, so there's no separate toolset
+// file to load and no re-normalization pass needed.
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+int SSP::loadInstanceConsolidated(string filename) {
+    ifstream file(filename);
+    if (!file.is_open()) {
+        cerr << "Error opening Consolidated instance file!" << endl;
+        exit(1);
+    }
+
+    string title;
+    getline(file, title); // informational only
+
+    int capacity, machines, horizon, unsupervisedMinuts;
+    file >> capacity >> machines >> horizon >> unsupervisedMinuts;
+    capacityMagazine = capacity;
+    numberMachines   = machines;
+    planingHorizon   = horizon;
+    unsupervised     = unsupervisedMinuts;
+
+    string discard;
+    getline(file, discard); // consume rest of the unsupervised_minuts line
+    getline(file, discard); // consume the blank separator line
+
+    originalJobs.clear();
+    originalToolSets.clear();
+    numberOfPriorityJobs = 0;
+
+    string line;
+    int rowIndex = 0;
+    int toolCount = 0;
+    while (getline(file, line)) {
+        if (line.empty()) continue;
+
+        stringstream ss(line);
+        Job tmpJob;
+        ss >> tmpJob.indexJob >> tmpJob.indexOperation >> tmpJob.priority >> tmpJob.processingTime;
+        numberOfPriorityJobs += tmpJob.priority;
+
+        // Each job row is its own toolset: there's nothing to deduplicate/normalize,
+        // the bit vector is already dense and 0-based (one toolset per job, same as
+        // loadInstanceBeezao).
+        ToolSet ts;
+        ts.indexToolSet = rowIndex;
+        int bit;
+        int toolIndex = 0;
+        while (ss >> bit) {
+            if (bit) ts.tools.push_back(toolIndex);
+            toolIndex++;
+        }
+        toolCount = toolIndex;
+
+        originalToolSets[rowIndex] = ts;
+        tmpJob.indexToolSet    = rowIndex;
+        tmpJob.toolSet         = ts;
+        tmpJob.toolSetNormalized = ts;
+        tmpJob.isGrouped   = false;
+        tmpJob.isReentrant = false;
+        tmpJob.flag        = false;
+
+        originalJobs.push_back(tmpJob);
+        rowIndex++;
+    }
+    file.close();
+
+    // Mark reentrant jobs (operation 1 -> find matching operation 0)
+    for (auto &thisJob : originalJobs) {
+        if (thisJob.indexOperation == 1) {
+            for (auto &otherJob : originalJobs) {
+                if (otherJob.indexOperation == 0 && otherJob.indexJob == thisJob.indexJob) {
+                    thisJob.isReentrant  = true;
+                    otherJob.isReentrant = true;
+                }
+            }
+        }
+    }
+
+    numberOfTools   = toolCount;
+    numberTools     = toolCount;
+    numberToolsReal = toolCount;
+
+    numberJobsUngrouped = originalJobs.size();
+    numberJobs           = originalJobs.size();
+
+    toolJob.assign(numberTools, vector<bool>(numberJobs, false));
+    for (auto &thisJob : originalJobs) {
+        for (auto &tool : thisJob.toolSetNormalized.tools) {
+            toolJob[tool][thisJob.indexJob] = true;
+        }
+    }
+
+    return 0;
+}
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
 // LOAD PRINTS
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
