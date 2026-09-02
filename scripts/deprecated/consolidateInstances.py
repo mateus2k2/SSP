@@ -1,3 +1,6 @@
+# DEPRECATED (2026-09-02): scripts/generateInstances.py now writes this same
+# Consolidated format directly, so this conversion pass is no longer needed
+# for newly-generated instances. Kept only for reference.
 import os
 from natsort import natsorted
 import uteis.loadData as ld

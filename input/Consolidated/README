@@ -5,3 +5,8 @@ days
 unsupervised_minuts
 
 job operation priority processingtime [1 if tool is required, 0 if not required]
+
+Generated directly in this format by scripts/generateInstances.py (see its
+--help). Loaded by src/loadData.cpp's SSP::loadInstanceConsolidated -- any
+jobs-file path containing "Consolidated" is routed there; pass "" for the
+toolsFile argument (there is no separate toolset file for this format).

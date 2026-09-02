@@ -1,3 +1,9 @@
+# DEPRECATED (2026-09-02): superseded by scripts/generateInstances.py, which
+# generates the same SameToolSets/DiferentToolSets instances directly in the
+# Consolidated single-file format instead of this file's CSV+.dat pair (which
+# then needed scripts/deprecated/consolidateInstances.py as a second pass).
+# Kept only for reference; also note ProcessingTimeGenerator was a dead stub
+# at the time this was retired, so this script could not actually run as-is.
 import pandas as pd
 import random
 import csv
