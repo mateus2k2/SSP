@@ -109,6 +109,7 @@ runPTDiff:
 		"./input/MyInstancesDiferentToolSets/n=75,p=0.24,r=0.5,t=112,v0.csv" \
 		"./input/Processed/ToolSetInt.csv" \
 		"./output/Exemplo/pt.csv" \
+		--METHOD pt \
 		--TEMP_INIT 0.1 \
 		--TEMP_FIM 5 \
 		--N_REPLICAS 2 \
@@ -127,6 +128,7 @@ runPT:
 		"./input/BaseInstances/6M1/n=1201,r=0.6,t=1525,v0.txt" \
 		"" \
 		"./output/Exemplo/ga.csv" \
+		--METHOD pt \
 		--PTL_TEMP_UPDATE_PROPORTION 3 \
 		--DIFERENT_TOOLSETS_MODE 1 \
 		--TEMP_INIT 0.1 \
@@ -170,6 +172,7 @@ runBeezao:
 		"./input/BaseInstances/6M2/n=5,r=0.4,t=5,v0.txt" \
 		"" \
 		"./output/Beezao/960.txt" \
+		--METHOD pt \
 		--PTL_TEMP_UPDATE_PROPORTION 3 \
 		--DIFERENT_TOOLSETS_MODE 0 \
 		--TEMP_INIT 0.1 \
@@ -226,10 +229,8 @@ goBeezao:
 
 goPT:
 	@clear
-# 	make devCompile
 	make normalCompile
-# 	make runBeezao
-	make runPractitioner
+	make runPT
 
 # --------------------------------------------------------
 # Meus python
