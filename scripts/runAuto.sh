@@ -3,6 +3,8 @@
 # ./scripts/runAuto.sh ./output/GATeste1 beezao PT 9999
 # ./scripts/runAuto.sh ./output/GATeste1 both PT 9999 > out 2>&1
 # ./scripts/runAuto.sh ./output/BeezaoAuto beezao practitioner 9999
+# ./scripts/runAuto.sh ./output/BaseHeuristica base practitioner 999999 normal
+
 
 outputFolder=${1:-"./output/Exemplo"}
 runMode=${2:-"both"}
@@ -12,13 +14,15 @@ env=${5:-"normal"}
 licenseFile=${6:-""}
 
 [ ! -d "$outputFolder" ] && mkdir -p "$outputFolder"
-[ ! -d "$outputFolder/MyInstancesSameToolSets" ] && mkdir -p "$outputFolder/MyInstancesSameToolSets"
-[ ! -d "$outputFolder/MyInstancesDiferentToolSets" ] && mkdir -p "$outputFolder/MyInstancesDiferentToolSets"
+# [ ! -d "$outputFolder/MyInstancesSameToolSets" ] && mkdir -p "$outputFolder/MyInstancesSameToolSets"
+# [ ! -d "$outputFolder/MyInstancesDiferentToolSets" ] && mkdir -p "$outputFolder/MyInstancesDiferentToolSets"
 
 instaceExtention="csv"
-if [ "$runMode" = "beezao" ]
-then
+if [ "$runMode" = "beezao" ]; then
     instaceExtention="PMTC"
+fi
+if [ "$runMode" = "base" ]; then
+    instaceExtention="txt"
 fi
 
 # if licenseFile is provided set the environment variable
@@ -31,7 +35,7 @@ then
     make normalCompile
 elif [ "$env" = "tesla" ]
 then
-    make teslaCompile
+    make teslaCompile V=1
 fi
 
 run_instances() {
@@ -68,7 +72,7 @@ then
         --TEMP_FIM 5 \
         --N_REPLICAS 11 \
         --MCL 500 \
-        --PTL 100 \
+        --PTL 500 \
         --PASSO_GATILHO 10 \
         --TEMP_DIST 3 \
         --TYPE_UPDATE 1 \
@@ -121,13 +125,17 @@ elif [ "$runMode" = "beezao" ]
 then
     instancesFolder=./input/BeezaoRaw/IPMTC-II
     run_instances "$instancesFolder" "$outputFolder" 0
-    
+elif [ "$runMode" = "base" ] 
+then
+    instancesFolder=./input/BaseInstances
+    run_instances "$instancesFolder" "$outputFolder" 0
+     
 elif [ "$runMode" = "diferent" ] 
 then
     instancesFolder=./input/MyInstancesDiferentToolSets
     run_instances "$instancesFolder" "$outputFolder/MyInstancesDiferentToolSets" 1
 else
-    echo "Modo de execução inválido"
+    echo "Modo de execução inválido: $runMode. Use 'both', 'same', 'diferent', 'beezao' or 'base'." 
     exit 1
 fi
 

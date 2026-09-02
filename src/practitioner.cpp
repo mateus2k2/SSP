@@ -87,7 +87,8 @@ void SSP::allocateOperationsToMachines(int numMachines) {
         } else {
             auto famIt = min_element(maxIt->assignedFamilies.begin(), maxIt->assignedFamilies.end(), [](const Family& a, const Family& b) { return a.totalProcTime < b.totalProcTime; });
 
-            if (famIt != maxIt->assignedFamilies.end()) {
+            int newDiff = abs((w_max - famIt->totalProcTime) - (w_min + famIt->totalProcTime));
+            if (famIt != maxIt->assignedFamilies.end() && newDiff < (w_max - w_min)) {
                 minIt->assignedFamilies.insert(minIt->assignedFamilies.begin(), *famIt);
                 minIt->totalWorkload += famIt->totalProcTime;
 

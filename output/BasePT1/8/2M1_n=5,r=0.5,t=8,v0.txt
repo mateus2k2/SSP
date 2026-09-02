@@ -1,0 +1,23 @@
+./input/BaseInstances/2M1_n=5,r=0.5,t=8,v0.txt;./input/Processed/ToolSetInt.csv
+7;720;1440
+Machine: 0
+2;0;0;11;1;0,1,2,3,4,5,6,7,
+0;0;11;92;1;0,1,2,3,4,5,6,7,
+0;1;92;160;1;0,1,2,3,4,5,6,7,
+Machine: 1
+1;0;0;39;0;0,1,2,3,4,5,6,7,
+1;1;39;78;0;0,1,2,3,4,5,6,7,
+END
+fineshedJobsCount: 5
+switchs: 0
+switchsInstances: 0
+unfineshedPriorityCount: 0
+totalUnfineshed: 0
+criticalMachineSwitchs: 0
+criticalMachineTime: 160
+Final Solution: 150
+Time: 2200
+PTL: -1
+MCMC: -1
+Best Initial: 150
+Mean Initial: 150
