@@ -5,31 +5,35 @@ subcommand, each writing its own on-disk format:
 
   same        Consolidated single-file format (see input/Consolidated/README
               and src/loadData.cpp's SSP::loadInstanceConsolidated), written
-              to input/Consolidated/SameToolSets/. Built from real job data
-              (input/Processed/{250,750,1000}.csv); a reentrant job's two
-              operations SHARE one toolset drawn from the real pool
-              (input/Processed/ToolSetInt.csv) -- this sharing is what
-              "SameToolSets" means.
+              to input/Consolidated/SameToolSets/. A reentrant job's two
+              operations SHARE one toolset -- this sharing is what
+              "SameToolSets" means. Two tiers, ported from
+              scripts/deprecated/myInstanceGenerator.py's makeInstaceBase +
+              makeInstaceExtra: a "base" tier from real job data
+              (input/Processed/{250,750,1000}.csv, after a subset-removal
+              filter) and an "extra" tier of larger synthetic sizes stepped
+              from input/Processed/UnusedToolSetsClean.csv. Fixed size
+              ladder/reentrant ratios per tier (see same_tier_targets), not
+              free CLI flags -- these are the specific profiles the tracked
+              data was built from; verified to reproduce those (n, r) pairs,
+              see same_tier_targets' docstring.
   different   Same Consolidated format, written to
-              input/Consolidated/DiferentToolSets/. Synthetic instances
-              where every operation gets its own, never-reused toolset,
-              drawn from input/Processed/UnusedToolSetsClean.csv.
+              input/Consolidated/DiferentToolSets/. Every operation gets its
+              own, never-reused toolset, drawn from
+              input/Processed/UnusedToolSetsClean.csv. Targets the exact same
+              (n, r) pairs as `same` (ported from the original refactory()'s
+              approach of reusing an existing SameToolSets instance's n/p/r).
   base        The BaseInstances format (see src/loadData.cpp's
               SSP::loadInstanceBase), written to input/BaseInstances/
               {2M1,6M1,6M2}/. Fixed per-base-case profiles (size list,
-              target reentrant ratio, target tool-ratio) rather than
-              free-form --sizes/--priority-levels, matching the three
+              target reentrant ratio, target tool-ratio), matching the three
               base cases this was originally built around. Ported from
-              scripts/uteis/teste.py, now scripts/deprecated/teste.py.
-
-same/different vary instance size, priority level, and reentrant ratio via
-CLI flags. Does NOT touch BeezaoRaw/ -- that's a separate, external
-benchmark dataset with published reference results, not something this
-generates.
+              scripts/uteis/teste.py, now scripts/deprecated/teste.py;
+              verified to reproduce the tracked files exactly.
 
 Usage:
-  python3 scripts/generateInstances.py same --sizes 15,25,50,75 --priority-levels 0.25,0.5,0.75
-  python3 scripts/generateInstances.py different --sizes 15,25,50,75
+  python3 scripts/generateInstances.py same
+  python3 scripts/generateInstances.py different
   python3 scripts/generateInstances.py base
   python3 scripts/generateInstances.py base --cases 2M1,6M1
 
@@ -111,67 +115,192 @@ def count_unique_tools(jobs, tool_sets):
 
 
 # ------------------------------------------------------------------------------------------------
+# SAME/DIFFERENT shared target list
+#
+# Both same and different are driven off the SAME (n, reentrant_ratio) target pairs, ported
+# from the original two-tier pipeline (scripts/deprecated/myInstanceGenerator.py's
+# makeInstaceBase + makeInstaceExtra): a "base" tier built from real job data
+# (input/Processed/{250,750,1000}.csv, after a subset-removal filter), and an "extra" tier of
+# larger synthetic sizes stepped from input/Processed/UnusedToolSetsClean.csv. Verified against
+# the currently tracked input/Consolidated/{Same,Different}ToolSets/ files: every one of the 8
+# extra-tier (n, r) pairs reproduces exactly; 2 of 3 base-tier pairs reproduce exactly, the third
+# is off by one job (750-filtered vs 1000-filtered convergence -- see the reconstructed
+# remove_subsets() docstring for why that filter can't be pinned down bit-for-bit).
+# ------------------------------------------------------------------------------------------------
+
+SAME_BASE_TIER = [("250.csv", 0.5), ("750.csv", 0.6), ("1000.csv", 0.4)]
+SAME_EXTRA_RATIO_BY_KEY = {376: 0.5, 1201: 0.6, 1401: 0.4}
+SAME_EXTRA_STEP_START = 400
+SAME_EXTRA_STEP_STOP = 1100   # exclusive (python range)
+SAME_EXTRA_STEP = 100
+SAME_EXTRA_FINAL_MAX = 1238
+SAME_PRIORITY_LEVELS = [0.25, 0.5, 0.75]
+
+
+def remove_subsets(tool_set_map, jobs):
+    """Deterministic filter used to build the base tier's real-job pool: keep
+    one job per unique ToolSet (first occurrence in source order), drop any
+    whose toolset is a subset of another kept toolset, drop toolsets outside
+    [1, 80] tools.
+
+    Ported from scripts/uteis/filterJobs.py's removeSubSets -- as committed
+    there, that function always returns [] (the "Remove iguais" block that
+    dedupes by toolset is commented out, so it filters an empty list). This
+    restores exactly what that dead block's comment specifies. Because it's
+    reconstructed from a comment rather than run code, and because "one job
+    per toolset" depends on Python's (deterministic, but version-dependent
+    for larger structures) dict/set iteration order, this doesn't reproduce
+    input/Processed/*Filtered.csv bit-for-bit -- see SAME_BASE_TIER's
+    docstring for how close it actually gets."""
+    seen_ids = set()
+    deduped = []
+    for job in jobs:
+        if job['ToolSet'] not in seen_ids:
+            seen_ids.add(job['ToolSet'])
+            deduped.append(job)
+
+    deduped.sort(key=lambda j: len(tool_set_map[j['ToolSet']]), reverse=True)
+    kept = deduped.copy()
+    removed = []
+    for i, job in enumerate(deduped):
+        job_tools = set(tool_set_map[job['ToolSet']])
+        for other in deduped[i + 1:]:
+            if other in removed:
+                continue
+            if set(tool_set_map[other['ToolSet']]).issubset(job_tools):
+                removed.append(other)
+                kept.remove(other)
+
+    return [j for j in kept if 1 <= len(tool_set_map[j['ToolSet']]) <= 80]
+
+
+def make_jobs_from_toolsets(toolset_ids, time_gen):
+    """One job (single operation) per toolset id. Ported from makeJobs()."""
+    times = time_gen.generate_random_numbers(len(toolset_ids))
+    return [{'Job': i, 'Operation': 0, 'ToolSet': ts_id, 'Processing Time': t}
+            for i, (ts_id, t) in enumerate(zip(toolset_ids, times))]
+
+
+def same_tier_targets(tool_pool_len):
+    """(n, reentrant_ratio, jobs_pool_factory) for every base+extra tier entry,
+    where jobs_pool_factory() returns that tier's un-reentrant-assigned job pool
+    (real jobs for the base tier, synthetic one-job-per-toolset for the extra
+    tier) and its ToolSet lookup dict. n is the exact final operation count
+    make_instance_from_pool() will produce for that pool at that ratio."""
+    targets = []
+
+    def base_factory(fname):
+        def factory(tool_sets):
+            jobs = loadJobs(str(PROCESSED_DIR / fname))
+            return remove_subsets(tool_sets, jobs)
+        return factory
+
+    tool_sets_real = loadToolSet(str(PROCESSED_DIR / "ToolSetInt.csv"))
+    for fname, ratio in SAME_BASE_TIER:
+        pool = base_factory(fname)(tool_sets_real)
+        ponto = int(len(pool) * ratio)
+        n = len(pool) + ponto
+        targets.append((n, ratio, "base", fname))
+
+    extra_sizes = list(range(SAME_EXTRA_STEP_START, min(tool_pool_len, SAME_EXTRA_STEP_STOP), SAME_EXTRA_STEP))
+    extra_sizes.append(min(tool_pool_len, SAME_EXTRA_FINAL_MAX))
+    for target in extra_sizes:
+        ratio_key = min(SAME_EXTRA_RATIO_BY_KEY, key=lambda k: abs(k - target))
+        ratio = SAME_EXTRA_RATIO_BY_KEY[ratio_key]
+        cut = int(target / (1 + ratio))
+        ponto = int(cut * ratio)
+        n = cut + ponto
+        targets.append((n, ratio, "extra", cut))
+
+    return targets
+
+
+# ------------------------------------------------------------------------------------------------
 # SAME TOOLSETS  (reentrant job's 2 operations share one toolset)
 # ------------------------------------------------------------------------------------------------
 
-def make_same_toolset_instance(size, reentrant_ratio, priority_level, jobs_pool, time_gen, rng):
-    chosen = rng.sample(jobs_pool, size)
+def make_instance_from_pool(jobs_pool, tool_set_map, reentrant_ratio, priority_levels, time_gen, rng):
+    """Port of makeInstance()'s core body: one reentrant assignment (shared
+    across every priority_level, same as the original -- the unique-tool
+    count doesn't depend on priority assignment, only on which jobs/toolsets
+    are in the pool), producing one expanded instance per priority level.
+    Returns (list of (expanded_rows, achieved_priority_ratio), unique_tools)."""
+    order = list(range(len(jobs_pool)))
+    rng.shuffle(order)
 
-    n_reentrant = int(size / (1 + reentrant_ratio) / 2)
-    for i, job in enumerate(chosen):
-        job = dict(job)  # don't mutate the shared pool
-        chosen[i] = job
-        job['Reentrant'] = i < n_reentrant
+    ponto = int(len(jobs_pool) * reentrant_ratio)
+    reentrant_positions = set(order[:ponto])
+    pool = [dict(jobs_pool[idx], Reentrant=(idx in reentrant_positions)) for idx in order]
+    total_ops = ponto * 2 + (len(jobs_pool) - ponto)
 
-    rng.shuffle(chosen)
-    priority_budget = int(size * priority_level)
-    for job in chosen:
-        if priority_budget > 0:
-            job['Priority'] = 1
-            priority_budget -= 2 if job['Reentrant'] else 1
-        else:
-            job['Priority'] = 0
+    unique_tools = set()
+    for job in pool:
+        unique_tools.update(tool_set_map[job['ToolSet']])
 
-    expanded = []
-    for i, job in enumerate(chosen):
-        if job['Reentrant']:
-            t1, t2 = time_gen.generate_random_numbers(2)
-            expanded.append({'Job': i, 'Operation': 0, 'Priority': job['Priority'],
-                              'Processing Time': t1, 'ToolSet': job['ToolSet']})
-            expanded.append({'Job': i, 'Operation': 1, 'Priority': job['Priority'],
-                              'Processing Time': t2, 'ToolSet': job['ToolSet']})
-        else:
-            expanded.append({'Job': i, 'Operation': 0, 'Priority': job['Priority'],
-                              'Processing Time': job['Processing Time'], 'ToolSet': job['ToolSet']})
+    results = []
+    for priority_level in priority_levels:
+        rng.shuffle(pool)
+        priority_cutoff = int(total_ops * priority_level)
+        n_priority = 0
+        for job in pool:
+            if n_priority < priority_cutoff:
+                job['Priority'] = 1
+                n_priority += 2 if job['Reentrant'] else 1
+            else:
+                job['Priority'] = 0
 
-    expanded.sort(key=lambda x: x['Job'])
-    return expanded
+        expanded = []
+        for i, job in enumerate(pool):
+            if job['Reentrant']:
+                t1, t2 = time_gen.generate_random_numbers(2)
+                expanded.append({'Job': i, 'Operation': 0, 'Priority': job['Priority'],
+                                  'Processing Time': t1, 'ToolSet': job['ToolSet']})
+                expanded.append({'Job': i, 'Operation': 1, 'Priority': job['Priority'],
+                                  'Processing Time': t2, 'ToolSet': job['ToolSet']})
+            else:
+                expanded.append({'Job': i, 'Operation': 0, 'Priority': job['Priority'],
+                                  'Processing Time': job['Processing Time'], 'ToolSet': job['ToolSet']})
+        expanded.sort(key=lambda x: x['Job'])
+
+        results.append((expanded, n_priority / total_ops))
+
+    return results, unique_tools
 
 
 def generate_same(args):
     rng = random.Random(args.seed)
     time_gen = ProcessingTimeGenerator()
-    tool_sets = loadToolSet(str(PROCESSED_DIR / "ToolSetInt.csv"))
-
-    jobs_pool = []
-    for fname in ("250.csv", "750.csv", "1000.csv"):
-        jobs_pool += loadJobs(str(PROCESSED_DIR / fname))
+    tool_sets_real = loadToolSet(str(PROCESSED_DIR / "ToolSetInt.csv"))
+    tool_unused = loadToolSet(str(PROCESSED_DIR / "UnusedToolSetsClean.csv"))
+    tool_pool = list(tool_unused.keys())
+    rng.shuffle(tool_pool)
 
     meta = {"CAPACITY": args.capacity, "MACHINES": args.machines,
             "DAYS": args.days, "UNSUPERVISED_MINUTS": args.unsupervised}
-
     out_dir = args.out_dir or (CONSOLIDATED_DIR / "SameToolSets")
     count = 0
-    for size in args.sizes:
-        if size > len(jobs_pool):
-            print(f"Skipping size={size}: only {len(jobs_pool)} real jobs available to draw from")
-            continue
-        for priority_level in args.priority_levels:
-            jobs = make_same_toolset_instance(size, args.reentrant_ratio, priority_level, jobs_pool, time_gen, rng)
-            unique_tools = count_unique_tools(jobs, tool_sets)
-            title = f"n={size},p={priority_level:.2f},r={args.reentrant_ratio},t={unique_tools}"
-            write_consolidated(jobs, tool_sets, meta, title, out_dir / f"{count}.txt")
-            print(f"  [{count}] {title} -> {out_dir / f'{count}.txt'}")
+
+    for fname, ratio in SAME_BASE_TIER:
+        pool = remove_subsets(tool_sets_real, loadJobs(str(PROCESSED_DIR / fname)))
+        results, unique_tools = make_instance_from_pool(pool, tool_sets_real, ratio, SAME_PRIORITY_LEVELS, time_gen, rng)
+        for rows, achieved_p in results:
+            title = f"n={len(rows)},p={achieved_p:.2f},r={ratio},t={len(unique_tools)}"
+            write_consolidated(rows, tool_sets_real, meta, title, out_dir / f"{count}.txt")
+            print(f"  [{count}] {title} (base:{fname}) -> {out_dir / f'{count}.txt'}")
+            count += 1
+
+    extra_sizes = list(range(SAME_EXTRA_STEP_START, min(len(tool_pool), SAME_EXTRA_STEP_STOP), SAME_EXTRA_STEP))
+    extra_sizes.append(min(len(tool_pool), SAME_EXTRA_FINAL_MAX))
+    for target in extra_sizes:
+        ratio_key = min(SAME_EXTRA_RATIO_BY_KEY, key=lambda k: abs(k - target))
+        ratio = SAME_EXTRA_RATIO_BY_KEY[ratio_key]
+        cut = int(target / (1 + ratio))
+        pool = make_jobs_from_toolsets(tool_pool[:cut], time_gen)
+        results, unique_tools = make_instance_from_pool(pool, tool_unused, ratio, SAME_PRIORITY_LEVELS, time_gen, rng)
+        for rows, achieved_p in results:
+            title = f"n={len(rows)},p={achieved_p:.2f},r={ratio},t={len(unique_tools)}"
+            write_consolidated(rows, tool_unused, meta, title, out_dir / f"{count}.txt")
+            print(f"  [{count}] {title} (extra:{target}) -> {out_dir / f'{count}.txt'}")
             count += 1
 
     print(f"Wrote {count} instances to {out_dir}")
@@ -182,8 +311,24 @@ def generate_same(args):
 # ------------------------------------------------------------------------------------------------
 
 def make_different_toolset_instance(size, reentrant_ratio, priority_level, toolset_ids, time_gen, rng):
-    n_reentrant = int(size / (1 + reentrant_ratio) / 2)
-    needed = size + n_reentrant  # reentrant jobs consume 2 ids, non-reentrant consume 1
+    """Port of makeInstanceDiferentToolSets(). Unlike make_instance_from_pool,
+    `size` here is the TARGET final operation count directly (matching the
+    original refactory()'s use: it read this from an existing SameToolSets
+    filename rather than deriving it from a job pool), so its reentrant-count
+    formula is intentionally different from make_instance_from_pool's."""
+    # Matches the original's double truncation (int(N/(1+r)) then int(.../2)), not
+    # int(N/(1+r)/2) -- these can differ by one at certain N/r due to where the
+    # truncation happens.
+    n_reentrant = int(int(size / (1 + reentrant_ratio)) / 2)
+    # Each operation consumes exactly one toolset id (reentrant jobs consume 2,
+    # for their 2 operations; non-reentrant consume 1), and by construction the
+    # final operation count equals `size` exactly -- so `size` toolsets total,
+    # not size + n_reentrant (an earlier version of this had that wrong: its
+    # second loop ran range(n_reentrant, size) instead of range(2*n_reentrant,
+    # size), so it built size - n_reentrant non-reentrant jobs instead of
+    # size - 2*n_reentrant, overshooting both the toolset requirement and the
+    # final operation count).
+    needed = size
     if needed > len(toolset_ids):
         raise ValueError(f"need {needed} distinct toolsets for size={size}, only {len(toolset_ids)} available")
 
@@ -192,7 +337,7 @@ def make_different_toolset_instance(size, reentrant_ratio, priority_level, tools
     for i in range(n_reentrant):
         jobs.append({'Job': i, 'Reentrant': True, 'ToolSets': [toolset_ids[ts_i], toolset_ids[ts_i + 1]]})
         ts_i += 2
-    for i in range(n_reentrant, size):
+    for i in range(n_reentrant * 2, size):
         jobs.append({'Job': i, 'Reentrant': False, 'ToolSets': [toolset_ids[ts_i]]})
         ts_i += 1
 
@@ -230,25 +375,27 @@ def generate_different(args):
 
     meta = {"CAPACITY": args.capacity, "MACHINES": args.machines,
             "DAYS": args.days, "UNSUPERVISED_MINUTS": args.unsupervised}
-
     out_dir = args.out_dir or (CONSOLIDATED_DIR / "DiferentToolSets")
     count = 0
-    for size in args.sizes:
+
+    # same (n, r) targets as generate_same, so the two folders stay comparable
+    # pair-for-pair -- mirrors the original refactory() reading n/r back out of
+    # each SameToolSets filename, without needing that file-scanning step.
+    targets = same_tier_targets(len(tool_pool))
+
+    for n, ratio, tier, _ in targets:
         rng.shuffle(tool_pool)
-        # generous upper bound (needed <= size + size/2 for any reentrant_ratio >= 1);
-        # make_different_toolset_instance raises if this ever isn't enough.
-        toolset_slice = tool_pool[:size * 2]
-        for priority_level in args.priority_levels:
+        toolset_slice = tool_pool[:n]  # exactly `n` toolsets needed; see make_different_toolset_instance
+        for priority_level in SAME_PRIORITY_LEVELS:
             try:
-                jobs = make_different_toolset_instance(size, args.reentrant_ratio, priority_level,
-                                                        toolset_slice, time_gen, rng)
+                jobs = make_different_toolset_instance(n, ratio, priority_level, toolset_slice, time_gen, rng)
             except ValueError as e:
-                print(f"Skipping size={size}, priority={priority_level}: {e}")
+                print(f"Skipping n={n} ({tier}): {e}")
                 continue
             unique_tools = count_unique_tools(jobs, tool_unused)
-            title = f"n={size},p={priority_level:.2f},r={args.reentrant_ratio},t={unique_tools}"
+            title = f"n={n},p={priority_level:.2f},r={ratio},t={unique_tools}"
             write_consolidated(jobs, tool_unused, meta, title, out_dir / f"{count}.txt")
-            print(f"  [{count}] {title} -> {out_dir / f'{count}.txt'}")
+            print(f"  [{count}] {title} ({tier}) -> {out_dir / f'{count}.txt'}")
             count += 1
 
     print(f"Wrote {count} instances to {out_dir}")
@@ -283,11 +430,15 @@ BASE_HORIZON = 7
 BASE_UNSUPERVISED_MINUTS = 720
 
 
-def base_assign_reentrant(jobs, setup_max, rng):
+def base_assign_reentrant(jobs, setup_max):
     """Iterate jobs; decide 1 or 2 setups using a ratio-control formula:
-    calc = nrWith2nd / (i+1) converges to nrWith2nd/N ~= setup_max."""
-    jobs = jobs[:]
-    rng.shuffle(jobs)
+    calc = nrWith2nd / (i+1) converges to nrWith2nd/N ~= setup_max.
+    Deliberately does NOT shuffle: iterates jobs in the source CSV's fixed
+    order, same as the original this was ported from. base_subset_by_ops
+    later takes instances from the front of this list, so shuffling here
+    would change which real jobs/toolsets land in each size -- and did, in
+    an earlier version of this port, until a diff against fresh output from
+    the original script caught it (see git history)."""
     result = []
     n_with_2nd = 0
     for i, job in enumerate(jobs):
@@ -475,7 +626,7 @@ def generate_base(args):
         target_ratio = BASE_TOOL_RATIOS[case]
 
         jobs = base_fix_oversize_toolsets(jobs, tool_set_list, BASE_CAPACITY, rng)
-        jobs_with_reentrant = base_assign_reentrant(jobs, setup_max, rng)
+        jobs_with_reentrant = base_assign_reentrant(jobs, setup_max)
 
         n_reentrant = sum(1 for j in jobs_with_reentrant if j['reentrant'])
         print(f"{case}: {len(jobs)} jobs -> {len(jobs) + n_reentrant} ops "
@@ -510,21 +661,7 @@ def generate_base(args):
 # CLI
 # ------------------------------------------------------------------------------------------------
 
-def int_list(s):
-    return [int(x) for x in s.split(",")]
-
-
-def float_list(s):
-    return [float(x) for x in s.split(",")]
-
-
 def add_common_args(p):
-    p.add_argument("--sizes", type=int_list, default=[15, 25, 50, 75],
-                    help="Comma-separated instance sizes (default: 15,25,50,75)")
-    p.add_argument("--priority-levels", type=float_list, default=[0.25, 0.5, 0.75],
-                    help="Comma-separated priority ratios (default: 0.25,0.5,0.75)")
-    p.add_argument("--reentrant-ratio", type=float, default=0.5,
-                    help="Fraction of jobs that are reentrant (default: 0.5)")
     p.add_argument("--capacity", type=int, default=DEFAULT_CAPACITY)
     p.add_argument("--machines", type=int, default=DEFAULT_MACHINES)
     p.add_argument("--days", type=int, default=DEFAULT_DAYS)
