@@ -1,4 +1,9 @@
-import pandas as pd
+from pathlib import Path
+
+from uteis.loadData import loadJobs as _loadJobs, loadToolSet as _loadToolSet
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+
 
 class Filters:
     def __init__(self, filePathListJobs: list, filePathToolsets: str):
@@ -46,31 +51,18 @@ class Filters:
     # ----------------------------------------
     
     def loadJobs(self, filePathJobs):
-        jobsFilePath = f'{filePathJobs}'
-        jobsDF = pd.read_csv(jobsFilePath, delimiter=';')
-        jobsDict = jobsDF.to_dict(orient='records')
-        
+        # Delegates to uteis.loadData (was a copy-pasted reimplementation).
+        jobsDict = _loadJobs(filePathJobs)
+
         for job in jobsDict:
             job['id'] = self.jobsId
             self.jobsId += 1
-        
+
         return jobsDict
 
     def loadToolsets(self):
-        toolSetsFilePath = f'{self.filePathToolsets}'
-        toolSetsDF = pd.read_csv(toolSetsFilePath, header=None, delimiter=';')
-        index = toolSetsDF.iloc[:, 0]
-        toolSetsDF = toolSetsDF.drop(toolSetsDF.columns[0], axis=1)
-        toolSetsDF = toolSetsDF.fillna('NaNPlaceholder')
-        toolSetsDict = toolSetsDF.to_dict(orient='records')
-        toolSetList = []
-        for i in range(0, len(toolSetsDict)):
-            toolSetList.append([])
-            for tool in toolSetsDict[i].values():
-                if tool != 'NaNPlaceholder':
-                    toolSetList[i].append(int(tool))
-        toolSetMap = {indexAtual : toolSetAtual for indexAtual, toolSetAtual in zip(index, toolSetList)}
-        return toolSetMap
+        # Delegates to uteis.loadData (was a copy-pasted reimplementation).
+        return _loadToolSet(self.filePathToolsets)
 
     def saveListToFile(self, listToSave, filePath):
         # save a list to a file
@@ -178,11 +170,19 @@ class Filters:
 
 
 def main():
-    # ----------------------------------------
-    # file1000 Analisys
-    # ----------------------------------------
+    import argparse
 
-    FiltersObj = Filters(['/home/mateus/WSL/IC/SSP/input/Processed/1000.csv'], '/home/mateus/WSL/IC/SSP/input/Processed/ToolSetInt.csv')
+    parser = argparse.ArgumentParser(
+        description="Report jobs/toolsets that are oversize (>80 tools), undersize (<1), "
+                    "or subsets of an oversize toolset -- candidates for filtering out.")
+    parser.add_argument("jobs_files", nargs="*",
+                         default=[str(REPO_ROOT / "input" / "Processed" / "1000.csv")],
+                         help="Job CSV file(s) to analyze (default: input/Processed/1000.csv)")
+    parser.add_argument("--toolsets", default=str(REPO_ROOT / "input" / "Processed" / "ToolSetInt.csv"),
+                         help="Toolset CSV file (default: input/Processed/ToolSetInt.csv)")
+    args = parser.parse_args()
+
+    FiltersObj = Filters(args.jobs_files, args.toolsets)
 
     jobslargerThen80, toolsetsLargerThen80 = FiltersObj.getJobsWithToolsetsLargarThen(FiltersObj.jobs, 81)
     jobsSmallerThen1, toolsetsSmallerThen1 = FiltersObj.getJobsWithToolsetsShorterThen(FiltersObj.jobs, 0)
@@ -196,5 +196,7 @@ def main():
     print(f'Usados Menores que 1 | Jobs: {len(jobsSmallerThen1)} toolSets: {len(toolsetsSmallerThen1)}')
     print(f'Subconjuntos | Jobs: {len(jobsSubsets)} toolSets: {len(toolsetsSubsets)}')
     print(f'Filtrados | Jobs: {len(filtedJobs)} toolSets: {len(filteredToolsets)}')
-    
-main()
+
+
+if __name__ == "__main__":
+    main()

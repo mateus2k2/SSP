@@ -1,3 +1,7 @@
+# DEPRECATED (2026-09-03): one-off scratch computation over a hand-copied
+# list of numbers (gap percentages between two result columns, likely
+# pasted from a spreadsheet). No reusable function, no record of what the
+# numbers were from. Kept for reference only.
 teste = [
     (100 * (( (248) - 394) / 394)),
     (100 * (( (-23) - 269) / 269)),
