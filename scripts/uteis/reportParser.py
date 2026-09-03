@@ -94,5 +94,3 @@ def printReport(machines, planejamento):
         
         print(f"end_info = {end_info}")
         print("\n----------------------------------------------------------------\n")
-
-# parseReport("/home/mateus/WSL/IC/SSP/output/Exemplo/exemplo.txt")
