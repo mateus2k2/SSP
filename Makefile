@@ -238,27 +238,28 @@ goPT:
 
 validarFile:
 	clear
-	python3 ./scripts/reportAnalises.py ./output/Beezao/teste.txt 0
+	python3 ./scripts/reportAnalises.py validate ./output/Beezao/teste.txt
 	echo "\n"
 
 tabelaResultadosPractitioner:
 	clear
-	python3 ./scripts/reportAnalises.py ./output/practitionerFinal/MyInstancesDiferentToolSets 2
+	python3 ./scripts/reportAnalises.py table-practitioner ./output/practitionerFinal/MyInstancesDiferentToolSets
 	echo "\n"
 
 tabelaResultadosModelo:
 	clear
-	python3 ./scripts/reportAnalises.py ./output/modeloFinal/MyInstancesDiferentToolSets 3
+	python3 ./scripts/reportAnalises.py table-modelo ./output/modeloFinal/MyInstancesDiferentToolSets
 	echo "\n"
 
+# each of diffTesla's/TCC2V2's immediate subfolders is one numbered run directory
 tabelaResultadosPT:
 	clear
-	python3 ./scripts/reportAnalises.py ./output/diffTesla 4
+	python3 ./scripts/reportAnalises.py table-pt $(wildcard ./output/diffTesla/*)
 	echo "\n"
 
 tabelaResultadosComparativa:
 	clear
-	python3 ./scripts/reportAnalises.py ./output/TCC2V2 5
+	python3 ./scripts/reportAnalises.py table-comparative $(wildcard ./output/TCC2V2/*)
 	echo "\n"
 
 # --------------------------------------------------------

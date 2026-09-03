@@ -1,47 +1,8 @@
 import csv
 import os
-import reportParser as rp
 
-def get_makespan(instance_name_path: str) -> float:
-    # Extract instance name (after last '/')
-    instance_name = os.path.basename(instance_name_path)
+from . import reportParser as rp
 
-    csv_path = "./input/BeezaoRaw/alns-original.csv"
-
-    total = 0.0
-    count = 0
-
-    try:
-        with open(csv_path, newline="") as f:
-            reader = csv.reader(f)
-
-            # Skip header
-            next(reader, None)
-
-            for row in reader:
-                if not row:
-                    continue
-
-                # First column: instance path/name
-                field = row[0]
-                clean_instance = field.split("/")[-1]
-
-                if clean_instance != instance_name:
-                    continue
-
-                # Column index after skipping:
-                # first column + 5 columns -> index 6
-                makespan_value = float(row[6])
-                total += makespan_value
-                count += 1
-
-    except FileNotFoundError:
-        raise RuntimeError("Could not open CSV file")
-
-    if count == 0:
-        raise RuntimeError("Instance not found in CSV")
-
-    return total / count
 
 def get_makespan_simple(sumProcessingTimes: float, numberMachines: int) -> float:
     # round up
@@ -388,5 +349,5 @@ def validateFolder(topFolderPath):
     print(f"\nDone. {len(csvData)} instances averaged across {len(run_dirs)} runs.")
     print(f"Output: {output_csv}")
 
-
-validateFolder("./output/BeezaoPTLarge/")
+# Entry point: scripts/reportAnalises.py's `validate-beezao` subcommand calls
+# validateFolder() directly -- this module is a library, not a script.
