@@ -1,3 +1,10 @@
+# DEPRECATED (2026-09-04): superseded by scripts/preprocessToolData.py's
+# `unused-toolsets` (getUnsuedToolSets/cleanUnsuedToolSets, ported) and
+# `used-toolsets` subcommands. The latter routed through a since-deleted
+# ToolSetOG.csv here even though the same result is directly derivable from
+# ToolSetInt.csv (already int-normalized) -- preprocessToolData.py does
+# that instead, verified to reproduce the same toolset/tool-id counts.
+# Kept for reference.
 import pandas as pd
 import os
 import json

@@ -1,3 +1,9 @@
+# DEPRECATED (2026-09-04): its removeSubSets(), as committed here, always
+# returns [] (the "Remove iguais" dedup block is commented out) -- its
+# AllJobsFiltered.csv-producing driver was dead. Superseded by
+# scripts/preprocessToolData.py's `all-jobs-filtered` subcommand, which
+# reconstructs the intended filter from this file's comments. Kept for
+# reference.
 import pandas as pd
 import matplotlib.pyplot as plt
 import csv
