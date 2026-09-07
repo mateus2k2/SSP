@@ -500,9 +500,15 @@ def _collect_files(folder_or_file, ext=None):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--spreadsheet", action="store_true",
-                         help="Emit ';'-separated rows for pasting into a spreadsheet instead of LaTeX rows")
     sub = parser.add_subparsers(dest="command", required=True)
+
+    # Shared by every table-* subcommand. A parent parser (rather than a flag on the top-level
+    # `parser`) so --spreadsheet can be given after the subcommand name, e.g.
+    # `table-ga output/GATestes/1 --spreadsheet` -- argparse subparsers don't accept a parent
+    # parser's flags positioned after the subcommand, only its own.
+    spreadsheet_parser = argparse.ArgumentParser(add_help=False)
+    spreadsheet_parser.add_argument("--spreadsheet", action="store_true",
+                                     help="Emit ';'-separated rows for pasting into a spreadsheet instead of LaTeX rows")
 
     p = sub.add_parser("validate", help="Validate report(s) against their instance")
     p.add_argument("target", help="A single report file, or a folder of them")
@@ -512,21 +518,22 @@ def main():
     p.add_argument("folder", nargs="?", default="./output/BeezaoPTLarge/")
     p.set_defaults(func=lambda a: vdb.validateFolder(a.folder))
 
-    p = sub.add_parser("table-practitioner", help="LaTeX table rows for a practitioner run")
+    p = sub.add_parser("table-practitioner", parents=[spreadsheet_parser], help="LaTeX table rows for a practitioner run")
     p.add_argument("folder")
     p.set_defaults(func=lambda a: tabelaResultadosPractitioner(_collect_files(a.folder), a.spreadsheet))
 
-    p = sub.add_parser("table-modelo", help="LaTeX table rows for a Gurobi-model run")
+    p = sub.add_parser("table-modelo", parents=[spreadsheet_parser], help="LaTeX table rows for a Gurobi-model run")
     p.add_argument("folder")
     p.set_defaults(func=lambda a: tabelaResultadosModelo(_collect_files(a.folder), a.spreadsheet))
 
-    p = sub.add_parser("table-ga", help="Detailed per-instance GA table, averaged across run dirs "
-                                         "(finished/unfinished tasks, switches, result, time; no Best Bound)")
+    p = sub.add_parser("table-ga", parents=[spreadsheet_parser],
+                        help="Detailed per-instance GA table, averaged across run dirs "
+                             "(finished/unfinished tasks, switches, result, time; no Best Bound)")
     p.add_argument("dirs", nargs="+", help="Run directories, each containing <subdir>/<instance files>")
     p.add_argument("--subdir", default="MyInstancesSameToolSets")
     p.set_defaults(func=lambda a: tabelaDetalhadaGA(a.dirs, a.subdir, a.spreadsheet))
 
-    p = sub.add_parser("table-pt", help="PT results tables (per-instance means, then gap/std stats)")
+    p = sub.add_parser("table-pt", parents=[spreadsheet_parser], help="PT results tables (per-instance means, then gap/std stats)")
     p.add_argument("dirs", nargs="+", help="Run directories, each containing <subdir>/<instance files>")
     p.add_argument("--subdir", default="MyInstancesSameToolSets")
     p.add_argument("--total-ptl", type=int, default=600)
