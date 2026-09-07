@@ -162,12 +162,12 @@ def tabelaResultadosPractitioner(files, modoPlanilha=False):
             f'{totalTarefas} {separador} '
             f'{taxaPrioridade} {separador} '
             f'{taxaReentrancia} {separador} '
-            f'{endInfo["fineshedJobsCount"]:,.2f} {separador}'
-            f'{endInfo["unfineshedPriorityCount"]:,.2f} {separador}'
-            f'{totalUnfineshed:,.2f} {separador}'
-            f'{endInfo["switchsInstances"]:,.2f} {separador}'
-            f'{endInfo["switchs"]:,.2f} {separador}'
-            f'{endInfo["finalSolution"]:,.2f}'
+            f'{endInfo["fineshedJobsCount"]:.2f} {separador}'
+            f'{endInfo["unfineshedPriorityCount"]:.2f} {separador}'
+            f'{totalUnfineshed:.2f} {separador}'
+            f'{endInfo["switchsInstances"]:.2f} {separador}'
+            f'{endInfo["switchs"]:.2f} {separador}'
+            f'{endInfo["finalSolution"]:.2f}'
             f'{endPrint}'
         ).replace('.', ',').replace(',00', ''))
         if modoPlanilha:
@@ -194,13 +194,13 @@ def tabelaResultadosModelo(files, modoPlanilha=False):
             f'{totalTarefas} {separador} '
             f'{taxaPrioridade} {separador} '
             f'{taxaReentrancia} {separador} '
-            f'{endInfo["fineshedJobsCount"]:,.2f} {separador}'
-            f'{endInfo["unfineshedPriorityCount"]:,.2f} {separador}'
-            f'{totalUnfineshed:,.2f} {separador}'
-            f'{endInfo["switchsInstances"]:,.2f} {separador}'
-            f'{endInfo["switchs"]:,.2f} {separador}'
-            f'{endInfo["bestBound"]:,.2f} {separador}'
-            f'{endInfo["finalSolution"]:,.2f} {separador}'
+            f'{endInfo["fineshedJobsCount"]:.2f} {separador}'
+            f'{endInfo["unfineshedPriorityCount"]:.2f} {separador}'
+            f'{totalUnfineshed:.2f} {separador}'
+            f'{endInfo["switchsInstances"]:.2f} {separador}'
+            f'{endInfo["switchs"]:.2f} {separador}'
+            f'{endInfo["bestBound"]:.2f} {separador}'
+            f'{endInfo["finalSolution"]:.2f} {separador}'
             f"{endInfo['Time']}"
             f'{endPrint}'
         ).replace('.', ',').replace(',00', ''))
@@ -208,6 +208,67 @@ def tabelaResultadosModelo(files, modoPlanilha=False):
             outputTeste = outputTeste.replace('&', ';').replace('\\\\', '').replace('\\hline', '')
         print(outputTeste)
         if (index + 1) % 3 == 0 and not (index == len(files) - 1) and not modoPlanilha:
+            print("\\hline")
+
+def tabelaDetalhadaGA(listDirs, subDir='MyInstancesSameToolSets', modoPlanilha=False):
+    """Per-instance breakdown table, everything averaged across listDirs (e.g.
+    output/GATestes/1..10): finished/unfinished-priority/total-unfinished
+    tasks, switch instances, tool switches, final solution, and time. There's
+    no "Best Bound" for a GA run (that's a Gurobi/exact-method concept, not
+    something a GA report carries) -- that column is always "-"."""
+    filesList = []
+    fineshedJobsCountAcc = {}
+    unfineshedPriorityCountAcc = {}
+    totalUnfinishedJobsCountAcc = {}
+    switchsInstancesAcc = {}
+    switchsAcc = {}
+    FinalSolutionAcc = {}
+    TimeAcc = {}
+
+    for dir in listDirs:
+        files = natsorted(os.listdir(f'{dir}/{subDir}'))
+        for file in files:
+            if file not in filesList:
+                filesList.append(file)
+
+            planejamento, machines, endInfo = rp.parseReport(f'{dir}/{subDir}/{file}')
+            totalUnfinishedJobsCount = totalUnfinishedJobs(machines, planejamento)
+
+            fineshedJobsCountAcc[file] = fineshedJobsCountAcc.get(file, []) + [endInfo['fineshedJobsCount']]
+            unfineshedPriorityCountAcc[file] = unfineshedPriorityCountAcc.get(file, []) + [endInfo['unfineshedPriorityCount']]
+            totalUnfinishedJobsCountAcc[file] = totalUnfinishedJobsCountAcc.get(file, []) + [totalUnfinishedJobsCount]
+            switchsInstancesAcc[file] = switchsInstancesAcc.get(file, []) + [endInfo['switchsInstances']]
+            switchsAcc[file] = switchsAcc.get(file, []) + [endInfo['switchs']]
+            FinalSolutionAcc[file] = FinalSolutionAcc.get(file, []) + [endInfo['finalSolution']]
+            TimeAcc[file] = TimeAcc.get(file, []) + [endInfo['Time'] / 1000]
+
+    separador = '&'
+    for index, file in enumerate(filesList):
+        instancenameClear = file.split(",t=")[0]
+        componentesDoNome = instancenameClear.split(',')
+        totalTarefas = int(componentesDoNome[0].split('=')[1])
+        taxaPrioridade = float(componentesDoNome[1].split('=')[1])
+        taxaReentrancia = float(componentesDoNome[2].split('=')[1])
+
+        endPrint = ' \\\\ \\hline' if index == len(filesList) - 1 else ' \\\\'
+        outputTeste = ((
+            f'{totalTarefas} {separador} '
+            f'{taxaPrioridade} {separador} '
+            f'{taxaReentrancia} {separador} '
+            f'{statistics.mean(fineshedJobsCountAcc[file]):.2f} {separador} '
+            f'{statistics.mean(unfineshedPriorityCountAcc[file]):.2f} {separador} '
+            f'{statistics.mean(totalUnfinishedJobsCountAcc[file]):.2f} {separador} '
+            f'{statistics.mean(switchsInstancesAcc[file]):.2f} {separador} '
+            f'{statistics.mean(switchsAcc[file]):.2f} {separador} '
+            f'- {separador} '
+            f'{statistics.mean(FinalSolutionAcc[file]):.2f} {separador} '
+            f'{statistics.mean(TimeAcc[file]):.2f}'
+            f'{endPrint}'
+        ).replace('.', ',').replace(',00', ''))
+        if modoPlanilha:
+            outputTeste = outputTeste.replace('&', ';').replace('\\\\', '').replace('\\hline', '')
+        print(outputTeste)
+        if (index + 1) % 3 == 0 and not (index == len(filesList) - 1) and not modoPlanilha:
             print("\\hline")
 
 def tabelaResultadosPT(listDirs, subDir='MyInstancesSameToolSets', totalPTL=600, modoPlanilha=False):
@@ -265,11 +326,11 @@ def tabelaResultadosPT(listDirs, subDir='MyInstancesSameToolSets', totalPTL=600,
             f'{totalTarefas} {separador} '
             f'{taxaPrioridade} {separador} '
             f'{taxaReentrancia} {separador} '
-            f'{statistics.mean(fineshedJobsCountAcc[file]):,.2f} {separador} '
-            f'{statistics.mean(unfineshedPriorityCountAcc[file]):,.2f} {separador} '
-            f'{statistics.mean(totalUnfinishedJobsCountAcc[file]):,.2f} {separador} '
-            f'{statistics.mean(switchsInstancesAcc[file]):,.2f} {separador} '
-            f'{statistics.mean(switchsAcc[file]):,.2f}'
+            f'{statistics.mean(fineshedJobsCountAcc[file]):.2f} {separador} '
+            f'{statistics.mean(unfineshedPriorityCountAcc[file]):.2f} {separador} '
+            f'{statistics.mean(totalUnfinishedJobsCountAcc[file]):.2f} {separador} '
+            f'{statistics.mean(switchsInstancesAcc[file]):.2f} {separador} '
+            f'{statistics.mean(switchsAcc[file]):.2f}'
             f'{endPrint}'
         ).replace('.', ','))
         if modoPlanilha:
@@ -458,6 +519,12 @@ def main():
     p = sub.add_parser("table-modelo", help="LaTeX table rows for a Gurobi-model run")
     p.add_argument("folder")
     p.set_defaults(func=lambda a: tabelaResultadosModelo(_collect_files(a.folder), a.spreadsheet))
+
+    p = sub.add_parser("table-ga", help="Detailed per-instance GA table, averaged across run dirs "
+                                         "(finished/unfinished tasks, switches, result, time; no Best Bound)")
+    p.add_argument("dirs", nargs="+", help="Run directories, each containing <subdir>/<instance files>")
+    p.add_argument("--subdir", default="MyInstancesSameToolSets")
+    p.set_defaults(func=lambda a: tabelaDetalhadaGA(a.dirs, a.subdir, a.spreadsheet))
 
     p = sub.add_parser("table-pt", help="PT results tables (per-instance means, then gap/std stats)")
     p.add_argument("dirs", nargs="+", help="Run directories, each containing <subdir>/<instance files>")
