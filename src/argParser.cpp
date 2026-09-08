@@ -48,6 +48,9 @@ void ArgParser::printUsage(const char* progName) {
         "  --COSTPRIORITY <int>                  Penalty for unfinished priority jobs (default 30)\n"
         "  --PROFITYFINISHED <int>               Revenue per finished job (default 30)\n"
         "\n"
+        "--METHOD ga options:\n"
+        "  --GA_SEED <uint>                      RNG seed (default 42; was hardcoded, not previously overridable)\n"
+        "\n"
         "  --HELP, -h                            Show this message\n";
 }
 
@@ -123,6 +126,8 @@ RunConfig ArgParser::parse(int argc, char* argv[]) {
         else if (flag == "--COSTSWITCHINSTANCE")             cfg.costSwitchInstance = stoi(value);
         else if (flag == "--COSTPRIORITY")                   cfg.costPriority = stoi(value);
         else if (flag == "--PROFITYFINISHED")                cfg.profitFinished = stoi(value);
+
+        else if (flag == "--GA_SEED")                        cfg.gaSeed = (unsigned)stoul(value);
 
         else {
             cerr << "Error: unrecognized flag '" << flag << "'.\n\n";

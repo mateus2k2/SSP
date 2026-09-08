@@ -56,6 +56,9 @@ struct RunConfig {
     int costSwitchInstance = 10;
     int costPriority       = 30;
     int profitFinished     = 30;
+
+    // Genetic Algorithm (GA)
+    unsigned gaSeed = 42; // was hardcoded in main.cpp; kept as the default here
 };
 
 // ─────────────────────────────────────────────────────────────────────────────

@@ -93,7 +93,7 @@ static void runGA(SSP* prob, const RunConfig& cfg, fstream& report) {
         return -prob->evaluate(s);
     };
 
-    GeneticAlgorithm ga(prob->getGroupedJobs(), gaParams, evalFn, /*seed=*/42);
+    GeneticAlgorithm ga(prob->getGroupedJobs(), gaParams, evalFn, cfg.gaSeed);
 
     ExecTime et;
     Chromosome best = ga.run();
