@@ -296,9 +296,12 @@ double getMakespan(const std::string& instanceNamePath){
         if (cleanInstance != instanceName)
             continue;
 
-        for (int i = 0; i < 5; ++i)
-            std::getline(ss, field, ',');
-
+        // Column layout of alns-original.csv (see its header row):
+        // Instance,makespan,Running time,Final temperature,improvements,iterations,
+        // Timeofjobsprocessing,timetoolswitches,solutionsaccepted
+        // This used to skip 5 fields (Running time..iterations) then read the 6th
+        // (Timeofjobsprocessing) instead of the makespan column itself -- one getline
+        // too many. makespan is the very next field after Instance.
         std::getline(ss, field, ',');
         sum += std::stod(field);
         count++;
