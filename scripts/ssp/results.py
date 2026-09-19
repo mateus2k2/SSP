@@ -1,6 +1,6 @@
 """Turn the runs under output-final/ into the rows of the results spreadsheet.
 
-Every report is first checked by uteis.validador, so a row can be built from
+Every report is first checked by ssp.validation, so a row can be built from
 either the counters the solver printed in the report footer ("reported", what
 the original Google Sheet used) or the ones the validator recomputed from the
 printed schedule ("recomputed"), and each row carries its validation status.
@@ -17,7 +17,7 @@ from collections import Counter
 from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass, field
 
-from . import validador as vd
+from . import validation as vd
 
 RUN_DIR = re.compile(r"^(run-)?\d+$")
 GRID_NAME = re.compile(r"n=(\d+),p=([\d.]+),r=([\d.]+)")

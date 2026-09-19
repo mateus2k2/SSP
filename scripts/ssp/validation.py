@@ -13,7 +13,8 @@ Severity:
   error    the schedule is infeasible, or the report states a wrong value
   warning  a reporting quirk that does not change feasibility or the value
 
-Known sources of findings in this repo's runs (checked against the code):
+Known sources of findings in reports written by mainCpp before the September
+2026 fixes (e.g. every run in output-final/; checked against that code):
   duration-reentrant-swap  KTNSReport / modelo.cpp print a grouped pair with
                            processingTimes = [p1, p0] (loadData.cpp groupJobs)
   duration-reentrant-sum   different-toolset mode: groupJobs adds op 1's time
@@ -28,12 +29,16 @@ Known sources of findings in this repo's runs (checked against the code):
                            strong chain on ungrouped pairs at all
   time-truncation          modelo.cpp writes Gurobi's double s/e through int
                            parameters, e.g. 1906.9999999 is printed as 1906
+  counter-unfinished-priority, objective
+                           practitioner.cpp printed the FINISHED priority count
+  tools-missing            KTNS loads at most `capacity` tools, so an operation
+                           needing more was "processed" without all its tools
 """
 import os
 from dataclasses import dataclass, field
 
 from . import instances
-from . import reportParser as rp
+from . import reports as rp
 
 # Objective weights: FO = profit*finished - switch*switches
 #                         - instance*switchInstances - priority*unfinishedPriority

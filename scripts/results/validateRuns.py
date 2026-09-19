@@ -5,16 +5,16 @@ Each report is checked against its instance for every SSP-USPrC constraint
 (tools in the magazine, magazine capacity, no switches in unsupervised time,
 planning horizon, no overlaps, reentrant strong chain, ...) and its footer
 counters and objective are recomputed from the printed schedule. See
-uteis/validador.py for the full list of checks.
+ssp/validation.py for the full list of checks.
 
 Reports are grouped by folder for the summary; numbered run folders (run-01,
 1, 2, ...) are collapsed into their parent, so a 10-run PT experiment shows up
 as one line.
 
 Usage:
-  python3 scripts/validateRuns.py output-final
-  python3 scripts/validateRuns.py output-final/same-toolset --issues-csv issues.csv
-  python3 scripts/validateRuns.py output/Beezao/teste.txt --costs beezao -v
+  python3 scripts/results/validateRuns.py output-final
+  python3 scripts/results/validateRuns.py output-final/same-toolset --issues-csv issues.csv
+  python3 scripts/results/validateRuns.py output/Beezao/teste.txt --costs beezao -v
 """
 import argparse
 import collections
@@ -24,8 +24,8 @@ import re
 import sys
 from concurrent.futures import ProcessPoolExecutor
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from uteis import validador as vd  # noqa: E402
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))  # scripts/, for ssp
+from ssp import validation as vd  # noqa: E402
 
 RUN_DIR = re.compile(r"^(run-)?\d+$")
 

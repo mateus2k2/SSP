@@ -1,41 +1,37 @@
 #!/usr/bin/env python3
 """
-Formats mainCpp solution reports (read via uteis/reportParser.py) into
-LaTeX/spreadsheet-ready table rows, plus a few report/instance inspections.
+Formats mainCpp solution reports (read via ssp/reports.py) into LaTeX (or
+';'-separated, with --spreadsheet) table rows, one row per instance.
 
-Validation lives in scripts/validateRuns.py (uteis/validador.py) and the full
-results spreadsheet in scripts/buildSpreadsheet.py (uteis/results.py); the
-table-* rows below print the counters exactly as the reports state them.
+The rows print the counters exactly as the reports state them. To check the
+reports use results/validateRuns.py; for the full results spreadsheet (with
+validated values) use results/buildSpreadsheet.py.
 
 Subcommands:
-  validate <paths...>             Same as scripts/validateRuns.py <paths...>.
-  table-practitioner <folder>     LaTeX table rows for a practitioner-heuristic run.
-  table-modelo <folder>           LaTeX table rows for a Gurobi-model run.
-  table-ga <dirs...>              Detailed GA table averaged across run dirs.
-  table-pt <dirs...>              Two LaTeX tables (per-instance means, then a
+  table-practitioner <folder>     rows for a practitioner-heuristic run.
+  table-modelo <folder>           rows for a Gurobi-model run.
+  table-ga <dirs...>              detailed GA table averaged across run dirs.
+  table-pt <dirs...>              two tables (per-instance means, then a
                                   gap/std-dev table) averaged across run dirs.
-  table-comparative <dirs...>     LaTeX table comparing PT vs practitioner vs modelo.
-  ktns <file>                     Print the KTNS magazine trace for one report.
-  tools <folder>                  Print unique-tool count per instance file (legacy
-                                  CSV format only).
+  table-comparative <dirs...>     PT vs practitioner vs modelo.
 
 Usage:
-  python3 scripts/reportAnalises.py table-pt ./output/diffTesla
-  python3 scripts/reportAnalises.py validate ./output-final/same-toolset
+  python3 scripts/results/latexTables.py table-pt ./output/diffTesla/*
+  python3 scripts/results/latexTables.py table-practitioner output-final/same-toolset/Practitioner-single-run
 """
 import argparse
 import os
 import re
 import statistics
+import sys
 
 from natsort import natsorted
 
-import uteis.instances as instances
-import uteis.loadData as ld
-import uteis.reportParser as rp
-import uteis.results as results
-import uteis.validador as validador
-import validateRuns
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))  # scripts/, for ssp
+from ssp import instances  # noqa: E402
+from ssp import reports as rp  # noqa: E402
+from ssp import results  # noqa: E402
+from ssp import validation as validador  # noqa: E402
 
 # ---------------------------------------------------------------------------------------------------
 # ANALISES
@@ -345,46 +341,6 @@ def tabelaResultadosComparativa(listDirs, subDir='MyInstancesSameToolSets', tota
         if (index + 1) % 3 == 0 and not (index == len(filesList) - 1):
             print("\\hline")
 
-def lookupJob(job, operations, jobFile):
-    for jobData in jobFile:
-        if jobData['Job'] == job and jobData['Operation'] == operations:
-            return jobData
-
-def analiseKTNS(file):
-    print(f"---Analysing {file}---")
-    planejamento, machines, endInfo = rp.parseReport(file)
-    toolSets = ld.loadToolSet(planejamento['toolSetFileName'])
-    jobs = ld.loadJobs(planejamento['jobsFileName'])
-
-    for i, machine in enumerate(machines):
-        for j, estado in enumerate(machine):
-            currMagazine = estado['magazine']
-
-            for k in range(j, len(machine)):
-                nextEstado = machine[k]
-                nextJob = lookupJob(nextEstado['job'], nextEstado['operation'], jobs)
-                nextToolSet = toolSets[nextJob['ToolSet']]
-                currMagazine = [tool for tool in currMagazine if tool not in nextToolSet]
-
-            print(f" Tools: {len(toolSets[jobs[estado['job']]['ToolSet']])} "
-                  f"Magazine no processamento do job: {estado['job']}, operation: {estado['operation']}, "
-                  f"depois de retirar as ferramentas por nenhum job subsequente na maquina: {len(currMagazine)}")
-        print("")
-
-def analiseFerramentasUnicas(folder, toolset_file):
-    toolSets = ld.loadToolSet(toolset_file)
-    files = natsorted(f for f in os.listdir(folder) if f.endswith(".csv"))
-
-    print("Instance -> #Unique Tools")
-    print("--------------------------------")
-
-    for file in files:
-        jobs = ld.loadJobs(f"{folder}/{file}")
-        unique_tools = set()
-        for job in jobs:
-            unique_tools.update(toolSets[job['ToolSet']])
-        print(f"{file} -> {len(unique_tools)}")
-
 # ---------------------------------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------------------------------
@@ -409,10 +365,6 @@ def main():
     spreadsheet_parser = argparse.ArgumentParser(add_help=False)
     spreadsheet_parser.add_argument("--spreadsheet", action="store_true",
                                      help="Emit ';'-separated rows for pasting into a spreadsheet instead of LaTeX rows")
-
-    p = sub.add_parser("validate", help="Validate reports against their instance (scripts/validateRuns.py)")
-    p.add_argument("args", nargs=argparse.REMAINDER, help="arguments for validateRuns.py (paths, -v, ...)")
-    p.set_defaults(func=lambda a: validateRuns.main(a.args))
 
     p = sub.add_parser("table-practitioner", parents=[spreadsheet_parser], help="LaTeX table rows for a practitioner run")
     p.add_argument("folder")
@@ -443,15 +395,6 @@ def main():
     p.add_argument("--modelo-dir", default="./output/Modelo")
     p.set_defaults(func=lambda a: tabelaResultadosComparativa(
         a.dirs, a.subdir, a.total_ptl, a.practitioner_dir, a.modelo_dir))
-
-    p = sub.add_parser("ktns", help="Print the KTNS magazine trace for one report")
-    p.add_argument("file")
-    p.set_defaults(func=lambda a: analiseKTNS(a.file))
-
-    p = sub.add_parser("tools", help="Print unique-tool count per instance file (legacy CSV format)")
-    p.add_argument("folder")
-    p.add_argument("--toolset-file", default="./input/Processed/ToolSetInt.csv")
-    p.set_defaults(func=lambda a: analiseFerramentasUnicas(a.folder, a.toolset_file))
 
     args = parser.parse_args()
     args.func(args)

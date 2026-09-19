@@ -6,7 +6,7 @@ One tab per experiment, laid out like the "Resultados SSP-USPrC" Google Sheet
 and Dang reproduzidas; one row per instance for the Beezao IPMTC II tabs),
 plus:
   LEIA-ME      where each tab comes from and how each column is computed
-  Validação    validation errors/warnings per row (uteis/validador.py)
+  Validação    validation errors/warnings per row (ssp/validation.py)
   Correções    cells where the recomputed value differs from the one the solver
                printed (only with --values recomputed)
 
@@ -20,8 +20,8 @@ Sheet tabs exported as CSV ("Resultados SSP-USPrC - <tab>.csv" in DIR), the
 way output-final/ was matched to the sheet.
 
 Usage:
-  python3 scripts/buildSpreadsheet.py
-  python3 scripts/buildSpreadsheet.py --values reported --compare .tmp --no-write
+  python3 scripts/results/buildSpreadsheet.py
+  python3 scripts/results/buildSpreadsheet.py --values reported --compare .tmp --no-write
 """
 import argparse
 import csv
@@ -30,15 +30,15 @@ import os
 import sys
 from collections import Counter, defaultdict
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from uteis import results as rs  # noqa: E402
-from uteis import validador as vd  # noqa: E402
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))  # scripts/, for ssp
+from ssp import results as rs  # noqa: E402
+from ssp import validation as vd  # noqa: E402
 
-REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 SHEET_TAB = {"IPMTC II Practitioner": "IPMTC II Pratictitioners e GA"}  # sheet tab names that differ
 
 # PT parameters as written in the original sheet's INFO column (not recorded in
-# the reports). The base runs' PTL is 500 -- see uteis/results.py TABS.
+# the reports). The base runs' PTL is 500 -- see ssp/results.py TABS.
 PT_PARAMS = {
     "Same Toolset": "--TEMP_INIT 0.1 --TEMP_FIM 5 --N_REPLICAS 11 --MCL 500 --PTL 600 --PASSO_GATILHO 10 "
                     "--TEMP_DIST 3 --TYPE_UPDATE 1 --INIT_SOL_TYPE 0 --TEMP_UPDATE 3500 "
@@ -52,7 +52,7 @@ PT_PARAMS = {
 }
 
 README = """\
-Gerado por scripts/buildSpreadsheet.py a partir de output-final/ em {date}.
+Gerado por scripts/results/buildSpreadsheet.py a partir de output-final/ em {date}.
 Valores: {mode_text}
 
 ORIGEM DE CADA ABA (pastas em output-final/)
@@ -74,7 +74,9 @@ COMO CADA COLUNA É CALCULADA
 PARÂMETROS DO PT (copiados da planilha original; não ficam registrados nos relatórios)
 {params}
 
-PROBLEMAS ENCONTRADOS NA VALIDAÇÃO
+PROBLEMAS ENCONTRADOS NA VALIDAÇÃO (corrigidos em src/ em setembro de 2026; as execuções de output-final/ são
+anteriores à correção. Same Toolset e Dang com PT/AG não mudam, exceto n=212 v6/v7/v8; Different Toolset e
+Practitioner mudam)
 - Practitioner (todas as abas): src/practitioner.cpp imprime em "unfineshedPriorityCount" o número de
   tarefas prioritárias FINALIZADAS, e a FO usa esse valor. No modo "recomputed" as colunas de prioritárias
   não finalizadas e Resultado/FO Dang são corrigidas (aba Correções).
@@ -325,7 +327,7 @@ def main():
 
     tabs, validated = rs.build(args.root, args.values, args.jobs)
     n_bad = sum(not r.ok for r in validated.values())
-    print(f"{len(validated)} reports validated, {n_bad} with errors (python3 scripts/validateRuns.py for details)")
+    print(f"{len(validated)} reports validated, {n_bad} with errors (python3 scripts/results/validateRuns.py for details)")
 
     if not args.no_write:
         corrections = None

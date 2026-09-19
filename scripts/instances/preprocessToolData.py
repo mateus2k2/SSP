@@ -30,18 +30,20 @@ the toolset count and dense tool-id count of the file that used to be
 committed here.
 
 Usage:
-  python3 scripts/preprocessToolData.py used-toolsets
-  python3 scripts/preprocessToolData.py unused-toolsets
-  python3 scripts/preprocessToolData.py all-jobs-filtered --out-dir /tmp/test
+  python3 scripts/instances/preprocessToolData.py used-toolsets
+  python3 scripts/instances/preprocessToolData.py unused-toolsets
+  python3 scripts/instances/preprocessToolData.py all-jobs-filtered --out-dir /tmp/test
 """
 import argparse
 import csv
+import sys
 from pathlib import Path
 
-from generateInstances import remove_subsets
-from uteis.loadData import loadJobs, loadToolSet
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # scripts/, for ssp
+from generateInstances import remove_subsets  # noqa: E402  (same folder)
+from ssp.csvData import loadJobs, loadToolSet  # noqa: E402
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
+REPO_ROOT = Path(__file__).resolve().parents[2]
 PROCESSED_DIR = REPO_ROOT / "input" / "Processed"
 
 JOB_FILES = ("250.csv", "750.csv", "1000.csv")

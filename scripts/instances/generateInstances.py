@@ -32,10 +32,10 @@ subcommand, each writing its own on-disk format:
               verified to reproduce the tracked files exactly.
 
 Usage:
-  python3 scripts/generateInstances.py same
-  python3 scripts/generateInstances.py different
-  python3 scripts/generateInstances.py base
-  python3 scripts/generateInstances.py base --cases 2M1,6M1
+  python3 scripts/instances/generateInstances.py same
+  python3 scripts/instances/generateInstances.py different
+  python3 scripts/instances/generateInstances.py base
+  python3 scripts/instances/generateInstances.py base --cases 2M1,6M1
 
 All paths are relative to the repo root (resolved from this file's
 location), so this runs the same regardless of which machine/checkout it's
@@ -44,12 +44,14 @@ run from.
 import argparse
 import random
 import shutil
+import sys
 from pathlib import Path
 
-from uteis.loadData import loadToolSet, loadJobs
-from uteis.ProcessingTimeGenerator import ProcessingTimeGenerator
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # scripts/, for ssp
+from ssp.csvData import loadToolSet, loadJobs  # noqa: E402
+from ssp.processingTimes import ProcessingTimeGenerator  # noqa: E402
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
+REPO_ROOT = Path(__file__).resolve().parents[2]
 INPUT_DIR = REPO_ROOT / "input"
 PROCESSED_DIR = INPUT_DIR / "Processed"
 CONSOLIDATED_DIR = INPUT_DIR / "Consolidated"
@@ -143,7 +145,7 @@ def remove_subsets(tool_set_map, jobs):
     whose toolset is a subset of another kept toolset, drop toolsets outside
     [1, 80] tools.
 
-    Ported from scripts/uteis/filterJobs.py's removeSubSets -- as committed
+    Ported from scripts/uteis/filterJobs.py's (now scripts/deprecated/filterJobs.py) removeSubSets -- as committed
     there, that function always returns [] (the "Remove iguais" block that
     dedupes by toolset is commented out, so it filters an empty list). This
     restores exactly what that dead block's comment specifies. Because it's

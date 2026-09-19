@@ -3,7 +3,7 @@
 # writing one report per instance under outputFolder.
 #
 # Usage:
-#   ./scripts/runAuto.sh <outputFolder> <runMode> <method> [head] [compileProfile] [licenseFile]
+#   ./scripts/experiments/runExperiment.sh <outputFolder> <runMode> <method> [head] [compileProfile] [licenseFile]
 #
 #   outputFolder     Where to write reports (default ./output/Exemplo)
 #   runMode          same | diferent | both | beezao   (which instance set(s) to run; default both)
@@ -16,10 +16,10 @@
 #   licenseFile      Optional path exported as GRB_LICENSE_FILE before compiling/running
 #
 # Examples:
-#   ./scripts/runAuto.sh ./output/TESTE same pt 9
-#   ./scripts/runAuto.sh ./output/practitionerFinal both practitioner 9999
-#   ./scripts/runAuto.sh ./output/GATeste1 beezao pt 9999
-#   ./scripts/runAuto.sh ./output/BeezaoAuto beezao practitioner 9999
+#   ./scripts/experiments/runExperiment.sh ./output/TESTE same pt 9
+#   ./scripts/experiments/runExperiment.sh ./output/practitionerFinal both practitioner 9999
+#   ./scripts/experiments/runExperiment.sh ./output/GATeste1 beezao pt 9999
+#   ./scripts/experiments/runExperiment.sh ./output/BeezaoAuto beezao practitioner 9999
 
 set -euo pipefail
 

@@ -2,7 +2,7 @@ from collections import Counter
 from pathlib import Path
 import random
 
-from . import loadData as ld
+from . import csvData as ld
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 PROCESSED_DIR = REPO_ROOT / "input" / "Processed"

@@ -4,7 +4,7 @@
 # .dat file in a folder, in natural filename order, with a blank line every
 # 3 files.
 #
-# Usage: ./scripts/runPrint.sh [folder]   (default: ./input/MyInstancesSameToolSets)
+# Usage: ./scripts/instances/printHorizons.sh [folder]   (default: ./input/MyInstancesSameToolSets)
 
 set -euo pipefail
 

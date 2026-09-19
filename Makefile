@@ -3,15 +3,15 @@
 # --------------------------------------------------------
 
 # PT
-# ./scripts/runMultiple.sh ./output/TeslaPT same PT 9999 tesla /home/marco/mateus/Gurobi/gurobi.lic > out
+# ./scripts/experiments/runRepeated.sh ./output/TeslaPT same PT 9999 tesla /home/marco/mateus/Gurobi/gurobi.lic > out
 # make tabelaResultadosPT > out 
 
 # Modelo
-# ./scripts/runAuto.sh ./output/TeslaModelo same modelo 9999 tesla /home/marco/mateus/Gurobi/gurobi.lic > out
+# ./scripts/experiments/runExperiment.sh ./output/TeslaModelo same modelo 9999 tesla /home/marco/mateus/Gurobi/gurobi.lic > out
 # make tabelaResultadosModelo > out
 
 # Practitioner
-# ./scripts/runAuto.sh ./output/Practitioner same practitioner 9999 tesla /home/marco/mateus/Gurobi/gurobi.lic > out
+# ./scripts/experiments/runExperiment.sh ./output/Practitioner same practitioner 9999 tesla /home/marco/mateus/Gurobi/gurobi.lic > out
 # make tabelaResultadosPractitioner > out
 
 PRINT_MODE=0
@@ -238,32 +238,32 @@ goPT:
 
 validarFile:
 	clear
-	python3 ./scripts/validateRuns.py ./output-final
+	python3 ./scripts/results/validateRuns.py ./output-final
 	echo "\n"
 
 # final results spreadsheet (output-final/Resultados-SSP-USPrC.xlsx)
 planilhaResultados:
-	python3 ./scripts/buildSpreadsheet.py
+	python3 ./scripts/results/buildSpreadsheet.py
 
 tabelaResultadosPractitioner:
 	clear
-	python3 ./scripts/reportAnalises.py table-practitioner ./output/practitionerFinal/MyInstancesDiferentToolSets
+	python3 ./scripts/results/latexTables.py table-practitioner ./output/practitionerFinal/MyInstancesDiferentToolSets
 	echo "\n"
 
 tabelaResultadosModelo:
 	clear
-	python3 ./scripts/reportAnalises.py table-modelo ./output/modeloFinal/MyInstancesDiferentToolSets
+	python3 ./scripts/results/latexTables.py table-modelo ./output/modeloFinal/MyInstancesDiferentToolSets
 	echo "\n"
 
 # each of diffTesla's/TCC2V2's immediate subfolders is one numbered run directory
 tabelaResultadosPT:
 	clear
-	python3 ./scripts/reportAnalises.py table-pt $(wildcard ./output/diffTesla/*)
+	python3 ./scripts/results/latexTables.py table-pt $(wildcard ./output/diffTesla/*)
 	echo "\n"
 
 tabelaResultadosComparativa:
 	clear
-	python3 ./scripts/reportAnalises.py table-comparative $(wildcard ./output/TCC2V2/*)
+	python3 ./scripts/results/latexTables.py table-comparative $(wildcard ./output/TCC2V2/*)
 	echo "\n"
 
 # --------------------------------------------------------
@@ -275,4 +275,4 @@ m ?= update
 git:
 	clear && git add . && git commit -m "$(m)" && git push origin master
 
-# python3 ./scripts/uteis/validador.Beezao.py
+# python3 ./scripts/results/validateRuns.py ./output/BeezaoPTLarge

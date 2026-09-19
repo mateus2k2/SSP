@@ -1,8 +1,17 @@
+"""Report raw jobs/toolsets that are candidates for filtering out before
+instance generation: toolsets larger than the magazine (> 80 tools), empty
+ones, and subsets of an oversize toolset.
+
+Usage:
+  python3 scripts/instances/filterCandidates.py [jobs.csv ...] [--toolsets ToolSetInt.csv]
+"""
+import sys
 from pathlib import Path
 
-from uteis.loadData import loadJobs as _loadJobs, loadToolSet as _loadToolSet
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # scripts/, for ssp
+from ssp.csvData import loadJobs as _loadJobs, loadToolSet as _loadToolSet  # noqa: E402
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
+REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
 class Filters:
@@ -51,7 +60,7 @@ class Filters:
     # ----------------------------------------
     
     def loadJobs(self, filePathJobs):
-        # Delegates to uteis.loadData (was a copy-pasted reimplementation).
+        # Delegates to ssp.csvData (was a copy-pasted reimplementation).
         jobsDict = _loadJobs(filePathJobs)
 
         for job in jobsDict:
@@ -61,7 +70,7 @@ class Filters:
         return jobsDict
 
     def loadToolsets(self):
-        # Delegates to uteis.loadData (was a copy-pasted reimplementation).
+        # Delegates to ssp.csvData (was a copy-pasted reimplementation).
         return _loadToolSet(self.filePathToolsets)
 
     def saveListToFile(self, listToSave, filePath):
