@@ -228,8 +228,9 @@ void SSP::convertModelData(string& filename, GRBModel& model) {
 
             if (betaVar[{m, j, k}].get(GRB_DoubleAttr_X) < 0.5) continue;
 
-            double start = s[{j, k}].get(GRB_DoubleAttr_X);
-            double end = e[{j, k}].get(GRB_DoubleAttr_X);
+            // round, not truncate: Gurobi returns e.g. 1906.9999999 for 1907
+            int start = (int)lround(s[{j, k}].get(GRB_DoubleAttr_X));
+            int end = (int)lround(e[{j, k}].get(GRB_DoubleAttr_X));
 
             int priority = 0;
             if (priorityOperations.count({j, k})) {
@@ -300,8 +301,9 @@ void SSP::convertModelData(string& filename, GRBModel& model) {
         }
     }
 
-    int bestBound = model.get(GRB_DoubleAttr_ObjBound);
-    int objValue = model.get(GRB_DoubleAttr_ObjVal);
+    // the objective has integer coefficients: the bound can be floored, the value rounded
+    int bestBound = (int)floor(model.get(GRB_DoubleAttr_ObjBound) + 1e-6);
+    int objValue = (int)lround(model.get(GRB_DoubleAttr_ObjVal));
     double runtime = model.get(GRB_DoubleAttr_Runtime);
     solutionReportFile << "END" << endl;
     solutionReportFile << "Best Bound: " << bestBound << endl;
@@ -522,6 +524,21 @@ int SSP::modelo(string fileOutputPath, int timeLimit) {
                 if (e.count(op_curr) && s.count(op_next)) {
                     model.addConstr(e[op_curr] <= s[op_next], "precedence_job_" + to_string(job) + "_op_" + to_string(k));
                 }
+            }
+        }
+
+        // (9b) Cadeia forte: a operação k+1 é a sucessora imediata da operação k, na mesma
+        // máquina (x(m)(jk, j'k') = 1 quando (j',k') precede imediatamente (j,k)). Operações
+        // agrupadas (mesmo toolset) já são uma única operação do modelo; isto cobre o modo
+        // different toolset, em que (9) sozinha é só precedência no tempo (cadeia fraca).
+        for (const auto& [job, numOps] : jobOperationsCount) {
+            for (int k = 1; k < numOps; ++k) {
+                GRBLinExpr expr = 0;
+                for (int m : machinesModel) {
+                    auto key = make_tuple(m, job, k + 1, job, k);
+                    if (x.count(key)) expr += x[key];
+                }
+                model.addConstr(expr == 1, "strong_chain_job_" + to_string(job) + "_op_" + to_string(k));
             }
         }
 

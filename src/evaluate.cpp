@@ -74,15 +74,19 @@ tuple<int, int, int, int, int> SSP::KTNS(vector<int> s, int startIndex) {
     int inicioJob = 0;
     int fimJob = 0;
 
+    // an operation needing more tools than the magazine holds can never be processed:
+    // it is skipped (left unfinished) instead of being run with part of its tools
+    auto fitsMagazine = [&](int k) { return (int)originalJobsCopy[s[k]].toolSetNormalized.tools.size() <= capacityMagazine; };
+
     for (jL = startIndex; jL < currNumberJobs; ++jL) {
+        if (!fitsMagazine(jL)) continue;
+
         // ---------------------------------------------------------------------------
         // UNSUPERVISED PERIOD FIX
         // ---------------------------------------------------------------------------
 
         int processingTimeSum = originalJobsCopy[s[jL]].processingTime;
         if((originalJobsCopy[s[jL]].isReentrant && !originalJobsCopy[s[jL]].isGrouped) && originalJobsCopy[s[jL]].indexOperation == 0) processingTimeSum = std::accumulate(originalJobsCopy[s[jL]].processingTimes.begin(), originalJobsCopy[s[jL]].processingTimes.end(), 0);
-        fimJob = inicioJob + originalJobsCopy[s[jL]].processingTime;
-
         fimJob = inicioJob + originalJobsCopy[s[jL]].processingTime;
 
         // Estou no periodo de supervisao e entrando no periodo sem supervisao
@@ -142,6 +146,7 @@ tuple<int, int, int, int, int> SSP::KTNS(vector<int> s, int startIndex) {
         int cmL = 0;
 
         while ((cmL < capacityMagazine) && (left < currNumberJobs)) {
+            if (!fitsMagazine(left)) { ++left; continue; }
             for (auto it = originalJobsCopy[s[left]].toolSetNormalized.tools.begin(); ((it != originalJobsCopy[s[left]].toolSetNormalized.tools.end()) && (cmL < capacityMagazine)); ++it) {
                 if ((magazineL[*it]) && (!magazineCL[*it])) {
                     magazineCL[*it] = true;

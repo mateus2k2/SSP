@@ -53,12 +53,23 @@ int differenceSize(const std::vector<int>& a, const std::vector<int>& b) {
 
 bool compareByTotalProcTime(const Family& a, const Family& b) { return a.totalProcTime < b.totalProcTime; }
 
+// Op 1 of a reentrant job that was not grouped with its op 0 (different-toolset
+// mode). The strong chain requires it on op 0's machine, right after op 0.
+static bool isSecondOperation(const Job& job) { return job.isReentrant && !job.isGrouped && job.indexOperation == 1; }
+
 void SSP::allocateOperationsToMachines(int numMachines) {
+    // op 1 joins the family of its op 0, so both land on the same machine
+    map<int, int> firstOperationToolSet;  // job -> tool set of its op 0
+    for (const auto& op : originalJobs) {
+        if (op.indexOperation == 0) firstOperationToolSet[op.indexJob] = op.toolSetNormalized.indexToolSet;
+    }
+
     map<int, Family> families;
     for (const auto& op : originalJobs) {
-        families[op.toolSetNormalized.indexToolSet].toolSet = op.toolSetNormalized.indexToolSet;
-        families[op.toolSetNormalized.indexToolSet].operations.push_back(op);
-        families[op.toolSetNormalized.indexToolSet].totalProcTime += op.processingTime;
+        int key = isSecondOperation(op) ? firstOperationToolSet[op.indexJob] : op.toolSetNormalized.indexToolSet;
+        families[key].toolSet = key;
+        families[key].operations.push_back(op);
+        families[key].totalProcTime += op.processingTime;
     }
 
     vector<Family> sortedFamilies;
@@ -87,7 +98,10 @@ void SSP::allocateOperationsToMachines(int numMachines) {
         } else {
             auto famIt = min_element(maxIt->assignedFamilies.begin(), maxIt->assignedFamilies.end(), [](const Family& a, const Family& b) { return a.totalProcTime < b.totalProcTime; });
 
-            if (famIt != maxIt->assignedFamilies.end()) {
+            // Moving a family at least as long as the gap only swaps which machine is
+            // the heaviest, and the next iteration moves it back: an endless loop
+            // whenever a machine stays empty (e.g. 6 machines and fewer than 6 families).
+            if (famIt != maxIt->assignedFamilies.end() && famIt->totalProcTime < w_max - w_min) {
                 minIt->assignedFamilies.insert(minIt->assignedFamilies.begin(), *famIt);
                 minIt->totalWorkload += famIt->totalProcTime;
 
@@ -112,12 +126,24 @@ void SSP::createSchedules(int condition) {
     // }
     // return;
     
+    // Reentrant pairs are sequenced as one unit: only op 0 goes through the two
+    // passes below, and op 1 is put right after it at the end. The next operation
+    // then follows op 1, so op 1's tools are what similarity is measured against.
+    map<int, Job> secondOperation;  // job -> its op 1
+    for (const auto& op : originalJobs) {
+        if (isSecondOperation(op)) secondOperation[op.indexJob] = op;
+    }
+    auto lastToolsOfUnit = [&](const Job& job) -> const vector<int>& {
+        auto it = secondOperation.find(job.indexJob);
+        return (it != secondOperation.end() && job.indexOperation == 0) ? it->second.toolSetNormalized.tools : job.toolSetNormalized.tools;
+    };
+
     // prioritarios primeiro
     for (size_t i = 0; i < machines.size(); i++) {
         for (size_t j = 0; j < machines[i].assignedFamilies.size(); j++) {
             Family& family = machines[i].assignedFamilies[j];
             for (const auto& job : family.operations) {
-                if (job.priority) machines[i].operations.push_back(job);
+                if (job.priority && !isSecondOperation(job)) machines[i].operations.push_back(job);
             }
         }
     }
@@ -127,12 +153,12 @@ void SSP::createSchedules(int condition) {
         for (size_t j = 0; j < machines[i].assignedFamilies.size(); j++) {
             Family& family = machines[i].assignedFamilies[j];
             for (const auto& jobCurrant : family.operations) {
-                if (!jobCurrant.priority) {
+                if (!jobCurrant.priority && !isSecondOperation(jobCurrant)) {
                     int bestIndex = -1;
                     int bestIntersection = -numeric_limits<int>::max();
                     int bestDiference = numeric_limits<int>::max();
                     for (const auto& jobTesting : machines[i].operations) {
-                        vector<int> previusTools = jobTesting.toolSetNormalized.tools;
+                        vector<int> previusTools = lastToolsOfUnit(jobTesting);
                         vector<int> currentTools = jobCurrant.toolSetNormalized.tools;
 
                         // interceçao entre os toolsets
@@ -165,6 +191,17 @@ void SSP::createSchedules(int condition) {
             }
         }
     }
+
+    // op 1 right after its op 0
+    for (auto& machine : machines) {
+        vector<Job> sequence;
+        for (const auto& job : machine.operations) {
+            sequence.push_back(job);
+            auto it = secondOperation.find(job.indexJob);
+            if (it != secondOperation.end()) sequence.push_back(it->second);
+        }
+        machine.operations = sequence;
+    }
 }
 
 void SSP::reportDataPractitioner(fstream& solutionReportFile, string filenameJobs, string filenameTools) {
@@ -174,7 +211,7 @@ void SSP::reportDataPractitioner(fstream& solutionReportFile, string filenameJob
     int fineshedJobsCountTotal = 0;
     int switchsTotal = 0;
     int switchsInstancesTotal = 0;
-    int unfineshedPriorityCountTotal = 0;
+    int unfineshedPriorityCountTotal = numberOfPriorityJobs;
     int totalUnfineshed = numberJobsUngrouped;
 
     for (size_t i = 0; i < machines.size(); i++) {
@@ -184,11 +221,12 @@ void SSP::reportDataPractitioner(fstream& solutionReportFile, string filenameJob
             int index = distance(originalJobs.begin(), it);
             jobsInMachine.push_back(index);
         }
-        auto [fineshedJobsCount, switchs, switchsInstances, unfineshedPriorityCount, _, lastJob] = KTNSReport(jobsInMachine, 0, solutionReportFile, i);
+        // KTNSReport returns the FINISHED priority operations (same as evaluateReport)
+        auto [fineshedJobsCount, switchs, switchsInstances, fineshedPriorityCount, _, lastJob] = KTNSReport(jobsInMachine, 0, solutionReportFile, i);
         fineshedJobsCountTotal += fineshedJobsCount;
         switchsTotal += switchs;
         switchsInstancesTotal += switchsInstances;
-        unfineshedPriorityCountTotal += unfineshedPriorityCount;
+        unfineshedPriorityCountTotal -= fineshedPriorityCount;
         totalUnfineshed -= fineshedJobsCount;
     }
 

@@ -33,14 +33,23 @@ vector<vector<int>> SSP::splitSolutionIntoMachines(const vector<int>& input, siz
     size_t baseSize = totalSize / n;
     size_t remainder = totalSize % n;
 
+    // expandSolution keeps the two operations of a reentrant job adjacent; a cut
+    // between them would put op 1 on the next machine and break the strong chain,
+    // so such a cut moves one position forward (op 1 stays with op 0)
+    auto cutsPair = [&](size_t cut) {
+        const Job& before = originalJobs[input[cut - 1]];
+        const Job& after = originalJobs[input[cut]];
+        return before.indexJob == after.indexJob && before.indexOperation == 0 && after.indexOperation == 1;
+    };
+
     vector<vector<int>> result;
-    auto it = input.begin();
+    size_t begin = 0;
 
     for (size_t i = 0; i < n; ++i) {
-        size_t currentSize = baseSize + (i < remainder ? 1 : 0);
-        vector<int> part(it, it + currentSize);
-        result.push_back(move(part));
-        it += currentSize;
+        size_t end = (i == n - 1) ? totalSize : min(totalSize, begin + baseSize + (i < remainder ? 1 : 0));
+        if (end > begin && end < totalSize && cutsPair(end)) ++end;
+        result.emplace_back(input.begin() + begin, input.begin() + end);
+        begin = end;
     }
 
     return result;
@@ -154,7 +163,13 @@ tuple<int, int, int, int, int, int>  SSP::KTNSReport(vector<int> s, int startInd
 
     solutionReportFile << "Machine: " << machine << std::endl;
 
+    // an operation needing more tools than the magazine holds can never be processed:
+    // it is skipped (left unfinished) instead of being run with part of its tools
+    auto fitsMagazine = [&](int k) { return (int)originalJobsCopy[s[k]].toolSet.tools.size() <= capacityMagazine; };
+
     for (jL = startIndex; jL < numberJobsSol; ++jL) {
+        if (!fitsMagazine(jL)) continue;
+
         // ---------------------------------------------------------------------------
         // UNSUPERVISED PERIOD FIX
         // ---------------------------------------------------------------------------
@@ -218,6 +233,7 @@ tuple<int, int, int, int, int, int>  SSP::KTNSReport(vector<int> s, int startInd
         int cmL = 0;
 
         while ((cmL < capacityMagazine) && (left < numberJobsSol)) {
+            if (!fitsMagazine(left)) { ++left; continue; }
             for (auto it = originalJobsCopy[s[left]].toolSet.tools.begin(); ((it != originalJobsCopy[s[left]].toolSet.tools.end()) && (cmL < capacityMagazine)); ++it) {
                 if ((magazineL[*it]) && (!magazineCL[*it])) {
                     magazineCL[*it] = true;

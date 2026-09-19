@@ -231,13 +231,16 @@ void SSP::groupJobs() {
             for (size_t j = 0; j < originalJobs.size(); ++j) {
                 auto &otherJob = originalJobs[j];
                 if (otherJob.indexOperation == 1 && otherJob.indexJob == thisJob.indexJob) {
-                    thisJob.processingTimes.push_back(otherJob.processingTime);
-                    thisJob.processingTimes.push_back(thisJob.processingTime);
-                    thisJob.toolSets.push_back(otherJob.toolSet);
-                    thisJob.toolSets.push_back(thisJob.toolSet);
-                    thisJob.processingTime = otherJob.processingTime + thisJob.processingTime;
-                    
+                    // op 0 first: the report printers read processingTimes[0] as op 0's time
+                    thisJob.processingTimes = {thisJob.processingTime, otherJob.processingTime};
+                    thisJob.toolSets = {thisJob.toolSet, otherJob.toolSet};
+
+                    // Same toolset: the pair becomes one operation lasting p0 + p1.
+                    // Different toolset: op 1 stays a separate operation with its own
+                    // time, so op 0 keeps p0 (KTNS uses processingTimes only to check
+                    // that the whole pair fits the horizon before starting op 0).
                     if(diferent_toolset_mode == 0) {
+                        thisJob.processingTime += otherJob.processingTime;
                         thisJob.isGrouped = true;
                         indicesToDelete.push_back(j);
                     }
@@ -546,7 +549,7 @@ int SSP::loadInstanceBase(string filename) {
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // LOAD CONSOLIDATED
 //
-// Single-file instance format (see input/Consolidated/README and scripts/consolidateInstances.py):
+// Single-file instance format (see input/Consolidated/README and scripts/instances/generateInstances.py):
 //   line 1: informational title, e.g. "n=75,p=0.24,r=0.5,t=650" (ignored)
 //   line 2: capacity
 //   line 3: machines
