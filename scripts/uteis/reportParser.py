@@ -1,96 +1,80 @@
+"""Parse a mainCpp solution report (written by SSP::evaluateReport / KTNSReport,
+SSP::practitioner and SSP::modelo -- all share this layout):
+
+    <jobsFile>;<toolsFile>
+    <planingHorizon>;<unsupervised>;<DAY>
+    Machine: 0
+    <job>;<op>;<start>;<end>;<priority>;<tool>,<tool>,...,
+    ...
+    Machine: 1
+    ...
+    END
+    <key>: <value>          (fineshedJobsCount, switchs, Final Solution, ...)
+
+Times are minutes on that machine's own timeline (every machine starts at 0).
+The magazine column lists the tools loaded while the operation runs.
+"""
 import re
 
-# ---------------------------------------------------------------------------------------------------
-# REPORT PARSER
-# ---------------------------------------------------------------------------------------------------
-
-def parseMachineSection(machine_section):
-    lines = machine_section.strip().split('\n')
-    operations = [line.split(';') for line in lines[1:]]
-    
-    operationsObj = []
-    
-    for operation in operations:
-        operationsObj.append({
-            'job': int(operation[0]),
-            'operation': int(operation[1]),
-            'start': int(operation[2]),
-            'end': int(operation[3]),
-            'priority': int(operation[4]),
-            'magazine': list(map(int, operation[5][:-1].split(',')))
-        })
-
-    return operationsObj
 
 def to_camel_case(s):
-    # If the string contains no separators, return it as-is
-    if not re.search(r'[\s_-]', s):
+    """'Final Solution' -> 'finalSolution'; single words are kept as-is
+    ('Time', 'PTL'), so GA/PT's 'Final Solution' and the practitioner's
+    'finalSolution' end up under the same key."""
+    if not re.search(r"[\s_-]", s):
         return s
-    words = re.split(r'[\s_-]+', s)
-    return words[0].lower() + ''.join(word.capitalize() for word in words[1:])
+    words = re.split(r"[\s_-]+", s)
+    return words[0].lower() + "".join(w.capitalize() for w in words[1:])
+
+
+def _parse_operation(line):
+    fields = line.split(";")
+    magazine = [int(t) for t in (fields[5] if len(fields) > 5 else "").split(",") if t.strip()]
+    return {
+        "job": int(fields[0]),
+        "operation": int(fields[1]),
+        "start": int(fields[2]),
+        "end": int(fields[3]),
+        "priority": int(fields[4]),
+        "magazine": magazine,
+    }
+
 
 def parseReport(file_path):
-    file = open(file_path, 'r')
-    file_content = file.read()
-    
-    linesAux = file_content.splitlines()
-    end_index = linesAux.index("END")
+    """-> (planejamento, machines, endInfo)
 
-    lines = linesAux[:end_index]
-    end_info = linesAux[end_index + 1:]
-    
-    instancesName = lines.pop(0)
-    jobsFileName = instancesName.split(';')[0]
-    toolSetFileName = instancesName.split(';')[1]
-    
-    header = lines.pop(0)
-    planejamento = [int(num) for num in header.split(';')]
-    planejamentoObj = {
-        'planingHorizon': planejamento[0],
-        'unsupervised': planejamento[1],
-        'timescale': planejamento[2],
-        'jobsFileName': jobsFileName,
-        'toolSetFileName': toolSetFileName,
+    planejamento: planingHorizon, unsupervised, timescale, jobsFileName, toolSetFileName
+    machines:     list (one per "Machine:" section, in order) of operation dicts
+    endInfo:      footer values, keys camelCased (see to_camel_case)
+    """
+    with open(file_path) as f:
+        lines = f.read().splitlines()
+    if "END" not in lines:
+        raise ValueError(f"{file_path}: no END marker (incomplete or not a report)")
+    end = lines.index("END")
+
+    files = lines[0].split(";")
+    horizon, unsupervised, timescale = (int(v) for v in lines[1].split(";")[:3])
+    planejamento = {
+        "planingHorizon": horizon,
+        "unsupervised": unsupervised,
+        "timescale": timescale,
+        "jobsFileName": files[0],
+        "toolSetFileName": files[1] if len(files) > 1 else "",
     }
-    
-    modified_string = '\n'.join(lines)
-    
-    machines = []
-    machine_sections = modified_string.strip().split('Machine:')
-    for machine_section in machine_sections[1:]:
-        machine_info = parseMachineSection(machine_section)
-        machines.append(machine_info)
-    
-    endInfoObj = {}
-    for item in end_info:
-        key, value = item.replace(';', '').split(':') if ':' in item else item.split(' ', 1)
-        endInfoObj[to_camel_case(key.strip())] = float(value.strip())
-    
-    return  planejamentoObj, machines, endInfoObj
 
-def printReport(machines, planejamento):
-    print(f"planingHorizon = {planejamento['planingHorizon']}")
-    print(f"unsupervised = {planejamento['unsupervised']}")
-    print(f"timescale = {planejamento['timescale']}")
-    print(f"instanceName = {planejamento['instanceName']}")
-    
-    print("\n----------------------------------------------------------------\n")
-    
-    for machine in machines:
-        operations = machine['operations']
-        machine_info = machine['machine_info']
-        end_info = machine['end_info']
-        
-        print(f"machine_info = {machine_info}")
-        print()
-        
-        for operation in operations:
-            print(f"job = {operation['job']} operation {operation['operation']}")
-            print(f"start = {operation['start']}")
-            print(f"end = {operation['end']}")
-            print(f"priority = {operation['priority']}")
-            print(f"magazine = {operation['magazine']}")
-            print()      
-        
-        print(f"end_info = {end_info}")
-        print("\n----------------------------------------------------------------\n")
+    machines = []
+    for line in lines[2:end]:
+        if line.startswith("Machine:"):
+            machines.append([])
+        elif line.strip():
+            machines[-1].append(_parse_operation(line))
+
+    endInfo = {}
+    for item in lines[end + 1:]:
+        if ":" not in item:
+            continue
+        key, value = item.replace(";", "").split(":", 1)
+        endInfo[to_camel_case(key.strip())] = float(value.strip())
+
+    return planejamento, machines, endInfo

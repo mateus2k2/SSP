@@ -238,8 +238,12 @@ goPT:
 
 validarFile:
 	clear
-	python3 ./scripts/reportAnalises.py validate ./output/Beezao/teste.txt
+	python3 ./scripts/validateRuns.py ./output-final
 	echo "\n"
+
+# final results spreadsheet (output-final/Resultados-SSP-USPrC.xlsx)
+planilhaResultados:
+	python3 ./scripts/buildSpreadsheet.py
 
 tabelaResultadosPractitioner:
 	clear

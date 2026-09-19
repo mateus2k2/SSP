@@ -1,148 +1,70 @@
 #!/usr/bin/env python3
 """
-Processes mainCpp solution reports (src/loadData.cpp/evaluateUteis.cpp's
-report format, read via uteis/reportParser.py): validates a report against
-its instance, and formats run results into LaTeX/spreadsheet-ready tables.
+Formats mainCpp solution reports (read via uteis/reportParser.py) into
+LaTeX/spreadsheet-ready table rows, plus a few report/instance inspections.
+
+Validation lives in scripts/validateRuns.py (uteis/validador.py) and the full
+results spreadsheet in scripts/buildSpreadsheet.py (uteis/results.py); the
+table-* rows below print the counters exactly as the reports state them.
 
 Subcommands:
-  validate <folder-or-file>       Consistency checks (magazine contents, switch
-                                   counts, profit formula, ...) via uteis/validador.py.
-                                   Legacy-CSV / Consolidated / BaseInstances formats.
-  validate-beezao <folder>        Validate + average .PMTC run results across numbered
-                                   run subfolders (uteis/validadorBeezao.py); writes
-                                   results_mean.csv into that folder.
+  validate <paths...>             Same as scripts/validateRuns.py <paths...>.
   table-practitioner <folder>     LaTeX table rows for a practitioner-heuristic run.
   table-modelo <folder>           LaTeX table rows for a Gurobi-model run.
-  table-pt <dirs...>               Two LaTeX tables (per-instance means, then a
-                                   gap/std-dev table) averaged across run dirs.
-  table-comparative <dirs...>      LaTeX table comparing PT vs practitioner vs modelo.
-  precedence <folder>             Report broken operation-0/operation-1 precedence.
+  table-ga <dirs...>              Detailed GA table averaged across run dirs.
+  table-pt <dirs...>              Two LaTeX tables (per-instance means, then a
+                                  gap/std-dev table) averaged across run dirs.
+  table-comparative <dirs...>     LaTeX table comparing PT vs practitioner vs modelo.
   ktns <file>                     Print the KTNS magazine trace for one report.
   tools <folder>                  Print unique-tool count per instance file (legacy
-                                   CSV format only).
+                                  CSV format only).
 
 Usage:
   python3 scripts/reportAnalises.py table-pt ./output/diffTesla
-  python3 scripts/reportAnalises.py validate ./output/Beezao/teste.txt
-
-This whole file used to be a single numbered --option flag with ~90% of its
-body commented out -- every Makefile target calling it (tabelaResultados*,
-validarFile) had silently been running an unrelated 15-line stub instead.
-Restored from the comments (fully specified, not guesswork) as a real
-subcommand CLI. One real fix made while restoring: table-pt's PTL/MCMC/
-BestInitial/MeanInitial accumulation was commented out (so its second table
-would KeyError on first use) -- that data simply didn't exist while the PT
-solving path was dead. It's live again (see src/main.cpp's `runPT`), and a
-real PT report does contain those fields, so the accumulation is restored
-too, not left broken. Verified: `validate` and reportParser's parsing run
-correctly against a real, current mainCpp report; the check functions in
-uteis/validador.py agree with the solver's own profit calculation.
+  python3 scripts/reportAnalises.py validate ./output-final/same-toolset
 """
 import argparse
 import os
+import re
 import statistics
 
 from natsort import natsorted
 
+import uteis.instances as instances
 import uteis.loadData as ld
 import uteis.reportParser as rp
-import uteis.validador as vd
-import uteis.validadorBeezao as vdb
-
-# ---------------------------------------------------------------------------------------------------
-# VALIDADOR
-# ---------------------------------------------------------------------------------------------------
-
-def validarPasta(files):
-    for report in files:
-        print(f"---Validating {report}---")
-
-        planejamento, machines, endInfo = rp.parseReport(report)
-        toolSets = ld.loadToolSet(planejamento['toolSetFileName'])
-        jobs = ld.loadJobs(planejamento['jobsFileName'])
-        print(endInfo)
-
-        vd.checkMagazine(machines, toolSets, jobs)
-        print()
-        vd.checkUnsupervisedSwitchs(machines, toolSets, jobs, planejamento)
-        print()
-        vd.checkSwitchs(machines, endInfo, toolSets, jobs)
-        print()
-        vd.checkUnfinishedJobs(machines, jobs)
-        print()
-        vd.checkOperations(machines, jobs)
-        print()
-        vd.checkProfit(machines, endInfo, jobs, planejamento)
-        print()
-        vd.newKTNS(machines, toolSets, jobs, planejamento)
-        print()
-        vd.checkMagazineSize(machines, toolSets, jobs)
-        print()
-
-def verificarPrecedencia(files):
-    quantidadePrecedenciaQuebradaPorInstancia = [0 for _ in range(len(files))]
-
-    for index, report in enumerate(files):
-        planejamento, machines, endInfo = rp.parseReport(report)
-        FimOperacao0 = {}
-
-        for machine in machines:
-            for estado in machine:
-                job = estado['job']
-                if estado['operation'] == 0:
-                    FimOperacao0[job] = estado['end']
-
-        for machine in machines:
-            for estado in machine:
-                job = estado['job']
-                if estado['operation'] == 1:
-                    if not (job in FimOperacao0) or estado['start'] < FimOperacao0[job]:
-                        print(f'Precedencia quebrada para a instancia {index + 1} no job {job}')
-                        quantidadePrecedenciaQuebradaPorInstancia[index] += 1
-
-    return quantidadePrecedenciaQuebradaPorInstancia
-
-def verificarPrecedenciaAsSingleMachine(files):
-    quantidadePrecedenciaQuebradaPorInstancia = [0 for _ in range(len(files))]
-
-    for index, report in enumerate(files):
-        planejamento, machines, endInfo = rp.parseReport(report)
-        jobs = ld.loadJobs(planejamento['jobsFileName'])
-        precedencia = [[] for _ in range(len(jobs))]
-
-        for machine in machines:
-            for estado in machine:
-                job = estado['job']
-                if estado['operation'] == 0:
-                    precedencia[job].append(0)
-                if estado['operation'] == 1:
-                    if not precedencia[job]:
-                        print(f'Precedencia quebrada para a instancia {index + 1} no job {job}')
-                        quantidadePrecedenciaQuebradaPorInstancia[index] += 1
-                    else:
-                        precedencia[job].pop()
-
-    return quantidadePrecedenciaQuebradaPorInstancia
+import uteis.results as results
+import uteis.validador as validador
+import validateRuns
 
 # ---------------------------------------------------------------------------------------------------
 # ANALISES
 # ---------------------------------------------------------------------------------------------------
 
 def totalUnfinishedJobs(machines, planejamento):
-    jobs = ld.loadJobs(planejamento['jobsFileName'])
-    total = len(jobs)
+    total = instances.load_instance(planejamento['jobsFileName']).n_ops
     for machine in machines:
         total -= len(machine)
     return total
 
-def getFileParans(file):
-    # n=600,p=0.25,r=0.5,t=3096,v6.csv
-    parans = file.split(',')
-    n = int(parans[0].split('=')[1])
-    p = float(parans[1].split('=')[1])
-    r = float(parans[2].split('=')[1])
-    t = int(parans[3].split('=')[1])
-    return n, p, r, t
+def nameParams(path):
+    """(n, p, r) from a report file name: 'n=600,p=0.25,r=0.5,t=3096,v6.csv' or,
+    for the base instances, '2M1_n=50,r=0.5,t=86,v0.txt' (p = 0.5 for every class)."""
+    name = os.path.basename(path)
+    m = results.GRID_NAME.search(name)
+    if m:
+        return int(m.group(1)), float(m.group(2)), float(m.group(3))
+    _, n, r = results.BASE_NAME.search(name).groups()
+    return int(n), results.BASE_P, float(r)
+
+def semDecimaisZerados(linha):
+    """'150,00' -> '150' for whole numbers, leaving '0,00542164' alone."""
+    return re.sub(r',00(?!\d)', '', linha)
+
+def reportsIn(folder):
+    """Report files in a folder, natural order (skips Gurobi .sol/.lp logs and notes)."""
+    return [f for f in natsorted(os.listdir(folder))
+            if not f.endswith(('.sol', '.lp', '.md')) and validador.is_report(os.path.join(folder, f))]
 
 def tabelaResultadosPractitioner(files, modoPlanilha=False):
     separador = '&'
@@ -150,12 +72,7 @@ def tabelaResultadosPractitioner(files, modoPlanilha=False):
         planejamento, machines, endInfo = rp.parseReport(report)
         totalUnfineshed = totalUnfinishedJobs(machines, planejamento)
 
-        instancename = report.split('/')[-1]
-        instancenameClear = instancename.split(",t=")[0]
-        componentesDoNome = instancenameClear.split(',')
-        totalTarefas = int(componentesDoNome[0].split('=')[1])
-        taxaPrioridade = float(componentesDoNome[1].split('=')[1])
-        taxaReentrancia = float(componentesDoNome[2].split('=')[1])
+        totalTarefas, taxaPrioridade, taxaReentrancia = nameParams(report)
 
         endPrint = ' \\\\ \\hline' if index == len(files) - 1 else ' \\\\'
         outputTeste = ((
@@ -169,7 +86,8 @@ def tabelaResultadosPractitioner(files, modoPlanilha=False):
             f'{endInfo["switchs"]:.2f} {separador}'
             f'{endInfo["finalSolution"]:.2f}'
             f'{endPrint}'
-        ).replace('.', ',').replace(',00', ''))
+        ).replace('.', ','))
+        outputTeste = semDecimaisZerados(outputTeste)
         if modoPlanilha:
             outputTeste = outputTeste.replace('&', ';').replace('\\\\', '').replace('\\hline', '')
         print(outputTeste)
@@ -182,12 +100,7 @@ def tabelaResultadosModelo(files, modoPlanilha=False):
         planejamento, machines, endInfo = rp.parseReport(report)
         totalUnfineshed = totalUnfinishedJobs(machines, planejamento)
 
-        instancename = report.split('/')[-1]
-        instancenameClear = instancename.split(",t=")[0]
-        componentesDoNome = instancenameClear.split(',')
-        totalTarefas = int(componentesDoNome[0].split('=')[1])
-        taxaPrioridade = float(componentesDoNome[1].split('=')[1])
-        taxaReentrancia = float(componentesDoNome[2].split('=')[1])
+        totalTarefas, taxaPrioridade, taxaReentrancia = nameParams(report)
 
         endPrint = ' \\\\ \\hline' if index == len(files) - 1 else ' \\\\'
         outputTeste = ((
@@ -203,7 +116,8 @@ def tabelaResultadosModelo(files, modoPlanilha=False):
             f'{endInfo["finalSolution"]:.2f} {separador}'
             f"{endInfo['Time']}"
             f'{endPrint}'
-        ).replace('.', ',').replace(',00', ''))
+        ).replace('.', ','))
+        outputTeste = semDecimaisZerados(outputTeste)
         if modoPlanilha:
             outputTeste = outputTeste.replace('&', ';').replace('\\\\', '').replace('\\hline', '')
         print(outputTeste)
@@ -226,7 +140,7 @@ def tabelaDetalhadaGA(listDirs, subDir='MyInstancesSameToolSets', modoPlanilha=F
     TimeAcc = {}
 
     for dir in listDirs:
-        files = natsorted(os.listdir(f'{dir}/{subDir}'))
+        files = reportsIn(f'{dir}/{subDir}')
         for file in files:
             if file not in filesList:
                 filesList.append(file)
@@ -244,11 +158,7 @@ def tabelaDetalhadaGA(listDirs, subDir='MyInstancesSameToolSets', modoPlanilha=F
 
     separador = '&'
     for index, file in enumerate(filesList):
-        instancenameClear = file.split(",t=")[0]
-        componentesDoNome = instancenameClear.split(',')
-        totalTarefas = int(componentesDoNome[0].split('=')[1])
-        taxaPrioridade = float(componentesDoNome[1].split('=')[1])
-        taxaReentrancia = float(componentesDoNome[2].split('=')[1])
+        totalTarefas, taxaPrioridade, taxaReentrancia = nameParams(file)
 
         endPrint = ' \\\\ \\hline' if index == len(filesList) - 1 else ' \\\\'
         outputTeste = ((
@@ -264,7 +174,8 @@ def tabelaDetalhadaGA(listDirs, subDir='MyInstancesSameToolSets', modoPlanilha=F
             f'{statistics.mean(FinalSolutionAcc[file]):.2f} {separador} '
             f'{statistics.mean(TimeAcc[file]):.2f}'
             f'{endPrint}'
-        ).replace('.', ',').replace(',00', ''))
+        ).replace('.', ','))
+        outputTeste = semDecimaisZerados(outputTeste)
         if modoPlanilha:
             outputTeste = outputTeste.replace('&', ';').replace('\\\\', '').replace('\\hline', '')
         print(outputTeste)
@@ -287,7 +198,7 @@ def tabelaResultadosPT(listDirs, subDir='MyInstancesSameToolSets', totalPTL=600,
     MeanInitialAcc = {}
 
     for dir in listDirs:
-        files = natsorted(os.listdir(f'{dir}/{subDir}'))
+        files = reportsIn(f'{dir}/{subDir}')
         for file in files:
             if file not in filesList:
                 filesList.append(file)
@@ -315,11 +226,7 @@ def tabelaResultadosPT(listDirs, subDir='MyInstancesSameToolSets', totalPTL=600,
 
     # TABELA 1
     for index, file in enumerate(filesList):
-        instancenameClear = file.split(",t=")[0]
-        componentesDoNome = instancenameClear.split(',')
-        totalTarefas = int(componentesDoNome[0].split('=')[1])
-        taxaPrioridade = float(componentesDoNome[1].split('=')[1])
-        taxaReentrancia = float(componentesDoNome[2].split('=')[1])
+        totalTarefas, taxaPrioridade, taxaReentrancia = nameParams(file)
 
         endPrint = ' \\\\ \\hline' if index == len(filesList) - 1 else ' \\\\'
         outputTeste = ((
@@ -352,11 +259,7 @@ def tabelaResultadosPT(listDirs, subDir='MyInstancesSameToolSets', totalPTL=600,
         stdPercent = 0
         if len(FinalSolutionAcc[file]) > 1:
             stdPercent = statistics.stdev(FinalSolutionAcc[file]) / statistics.mean(FinalSolutionAcc[file]) * 100
-        instancenameClear = file.split(",t=")[0]
-        componentesDoNome = instancenameClear.split(',')
-        totalTarefas = int(componentesDoNome[0].split('=')[1])
-        taxaPrioridade = float(componentesDoNome[1].split('=')[1])
-        taxaReentrancia = float(componentesDoNome[2].split('=')[1])
+        totalTarefas, taxaPrioridade, taxaReentrancia = nameParams(file)
 
         endPrint = ' \\\\ \\hline' if index == len(filesList) - 1 else ' \\\\'
         outputTeste = ((
@@ -385,7 +288,7 @@ def tabelaResultadosComparativa(listDirs, subDir='MyInstancesSameToolSets', tota
     FinalSolutionAcc = {}
 
     for dir in listDirs:
-        files = natsorted(os.listdir(f'{dir}/{subDir}'))
+        files = reportsIn(f'{dir}/{subDir}')
         for file in files:
             if file not in filesList:
                 filesList.append(file)
@@ -396,11 +299,11 @@ def tabelaResultadosComparativa(listDirs, subDir='MyInstancesSameToolSets', tota
     separador = '&'
 
     folderNamePH = f'{practitionerDir}/{subDir}/'
-    filesPH = natsorted(os.listdir(folderNamePH))
+    filesPH = reportsIn(folderNamePH)
     fileWithPathPH = [f"{folderNamePH}/{file}" for file in filesPH if file.endswith(".csv")]
 
     folderNameModelo = f'{modeloDir}/{subDir}/'
-    filesModelo = natsorted(os.listdir(folderNameModelo))
+    filesModelo = reportsIn(folderNameModelo)
     fileWithPathModelo = [f"{folderNameModelo}/{file}" for file in filesModelo if file.endswith(".csv")]
 
     for index, file in enumerate(filesList):
@@ -408,11 +311,7 @@ def tabelaResultadosComparativa(listDirs, subDir='MyInstancesSameToolSets', tota
         s = statistics.mean(FinalSolutionAcc[file])
         gapPT = (sStar - s) / sStar * 100
 
-        instancenameClear = file.split(",t=")[0]
-        componentesDoNome = instancenameClear.split(',')
-        totalTarefas = int(componentesDoNome[0].split('=')[1])
-        taxaPrioridade = float(componentesDoNome[1].split('=')[1])
-        taxaReentrancia = float(componentesDoNome[2].split('=')[1])
+        totalTarefas, taxaPrioridade, taxaReentrancia = nameParams(file)
 
         planejamentoPH, machinesPH, endInfoPH = rp.parseReport(fileWithPathPH[index])
         resultadoPH = endInfoPH["finalSolution"]
@@ -440,7 +339,8 @@ def tabelaResultadosComparativa(listDirs, subDir='MyInstancesSameToolSets', tota
             f'{resultadoModelo} {separador} '
             f'{gapPTModelo}'
             f'{endPrint}'
-        ).replace('.', ',').replace(',00', ''))
+        ).replace('.', ','))
+        outputTeste = semDecimaisZerados(outputTeste)
         print(outputTeste)
         if (index + 1) % 3 == 0 and not (index == len(filesList) - 1):
             print("\\hline")
@@ -492,7 +392,7 @@ def analiseFerramentasUnicas(folder, toolset_file):
 def _collect_files(folder_or_file, ext=None):
     if os.path.isfile(folder_or_file):
         return [folder_or_file]
-    files = natsorted(os.listdir(folder_or_file))
+    files = reportsIn(folder_or_file)
     if ext:
         files = [f for f in files if f.endswith(ext)]
     return [os.path.join(folder_or_file, f) for f in files]
@@ -510,13 +410,9 @@ def main():
     spreadsheet_parser.add_argument("--spreadsheet", action="store_true",
                                      help="Emit ';'-separated rows for pasting into a spreadsheet instead of LaTeX rows")
 
-    p = sub.add_parser("validate", help="Validate report(s) against their instance")
-    p.add_argument("target", help="A single report file, or a folder of them")
-    p.set_defaults(func=lambda a: validarPasta(_collect_files(a.target)))
-
-    p = sub.add_parser("validate-beezao", help="Validate + average .PMTC results across run subfolders")
-    p.add_argument("folder", nargs="?", default="./output/BeezaoPTLarge/")
-    p.set_defaults(func=lambda a: vdb.validateFolder(a.folder))
+    p = sub.add_parser("validate", help="Validate reports against their instance (scripts/validateRuns.py)")
+    p.add_argument("args", nargs=argparse.REMAINDER, help="arguments for validateRuns.py (paths, -v, ...)")
+    p.set_defaults(func=lambda a: validateRuns.main(a.args))
 
     p = sub.add_parser("table-practitioner", parents=[spreadsheet_parser], help="LaTeX table rows for a practitioner run")
     p.add_argument("folder")
@@ -547,15 +443,6 @@ def main():
     p.add_argument("--modelo-dir", default="./output/Modelo")
     p.set_defaults(func=lambda a: tabelaResultadosComparativa(
         a.dirs, a.subdir, a.total_ptl, a.practitioner_dir, a.modelo_dir))
-
-    p = sub.add_parser("precedence", help="Report broken operation-0/operation-1 precedence")
-    p.add_argument("folder")
-
-    def _precedence(a):
-        files = _collect_files(a.folder)
-        verificarPrecedencia(files)
-        verificarPrecedenciaAsSingleMachine(files)
-    p.set_defaults(func=_precedence)
 
     p = sub.add_parser("ktns", help="Print the KTNS magazine trace for one report")
     p.add_argument("file")
