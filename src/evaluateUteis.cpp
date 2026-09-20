@@ -82,12 +82,8 @@ vector<vector<int>> SSP::splitSolutionIntoMachinesByTime(const vector<int>& inpu
 }
 
 double SSP::evaluateReport(solSSP& solution, fstream& solutionReportFile) {
-    // int planingHorizonToRepost =  0;
-    // if (planingHorizon % DAY == 0) planingHorizonToRepost = planingHorizon; 
-    // else planingHorizonToRepost = ((planingHorizon + DAY - 1) / DAY);
-
     solutionReportFile << inputJobsFile << ";" << inputToolsetsFile << endl;
-    solutionReportFile << planingHorizon << ";" << unsupervised << ";" << DAY << endl;
+    solutionReportFile << horizonMinutes / DAY << ";" << unsupervisedStart << ";" << DAY << endl;
 
     int fineshedJobsCountTotal = 0;
     int switchsTotal = 0;
@@ -109,7 +105,7 @@ double SSP::evaluateReport(solSSP& solution, fstream& solutionReportFile) {
     // }
 
     vector<vector<int>> machines = splitSolutionIntoMachines(sol.sol, numberMachines);
-    // vector<vector<int>> machines = splitSolutionIntoMachinesByTime(sol.sol, planingHorizon);
+    // vector<vector<int>> machines = splitSolutionIntoMachinesByTime(sol.sol, horizonMinutes);
     int criticalMachine = 0;
     int criticalMachineSwitchs = 0;
 
@@ -179,7 +175,7 @@ tuple<int, int, int, int, int, int>  SSP::KTNSReport(vector<int> s, int startInd
         fimJob = inicioJob + originalJobsCopy[s[jL]].processingTime;
 
         // Estou no periodo de supervisao e entrando no periodo sem supervisao
-        if (inicioJob % (DAY) < unsupervised && fimJob % (DAY) > unsupervised && fimJob < (planingHorizon * DAY)) {
+        if (inicioJob % DAY < unsupervisedStart && fimJob % DAY > unsupervisedStart && fimJob < horizonMinutes) {
             vector<bool> magazineAntes = magazineL;
             set<int> unsupervisedMagazine;
             int inicioUnsupervised = inicioJob;
@@ -202,8 +198,8 @@ tuple<int, int, int, int, int, int>  SSP::KTNSReport(vector<int> s, int startInd
                     }
                 }
                 // verificacao de tempo
-                if ((((inicioUnsupervised % DAY) >= unsupervised) && (fimUnsupervised % DAY) < unsupervised) || (breakLoop))  {
-                    if( (fimUnsupervised + unsupervised >= (planingHorizon * DAY)) && (originalJobsCopy[s[k]].indexOperation == 1)) {
+                if ((((inicioUnsupervised % DAY) >= unsupervisedStart) && (fimUnsupervised % DAY) < unsupervisedStart) || (breakLoop))  {
+                    if( (fimUnsupervised + (DAY - unsupervisedStart) >= horizonMinutes) && (originalJobsCopy[s[k]].indexOperation == 1)) {
                         originalJobsCopy[s[k-1]].flag = true; // flag para indicar que a tarefa foi interrompida
                     }
                     break;
@@ -259,14 +255,14 @@ tuple<int, int, int, int, int, int>  SSP::KTNSReport(vector<int> s, int startInd
         // TIME VERIFICATIONS
         // ---------------------------------------------------------------------------
 
-        if (((inicioJob % DAY) >= unsupervised && (currantSwitchs > 0)) ||                         // verificar se estou em um periodo sem supervisao e houve troca de ferramenta
-            (inicioJob % (planingHorizon * DAY) + (processingTimeSum) > (planingHorizon * DAY)) || // verificar se o job excede o horizonte de planejamento
+        if (((inicioJob % DAY) >= unsupervisedStart && (currantSwitchs > 0)) ||                         // verificar se estou em um periodo sem supervisao e houve troca de ferramenta
+            (inicioJob % horizonMinutes + (processingTimeSum) > horizonMinutes) || // verificar se o job excede o horizonte de planejamento
             (originalJobsCopy[s[jL]].flag == true)) {
             inicioJob += DAY - (inicioJob % DAY);
             fimJob = inicioJob + originalJobsCopy[s[jL]].processingTime;
         }
 
-        if (fimJob > (planingHorizon * DAY)) {
+        if (fimJob > horizonMinutes) {
             break;
         }
 
@@ -286,8 +282,8 @@ tuple<int, int, int, int, int, int>  SSP::KTNSReport(vector<int> s, int startInd
         // PRINTS
         // ---------------------------------------------------------------------------
 
-        int startTMP = (fimJob - originalJobsCopy[s[jL]].processingTime) % (planingHorizon * DAY);
-        int endTMP = ((fimJob - 1) % (planingHorizon * DAY)) + 1;
+        int startTMP = (fimJob - originalJobsCopy[s[jL]].processingTime) % horizonMinutes;
+        int endTMP = ((fimJob - 1) % horizonMinutes) + 1;
         lastTime = endTMP;
 
         const auto &job = originalJobsCopy[s[jL]];

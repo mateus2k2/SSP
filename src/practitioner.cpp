@@ -206,7 +206,7 @@ void SSP::createSchedules(int condition) {
 
 void SSP::reportDataPractitioner(fstream& solutionReportFile, string filenameJobs, string filenameTools) {
     solutionReportFile << filenameJobs << ";" << filenameTools << endl;
-    solutionReportFile << H << ";" << U << ";" << DAY << endl;
+    solutionReportFile << H / DAY << ";" << U << ";" << DAY << endl;
 
     int fineshedJobsCountTotal = 0;
     int switchsTotal = 0;
@@ -244,10 +244,10 @@ void SSP::reportDataPractitioner(fstream& solutionReportFile, string filenameJob
 vector<Machine> SSP::practitioner(fstream& solutionReportFile, int condition) {
     // ExecTime et;
     auto start = std::chrono::high_resolution_clock::now();
-    H = planingHorizon;
-    U = unsupervised;
-    B1 = 0.1f * H;
-    B2 = 0.8f * H;
+    H = horizonMinutes;      // minutes, like every workload below
+    U = unsupervisedStart;
+    B1 = 0.1f * H;           // machines are balanced until the gap is under B1
+    B2 = 0.8f * H;           // or the lightest machine is loaded past B2
 
     allocateOperationsToMachines(numberMachines);
     createSchedules(condition);

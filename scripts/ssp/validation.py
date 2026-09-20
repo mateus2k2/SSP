@@ -132,8 +132,9 @@ def objective(costs, finished, switches, instances_, unfinished_priority):
 
 def _supervised_moment(t0, t1, unsupervised, day, closed=False):
     """Is there an instant t in [t0, t1] with t % day < unsupervised?
+    unsupervised >= day means the instance has no unsupervised period.
     closed=True also accepts t % day == unsupervised, the boundary the Gurobi
-    model allows (constraint (16): h <= 1440 - tU)."""
+    model allows (its constraint (16) is h(jk) <= tU, inclusive)."""
     u = unsupervised + (1 if closed else 0)
     if u >= day or t1 - t0 >= day:
         return True

@@ -60,7 +60,7 @@ struct Machine {
 // #define COSTPRIORITY       30
 // #define PROFITYFINISHED    0
 
-#define DAY                1440
+#define DAY                1440   // minutes in a day: every time in the code is in minutes
 
 #endif
 

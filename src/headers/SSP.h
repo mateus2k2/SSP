@@ -36,8 +36,8 @@ struct solSSP: public solution{
 
 class SSP: public Problem<solSSP>{
 	private:
-		int planingHorizon;
-		float unsupervised;
+		int horizonMinutes;    // planning horizon, in minutes (DAY minutes per day)
+		int unsupervisedStart; // minute of the day the unsupervised period starts; DAY = none
 		int numberMachines;
 		int numberTools;
 		int numberToolsReal;
@@ -117,8 +117,8 @@ class SSP: public Problem<solSSP>{
 		// Add to SSP.h public section:
 		int  getNumberMachines()   const { return numberMachines; }
 		int  getCapacityMagazine() const { return capacityMagazine; }
-		int  getPlaningHorizon()   const { return planingHorizon; }
-		int  getUnsupervised()     const { return unsupervised; }
+		int  getHorizonMinutes()   const { return horizonMinutes; }
+		int  getUnsupervisedStart() const { return unsupervisedStart; }
 		const std::vector<Job>& getGroupedJobs() const { return groupedJobs; }
 
 };

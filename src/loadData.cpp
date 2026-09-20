@@ -122,10 +122,10 @@ int SSP::laodInstance(string filename) {
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    // planingHorizon = 7   * (24*60); // 7 dias em minutos
-    // unsupervised   = 0.5 * (24*60); // 0.5 dia em minutos
-    planingHorizon = 7;
-    unsupervised = 0.5;
+    // Defaults for the legacy CSV format; loadInstanceParans() overwrites both
+    // from the sibling .dat file (DAYS / UNSUPERVISED_MINUTS).
+    horizonMinutes = 7 * DAY;
+    unsupervisedStart = DAY / 2;
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -207,9 +207,9 @@ int SSP::loadInstanceParans(string filename) {
             } else if (key == "MACHINES") {
                 numberMachines = std::stoi(value);
             } else if (key == "DAYS") {
-                planingHorizon = std::stoi(value);
+                horizonMinutes = std::stoi(value) * DAY;
             } else if (key == "UNSUPERVISED_MINUTS") {
-                unsupervised = std::stoi(value);
+                unsupervisedStart = std::stoi(value);
             }
         }
     }
@@ -407,9 +407,11 @@ int SSP::loadInstanceBeezao(string filename) {
     }
 
     // ---------------------------------------------------------------------
-    planingHorizon = getMakespan(filename) * 2;
-    // cout << "Estimated Makespan from ALNS: " << planingHorizon << endl;
-    unsupervised = planingHorizon;
+    // The .PMTC format carries no horizon and no unsupervised period. The horizon
+    // is estimated as twice the ALNS makespan, read as DAYS (so it never binds --
+    // kept as it was), and unsupervisedStart = DAY means "no unsupervised period".
+    horizonMinutes = (int)(getMakespan(filename) * 2) * DAY;
+    unsupervisedStart = DAY;
 
     file.close();
 
@@ -434,8 +436,8 @@ int SSP::loadInstanceBase(string filename) {
     file >> capacity >> machines >> horizon >> unsupervisedMinuts;
     capacityMagazine = capacity;
     numberMachines = machines;
-    planingHorizon = horizon;
-    unsupervised = unsupervisedMinuts;
+    horizonMinutes = horizon * DAY;
+    unsupervisedStart = unsupervisedMinuts;
 
     string emptyLine;
     getline(file, emptyLine); // consume rest of row 1
@@ -577,8 +579,8 @@ int SSP::loadInstanceConsolidated(string filename) {
     file >> capacity >> machines >> horizon >> unsupervisedMinuts;
     capacityMagazine = capacity;
     numberMachines   = machines;
-    planingHorizon   = horizon;
-    unsupervised     = unsupervisedMinuts;
+    horizonMinutes    = horizon * DAY;
+    unsupervisedStart = unsupervisedMinuts;
 
     string discard;
     getline(file, discard); // consume rest of the unsupervised_minuts line
@@ -666,8 +668,8 @@ void SSP::printDataReport() {
 
     fmt::print("Number of Machines: {}\n", numberMachines);
     fmt::print("Capacity of Magazine: {}\n", capacityMagazine);
-    fmt::print("Planing Horizon: {}\n", planingHorizon);
-    fmt::print("Unsupervised: {}\n\n", unsupervised);
+    fmt::print("Horizon (minutes): {}\n", horizonMinutes);
+    fmt::print("Unsupervised starts at minute: {}\n\n", unsupervisedStart);
     fmt::print("Number of Tools: {}\n\n", numberTools);
     fmt::print("Number of Original Jobs: {}\n\n", numberJobs);
 

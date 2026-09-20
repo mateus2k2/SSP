@@ -2,7 +2,7 @@
 SSP::practitioner and SSP::modelo -- all share this layout):
 
     <jobsFile>;<toolsFile>
-    <planingHorizon>;<unsupervised>;<DAY>
+    <horizon in days>;<unsupervised start>;<minutes per day>
     Machine: 0
     <job>;<op>;<start>;<end>;<priority>;<tool>,<tool>,...,
     ...
@@ -11,8 +11,16 @@ SSP::practitioner and SSP::modelo -- all share this layout):
     END
     <key>: <value>          (fineshedJobsCount, switchs, Final Solution, ...)
 
+Every time in a report is in minutes, except the horizon on line 2, which is
+in days (horizon minutes = days x minutes-per-day). "unsupervised start" is the
+minute of the day the unsupervised period begins; == minutes per day means the
+instance has no unsupervised period (the Beezao .PMTC set).
+
 Times are minutes on that machine's own timeline (every machine starts at 0).
 The magazine column lists the tools loaded while the operation runs.
+
+The footer's "Time" is milliseconds for GA/PT/practitioner and seconds for the
+Gurobi model (see ssp/results.py, which divides accordingly).
 """
 import re
 

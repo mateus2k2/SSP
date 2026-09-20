@@ -13,8 +13,8 @@
 struct GAParams {
     int    numMachines = 2;
     int    magazineCap = 80;
-    int    horizon     = 10080;   // planning horizon in minutes (7 days)
-    double unsupHours  = 12.0;   // unsupervised hours per day
+    int    horizonMinutes    = 7 * DAY;  // planning horizon, in minutes
+    int    unsupervisedStart = DAY / 2;  // minute of the day the unsupervised period starts
     int    revenue     = 30;
     int    penaltyCost = 30;
     int    fixedSwitch = 10;

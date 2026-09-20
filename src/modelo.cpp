@@ -21,7 +21,7 @@ double cf;     // custo por troca supervisionada
 double cv;     // custo por ferramenta trocada
 double Hm;     // Horizonte de agendamento em minutos
 double Hd;     // Horizonte de agendamento em dias
-double tU;     // Duração do turno não supervisionado
+double tU;     // Minuto do dia em que começa o turno não supervisionado
 double TC;     // Capacidade total de ferramentas
 
 // -------------------------------------------------
@@ -218,7 +218,7 @@ void SSP::convertModelData(string& filename, GRBModel& model) {
     sort(operationsSorted.begin(), operationsSorted.end(), [&](const pair<int, int>& a, const pair<int, int>& b) { return s[a].get(GRB_DoubleAttr_X) < s[b].get(GRB_DoubleAttr_X); });
 
     solutionReportFile << inputJobsFile << ";" << inputToolsetsFile << endl;
-    solutionReportFile << Hd << ";" << tU << ";" << 1440 << endl;
+    solutionReportFile << Hd << ";" << tU << ";" << DAY << endl;
 
     for (int m : machinesModel) {
         solutionReportFile << "Machine: " << m - 1 << endl;
@@ -320,9 +320,9 @@ void SSP::loadModelData() {
     cp = 30;
     cf = 10;
     cv = 1;
-    Hm = planingHorizon * 24 * 60;  // converte de dias para minutos
-    Hd = planingHorizon;            // em dias
-    tU = unsupervised;              // ja esta em minutos
+    Hm = horizonMinutes;            // em minutos
+    Hd = horizonMinutes / DAY;      // em dias (só para o cabeçalho do relatório)
+    tU = unsupervisedStart;         // minuto do dia em que começa o turno não supervisionado
     TC = capacityMagazine;
 
     for (auto job : originalJobs) {
@@ -414,7 +414,7 @@ int SSP::modelo(string fileOutputPath, int timeLimit) {
         for (auto [j, k] : operationsModel) {
             L += processingTimes[{j, k}];
         }
-        L += ceil(Hm * (tU / (24 * 60)));
+        L += ceil(Hm * ((DAY - tU) / (double)DAY));  // fração não supervisionada do dia
 
         // (2) Cada operação pode ser seguida por no máximo uma outra operação
         for (auto [j, k] : operationsModel) {
@@ -614,7 +614,8 @@ int SSP::modelo(string fileOutputPath, int timeLimit) {
 
             model.addConstr(s[{j, k}] == (24*60) * q[{j, k}] + h[{j, k}], "mod_reconstruction_" + to_string(j) + "_" + to_string(k));
 
-            double denom = (24*60) - tU;
+            // trocas só no turno supervisionado, isto é, h(jk) = s(jk) mod DAY <= tU
+            double denom = tU;
             model.addConstr(l[{j, k}] <= 2 - h[{j, k}] / denom, "supervised_tool_switch_" + to_string(j) + "_" + to_string(k));
         }
 

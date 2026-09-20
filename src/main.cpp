@@ -78,8 +78,8 @@ static void runGA(SSP* prob, const RunConfig& cfg, fstream& report) {
     GAParams gaParams;
     gaParams.numMachines = prob->getNumberMachines();
     gaParams.magazineCap = prob->getCapacityMagazine();
-    gaParams.horizon     = prob->getPlaningHorizon();     // already in minutes
-    gaParams.unsupHours  = prob->getUnsupervised() / 60;  // convert min -> hours
+    gaParams.horizonMinutes    = prob->getHorizonMinutes();
+    gaParams.unsupervisedStart = prob->getUnsupervisedStart();
     gaParams.revenue     = cfg.profitFinished;
     gaParams.penaltyCost = cfg.costPriority;
     gaParams.fixedSwitch = cfg.costSwitchInstance;
