@@ -24,8 +24,8 @@ using namespace std;
 // report format can differ per method (modelo writes its own file directly and ignores it).
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-static void runModelo(SSP* prob, const RunConfig& cfg) {
-    prob->modelo(cfg.outputFile, cfg.timeLimit);
+static int runModelo(SSP* prob, const RunConfig& cfg) {
+    return prob->modelo(cfg.outputFile, cfg.timeLimit);  // non-zero: no report was written
 }
 
 static void runPractitioner(SSP* prob, const RunConfig& cfg, fstream& report) {
@@ -137,8 +137,9 @@ int main(int argc, char* argv[]) {
     // DISPATCH
     // ------------------------------------------------------------------------------
 
+    int status = 0;
     switch (cfg.method) {
-        case Method::MODELO:       runModelo(prob, cfg); break;
+        case Method::MODELO:       status = runModelo(prob, cfg); break;
         case Method::PRACTITIONER: runPractitioner(prob, cfg, solutionReportFile); break;
         case Method::PT:           runPT(prob, cfg, solutionReportFile); break;
         case Method::ONB:          runONB(prob, cfg, solutionReportFile); break;
@@ -146,5 +147,5 @@ int main(int argc, char* argv[]) {
     }
 
     solutionReportFile.close();
-    return 0;
+    return status;
 }

@@ -14,6 +14,13 @@ summarizing the reports it writes. Run every command from the repo root.
 
 Python needs `pandas`, `natsort` and `openpyxl` (installed by the devcontainer).
 
+Gurobi (only `--METHOD modelo` needs it) lives in `gurobi/`. `make` defaults `GUROBI_HOME`
+to `gurobi/gurobi1303/linux64` and exports `GRB_LICENSE_FILE=gurobi/gurobi.lic`, and the
+binary is linked with an rpath, so `make normalCompile` and `experiments/runExperiment.sh`
+work with no environment setup. Running `src/out/mainCpp --METHOD modelo` **directly** still
+needs the license: `export GRB_LICENSE_FILE=$PWD/gurobi/gurobi.lic` (or copy it to `~/gurobi.lic`).
+`--TIME_LIMIT` is in **minutes**.
+
 ## instances/
 
 | Script | What it does |

@@ -37,7 +37,7 @@ void ArgParser::printUsage(const char* progName) {
         "  --INSTANCE_REPORT <0|1>               Print the instance report before solving (default 0)\n"
         "\n"
         "--METHOD modelo options:\n"
-        "  --TIME_LIMIT <int>                    Gurobi time limit in seconds (default 0 = unlimited)\n"
+        "  --TIME_LIMIT <int>                    Gurobi time limit in MINUTES (default 0 = unlimited)\n"
         "\n"
         "--METHOD practitioner options:\n"
         "  --SEQUENCE_BY <int>                   Sequencing rule (default 0)\n"

@@ -20,6 +20,12 @@ GATILHO_MODE=0
 RAND_MODE=1
 TESLA_MODE=0
 GUROBI_VERSION=130
+# Gurobi install used for building/linking. Override by exporting GUROBI_HOME
+# (an exported value wins over this default), e.g. for the tesla build.
+GUROBI_HOME ?= $(CURDIR)/gurobi/gurobi1303/linux64
+# License shipped with the repo; Gurobi needs it at run time.
+GRB_LICENSE_FILE ?= $(CURDIR)/gurobi/gurobi.lic
+export GRB_LICENSE_FILE
 OPTIMIZATION=-O3
 SANITAZE=
 
@@ -70,7 +76,7 @@ OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(CPP_FILES))
 
 CXX := g++
 CXXFLAGS := -std=c++2a -Wall -Wshadow -m64 -march=native $(DEBUG_MACRO_OPTS) $(FMT_MACRO) ${PRINT_MACRO} $(GATILHO_MACRO) $(RAND_MACRO) $(TESLA_MACRO)
-LDFLAGS := -L${GUROBI_HOME}/lib -lgurobi_c++ -lgurobi${GUROBI_VERSION} -lpthread ${DEBUG_MACRO_OPTS} -lm -lstdc++ $(USE_FMT)
+LDFLAGS := -L${GUROBI_HOME}/lib -Wl,-rpath,${GUROBI_HOME}/lib -lgurobi_c++ -lgurobi${GUROBI_VERSION} -lpthread ${DEBUG_MACRO_OPTS} -lm -lstdc++ $(USE_FMT)
 INCLUDES := -I${GUROBI_HOME}/include -I$(PTAPI_HOME)/include
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp

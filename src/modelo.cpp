@@ -365,14 +365,15 @@ int SSP::modelo(string fileOutputPath, int timeLimit) {
     size_t slashPos = fileOutputPath.find_last_of('/');
     size_t dotPos = fileOutputPath.find_last_of('.');
 
-    // Extract folder and file
-    std::string folder = fileOutputPath.substr(0, slashPos);
+    // Extract folder and file. The folder is used as given: prefixing it with
+    // "./" made every absolute output path unwritable (Gurobi error 10013).
+    std::string folder = (slashPos == string::npos) ? "." : fileOutputPath.substr(0, slashPos);
     std::string file = fileOutputPath.substr(slashPos + 1, dotPos - slashPos - 1);
 
-    string outputModel = "./" + folder + "/" + file + ".lp";
-    string outputSolution = "./" + folder + "/" + file + ".sol";
-    string outputReport = "./" + folder + "/" + file + ".csv";
-    string outputInfisible = "./" + folder + "/" + file + ".inf";
+    string outputModel = folder + "/" + file + ".lp";
+    string outputSolution = folder + "/" + file + ".sol";
+    string outputReport = folder + "/" + file + ".csv";
+    string outputInfisible = folder + "/" + file + ".inf";
 
     try {
         GRBEnv env = GRBEnv();
@@ -680,21 +681,23 @@ int SSP::modelo(string fileOutputPath, int timeLimit) {
 
         model.update();                                         // Atualiza o conteúdo do modelo
         if (timeLimit > 0) {
-            model.set(GRB_DoubleParam_TimeLimit, timeLimit*60); // 5 minutes
+            model.set(GRB_DoubleParam_TimeLimit, timeLimit*60); // --TIME_LIMIT is in minutes
         }
         // model.write(outputModel);                               // Escreve o modelo em um arquivo
         model.optimize();                                       // Resolve o modelo
 
         int status = model.get(GRB_IntAttr_Status);             // Verifica o status do modelo
+        // no report is written on these paths: report the failure to the caller
+        // instead of exiting 0 and leaving an empty file behind
         if (status == GRB_UNBOUNDED) {
-            cout << "O modelo nao pode ser resolvido porque e ilimitado" << endl;
-            return 0;
+            cerr << "O modelo nao pode ser resolvido porque e ilimitado" << endl;
+            return 1;
         }
         if (status == GRB_INFEASIBLE) {
-            cout << "O modelo nao pode ser resolvido porque e inviavel. Verifique o arquivo InfeasibilityCheck.ilp" << endl;
+            cerr << "O modelo nao pode ser resolvido porque e inviavel. Verifique " << outputInfisible << endl;
             model.computeIIS();
-            model.write(outputInfisible);               
-            return 0;
+            model.write(outputInfisible);
+            return 1;
         }
         if (status == GRB_TIME_LIMIT) {
             cout << "Optimization stopped due to time limit." << std::endl; // salvar o best bound aqui
@@ -704,10 +707,12 @@ int SSP::modelo(string fileOutputPath, int timeLimit) {
         convertModelData(outputReport, model);
 
     } catch (GRBException error) {
-        cout << "Erro numero: " << error.getErrorCode() << endl;
-        cout << error.getMessage() << endl;
+        cerr << "Erro numero: " << error.getErrorCode() << endl;
+        cerr << error.getMessage() << endl;
+        return 1;
     } catch (...) {
-        cout << "Erro durante a construcao ou solucao do modelo" << endl;
+        cerr << "Erro durante a construcao ou solucao do modelo" << endl;
+        return 1;
     }
 
     return 0;

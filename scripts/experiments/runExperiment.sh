@@ -14,6 +14,7 @@
 #                    old-ABI build used on one specific lab machine. Use "skip" to reuse
 #                    whatever binary is already built.
 #   licenseFile      Optional path exported as GRB_LICENSE_FILE before compiling/running
+#                    (default: ./gurobi/gurobi.lic when it exists)
 #
 # Examples:
 #   ./scripts/experiments/runExperiment.sh ./output/TESTE same pt 9
@@ -24,7 +25,7 @@
 set -euo pipefail
 
 if [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ]; then
-    sed -n '2,20p' "$0" | sed 's/^# \{0,1\}//'
+    sed -n '2,23p' "$0" | sed 's/^# \{0,1\}//'
     exit 0
 fi
 
@@ -73,7 +74,11 @@ if [ "$runMode" = "beezao" ]; then
     instaceExtention="PMTC"
 fi
 
-# If licenseFile is provided, set the environment variable
+# If licenseFile is provided, set the environment variable; otherwise fall back
+# to the license shipped with the repo (only --METHOD modelo needs one)
+if [ -z "$licenseFile" ] && [ -f ./gurobi/gurobi.lic ]; then
+    licenseFile=./gurobi/gurobi.lic
+fi
 if [ -n "$licenseFile" ]; then
     export GRB_LICENSE_FILE="$licenseFile"
 fi
