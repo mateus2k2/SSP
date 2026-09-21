@@ -12,9 +12,11 @@ python3 scripts/results/validateRuns.py output-final          # all checks, per 
 python3 scripts/results/buildSpreadsheet.py --compare .tmp     # results vs the Google Sheet export
 ```
 
-**All runs in `output-final/` predate the fixes below**, so they still show these problems. Rerunning
-with the current code leaves same-toolset and base GA/PT results unchanged (except the three n=212
-instances in §3.1); different-toolset and practitioner results change.
+**The practitioner runs in `output-final/` were regenerated on 2026-09-21** with the fixed solver and
+now validate with 0 errors; the originals are kept as `*-single-run-pre-fix/` (see §7). The GA, PT and
+Modelo runs there still predate the fixes and still show the problems below. Rerunning them leaves
+same-toolset and base GA/PT results unchanged (except the three n=212 instances in §3.1);
+different-toolset results change.
 
 ---
 
@@ -22,7 +24,7 @@ instances in §3.1); different-toolset and practitioner results change.
 
 | # | Problem | Where | Status |
 |---|---|---|---|
-| 1 | `unfineshedPriorityCount` holds the **finished** priority count, and the objective uses it | practitioner: 1560 reports (41 same, 42 diff, 37 base, 1440 Beezao HP) | fixed `f53247b7` |
+| 1 | `unfineshedPriorityCount` holds the **finished** priority count, and the objective uses it | practitioner: 1560 reports (41 same, 42 diff, 37 base, 1440 Beezao HP) | fixed `f53247b7`; reports regenerated |
 | 2 | Op 1 finished without its op 0 | different toolset: PT 322, GA 290, HP 33 reports | fixed `f53247b7` |
 | 3 | Op 0 and op 1 of a job on different machines | different toolset: PT 60, HP 41, GA 30, Modelo 3 reports | fixed `f53247b7` |
 | 4 | Op 1 not immediately after op 0 (another job in between) | different toolset: HP 40, Modelo 3 reports | fixed `f53247b7` |
@@ -119,15 +121,39 @@ Old and new binaries were built clean and run over the same inputs:
 | Gurobi model, same and different toolset n=15 | 0 validation errors; strong chain holds, times no longer truncated |
 | Existing `output-final` reports | still parse and validate with the same findings as before |
 
-## 7. Open items
+## 7. Regenerated runs and what is still pending
 
-1. **Rerun the experiments.** The practitioner and every different-toolset run in `output-final/` come
-   from the buggy code, as do the model runs. The practitioner is fast (minutes for all sets); the
-   GA/PT different-toolset runs take hours.
+The practitioner was rerun over all four instance sets on 2026-09-21 (`01b7f547`): 1561 reports,
+0 validation errors. The originals are kept beside them as `*-single-run-pre-fix/`. Against those:
+
+| Set | Objective changed | Switches | Finished | Why |
+|---|---|---|---|---|
+| same toolset | 41/42 | 3 | 2 | priority counter; n=212 v7/v8 over-capacity op; n=15 p=0.75 balancing |
+| different toolset | 42/42 | 41 | 33 | priority counter, strong chain, op 1's time no longer spent twice |
+| base | 37/37 | 0 | 0 | priority counter only |
+| Beezao HP | 1440/1440 | 1173 | 1191 | priority counter **and** the `getMakespan()` fix (`ecd94128`): the horizon came from the wrong CSV column and was about ten times too small, so jobs were left unfinished. All 200 jobs now finish (instance 931: 909 -> 927 switches) |
+
+The spreadsheet was rebuilt from them: `Resultados-SSP-USPrC.xlsx` now needs **no** corrections
+(reported and recomputed values agree), and validation errors across `output-final/` dropped from
+2266 to 706 reports.
+
+Note for the thesis tables: the HP column changes everywhere, and for the Beezao instances it changes
+for a second reason (the horizon fix), not only the objective bug. The Beezao PT runs were produced by
+an even older version whose header says horizon = 1 day, unsupervised = 1068; rerunning them would
+move those numbers too.
+
+## 8. Open items
+
+1. **Rerun the remaining experiments.** The different-toolset GA (320 reports with errors), PT (382)
+   and Modelo (4) runs in `output-final/` still come from the buggy code. GA/PT runs take hours; the
+   model needs Gurobi.
 2. **Practitioner B1/B2.** They are now fractions of the horizon in minutes, which is the consistent
    reading, but Holanda et al.'s definition was not available to confirm it.
 3. **Beezao horizon.** The `.PMTC` format carries no horizon; the code uses 2 × the ALNS makespan read
-   as days, which never binds. Kept as it was so the published Beezao results stay reproducible.
+   as days, which never binds, so every job finishes. That convention was left alone, but the
+   `getMakespan()` column fix already moved the HP numbers away from the published ones (§7), and the
+   Beezao PT runs still carry the older, much smaller horizon. Decide which horizon the IPMTC tables
+   should use before rerunning PT there.
 4. **`Time` in report footers** is milliseconds for GA/PT/practitioner and seconds for the Gurobi
    model. Documented in `scripts/ssp/reports.py` rather than changed, because changing it would
    invalidate every existing report and the spreadsheet's time columns.
