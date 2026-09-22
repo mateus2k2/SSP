@@ -186,3 +186,36 @@ finished and 909 switches, against 200 and 927 now). The horizon is now read as 
 spreadsheet and the unsupervised period is switched off explicitly for this format; verified over all
 1440 instances, this changes no counters against the previous "read as days" behaviour — only the
 horizon printed in the report header.
+
+## 10. Why the GA returns the same switch count for every IPMTC-II instance
+
+Running the GA over the 12 instances of the Beezao table with a fixed seed gives **exactly** the same
+number of switches on all of them (600 with seed 42, 595 with seed 7, 624 with seed 2024). That is not
+a coincidence and not a bug: for our objective those 12 files are the same problem.
+
+| What the files contain | 931 | 932 | 933 | 946-948 | 952-954 | 958-960 |
+|---|---|---|---|---|---|---|
+| tool matrix (tool set of every job) | identical across all twelve | = | = | = | = | = |
+| processing times | A | A | A | B | C | D |
+| switching time (line 2 of the .PMTC) | 42 | 68 | 1 | ... | ... | ... |
+
+Within a group of three (931/932/933) the files differ **only** in the switching time; between groups
+they also differ in the processing times. Our model has neither: the SSP-USPrC objective counts tool
+switches (it has no switching *time*), and with the Beezao cost parameters
+(`--PROFITYFINISHED 0 --COSTSWITCHINSTANCE 0`) the objective is exactly `-switches`. Processing times
+could only enter through the horizon or the unsupervised period, and neither binds here (§9), while
+the GA splits the sequence across machines by operation *count*, not by time. So the GA is solving one
+and the same instance twelve times, and the seed is the only thing that changes.
+
+The practitioner does use processing times, in its workload balancing, and it behaves accordingly:
+927 switches for 931-933, 889 for 946-948, 933 for 952-954, 923 for 958-960 — constant inside each
+group of equal processing times, different between groups.
+
+Across the whole IPMTC-II set the redundancy is the same: 1440 files, **48 distinct tool matrices**,
+each shared by 30 files.
+
+This also explains why the published AG column (745, 684, 718, ...) cannot be reproduced here: it
+varies from instance to instance within a group, so it must come from a model in which the switching
+time matters — which is Beezao's original IPMTC objective, not the SSP-USPrC one. Making our solver
+distinguish these instances would require modelling switching time (or splitting machines by time,
+which `splitSolutionIntoMachinesByTime()` does but is not used).

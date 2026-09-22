@@ -58,7 +58,8 @@ struct RunConfig {
     int profitFinished     = 30;
 
     // Genetic Algorithm (GA)
-    unsigned gaSeed = 42; // was hardcoded in main.cpp; kept as the default here
+    unsigned gaSeed = 42;      // was hardcoded in main.cpp; kept as the default here
+    double gaMaxSec = 3600.0;  // wall-clock cap on the GA loop; was hardcoded in main.cpp
 };
 
 // ─────────────────────────────────────────────────────────────────────────────

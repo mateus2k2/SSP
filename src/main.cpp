@@ -84,7 +84,7 @@ static void runGA(SSP* prob, const RunConfig& cfg, fstream& report) {
     gaParams.penaltyCost = cfg.costPriority;
     gaParams.fixedSwitch = cfg.costSwitchInstance;
     gaParams.varSwitch   = cfg.costSwitch;
-    gaParams.maxTimeSec  = 3600.0;
+    gaParams.maxTimeSec  = cfg.gaMaxSec;
 
     // Wrap SSP::evaluate as a profit function (evaluate() returns -profit)
     GeneticAlgorithm::EvalFn evalFn = [&](const vector<int>& perm) -> double {
@@ -93,7 +93,9 @@ static void runGA(SSP* prob, const RunConfig& cfg, fstream& report) {
         return -prob->evaluate(s);
     };
 
-    GeneticAlgorithm ga(prob->getGroupedJobs(), gaParams, evalFn, cfg.gaSeed);
+    // --GA_SEED 0 means "pick a seed now"; the seed goes in the report so a run can be repeated
+    unsigned seed = cfg.gaSeed ? cfg.gaSeed : std::random_device{}();
+    GeneticAlgorithm ga(prob->getGroupedJobs(), gaParams, evalFn, seed);
 
     ExecTime et;
     Chromosome best = ga.run();
@@ -105,6 +107,8 @@ static void runGA(SSP* prob, const RunConfig& cfg, fstream& report) {
 
     report << "Final Solution: " << cost << endl;
     report << "Time: " << et.getTimeMs() << endl;
+    report << "GA Seed: " << seed << endl;
+    report << "GA Max Sec: " << gaParams.maxTimeSec << endl;
 
     cout << cost << endl;
 }
