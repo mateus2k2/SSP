@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-# Runs runExperiment.sh `repeats` times, once per numbered subfolder, so results from
+# Runs runExperiment.sh `repeats` times, into run-01 ... run-NN, so results from
 # repeated runs of the same config don't overwrite each other.
+#
+# JOBS and GA_SEED are passed through to runExperiment.sh (see its --help).
 #
 # Usage:
 #   ./scripts/experiments/runRepeated.sh <outputFolder> <runMode> <method> [head] [compileProfile] [licenseFile] [repeats]
@@ -28,5 +30,7 @@ repeats=${7:-10}
 for i in $(seq 1 "$repeats")
 do
     echo "Running $i"
-    "$(dirname "$0")/runExperiment.sh" "$outputFolder/$i" "$runMode" "$method" "$head" "$compileProfile" "$licenseFile"
+    # run-01 ... run-10, the layout output-final/ uses and the results scripts expect
+    "$(dirname "$0")/runExperiment.sh" "$outputFolder/$(printf 'run-%02d' "$i")" \
+        "$runMode" "$method" "$head" "$compileProfile" "$licenseFile"
 done
