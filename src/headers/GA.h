@@ -59,6 +59,12 @@ public:
     /// Run the GA and return the best chromosome found.
     Chromosome run();
 
+    /// Fitness of the initial population, available after run(): the best one and
+    /// the mean. Reported like PT's "Best Initial" / "Mean Initial" so the two
+    /// methods can be compared on how much the search improved on its start.
+    double initialBest() const { return initialBest_; }
+    double initialMean() const { return initialMean_; }
+
 private:
     // ── problem data ──────────────────────────────────────────────────────────
     std::vector<Job> jobs_;   // grouped jobs
@@ -66,6 +72,8 @@ private:
     EvalFn           eval_;
     std::mt19937     rng_;
     int              n_;      // number of grouped jobs
+    double           initialBest_ = 0.0;
+    double           initialMean_ = 0.0;
 
     // ── hyper-parameters (tuned values from paper) ────────────────────────────
     static constexpr int    Np_    = 400;   // population size

@@ -537,6 +537,9 @@ Chromosome GeneticAlgorithm::run() {
     sort(pop.begin(), pop.end(), fitnessDesc);
 
     Chromosome best       = pop[0];
+    initialBest_ = pop[0].fitness;
+    initialMean_ = accumulate(pop.begin(), pop.end(), 0.0,
+                              [](double acc, const Chromosome& c) { return acc + c.fitness; }) / pop.size();
     int  gensNoImprove    = 0;
     bool poxActive        = false;
     int  poxGenCount      = 0;

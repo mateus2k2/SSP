@@ -107,6 +107,8 @@ static void runGA(SSP* prob, const RunConfig& cfg, fstream& report) {
 
     report << "Final Solution: " << cost << endl;
     report << "Time: " << et.getTimeMs() << endl;
+    report << "Best Initial: " << ga.initialBest() << endl;
+    report << "Mean Initial: " << ga.initialMean() << endl;
     report << "GA Seed: " << seed << endl;
     report << "GA Max Sec: " << gaParams.maxTimeSec << endl;
 
