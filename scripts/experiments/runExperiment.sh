@@ -109,6 +109,15 @@ case "$compileProfile" in
     skip)   echo "Skipping compile, reusing existing ./src/out/mainCpp" ;;
 esac
 
+# Guard against running a binary older than these sources: with compileProfile=skip
+# it is easy to reuse a stale build, and an old mainCpp ignores flags it does not
+# know (so the run finishes suspiciously fast and the reports are meaningless).
+if ! ./src/out/mainCpp --HELP 2>&1 | grep -q -- '--GA_MAX_SEC'; then
+    echo "Error: ./src/out/mainCpp predates the current sources (it has no --GA_MAX_SEC)." >&2
+    echo "       Rebuild it: make normalCompile   (or: make teslaCompile)" >&2
+    exit 1
+fi
+
 toolSetsFile=./input/Processed/ToolSetInt.csv
 
 # --METHOD plus the parameters that do not depend on the instance set
