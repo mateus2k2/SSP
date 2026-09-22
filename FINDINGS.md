@@ -219,3 +219,77 @@ varies from instance to instance within a group, so it must come from a model in
 time matters — which is Beezao's original IPMTC objective, not the SSP-USPrC one. Making our solver
 distinguish these instances would require modelling switching time (or splitting machines by time,
 which `splitSolutionIntoMachinesByTime()` does but is not used).
+
+## 11. The GA against Dang et al. (2023), Section 5
+
+Reviewed `src/ga.cpp` and `src/headers/GA.h` against the paper's Section 5 and Table D.1.
+
+### Matches the paper
+
+Tuned parameters (Np = 400, ST = 0.2 x Np = 80, SE = 0.1 x Np = 40, Ps = Pu = 0.01, Omega = 1,
+Gc = 20, maxTime = 3600 s); the Algorithm 1 loop (tournament selection, crossover, mutation,
+evaluation, elitism plus immigration, POX armed for Omega generations after each new best);
+combined crossover as two-point plus PMX repair; elitism replacing the SE worst offspring with the
+SE best parents; duplicates replaced by random solutions; termination on maxTime or Gc generations
+without improvement; a BnB-seeded share of the initial population.
+
+### Structural deviations
+
+1. **No machine vector.** The paper's chromosome is a job vector *and* a machine vector
+   (`v_g = {S_g, M_g}`); ours is a flat permutation, and machines come from
+   `splitSolutionIntoMachines()`, which cuts the sequence into equal-size blocks **by operation
+   count**. The GA therefore never searches machine allocation. Three parts of the paper depend on
+   that vector and are consequently absent or altered: POX step 3 (the constructive heuristic that
+   assigns each class to a machine already holding part of its tools, else the least loaded one),
+   the uniform mutation (which in the paper re-draws machines, and here became a reinsertion
+   mutation on the sequence), and the machine half of the combined crossover. The comment in GA.h
+   claiming the evaluator assigns machines "via a time-based split" is wrong: the split is by count
+   (`splitSolutionIntoMachinesByTime()` exists but is unused).
+2. **No maximal classes in the chromosome.** The paper's genes *are* maximal classes, and §5.5 merges
+   classes back after the genetic operators, precisely to avoid unnecessary switching *instances*.
+   Here classes only seed 5% of the initial population; after the first generation the structure is
+   gone and there is no merge step. This matters for the thesis' own instances, where the fixed cost
+   per switching instance is c_f = 10 (it does not matter for the Beezao runs, where c_f = 0).
+3. **Initial population.** The paper seeds one practitioner solution plus 5% BnB; ours seeds 5% BnB
+   plus 5% "priority first" and no practitioner solution, although the practitioner is implemented.
+4. **`runBnB()` is not a branch-and-bound.** It computes MIMU and sweeping, and if the bounds differ
+   it explores exactly one branch per level (`break` at the end of the seed loop), so it is MIMU with
+   extra work rather than the paper's Appendix E.3 search.
+5. **POX step 2.** The paper inserts each operation at the position of the first gene with similar
+   tool requirements; ours rebuilds the whole non-priority tail as a greedy nearest-neighbour chain.
+   Because that chain is determined by its first element, POX maps many different parents onto very
+   few distinct children - on the Beezao instances, where every job is priority, step 1 does nothing
+   and step 2 collapses each chromosome to one deterministic ordering. `removeDuplicates()` then
+   discards the copies and replaces them with random solutions, so POX injects diversity instead of
+   exploiting the region of the best solution, which is the opposite of its purpose.
+   (Applying POX to the CX offspring, as the code does, is *not* a deviation: Algorithm 1 presents
+   the two as alternatives but Example 6 applies POX to the output of CX.)
+6. **Swap mutation** is a plain permutation swap; the paper swaps at class level *and* at operation
+   level with a magazine-capacity check that can move an operation to another class or open a new one.
+7. **Tournament selection** draws ST indices with replacement; the paper picks a set of ST
+   chromosomes. Minor, but it is not the same distribution.
+
+### Smaller issues
+
+`GAParams` carries fields the GA never reads (`numMachines`, `revenue`, `penaltyCost`,
+`fixedSwitch`, `varSwitch`, `horizonMinutes`, `unsupervisedStart`) - the costs live in the decoder,
+not in the GA. `ga.cpp` redefines `INT_MAX`. When POX is active each offspring is evaluated twice
+(POX evaluates, mutation re-evaluates).
+
+### Against Table D.1
+
+Run with the paper's Appendix D setup (H = delta*, no unsupervised hours, r = 0, c_f = 0, c_v = 1,
+c_p = 30), best of five random seeds per instance:
+
+| | paper GA | ours, thesis convention | ours, paper convention |
+|---|---|---|---|
+| mean total switches over the 12 instances | 711 | 611 | 775 |
+| instance 931 | 745 | 619 | 780 |
+
+The two conventions differ in the initial magazine load: the thesis states that loading the magazine
+for the first time is not a switch (chap. 3), whereas the paper's fitness (Algorithm 2, lines 26-27)
+starts from an empty magazine and counts it. Adding the first operation's tools on each machine to
+our count (about 160 switches over 6 machines) gives the third column. So the apparent 14% advantage
+is the counting rule; like for like our GA is roughly 9% behind the published one, which is
+consistent with the missing machine-vector search - and the paper ran 14400 s per instance against
+our seconds. Any comparison with Table D.1 in the thesis should state which convention it uses.
