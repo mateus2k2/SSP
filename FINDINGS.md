@@ -161,11 +161,15 @@ move those numbers too.
 ## 9. The Beezao (IPMTC) horizon
 
 The `.PMTC` files carry no planning horizon and no unsupervised period; the horizon is taken from
-`input/BeezaoRaw/alns-original.csv` as **twice the ALNS makespan**, in minutes (rounded up to whole
-days, because the report header expresses the horizon in days). Operations that do not fit are left
-unfinished, so it is a real horizon — it just never binds on these instances: the tightest case has
-1344 minutes of horizon against about 619 minutes of work per machine, and no instance of the 1440
-has `2 x makespan` below its per-machine load.
+`input/BeezaoRaw/alns-original.csv` as **twice the ALNS makespan, in minutes** (the file holds ten ALNS
+runs per instance, so `getMakespan()` averages them: 10898 minutes for instance 931). Operations that
+do not fit are left unfinished, so it is a real horizon — it just never binds on these instances: the
+tightest case has 1344 minutes of horizon against about 619 minutes of work per machine, and none of
+the 1440 instances has `2 x makespan` below its per-machine load.
+
+Because that horizon is not a whole number of days, the report header now carries it exactly in a
+fourth field (`<days>;<unsupervised start>;<minutes per day>;<horizon in minutes>`); reports written
+before this change have three fields and their horizon is days x minutes-per-day.
 
 In the runs that produced the published tables this value was **1068 for instance 931**, because
 `getMakespan()` read the `Timeofjobsprocessing` column instead of `makespan` (fixed in `ecd94128`),

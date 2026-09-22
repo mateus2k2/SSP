@@ -171,7 +171,7 @@ def validate_report(path, costs="auto"):
     res.costs = costs
 
     day = plan["timescale"]
-    horizon = plan["planingHorizon"] * day
+    horizon = plan["horizonMinutes"]
     unsupervised = plan["unsupervised"]
 
     used_machines = sum(1 for m in machines if m)
@@ -309,12 +309,13 @@ def validate_report(path, costs="auto"):
 
 
 def is_report(path):
-    """Cheap sniff: a report's second line is 'H;U;DAY' and it has an END line."""
+    """Cheap sniff: a report's second line is 'H;U;DAY' (older reports) or
+    'H;U;DAY;horizonMinutes', and it has an END line."""
     try:
         with open(path) as f:
             f.readline()
             second = f.readline().strip().split(";")
-            if len(second) != 3 or not all(s.isdigit() for s in second):
+            if len(second) not in (3, 4) or not all(s.isdigit() for s in second):
                 return False
             return any(line.strip() == "END" for line in f)
     except (OSError, UnicodeDecodeError):

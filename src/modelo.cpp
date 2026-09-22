@@ -218,7 +218,7 @@ void SSP::convertModelData(string& filename, GRBModel& model) {
     sort(operationsSorted.begin(), operationsSorted.end(), [&](const pair<int, int>& a, const pair<int, int>& b) { return s[a].get(GRB_DoubleAttr_X) < s[b].get(GRB_DoubleAttr_X); });
 
     solutionReportFile << inputJobsFile << ";" << inputToolsetsFile << endl;
-    solutionReportFile << Hd << ";" << tU << ";" << DAY << endl;
+    solutionReportFile << Hd << ";" << tU << ";" << DAY << ";" << Hm << endl;
 
     for (int m : machinesModel) {
         solutionReportFile << "Machine: " << m - 1 << endl;

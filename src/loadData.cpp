@@ -407,12 +407,10 @@ int SSP::loadInstanceBeezao(string filename) {
     }
 
     // ---------------------------------------------------------------------
-    // The .PMTC format carries no horizon and no unsupervised period. The horizon is
-    // twice the ALNS makespan of alns-original.csv, in minutes, rounded up to whole
-    // days so the report header (which is in days) can express it exactly.
-    // unsupervisedStart = DAY means "no unsupervised period".
-    int horizon = (int)(getMakespan(filename) * 2);
-    horizonMinutes = ((horizon + DAY - 1) / DAY) * DAY;
+    // The .PMTC format carries no horizon and no unsupervised period: the horizon is
+    // twice the ALNS makespan of alns-original.csv, in minutes, and unsupervisedStart
+    // = DAY means "no unsupervised period".
+    horizonMinutes = (int)(getMakespan(filename) * 2);
     unsupervisedStart = DAY;
 
     file.close();

@@ -2,7 +2,7 @@
 SSP::practitioner and SSP::modelo -- all share this layout):
 
     <jobsFile>;<toolsFile>
-    <horizon in days>;<unsupervised start>;<minutes per day>
+    <horizon in days>;<unsupervised start>;<minutes per day>;<horizon in minutes>
     Machine: 0
     <job>;<op>;<start>;<end>;<priority>;<tool>,<tool>,...,
     ...
@@ -11,10 +11,12 @@ SSP::practitioner and SSP::modelo -- all share this layout):
     END
     <key>: <value>          (fineshedJobsCount, switchs, Final Solution, ...)
 
-Every time in a report is in minutes, except the horizon on line 2, which is
-in days (horizon minutes = days x minutes-per-day). "unsupervised start" is the
-minute of the day the unsupervised period begins; == minutes per day means the
-instance has no unsupervised period (the Beezao .PMTC set).
+Every time in a report is in minutes. Line 2 gives the horizon twice: in whole
+days (first field, kept for compatibility) and exactly in minutes (fourth field).
+Reports written before September 2026 have no fourth field, and their horizon is
+days x minutes-per-day. "unsupervised start" is the minute of the day the
+unsupervised period begins; == minutes per day means the instance has no
+unsupervised period (the Beezao .PMTC set).
 
 Times are minutes on that machine's own timeline (every machine starts at 0).
 The magazine column lists the tools loaded while the operation runs.
@@ -51,7 +53,8 @@ def _parse_operation(line):
 def parseReport(file_path):
     """-> (planejamento, machines, endInfo)
 
-    planejamento: planingHorizon, unsupervised, timescale, jobsFileName, toolSetFileName
+    planejamento: planingHorizon (days), horizonMinutes, unsupervised, timescale,
+                  jobsFileName, toolSetFileName
     machines:     list (one per "Machine:" section, in order) of operation dicts
     endInfo:      footer values, keys camelCased (see to_camel_case)
     """
@@ -62,9 +65,12 @@ def parseReport(file_path):
     end = lines.index("END")
 
     files = lines[0].split(";")
-    horizon, unsupervised, timescale = (int(v) for v in lines[1].split(";")[:3])
+    header = [int(v) for v in lines[1].split(";") if v.strip()]
+    horizon, unsupervised, timescale = header[:3]
     planejamento = {
         "planingHorizon": horizon,
+        # exact horizon; older reports only carry whole days
+        "horizonMinutes": header[3] if len(header) > 3 else horizon * timescale,
         "unsupervised": unsupervised,
         "timescale": timescale,
         "jobsFileName": files[0],

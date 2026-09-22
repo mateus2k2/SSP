@@ -206,7 +206,7 @@ void SSP::createSchedules(int condition) {
 
 void SSP::reportDataPractitioner(fstream& solutionReportFile, string filenameJobs, string filenameTools) {
     solutionReportFile << filenameJobs << ";" << filenameTools << endl;
-    solutionReportFile << H / DAY << ";" << U << ";" << DAY << endl;
+    solutionReportFile << H / DAY << ";" << U << ";" << DAY << ";" << H << endl;
 
     int fineshedJobsCountTotal = 0;
     int switchsTotal = 0;

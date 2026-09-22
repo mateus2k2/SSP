@@ -83,7 +83,8 @@ vector<vector<int>> SSP::splitSolutionIntoMachinesByTime(const vector<int>& inpu
 
 double SSP::evaluateReport(solSSP& solution, fstream& solutionReportFile) {
     solutionReportFile << inputJobsFile << ";" << inputToolsetsFile << endl;
-    solutionReportFile << horizonMinutes / DAY << ";" << unsupervisedStart << ";" << DAY << endl;
+    // <horizon in days>;<unsupervised start>;<minutes per day>;<horizon in minutes>
+    solutionReportFile << horizonMinutes / DAY << ";" << unsupervisedStart << ";" << DAY << ";" << horizonMinutes << endl;
 
     int fineshedJobsCountTotal = 0;
     int switchsTotal = 0;
