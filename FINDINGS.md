@@ -149,12 +149,36 @@ move those numbers too.
    model needs Gurobi.
 2. **Practitioner B1/B2.** They are now fractions of the horizon in minutes, which is the consistent
    reading, but Holanda et al.'s definition was not available to confirm it.
-3. **Beezao horizon.** The `.PMTC` format carries no horizon; the code uses 2 × the ALNS makespan read
-   as days, which never binds, so every job finishes. That convention was left alone, but the
-   `getMakespan()` column fix already moved the HP numbers away from the published ones (§7), and the
-   Beezao PT runs still carry the older, much smaller horizon. Decide which horizon the IPMTC tables
-   should use before rerunning PT there.
+3. **Beezao PT runs.** They still carry the old horizon (1 day) and the spurious 1068-minute
+   unsupervised cutoff described in §9, so in the IPMTC table PT and HP now rest on different
+   assumptions. Rerunning the 12 table instances takes about an hour; the full tab is a multi-day job.
+   Not rerun yet, by decision.
 4. **`Time` in report footers** is milliseconds for GA/PT/practitioner and seconds for the Gurobi
    model. Documented in `scripts/ssp/reports.py` rather than changed, because changing it would
    invalidate every existing report and the spreadsheet's time columns.
 5. **Minute-720 switch in the model** (§2.9).
+
+## 9. The Beezao (IPMTC) horizon
+
+The `.PMTC` files carry no planning horizon and no unsupervised period; the horizon is taken from
+`input/BeezaoRaw/alns-original.csv` as **twice the ALNS makespan**, in minutes (rounded up to whole
+days, because the report header expresses the horizon in days). Operations that do not fit are left
+unfinished, so it is a real horizon — it just never binds on these instances: the tightest case has
+1344 minutes of horizon against about 619 minutes of work per machine, and no instance of the 1440
+has `2 x makespan` below its per-machine load.
+
+In the runs that produced the published tables this value was **1068 for instance 931**, because
+`getMakespan()` read the `Timeofjobsprocessing` column instead of `makespan` (fixed in `ecd94128`),
+and that single number was used for three different things:
+
+| Used as | Effect on the published HP runs |
+|---|---|
+| the unsupervised start (`unsupervised = planingHorizon`) | no tool switches after minute 1068 of each day — a constraint the IPMTC problem does not have |
+| the practitioner's balancing thresholds (`B1 = 0.1 x H`, `B2 = 0.8 x H`, i.e. 107 and 854 minutes) | machines were balanced to 33/33/33/33/32/32 operations |
+| the horizon itself, multiplied by DAY | 1068 days — never bound |
+
+That is why the published HP numbers differ from the current ones (instance 931: 196 of 200 jobs
+finished and 909 switches, against 200 and 927 now). The horizon is now read as minutes from the
+spreadsheet and the unsupervised period is switched off explicitly for this format; verified over all
+1440 instances, this changes no counters against the previous "read as days" behaviour — only the
+horizon printed in the report header.
