@@ -142,6 +142,24 @@ ptArgs() {
     esac
 }
 
+# Runs one instance and reports when it FINISHES, with its own wall time, so the
+# log stays readable with several instances in flight. Exported for xargs below.
+# (Instance file names contain no spaces, which is what lets xargs split on them.)
+run_one() {
+    local idx=$1 entry=$2
+    local filename out t0
+    filename=$(basename "$entry")
+    out="$RI_OUT/$RI_PREFIX$filename"
+    t0=$(date +%s)
+    if ./src/out/mainCpp "$entry" "$RI_TOOLSETS" "$out" \
+           --DIFERENT_TOOLSETS_MODE "$RI_MODE" $RI_ARGS >/dev/null 2>&1; then
+        printf '%s [%s/%s] %-42s %5ds\n' "$(date +%H:%M:%S)" "$idx" "$RI_TOTAL" "$filename" "$(( $(date +%s) - t0 ))"
+    else
+        printf '%s [%s/%s] %-42s FAILED\n' "$(date +%H:%M:%S)" "$idx" "$RI_TOTAL" "$filename" >&2
+    fi
+}
+export -f run_one
+
 # run_instances <instancesFolder> <outputFolder> <toolsetFile> <diferentToolsetsMode> <setName> [outputPrefix]
 run_instances() {
     local instancesFolder=$1 outFolder=$2 toolsets=$3 instanceMode=$4 setName=$5 prefix=${6:-""}
@@ -151,48 +169,30 @@ run_instances() {
     [ "$method" = "pt" ] && extraArgs+=" $(ptArgs "$setName")"
 
     local entries total setStart
+    # awk, not head: head exits early, which kills `ls` with SIGPIPE, and under
+    # `set -o pipefail` that aborts the whole script (silently, for big folders)
     entries=$(ls -v "$instancesFolder"/*."$instaceExtention" \
               | { [ -n "${FILTER:-}" ] && grep -E "$FILTER" || cat; } \
-              | head -n "$head")
-    total=$(printf '%s\n' "$entries" | grep -c .)
+              | awk -v n="$head" 'NR <= n')
+    total=$(printf '%s\n' "$entries" | grep -c . || true)
     setStart=$(date +%s)
 
     echo "=== $instancesFolder -> $outFolder"
     echo "    $total instances, $jobs at a time, method $method"
     echo "    $extraArgs"
 
-    local counter=0 running=0
-    for entry in $entries; do
-        counter=$((counter+1))
-        local filename out
-        filename=$(basename "$entry")
-        out="$outFolder/$prefix$filename"
+    # xargs -P throttles the parallel jobs; bash's `wait -n` would need bash 4.3,
+    # which the lab machine does not have.
+    export RI_OUT="$outFolder" RI_PREFIX="$prefix" RI_TOOLSETS="$toolsets" \
+           RI_MODE="$instanceMode" RI_ARGS="$extraArgs" RI_TOTAL="$total"
+    printf '%s\n' "$entries" | grep -v '^$' | nl -ba \
+        | xargs -P "$jobs" -L1 bash -c 'run_one "$0" "$1"'
 
-        # each job reports when it FINISHES, with its own wall time, so the log
-        # stays useful when several instances run at once
-        (
-            local t0=$(date +%s)
-            if ./src/out/mainCpp "$entry" "$toolsets" "$out" \
-                   --DIFERENT_TOOLSETS_MODE "$instanceMode" $extraArgs >/dev/null 2>&1; then
-                printf '%s [%d/%d] %-42s %5ds\n' "$(date +%H:%M:%S)" "$counter" "$total" "$filename" "$(( $(date +%s) - t0 ))"
-            else
-                printf '%s [%d/%d] %-42s FAILED\n' "$(date +%H:%M:%S)" "$counter" "$total" "$filename" >&2
-            fi
-        ) &
-
-        running=$((running+1))
-        if [ "$running" -ge "$jobs" ]; then
-            wait -n
-            running=$((running-1))
-        fi
-    done
-    wait
-
-    local written
+    local written elapsed
     written=$(ls "$outFolder" | wc -l)
-    printf '    set finished in %s (%s now holds %d reports)\n\n' \
-        "$(printf '%dh%02dm' $(( ( $(date +%s) - setStart ) / 3600 )) $(( ( $(date +%s) - setStart ) % 3600 / 60 )))" \
-        "$outFolder" "$written"
+    elapsed=$(( $(date +%s) - setStart ))
+    printf '    set finished in %dh%02dm (%s now holds %d reports)\n\n' \
+        $(( elapsed / 3600 )) $(( elapsed % 3600 / 60 )) "$outFolder" "$written"
 }
 
 run_same()     { run_instances ./input/MyInstancesSameToolSets     "$outputFolder/MyInstancesSameToolSets"     "$toolSetsFile" 0 same; }
