@@ -302,10 +302,14 @@ double getMakespan(const std::string& instanceNamePath){
         // Column layout of alns-original.csv (see its header row):
         // Instance,makespan,Running time,Final temperature,improvements,iterations,
         // Timeofjobsprocessing,timetoolswitches,solutionsaccepted
-        // This used to skip 5 fields (Running time..iterations) then read the 6th
-        // (Timeofjobsprocessing) instead of the makespan column itself -- one getline
-        // too many. makespan is the very next field after Instance.
-        std::getline(ss, field, ',');
+        // We want Timeofjobsprocessing: its mean over the 10 ALNS runs of an
+        // instance is exactly the delta* of Table D.1 in Dang et al. (2023), the
+        // scheduling horizon their Appendix D sets for the Beezao instances
+        // ("the makespan obtained by Beezao et al. excluding the idle time caused
+        // by tool switches"). makespan itself includes the tool switching time.
+        for (int i = 0; i < 5; ++i)
+            std::getline(ss, field, ',');   // makespan .. iterations
+        std::getline(ss, field, ',');       // Timeofjobsprocessing
         sum += std::stod(field);
         count++;
     }
@@ -407,10 +411,12 @@ int SSP::loadInstanceBeezao(string filename) {
     }
 
     // ---------------------------------------------------------------------
-    // The .PMTC format carries no horizon and no unsupervised period: the horizon is
-    // twice the ALNS makespan of alns-original.csv, in minutes, and unsupervisedStart
-    // = DAY means "no unsupervised period".
-    horizonMinutes = (int)(getMakespan(filename) * 2);
+    // The .PMTC format carries no horizon and no unsupervised period. Dang et al.
+    // (2023), Appendix D, set the horizon of these instances to delta*, the time
+    // Beezao et al.'s ALNS needs to finish every job without tool switching time,
+    // and use no unsupervised hours (rho_U = 0, so unsupervisedStart = DAY here).
+    // getMakespan() returns that delta* in minutes.
+    horizonMinutes = (int)getMakespan(filename);
     unsupervisedStart = DAY;
 
     file.close();

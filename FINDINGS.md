@@ -158,34 +158,34 @@ move those numbers too.
    invalidate every existing report and the spreadsheet's time columns.
 5. **Minute-720 switch in the model** (§2.9).
 
-## 9. The Beezao (IPMTC) horizon
+## 9. The Beezao (IPMTC) horizon is delta*, from the paper
 
-The `.PMTC` files carry no planning horizon and no unsupervised period; the horizon is taken from
-`input/BeezaoRaw/alns-original.csv` as **twice the ALNS makespan, in minutes** (the file holds ten ALNS
-runs per instance, so `getMakespan()` averages them: 10898 minutes for instance 931). Operations that
-do not fit are left unfinished, so it is a real horizon — it just never binds on these instances: the
-tightest case has 1344 minutes of horizon against about 619 minutes of work per machine, and none of
-the 1440 instances has `2 x makespan` below its per-machine load.
+The `.PMTC` files carry no horizon and no unsupervised period. Dang et al. (2023), Appendix D, state
+how they ran these instances: no unsupervised hours (rho_U = 0), every job priority (rho_P = 1),
+r = 0, c_f = 0, c_v = 1, c_p = 30, and **H = delta\***, "the makespan obtained by Beezao et al.
+excluding the idle time caused by tool switches". Those delta\* values are printed in their Table D.1.
 
-Because that horizon is not a whole number of days, the report header now carries it exactly in a
-fourth field (`<days>;<unsupervised start>;<minutes per day>;<horizon in minutes>`); reports written
-before this change have three fields and their horizon is days x minutes-per-day.
+`input/BeezaoRaw/alns-original.csv` holds ten ALNS runs per instance, and the mean of its
+**`Timeofjobsprocessing`** column reproduces Table D.1's delta\* **exactly for all 12 instances**
+(instance 931: 1068.80). That is the column `getMakespan()` originally read, and the horizon binds:
+delta\* is about 1068 minutes against about 1072 minutes of work per machine, so a few operations do
+not fit.
 
-In the runs that produced the published tables this value was **1068 for instance 931**, because
-`getMakespan()` read the `Timeofjobsprocessing` column instead of `makespan` (fixed in `ecd94128`),
-and that single number was used for three different things:
+This was broken and is now restored:
 
-| Used as | Effect on the published HP runs |
-|---|---|
-| the unsupervised start (`unsupervised = planingHorizon`) | no tool switches after minute 1068 of each day — a constraint the IPMTC problem does not have |
-| the practitioner's balancing thresholds (`B1 = 0.1 x H`, `B2 = 0.8 x H`, i.e. 107 and 854 minutes) | machines were balanced to 33/33/33/33/32/32 operations |
-| the horizon itself, multiplied by DAY | 1068 days — never bound |
+| | horizon for instance 931 | HP result |
+|---|---|---|
+| original code (what produced the published runs) | 1068 = delta\* | 196 of 200 finished, 909 switches |
+| after `ecd94128` "fix" (read `makespan`, x2) | 10898 | 200 finished, 927 switches |
+| now (`getMakespan()` = mean `Timeofjobsprocessing`, no x2) | 1068 = delta\* | 196 finished, 909 switches |
 
-That is why the published HP numbers differ from the current ones (instance 931: 196 of 200 jobs
-finished and 909 switches, against 200 and 927 now). The horizon is now read as minutes from the
-spreadsheet and the unsupervised period is switched off explicitly for this format; verified over all
-1440 instances, this changes no counters against the previous "read as days" behaviour — only the
-horizon printed in the report header.
+`ecd94128` changed the column to `makespan`, which *includes* the tool switching time
+(5449 = 1068.8 + 4380.6), and kept an extra factor of two, so the horizon stopped binding and every
+job finished. Reading delta\* again reproduces the published HP numbers exactly. The report header
+now carries the horizon in minutes (§ above), which this needs: delta\* is less than one day.
+
+The Beezao PT runs in `output-final/` still carry the old header (horizon 1 day, unsupervised 1068)
+and have not been rerun.
 
 ## 10. Why the GA returns the same switch count for every IPMTC-II instance
 
