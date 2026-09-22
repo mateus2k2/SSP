@@ -1,0 +1,26 @@
+./input/BaseInstances/6M2_n=10,r=0.4,t=14,v0.txt;./input/Processed/ToolSetInt.csv
+7;720;1440
+Machine: 0
+2;0;3875;4048;0;0,1,2,5,6,7,
+2;1;4048;4095;0;0,1,2,5,6,7,
+3;0;4095;4144;1;0,1,2,5,7,
+Machine: 1
+4;0;3929;3998;1;0,1,2,5,7,
+4;1;3998;4095;1;0,1,2,5,7,
+Machine: 2
+5;0;4066;4095;0;0,1,2,3,4,5,6,7,8,9,
+Machine: 3
+0;0;3892;4049;1;0,1,2,3,4,5,7,
+0;1;4049;4095;1;0,1,2,3,4,5,7,
+Machine: 4
+1;0;3948;4095;0;0,1,2,5,6,7,8,9,
+Machine: 5
+6;0;3964;4095;0;0,1,2,5,7,
+END
+Best Bound: 300
+Final Solution: 300
+fineshedJobsCount: 10
+switchs: 0
+switchsInstances: 0
+unfineshedPriorityCount: 0
+Time: 0.0394812
