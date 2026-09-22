@@ -150,24 +150,36 @@ run_instances() {
     local extraArgs="$baseArgs"
     [ "$method" = "pt" ] && extraArgs+=" $(ptArgs "$setName")"
 
-    echo "RODANDO INSTANCIAS DE $instancesFolder  (jobs=$jobs)"
-    echo "  $extraArgs"
+    local entries total setStart
+    entries=$(ls -v "$instancesFolder"/*."$instaceExtention" \
+              | { [ -n "${FILTER:-}" ] && grep -E "$FILTER" || cat; } \
+              | head -n "$head")
+    total=$(printf '%s\n' "$entries" | grep -c .)
+    setStart=$(date +%s)
 
-    local counter=1 running=0
-    for entry in $(ls -v "$instancesFolder"/*."$instaceExtention" \
-                   | { [ -n "${FILTER:-}" ] && grep -E "$FILTER" || cat; } \
-                   | head -n "$head"); do
-        local filename out timestamp
+    echo "=== $instancesFolder -> $outFolder"
+    echo "    $total instances, $jobs at a time, method $method"
+    echo "    $extraArgs"
+
+    local counter=0 running=0
+    for entry in $entries; do
+        counter=$((counter+1))
+        local filename out
         filename=$(basename "$entry")
         out="$outFolder/$prefix$filename"
-        timestamp=$(TZ="America/Sao_Paulo" date "+%Y-%m-%d %H:%M:%S.%3N")
-        echo "$timestamp - $counter $entry -> $out"
 
-        ./src/out/mainCpp "$entry" "$toolsets" "$out" \
-            --DIFERENT_TOOLSETS_MODE "$instanceMode" $extraArgs >/dev/null 2>&1 \
-            || echo "FAILED: $entry" >&2 &
+        # each job reports when it FINISHES, with its own wall time, so the log
+        # stays useful when several instances run at once
+        (
+            local t0=$(date +%s)
+            if ./src/out/mainCpp "$entry" "$toolsets" "$out" \
+                   --DIFERENT_TOOLSETS_MODE "$instanceMode" $extraArgs >/dev/null 2>&1; then
+                printf '%s [%d/%d] %-42s %5ds\n' "$(date +%H:%M:%S)" "$counter" "$total" "$filename" "$(( $(date +%s) - t0 ))"
+            else
+                printf '%s [%d/%d] %-42s FAILED\n' "$(date +%H:%M:%S)" "$counter" "$total" "$filename" >&2
+            fi
+        ) &
 
-        counter=$((counter+1))
         running=$((running+1))
         if [ "$running" -ge "$jobs" ]; then
             wait -n
@@ -175,6 +187,12 @@ run_instances() {
         fi
     done
     wait
+
+    local written
+    written=$(ls "$outFolder" | wc -l)
+    printf '    set finished in %s (%s now holds %d reports)\n\n' \
+        "$(printf '%dh%02dm' $(( ( $(date +%s) - setStart ) / 3600 )) $(( ( $(date +%s) - setStart ) % 3600 / 60 )))" \
+        "$outFolder" "$written"
 }
 
 run_same()     { run_instances ./input/MyInstancesSameToolSets     "$outputFolder/MyInstancesSameToolSets"     "$toolSetsFile" 0 same; }

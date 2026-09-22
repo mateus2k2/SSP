@@ -29,8 +29,10 @@ repeats=${7:-10}
 
 for i in $(seq 1 "$repeats")
 do
-    echo "Running $i"
     # run-01 ... run-10, the layout output-final/ uses and the results scripts expect
+    runStart=$(date +%s)
+    echo "##### $(date '+%Y-%m-%d %H:%M:%S')  run $i of $repeats  ($runMode/$method)"
     "$(dirname "$0")/runExperiment.sh" "$outputFolder/$(printf 'run-%02d' "$i")" \
         "$runMode" "$method" "$head" "$compileProfile" "$licenseFile"
+    echo "##### run $i of $repeats finished in $(( ( $(date +%s) - runStart ) / 60 )) min" 
 done
