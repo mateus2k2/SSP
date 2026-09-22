@@ -14,9 +14,9 @@ python3 scripts/results/buildSpreadsheet.py --compare .tmp     # results vs the 
 
 **The practitioner runs in `output-final/` were regenerated on 2026-09-21** with the fixed solver and
 now validate with 0 errors; the originals are kept as `*-single-run-pre-fix/` (see §7). The GA, PT and
-Modelo runs there still predate the fixes and still show the problems below. Rerunning them leaves
-same-toolset and base GA/PT results unchanged (except the three n=212 instances in §3.1);
-different-toolset results change.
+Modelo runs there still predate the fixes and still show the problems below. Note that those runs also
+predate the repository itself by some margin: see §12, the GA no longer reproduces them exactly on the
+larger instances even with the original seed, and that is independent of the fixes.
 
 ---
 
@@ -293,3 +293,39 @@ our count (about 160 switches over 6 machines) gives the third column. So the ap
 is the counting rule; like for like our GA is roughly 9% behind the published one, which is
 consistent with the missing machine-vector search - and the paper ran 14400 s per instance against
 our seconds. Any comparison with Table D.1 in the thesis should state which convention it uses.
+
+## 12. The published GA runs are not reproducible from the current code on large instances
+
+Running the GA with its original seed (42) over the same-toolset and base collections and comparing
+with `output-final/.../AG-genetic-algorithm/run-01`:
+
+| | instances compared | identical | different |
+|---|---|---|---|
+| same toolset (n = 15 .. 1236, 24 of 42) + base (all 37) | 61 | 46 | 15 |
+
+Every difference is on a large instance (n >= 209) and ranges from -3.7% to +2.9%:
+
+| instance | published | current code, seed 42 |
+|---|---|---|
+| same n=1000 p=0.50 | 15233 | 15671 (+2.9%) |
+| same n=1236 p=0.50 | 17993 | 18377 (+2.1%) |
+| same n=212 p=0.25 | 4057 | 4165 (+2.7%) |
+| same n=228 p=0.25 | 4520 | 4506 (-0.3%) |
+| base 6M1 n=1201 | 11209 | 11528 (+2.8%) |
+| base 6M2 n=1401 | 10707 | 10309 (-3.7%) |
+
+**This is not caused by the September 2026 fixes.** Rebuilding the repository as it stood at the start
+of that work (`a567896a`, before any fix) and rerunning two of the differing instances gives exactly
+the values the current code gives (same n=228 p=0.25: 4506 both; base 6M2 n=629: 18186 both), not the
+published ones. So the GA results in `output-final/` were produced by a code version older than
+anything in the repository's recent history. Only the three n=212 instances of §3.1 are affected by a
+fix (the over-capacity operation).
+
+Consequences: the same-toolset and base GA columns cannot be reproduced instance by instance from
+today's code, so rerunning them is not optional if the thesis wants its tables to match the code it
+publishes. The small instances (n up to ~130) do reproduce exactly.
+
+For PT the question does not arise in the same form: it is built with `-DRANDSEED`
+(`RAND_MODE=1` in the Makefile), so its construction and neighbourhood operators seed from
+`std::random_device` and no run is reproducible by design - which is why its table reports means over
+ten runs.
